@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#000"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:text="连接断开, 是否重新连接?"/>
+    
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="#fff"
+        />
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button 
+            android:id="@+id/dr_btn_cancel"
+            android:layout_width="140dp"
+            android:layout_height="44dp"
+            android:background="@null"
+        	android:textColor="@color/white"
+        	android:textSize="16dp"
+            android:text="取消"/>
+    
+	    <View 
+	        android:layout_width="1dp"
+	        android:layout_height="match_parent"
+	        android:background="#fff"
+	        />
+        <Button 
+            android:id="@+id/dr_btn_reconnect"
+            android:layout_width="140dp"
+            android:layout_height="44dp"
+            android:background="@null"
+        	android:textColor="@color/white"
+       		android:textSize="16dp"
+            android:text="重新连接"/>
+    </LinearLayout>
+
+</LinearLayout>

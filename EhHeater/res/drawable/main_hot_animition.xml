@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false" >
+
+    <item
+        android:drawable="@drawable/heating_animation1"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation2"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation3"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation4"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation5"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation6"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation7"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation8"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation9"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation10"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation11"
+        android:duration="100">
+    </item>
+    <item
+        android:drawable="@drawable/heating_animation12"
+        android:duration="100">
+    </item>
+
+</animation-list>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingBottom="18dp"
+    android:background="@color/activity_background"
+    android:orientation="vertical" >
+    
+    <RelativeLayout 
+        android:id="@+id/ac_rl_step_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+    </RelativeLayout>
+    
+    <Button 
+        android:id="@+id/ac_btn_next_step"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@drawable/button_zhu"
+        android:textColor="@color/white"
+        android:text="下一步"
+        />
+    
+</LinearLayout>

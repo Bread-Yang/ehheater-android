@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:background="@color/activity_background"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:textSize="17dp"
+        android:textColor="@color/color1"
+        android:text="无法连接热水器, 请检查: "/>
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/color2"
+        android:textSize="16dp"
+        android:text="1. 热水器是否正常运行\n2. 无线局域网名称和密码是否修改过\n\n如是, 则需删除热水器重新添加"/>
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/color2"
+        android:textSize="16dp"
+        android:text="您可以进行以下操作"/>
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    
+    <Button 
+        android:id="@+id/aacf_btn_retry"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@drawable/button_zhu"
+        android:textColor="@color/white"
+        android:text="重试"/>
+    
+    <Button 
+        android:id="@+id/aacf_btn_manual"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_zhu"
+        android:textColor="@color/white"
+        android:text="手动连接"/>
+
+</LinearLayout>

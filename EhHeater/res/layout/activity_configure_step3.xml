@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@color/activity_background">
+    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp">
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/acs1_tv_center"
+            android:layout_marginRight="60dp"
+            android:textColor="@color/title_color"
+            android:text="初始化"/>
+        
+        <TextView 
+            android:id="@+id/acs1_tv_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/title_color"
+            android:text="连接网络"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/acs1_tv_center"
+            android:layout_marginLeft="66dp"
+            android:textColor="@color/title_color"
+            android:text="配置"/>
+    </RelativeLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center">
+        
+        <TextView 
+            android:layout_height="28dp"
+            android:layout_width="28dp"
+            android:background="@drawable/step_dot_highlight"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:textColor="#fff"
+            android:text="1"
+            />
+        
+        <TextView 
+            android:layout_width="80dp"
+            android:layout_height="4dp"
+            android:background="@color/title_color"/>
+        
+        <TextView 
+            android:layout_height="28dp"
+            android:layout_width="28dp"
+            android:background="@drawable/step_dot_highlight"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:textColor="#fff"
+            android:text="2"
+            />
+        
+        <TextView 
+            android:layout_width="80dp"
+            android:layout_height="4dp"
+            android:background="@color/title_color"/>
+        
+        <TextView 
+            android:layout_height="28dp"
+            android:layout_width="28dp"
+            android:background="@drawable/step_dot_highlight"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:textColor="#fff"
+            android:text="3"
+            />
+        
+    </LinearLayout>
+    
+    <TextView 
+        android:id="@+id/acs3_tv_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/color1"
+        android:text="请长按电源键3秒, 听到三声蜂鸣后松手, 点击下一步"/>
+    
+    <ImageView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/setting_img4"/>
+    
+
+</LinearLayout>

@@ -1,0 +1,16 @@
+09-25 23:25:36.971: E/AndroidRuntime(14411): FATAL EXCEPTION: main
+09-25 23:25:36.971: E/AndroidRuntime(14411): Process: com.vanward.ehheater, PID: 14411
+09-25 23:25:36.971: E/AndroidRuntime(14411): java.lang.NullPointerException
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at com.vanward.ehheater.activity.main.MainActivity.changeToCustomModeUpdateUI(MainActivity.java:280)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at com.vanward.ehheater.activity.main.MainActivity.onTcpPacket(MainActivity.java:350)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at com.xtremeprog.xpgconnect.generated.XpgMsgHandler.handleMessage(XpgMsgHandler.java:33)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at android.os.Handler.dispatchMessage(Handler.java:102)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at android.os.Looper.loop(Looper.java:136)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at android.app.ActivityThread.main(ActivityThread.java:5034)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at java.lang.reflect.Method.invokeNative(Native Method)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at java.lang.reflect.Method.invoke(Method.java:515)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:786)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:602)
+09-25 23:25:36.971: E/AndroidRuntime(14411): 	at dalvik.system.NativeStart.main(Native Method)
+09-25 23:25:37.232: E/xpgc(14411): onStateResp cb called.
+09-25 23:25:38.833: E/xpgc(14411): onStateResp cb called.
