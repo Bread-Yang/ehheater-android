@@ -341,17 +341,20 @@ public class ShitActivity extends EhHeaterBaseActivity implements OnClickListene
 //			return hinfo;
 			
 			
-//			HeaterInfo hinfo1 = new HeaterInfo();
-//			hinfo1.setMac("C8934642E4C7");
-//			hinfo1.setPasscode("JPDRRIXEKX");
-//			
-//			HeaterInfo hinfo2 = new HeaterInfo();
-//			hinfo2.setMac("C8934642F763");
-//			hinfo2.setPasscode("UMBXIWTCEM");
-//			
-//			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			HeaterInfo hinfo1 = new HeaterInfo();
+			hinfo1.setMac("C8934642E4C7");
+			hinfo1.setPasscode("JPDRRIXEKX");
+			
+			HeaterInfo hinfo2 = new HeaterInfo();
+			hinfo2.setMac("C8934642F763");
+			hinfo2.setPasscode("UMBXIWTCEM");
+			
+			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			hser.addNewHeater(hinfo1);
 //			hser.addNewHeater(hinfo2);
-//			hser.addNewHeater(hinfo1);
+			
+			Context context = getBaseContext();
+			AccountService.setUser(context, AccountService.getPendingUserId(context), AccountService.getPendingUserPsw(context));
 			
 		}
 		return super.onKeyDown(keyCode, event);
