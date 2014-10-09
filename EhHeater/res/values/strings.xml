@@ -102,7 +102,7 @@
     <string name="current_temp">当前温度</string>
     <string name="water_amount">剩余热水量</string>
     <string name="heat_amount">剩余加热时间</string>
-    <string name="device_configure">设备配置中，请耐心等待</string>
+    <string name="device_configure">亲，电器正在配对中，请您耐心等待</string>
     <string name="second">秒</string>
     <string name="not_null">密码最少为6位</string>
     <string name="old_pwd">旧密码</string>
