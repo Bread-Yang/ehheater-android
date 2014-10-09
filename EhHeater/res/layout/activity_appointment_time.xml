@@ -23,6 +23,7 @@
             android:id="@+id/wheelView1"
             android:layout_width="wrap_content"
             android:layout_height="210dp"
+            android:layout_marginLeft="25dp"
             android:layout_weight="1"
             app:centerLabelPosition="30"
             app:hasLeftBorder="false"
@@ -32,10 +33,22 @@
             app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
             app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="3dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="4dp"
+            android:text="时"
+            android:textSize="25sp" />
+
         <com.vanward.ehheater.view.wheelview.WheelView
             android:id="@+id/wheelView2"
             android:layout_width="wrap_content"
             android:layout_height="210dp"
+            android:layout_marginLeft="15dp"
             android:layout_weight="1"
             app:centerLabelPosition="30"
             app:hasLeftBorder="false"
@@ -43,6 +56,18 @@
             app:textHighlightColor="@color/appointment_text_color"
             app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
             app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="3dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="15dp"
+            android:paddingTop="4dp"
+            android:text="分"
+            android:textSize="25sp" />
     </LinearLayout>
 
     <RelativeLayout
@@ -109,8 +134,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:text="  无"
                 android:enabled="false"
+                android:text="  无"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
         </RadioGroup>
@@ -166,9 +191,9 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/TextView01"
-                android:max="40"
-                android:maxHeight="3dip"
-                android:minHeight="3dip"
+                android:max="50"
+                android:maxHeight="6dip"
+                android:minHeight="6dip"
                 android:progress="20"
                 android:progressDrawable="@drawable/seekbar_style"
                 android:thumb="@drawable/tiao3" />

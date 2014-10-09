@@ -1071,7 +1071,7 @@ public class WheelView extends View {
 		// Paint paint = new Paint();
 		// paint.setColor(Color.parseColor("#FF091A40"));
 		// canvas.drawRect(centerRect, paint);
-		 centerDrawable.draw(canvas);
+		centerDrawable.draw(canvas);
 
 		// 如果label设置了,则画出label
 		if (null != center_label && !center_label.equals("")) {

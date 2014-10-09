@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="人数"
+            android:text="分人洗"
             android:textColor="#ffffffff"
             android:textSize="20dp" />
 
@@ -116,9 +116,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/textView2"
-                android:max="40"
-                android:maxHeight="3dip"
-                android:minHeight="3dip"
+                android:max="50"
+                android:maxHeight="6dip"
+                android:minHeight="6dip"
                 android:padding="10dp"
                 android:progress="0"
                 android:progressDrawable="@drawable/seekbar_style"
