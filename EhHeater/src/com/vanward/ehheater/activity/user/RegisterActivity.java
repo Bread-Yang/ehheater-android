@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -78,7 +79,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 					public void run() {
 						DialogUtil.dismissDialog();
 					}
-				}, 10000);
+				}, 9000);
 				
 //				XPGConnectClient.xpgcRegister(mEtPhone.getText().toString(), mEtPsw.getText().toString());
 				new AsyncTask<Void, Void, Void>() {
@@ -102,6 +103,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 	@Override
 	public void OnUserRegisterResp(UserRegisterResp_t pResp, int nConnId) {
 		super.OnUserRegisterResp(pResp, nConnId);
+		Log.d("emmm", "OnUserRegisterResp:" + pResp.getResult());
 		DialogUtil.dismissDialog();
 		
 		if (pResp.getResult() == 0) {
@@ -111,7 +113,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			startActivity(new Intent(getBaseContext(), ShitActivity.class));
 			finish();
 		} else {
-			Toast.makeText(getBaseContext(), "注册失败", 1000).show();
+			Toast.makeText(getBaseContext(), "该号码已注册", 1000).show();
 		}
 		
 	}

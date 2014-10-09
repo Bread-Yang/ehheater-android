@@ -85,7 +85,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		case R.id.login_btn:
 			DialogUtil.instance().showLoadingDialog(this, "");
 			loginCloudResponseTriggered = false;
-			new Timer().schedule(new TimerTask() {
+			mLoginTimeoutTimer = new Timer();
+			mLoginTimeoutTimer.schedule(new TimerTask() {
 				@Override
 				public void run() {
 					if (!loginCloudResponseTriggered) {
@@ -98,7 +99,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 						});
 					}
 				}
-			}, 15000);
+			}, 9000);
 			XPGConnShortCuts.connect2big();
 			break;
 		case R.id.ll_tv_register:
@@ -106,6 +107,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			break;
 		}
 	}
+	Timer mLoginTimeoutTimer;	// 点击登录时触发此timer, 在登录回调中取消此timer
 	
 	@Override
 	protected void onPause() {
@@ -148,6 +150,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		super.onLoginCloudResp(result, mac);
 		
 		loginCloudResponseTriggered = true;
+		if (mLoginTimeoutTimer != null) {
+			mLoginTimeoutTimer.cancel();
+		}
 		
 		if (result == 0 || result == 1) {
 			// 0和1都是登录成功
@@ -167,7 +172,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		} else {
 			// 登录失败
 			DialogUtil.dismissDialog();
-			Toast.makeText(getBaseContext(), "登录失败", 3000).show();
+			Toast.makeText(getBaseContext(), "用户名或密码错误", 3000).show();
 		}
 	}
 	boolean loginCloudResponseTriggered;
