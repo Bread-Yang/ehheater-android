@@ -3,12 +3,30 @@ package com.vanward.ehheater.activity.main.gas;
 import net.tsz.afinal.annotation.sqlite.Id;
 import android.R.integer;
 
-public class CustomSetVo {
+public class GasCustomSetVo {
+	@Id
+	int id;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	int connid;
 
 	public int getConnid() {
 		return connid;
+	}
+
+	public int getWaterval() {
+		return waterval;
+	}
+
+	public void setWaterval(int waterval) {
+		this.waterval = waterval;
 	}
 
 	public void setConnid(int connid) {
@@ -23,27 +41,11 @@ public class CustomSetVo {
 		this.tempter = tempter;
 	}
 
-	public int getPower() {
-		return power;
-	}
-
-	public void setPower(int power) {
-		this.power = power;
-	}
-
+	// 温度
 	int tempter;
-	int power;
-	int peoplenum;
+	// 水流量
+	int waterval;
 
-	public int getPeoplenum() {
-		return peoplenum;
-	}
-
-	public void setPeoplenum(int peoplenum) {
-		this.peoplenum = peoplenum;
-	}
-
-	@Id
 	String name;
 
 	public String getName() {

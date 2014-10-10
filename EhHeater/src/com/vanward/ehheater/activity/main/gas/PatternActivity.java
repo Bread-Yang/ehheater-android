@@ -30,10 +30,12 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.main.CustomSetVo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.AddPatternButtonDialogUtil;
+import com.vanward.ehheater.view.AddPatternGasSettingDialogUtil;
 import com.vanward.ehheater.view.AddPatternNameDialogUtil;
 import com.vanward.ehheater.view.AddPatternSettingDialogUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
@@ -91,7 +93,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	Button ivTitleBtnRigh;
 	@ViewInject(id = R.id.zidingyiradio, click = "onClick")
 	LinearLayout zidingyiradioGroup;
-	private List<CustomSetVo> customSetVolist;
+	private List<GasCustomSetVo> customSetVolist;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -123,99 +125,98 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	}
 
 	@Override
+	public void onCheckedChanged(RadioGroup arg0, int arg1) {
+		switch (arg1) {
+		case R.id.radio0:
+			SendMsgModel.setToDIYMode();
+			finish();
+			break;
+		case R.id.radio1:
+			SendMsgModel.setToKictionMode();
+			finish();
+			break;
+		case R.id.radio2:
+			SendMsgModel.setToSolfMode();
+			finish();
+			break;
+		case R.id.radio3:
+			SendMsgModel.setToBathtubMode();
+			finish();
+			break;
+		case R.id.radio4:
+			SendMsgModel.setToEnergyMode();
+			finish();
+			break;
+		case R.id.radio5:
+			SendMsgModel.setToIntelligenceMode();
+			finish();
+			break;
+		}
+
+	}
+
+	@Override
 	public void onClick(View v) {
 		System.out.println("view:" + v.getId());
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.textradio0:
-			radio0.setChecked(true);
-			break;
-		case R.id.textradio1:
-			radio1.setChecked(true);
-			break;
-		case R.id.textradio2:
-			radio2.setChecked(true);
-			break;
-		case R.id.textradio3:
-			radio3.setChecked(true);
-			break;
 		case R.id.ivTitleBtnLeft:
 			finish();
 			break;
 		case R.id.ivTitleBtnRigh:
+			AddPatternNameDialogUtil.instance(this)
+					.setNextButtonCall(new NextButtonCall() {
+						@Override
+						public void oncall(View v) {
+							final String name = AddPatternNameDialogUtil
+									.instance(PatternActivity.this).getName();
+							if (AddPatternNameDialogUtil.instance(
+									PatternActivity.this).isNameExit()) {
+								Toast.makeText(PatternActivity.this, "此名字已存在",
+										Toast.LENGTH_SHORT).show();
+								return;
+							}
 
-			break;
+							if (name != null && name.length() > 0) {
+								AddPatternGasSettingDialogUtil
+										.instance(PatternActivity.this)
+										.initName(name, 0)
+										.nextButtonCall(new NextButtonCall() {
 
-		case R.id.mornongsetting:
-			setMorningWashPeople(false);
-			break;
-		}
-	}
-
-	// 设置到智能模式
-	private void setToIntelligenceMode() {
-
-		SendMsgModel.changeToIntelligenceModeWash();
-	}
-
-	// 设置到自定义模式
-	private void setToCustomMode() {
-		SendMsgModel.changeToZidingyiMode();
-	}
-
-	// 厨房模式
-	private void setToKictionMode() {
-
-	}
-	
-
-	// 舒适模式
-	private void setToSolfMode() {
-
-	}
-
-	// 节能模式
-	private void setToEnergyMode() {
-
-	}
-
-	// 设置到夜电模式
-	private void setToNightMode() {
-		SendMsgModel.changeNightMode();
-	}
-
-	// 设置到晨浴模式
-	private void setToMorningWash() {
-	}
-
-	// 设置晨浴人数
-	public void setMorningWashPeople(final boolean shouldswich) {
-	}
-
-	@Override
-	public void onCheckedChanged(RadioGroup arg0, int arg1) {
-		switch (arg1) {
-		case R.id.radio0:
-			setToCustomMode();
-			finish();
-			break;
-		case R.id.radio1:
-			setMorningWashPeople(true);
-			break;
-		case R.id.radio2:
-			setToNightMode();
-			finish();
-			break;
-		case R.id.radio3:
-			setToIntelligenceMode();
-			finish();
+											@Override
+											public void oncall(View v) {
+												// TODO Auto-generated method
+												// stub
+												GasCustomSetVo customSetVo = AddPatternGasSettingDialogUtil
+														.instance(
+																PatternActivity.this)
+														.getData();
+												customSetVo.setName(name);
+												new BaseDao(
+														PatternActivity.this)
+														.getDb().save(
+																customSetVo);
+												System.out.println("customSetVoid: "
+														+ customSetVo.getId());
+												initViewValue();
+												AddPatternGasSettingDialogUtil
+														.instance(
+																PatternActivity.this)
+														.dissmiss();
+											}
+										}).showDialog();
+							}
+							AddPatternNameDialogUtil.instance(
+									PatternActivity.this).dissmiss();
+						}
+					}).showDialog();
 			break;
 		}
-
 	}
 
 	public void initViewValue() {
-		customSetVolist = new BaseDao(this).getDb().findAll(CustomSetVo.class);
+		customSetVolist = new BaseDao(this).getDb().findAll(
+				GasCustomSetVo.class);
 		addCustomView();
 		if (customSetVolist.size() >= 3) {
 			ivTitleBtnRigh.setVisibility(View.GONE);
@@ -234,7 +235,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				for (int i = 0; i < viewGroup.getChildCount(); i++) {
 					setRadiocheck(name, viewGroup.getChildAt(i));
 				}
-
 			} else if (root instanceof RadioButton) {
 				RadioButton radioButton = ((RadioButton) root);
 				System.out.println(radioButton.getText());
@@ -273,7 +273,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				LinearLayout.LayoutParams lParams = new LayoutParams(
 						LayoutParams.FILL_PARENT, 1);
 				zidingyiradioGroup.addView(view2, lParams);
-
 			}
 			nopatterm.setVisibility(View.GONE);
 		} else {
@@ -281,12 +280,99 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		}
 	}
 
-	public View initCustomItemView(final CustomSetVo customSetVo,
+	public View initCustomItemView(final GasCustomSetVo customSetVo,
 			Boolean isCheck) {
 		View view = LinearLayout.inflate(this,
 				R.layout.layout_addcustom_layout, null);
 		Button button = (Button) view.findViewById(R.id.textradio1);
+		view.findViewById(R.id.setting).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						// TODO Auto-generated method stub
+						AddPatternButtonDialogUtil
+								.instance(PatternActivity.this)
+								.nextButtonCall(new NextButtonCall() {
+									@Override
+									public void oncall(View v) {
+										// 重命名
+										reNameCustom(customSetVo);
+										AddPatternButtonDialogUtil.instance(
+												PatternActivity.this)
+												.dissmiss();
+									}
+								}).editButtonCall(new NextButtonCall() {
+									@Override
+									public void oncall(View v) {
 
+										AddPatternGasSettingDialogUtil
+												.instance(PatternActivity.this)
+												.initName(
+														customSetVo.getName(),
+														customSetVo.getId())
+												.nextButtonCall(
+														new NextButtonCall() {
+															@Override
+															public void oncall(
+																	View v) {
+																GasCustomSetVo tempcustomSetVo = AddPatternGasSettingDialogUtil
+																		.instance(
+																				PatternActivity.this)
+																		.getData();
+																tempcustomSetVo
+																		.setId(customSetVo
+																				.getId());
+																new BaseDao(
+																		PatternActivity.this)
+																		.getDb()
+																		.update(tempcustomSetVo);
+
+																initViewValue();
+																AddPatternGasSettingDialogUtil
+																		.instance(
+																				PatternActivity.this)
+																		.dissmiss();
+															}
+														}).showDialog();
+										AddPatternButtonDialogUtil.instance(
+												PatternActivity.this)
+												.dissmiss();
+
+									}
+								})
+
+								.lastButtonCall(new NextButtonCall() {
+
+									@Override
+									public void oncall(View v) {
+										AddPatternButtonDialogUtil.instance(
+												PatternActivity.this)
+												.dissmiss();
+										SureDelDialogUtil
+												.instance(PatternActivity.this)
+												.setNextButtonCall(
+														new NextButtonCall() {
+															@Override
+															public void oncall(
+																	View v) {
+																// 删除
+																new BaseDao(
+																		PatternActivity.this)
+																		.getDb()
+																		.delete(customSetVo);
+																initViewValue();
+																SureDelDialogUtil
+																		.instance(
+																				PatternActivity.this)
+																		.dissmiss();
+															}
+														}).showDialog();
+
+									}
+								}).showDialog();
+
+					}
+				});
 		button.setText(customSetVo.getName());
 		final RadioButton radioButton = (RadioButton) view
 				.findViewById(R.id.radioButton1);
@@ -299,33 +385,13 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				// 清空其他的
 				setRadiocheck("", getWindow().getDecorView());
 				radioButton.setChecked(true);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							System.out.println("自定义");
-							SendMsgModel.changeToZidingyiMode();
-							Thread.sleep(700);
-							System.out.println("自定义 pow: "
-									+ customSetVo.getPower());
-							SendMsgModel.setPower(customSetVo.getPower());
-							Thread.sleep(700);
-							System.out.println("自定义 Tem: "
-									+ customSetVo.getTempter());
-							SendMsgModel.setTempter(customSetVo.getTempter());
-							finish();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}).start();
-
+				System.out.println("id: " + customSetVo.getId());
+				SendMsgModel.setDIYModel(customSetVo.getId(), customSetVo);
+				finish();
 			}
 		};
 		button.setOnClickListener(onClickListener);
 		radioButton.setOnClickListener(onClickListener);
-
 		return view;
 	}
 
@@ -334,7 +400,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	 * 
 	 * @param customSetVo
 	 */
-	public void reNameCustom(final CustomSetVo customSetVo) {
+	public void reNameCustom(final GasCustomSetVo customSetVo) {
 		AddPatternNameDialogUtil.instance(this)
 				.nextButtonCall(new NextButtonCall() {
 
@@ -356,7 +422,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 								.dissmiss();
 					}
 				}).showDialog();
-
 	}
 
 }

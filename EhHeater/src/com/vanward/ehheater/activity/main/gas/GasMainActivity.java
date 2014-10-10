@@ -2,7 +2,6 @@ package com.vanward.ehheater.activity.main.gas;
 
 import java.util.List;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -90,10 +89,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initSlidingMenu();
-		setContentView(R.layout.main_center_layout);
+		setContentView(R.layout.main_gas_center_layout);
 		initView(savedInstanceState);
 		initData();
-
 		IntentFilter filter = new IntentFilter(
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
@@ -112,8 +110,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			return;
 		}
 		boolean flag = false;
-		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
-				CustomSetVo.class);
+		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
+				GasCustomSetVo.class);
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				if (tempname.equals(list.get(i).getName())) {
@@ -174,12 +172,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				circularView = new CircularView(GasMainActivity.this, llt_circle,
-						CircularView.CIRCULAR_SINGLE, 0);
+				circularView = new CircularView(GasMainActivity.this,
+						llt_circle, CircularView.CIRCULAR_SINGLE, 0);
 				circularView.setAngle(35);
 				circularView.setOn(true);
-				operatingAnim = AnimationUtils.loadAnimation(GasMainActivity.this,
-						R.anim.tip_4500);
+				operatingAnim = AnimationUtils.loadAnimation(
+						GasMainActivity.this, R.anim.tip_4500);
 				LinearInterpolator lin = new LinearInterpolator();
 				operatingAnim.setInterpolator(lin);
 				hotImgeImageView.startAnimation(operatingAnim);
@@ -271,38 +269,62 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		}
 	}
 
-	// 舒适模式
+	/**
+	 * 舒适模式
+	 * 
+	 * @param pResp
+	 */
 	public void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
 
 	}
 
-	// 厨房模式
+	/**
+	 * 厨房模式
+	 * 
+	 * @param pResp
+	 */
 	public void changetoKictienMode(GasWaterHeaterStatusResp_t pResp) {
 
 	}
 
-	// 节能模式
+	/**
+	 * 节能模式
+	 * 
+	 * @param pResp
+	 */
 	public void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
 
 	}
 
-	// 智能模式
+	/**
+	 * 智能模式
+	 * 
+	 * @param pResp
+	 */
 	public void changetoligenceMode(GasWaterHeaterStatusResp_t pResp) {
 
 	}
 
-	// 浴缸模式
+	/**
+	 * 浴缸模式
+	 * 
+	 * @param pResp
+	 */
 	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
 
 	}
 
-	// 自定义模式
+	/**
+	 * 自定义模式
+	 * 
+	 * @param pResp
+	 */
 
 	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
 
 		modeTv.setText("自定义模式");
-		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
-				CustomSetVo.class);
+		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
+				GasCustomSetVo.class);
 
 		// 自定义模式的名字怎么显示。
 		// for (int i = 0; i < list.size(); i++) {
@@ -315,13 +337,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		// }
 		circularView.setOn(true);
 		// 剩余加热时间 好像燃热没有这个状态
-		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
-		int i = 0;
-		if (i == 0) {
-			ChangeStuteView.swichKeep(stuteParent);
-		} else {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
-		}
 
 	}
 
@@ -357,10 +372,11 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
-		modecheck(pResp);
-		temptertureCheck(pResp);
-		waterCheck(pResp);
-		onoffcheck(pResp);
+		modeDeal(pResp);
+		temptertureDeal(pResp);
+		waterDeal(pResp);
+		onoffDeal(pResp);
+		warningDeal(pResp);
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 
@@ -369,43 +385,31 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void modecheck(GasWaterHeaterStatusResp_t pResp) {
+	public void modeDeal(GasWaterHeaterStatusResp_t pResp) {
 
 		// 模式切换的api 跟 那个需求有出入
 		System.out.println("当前模式： " + pResp.getFunction_state());
-		/*
-		 * <!--功能状态：0x01（洗浴/普通模式）、0x02（注水模式）、0x03（厨房模式）、0x04（舒适模式）
-		 * 、0x05（DIY模式1）、
-		 * 0x06（DIY模式2）、0x07（DIY模式3）、0x08（节能模式）、0x09（@模式1）、0x0A（@模式2
-		 * ）、0x0B（@模式3）、
-		 * 0x0C（@模式4）、0x0D（@模式5）、0x0E（VIP模式1）、0x0F（VIP模式2）、0x10（0xfe
-		 * 预留）、0xff（故障模式）-->
-		 */
+		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
+		// 0x05（智能模式）、0x06（自定义模式）
+
 		switch (pResp.getFunction_state()) {
 		case 1:
-
-			break;
-		case 2:
-
-			break;
-		case 3:
-			changetoKictienMode(pResp);
-			break;
-		case 4:
 			changetoSofeMode(pResp);
 			break;
+		case 2:
+			changetoKictienMode(pResp);
+			break;
+		case 3:
+			changetoBathtubMode(pResp);
+			break;
+		case 4:
+			changetoEnergyMode(pResp);
+			break;
 		case 5:
-
+			changetoligenceMode(pResp);
 			break;
 		case 6:
-
-			break;
-		case 7:
-
-			break;
-
-		case 8:
-			changetoEnergyMode(pResp);
+			changetoDIYMode(pResp);
 			break;
 
 		default:
@@ -418,7 +422,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void onoffcheck(GasWaterHeaterStatusResp_t pResp) {
+	public void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("开关： " + pResp.getOn_off());// 1为开机0为关机
 		if (pResp.getOn_off() == 0) {
 			openView.setVisibility(View.VISIBLE);
@@ -435,17 +439,17 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void temptertureCheck(final GasWaterHeaterStatusResp_t pResp) {
+	public void temptertureDeal(final GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("设置温度： " + pResp.getTargetTemperature());
 		System.out.println("进水温度： " + pResp.getIncomeTemperature());
 		System.out.println("出水温度： " + pResp.getOutputTemperature());
 
-		circularView.setTargerdegree(pResp.getOutputTemperature());
 		target_tem.setText(pResp.getTargetTemperature() + "℃");
-
 		tempter.postDelayed(new Runnable() {
 			@Override
 			public void run() {
+				// 设置初始化设定温度
+				circularView.setTargerdegree(pResp.getTargetTemperature());
 				circularView.setAngle(pResp.getOutputTemperature());
 				tempter.setText(pResp.getOutputTemperature() + "℃");
 			}
@@ -457,12 +461,22 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void waterCheck(GasWaterHeaterStatusResp_t pResp) {
+	public void waterDeal(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("注水流量： " + pResp.getTargetFilledVolume());
 		System.out.println("注水累加流量： " + pResp.getCumulativeFilledVolume());
 		System.out.println("当前水流量： " + pResp.getNowVolume());
 		System.out.println("当前设置水流量： " + pResp.getSetVolume());
 		leavewater.setText(pResp.getNowVolume() + "L");
+	}
+
+	/**
+	 * 警告处理
+	 * 
+	 * @param pResp
+	 */
+	public void warningDeal(GasWaterHeaterStatusResp_t pResp) {
+		System.out.println("防冻警告：" + pResp.getFreezeProofingWarning());
+		System.out.println("氧护提示：" + pResp.getOxygenWarning());
 	}
 
 }

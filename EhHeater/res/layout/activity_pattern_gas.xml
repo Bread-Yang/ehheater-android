@@ -85,7 +85,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/view2"
         android:layout_toRightOf="@+id/radioGroup2"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <Button
             android:id="@+id/textradio0"
@@ -221,7 +222,7 @@
 
     <RadioGroup
         android:id="@+id/radioGroup2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/radioGroup1"
         android:layout_alignParentLeft="true"
@@ -229,12 +230,16 @@
 
         <RadioButton
             android:id="@+id/radio0"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:button="@drawable/radio_selector"
-            android:tag="自定义模式" />
+            android:padding="10dp"
+            android:tag="自定义模式"
+            android:text="自定义"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
 
         <View
             android:id="@+id/view2"
@@ -246,12 +251,16 @@
 
         <RadioButton
             android:id="@+id/radio1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:button="@drawable/radio_selector"
-            android:tag="晨浴模式" />
+            android:padding="10dp"
+            android:tag="厨房模式"
+            android:text="厨房"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
 
         <View
             android:id="@+id/view2"
@@ -263,12 +272,16 @@
 
         <RadioButton
             android:id="@+id/radio2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:button="@drawable/radio_selector"
-            android:tag="夜电模式" />
+            android:padding="10dp"
+            android:tag="舒适模式"
+            android:text="舒适"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
 
         <View
             android:id="@+id/view2"
@@ -280,12 +293,16 @@
 
         <RadioButton
             android:id="@+id/radio3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:button="@drawable/radio_selector"
-            android:tag="智能模式" />
+            android:padding="10dp"
+            android:tag="浴缸模式"
+            android:text="浴缸"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
 
         <View
             android:id="@+id/View03"
@@ -294,13 +311,17 @@
             android:background="#d4d4d4" />
 
         <RadioButton
-            android:id="@+id/RadioButton01"
-            android:layout_width="wrap_content"
+            android:id="@+id/radio4"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:button="@drawable/radio_selector"
-            android:tag="智能模式" />
+            android:padding="10dp"
+            android:tag="节能模式"
+            android:text="节能"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
 
         <View
             android:id="@+id/View05"
@@ -309,21 +330,25 @@
             android:background="#d4d4d4" />
 
         <RadioButton
-            android:id="@+id/RadioButton02"
-            android:layout_width="wrap_content"
+            android:id="@+id/radio5"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:button="@drawable/radio_selector"
-            android:tag="智能模式" />
-    </RadioGroup>
+            android:padding="10dp"
+            android:tag="智能模式"
+            android:text="智能"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
 
-    <View
-        android:id="@+id/View02"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/radioGroup1"
-        android:background="#d4d4d4" />
+        <View
+            android:id="@+id/View02"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#d4d4d4" />
+
+    </RadioGroup>
 
 </RelativeLayout>

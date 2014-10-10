@@ -79,7 +79,7 @@
                     android:drawableLeft="@drawable/icon_temperature"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
-                    android:text="@string/current_temp"
+                    android:text="@string/outwater_temp"
                     android:textColor="@color/an_hui"
                     android:textSize="18dp" />
 
@@ -113,7 +113,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/water_amount"
+                        android:text="实时水流量"
                         android:textColor="#87420d"
                         android:textSize="15dp" />
 
@@ -140,7 +140,8 @@
                 android:layout_marginLeft="15dp"
                 android:background="@drawable/setting_tempter_bg"
                 android:focusable="false"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -226,7 +227,7 @@
                     android:onClick="onClick"
                     android:padding="0dp"
                     android:text="模式"
-                    android:textColor="@color/an_hui"/>
+                    android:textColor="@color/an_hui" />
 
                 <Button
                     android:id="@+id/appointment_btn"
@@ -241,7 +242,8 @@
                     android:onClick="onClick"
                     android:padding="0dp"
                     android:text="预约"
-                    android:textColor="@color/an_hui" />
+                    android:textColor="@color/an_hui"
+                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/power"
@@ -256,7 +258,8 @@
                     android:onClick="onClick"
                     android:padding="0dp"
                     android:text="功率"
-                    android:textColor="@color/an_hui" />
+                    android:textColor="@color/an_hui"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btn_information"
@@ -273,7 +276,7 @@
                     android:text="@string/information"
                     android:textColor="@color/an_hui"
                     android:textSize="15dp"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
 
@@ -284,7 +287,8 @@
             android:layout_below="@+id/circle_bg"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="gone" >
 
             <LinearLayout
                 android:id="@+id/hotlayout"

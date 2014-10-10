@@ -52,6 +52,9 @@ public class CircularView extends View {
 	}
 
 	public int angleToDegree(float angle) {
+		if (angle < 35) {
+			angle = 35;
+		}
 		angle = angle - 25;
 		return (int) (angle * 360 / 60);
 	}
@@ -130,16 +133,19 @@ public class CircularView extends View {
 			case 1:
 				new CountDownTimer(2000, 1000) {
 					@Override
-					public void onTick(long millisUntilFinished) { }
+					public void onTick(long millisUntilFinished) {
+					}
+
 					@Override
 					public void onFinish() {
 						postInvalidate();
-						circularListener.levelListener((int) degreeToAngle(degree));
+						circularListener
+								.levelListener((int) degreeToAngle(degree));
 					}
 				}.start();
-				
-//				postInvalidate();
-//				circularListener.levelListener((int) degreeToAngle(degree));
+
+				// postInvalidate();
+				// circularListener.levelListener((int) degreeToAngle(degree));
 				break;
 
 			case 2:
