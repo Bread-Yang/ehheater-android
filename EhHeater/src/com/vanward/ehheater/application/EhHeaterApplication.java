@@ -1,6 +1,7 @@
 package com.vanward.ehheater.application;
 
 import com.vanward.ehheater.statedata.EhState;
+import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 
 import android.app.Application;
@@ -13,6 +14,8 @@ public class EhHeaterApplication extends Application {
 	public static float device_density;
 	
 	public static EhState currentEhState;
+	
+	public static GasWaterHeaterStatusResp_t currentGasHeaterStatus;
 
 	@Override
 	public void onCreate() {

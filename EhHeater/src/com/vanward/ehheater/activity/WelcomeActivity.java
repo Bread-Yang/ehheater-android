@@ -33,6 +33,7 @@ import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
+import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 import com.xtremeprog.xpgconnect.generated.LanLoginResp_t;
 import com.xtremeprog.xpgconnect.generated.PasscodeResp_t;
@@ -215,9 +216,9 @@ public class WelcomeActivity extends GeneratedActivity {
 
 		if (pResp.getResult() == 0) {
 			mTvInfo.setText("设备已连接! 查询设备状态中..");
-//			generated.SendStateReq(Global.connectId);
-			startActivity(new Intent(this, GasMainActivity.class));
-			finish();
+			generated.SendStateReq(Global.connectId);
+//			startActivity(new Intent(this, GasMainActivity.class));
+//			finish();
 		}
 	}
 
@@ -240,16 +241,33 @@ public class WelcomeActivity extends GeneratedActivity {
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 
 			mTvInfo.setText("状态查询成功!");
-			EhHeaterApplication.currentEhState = new EhState(data);
+			XPGConnectClient.RemoveActivity(this);
 			
+			EhHeaterApplication.currentEhState = new EhState(data);
 			Intent intent = new Intent(getBaseContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
-			XPGConnectClient.RemoveActivity(this);
 			finish();
 
 		}
 	}
+	
+	@Override
+	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp, int nConnId) {
+		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
+		
+		if (count++ == 0) {
+			mTvInfo.setText("状态查询成功!");
+			XPGConnectClient.RemoveActivity(this);
+			
+			EhHeaterApplication.currentGasHeaterStatus = pResp;
+			Intent intent = new Intent(getBaseContext(), GasMainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			finish();
+		}
+	}
+	int count;
 
 	public HeaterInfo getCurrentDevice() {
 
