@@ -1,4 +1,4 @@
-package com.vanward.ehheater.activity.main;
+package com.vanward.ehheater.activity.main.gas;
 
 import java.util.List;
 
@@ -30,6 +30,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.main.LeftFragment;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -44,27 +45,19 @@ import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.vanward.ehheater.view.wheelview.WheelView;
+import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
-public class MainActivity extends BaseSlidingFragmentActivity implements
+public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		OnClickListener {
 
 	protected SlidingMenu mSlidingMenu;
 
-	private LeftFragment mLeftFragment;
+	private TextView mTitleName, modeTv, temptertitleTextView;
 
-	private RightFragment mRightFragment;
-
-	private TextView mTitleName, modeTv, powerTv, temptertitleTextView;
-
-	private Button btn_info;
 	View btn_power;
 	TextView tempter, leavewater, target_tem;
-
-	private Dialog dialog_power_setting;
-
-	private WheelView wheelView1, wheelView2;
 
 	LinearLayout llt_circle;
 	ViewGroup stuteParent;
@@ -88,6 +81,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			initSlidingMenu();
 		}
 	};
+
+	private TextView powerTv;
+
+	private Button btn_info;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -177,12 +174,11 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				circularView = new CircularView(MainActivity.this, llt_circle,
+				circularView = new CircularView(GasMainActivity.this, llt_circle,
 						CircularView.CIRCULAR_SINGLE, 0);
 				circularView.setAngle(35);
-				circularView.setOn(false);
-
-				operatingAnim = AnimationUtils.loadAnimation(MainActivity.this,
+				circularView.setOn(true);
+				operatingAnim = AnimationUtils.loadAnimation(GasMainActivity.this,
 						R.anim.tip_4500);
 				LinearInterpolator lin = new LinearInterpolator();
 				operatingAnim.setInterpolator(lin);
@@ -193,13 +189,11 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setCircularListener(new CircleListener() {
 					@Override
 					public void levelListener(final int outlevel) {
-
 						SendMsgModel.setTempter(outlevel);
 						tempter.setText(outlevel + "");
 						// temptertitleTextView.setText("当前温度");
 						hotImgeImageView.setVisibility(View.GONE);
 						hotImgeImageView.clearAnimation();
-
 					}
 
 					@Override
@@ -211,7 +205,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 					@Override
 					public void updateUIWhenAferSetListener(final int outlevel) {
-						temptertitleTextView.setText("当前温度");
+						temptertitleTextView.setText("出水温度");
 						tempter.setText(outlevel + "");
 					}
 				});
@@ -238,13 +232,11 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	private void updateTitle() {
-
 		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeater();
 		if (heaterInfo != null) {
 			mTitleName.setText(Consts.getHeaterName(heaterInfo));
 		}
-
 	}
 
 	@Override
@@ -273,72 +265,58 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			intent2.setClass(this, PatternActivity.class);
 			startActivity(intent2);
 			break;
-		case R.id.power:
-			setPower();
-			break;
+
 		case R.id.btn_information:
 			break;
 		}
 	}
 
-	private void changeToIntelligenceModeUpdateUI(byte[] data) {
-		modeTv.setText("智能模式");
-		circularView.setOn(false);
-		setAppointmentButtonAble(false);
-		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
-		powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(null);
-		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
-			ChangeStuteView.swichKeep(stuteParent);
-		} else {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
-		}
+	// 舒适模式
+	public void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
 
 	}
 
-	private void changeToNightModeUpdateUI(byte[] data) {
-		modeTv.setText("夜电模式");
-		circularView.setOn(false);
-		setAppointmentButtonAble(false);
-		ChangeStuteView.swichNight(stuteParent);
-		powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(null);
-		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
-			ChangeStuteView.swichNight(stuteParent);
-		} else {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
-		}
+	// 厨房模式
+	public void changetoKictienMode(GasWaterHeaterStatusResp_t pResp) {
 
 	}
 
-	// public void setButtonCanUse(){
-	// btn_power.
-	//
-	// }
+	// 节能模式
+	public void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
 
-	private void changeToCustomModeUpdateUI(byte[] data) {
+	}
+
+	// 智能模式
+	public void changetoligenceMode(GasWaterHeaterStatusResp_t pResp) {
+
+	}
+
+	// 浴缸模式
+	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
+
+	}
+
+	// 自定义模式
+
+	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
+
 		modeTv.setText("自定义模式");
-		EhState ehState = new EhState(data);
-		setAppointmentButtonAble(true);
-		int targetTemperature = ehState.getTargetTemperature();
-		int power = ehState.getPower();
 		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
 				CustomSetVo.class);
-		for (int i = 0; i < list.size(); i++) {
-			CustomSetVo customSetVo = list.get(i);
-			if (customSetVo.getPower() == power
-					&& customSetVo.getTempter() == targetTemperature) {
-				modeTv.setText(customSetVo.getName());
-				break;
-			}
-		}
+
+		// 自定义模式的名字怎么显示。
+		// for (int i = 0; i < list.size(); i++) {
+		// CustomSetVo customSetVo = list.get(i);
+		// if (customSetVo.getPower() == power
+		// && customSetVo.getTempter() == targetTemperature) {
+		// modeTv.setText(customSetVo.getName());
+		// break;
+		// }
+		// }
 		circularView.setOn(true);
+		// 剩余加热时间 好像燃热没有这个状态
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
-		// powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(this);
-		int i = new EhState(data).getRemainingHeatingTime();
+		int i = 0;
 		if (i == 0) {
 			ChangeStuteView.swichKeep(stuteParent);
 		} else {
@@ -347,155 +325,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	}
 
-	public void setPower() {
-		int oldvalue = Integer.parseInt((String) powerTv.getText().subSequence(
-				0, 1));
-
-		PowerSettingDialogUtil.instance(this)
-				.setNextButtonCall(new NextButtonCall() {
-
-					@Override
-					public void oncall(View v) {
-						int i = PowerSettingDialogUtil.instance(
-								MainActivity.this).getPower();
-						System.out.println("0x00: " + (short) (0x00 + i));
-						SendMsgModel.setPower(i);
-						powerTv.setText(i + "kw");
-						PowerSettingDialogUtil.instance(MainActivity.this)
-								.dissmiss();
-					}
-				}).showDialog(oldvalue);
-	}
-
-	/**
-	 * 根据 时间人数更新界面
-	 * 
-	 * @param data
-	 * 
-	 * @param time
-	 * @param peopleNum
-	 */
-	private void changeToMorningWashUpdateUI(byte[] data) {
-		circularView.setOn(false);
-		setAppointmentButtonAble(false);
-		modeTv.setText("晨浴模式");
-		ChangeStuteView.swichMorningWash(stuteParent);
-		powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(null);
-		int i = new EhState(data).getRemainingHeatingTime();
-		System.out.println("测试晨浴i: " + i);
-		if (i == 0) {
-			ChangeStuteView.swichMorningWash(stuteParent);
-		} else if (new EhState(data).getSystemRunningState() == 1) {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
-		}
-
-	}
-
-	@Override
-	public void OnStateResp(StateResp_t pResp, int nConnId) {
-		System.out.println("回调");
-		super.OnStateResp(pResp, nConnId);
-	}
-
-	@Override
-	public void onTcpPacket(byte[] data, int connId) {
-		super.onTcpPacket(data, connId);
-		System.out.println("回调onTcpPacket");
-		if (TcpPacketCheckUtil.isEhStateData(data)) {
-			setTempture(data);
-			setLeaveWater(data);
-			setPower(data);
-			setTargerTempertureUI(data);
-			setHotAnimition(data);
-			// 调试返回2 夜电模式\ 1智能模式 \3晨浴模式\ 4自定义模式
-			System.out.println("当前模式：" + new EhState(data).getFunctionState());
-			// 非常奇怪 智能模式设置成功，可是返回值 确实1 跟p0 文档不符合。设置进去的时候是2 ，晨浴模式成功。
-			int mode = new EhState(data).getFunctionState();
-			if (mode == 1) {
-				changeToIntelligenceModeUpdateUI(data);
-			} else if (mode == 3) {
-				changeToMorningWashUpdateUI(data);
-			} else if (mode == 4) {
-				changeToCustomModeUpdateUI(data);
-			} else if (mode == 2) {
-				changeToNightModeUpdateUI(data);
-			}
-
-			byte b = new EhState(data).getSystemRunningState();
-			System.out.println("onTcpPacket: " + b);
-			if (!new EhState(data).isPoweredOn()) {
-				System.out.println("关机了");
-				openView.setVisibility(View.VISIBLE);
-				rightButton.setVisibility(View.GONE);
-				ChangeStuteView.swichDeviceOff(stuteParent);
-			} else {
-				rightButton.setVisibility(View.VISIBLE);
-				openView.setVisibility(View.GONE);
-			}
-		}
-
-	}
-
-	public void setTempture(final byte[] b) {
-		System.out.println("当前温度：" + new EhState(b).getInnerTemp1() + "   "
-				+ new EhState(b).getInnerTemp2() + "   "
-				+ new EhState(b).getInnerTemp3());
-		// tempter.setText(new EhState(b).getInnerTemp2() + "");
-
-		tempter.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				circularView.setAngle(new EhState(b).getInnerTemp1());
-				tempter.setText(new EhState(b).getInnerTemp1() + "");
-			}
-		}, 2000);
-		System.out.println("当前设置温度：" + new EhState(b).getTargetTemperature());
-	}
-
-	public void setHotAnimition(byte[] b) {
-		System.out.println("是否加热中：" + new EhState(b).getSystemRunningState());
-		if (new EhState(b).getSystemRunningState() == 0) {
-			// 未加热
-			hotImgeImageView.setVisibility(View.GONE);
-			hotImgeImageView.clearAnimation();
-		} else if (new EhState(b).getSystemRunningState() == 1) {
-			// 加热
-			hotImgeImageView.setVisibility(View.VISIBLE);
-			hotImgeImageView.clearAnimation();
-			if (new EhState(b).getPower() == 1) {
-				operatingAnim = AnimationUtils.loadAnimation(this,
-						R.anim.tip_4500);
-			} else if (new EhState(b).getPower() == 2) {
-				operatingAnim = AnimationUtils.loadAnimation(this,
-						R.anim.tip_3500);
-			} else if (new EhState(b).getPower() == 3) {
-				operatingAnim = AnimationUtils.loadAnimation(this,
-						R.anim.tip_2500);
-			}
-			LinearInterpolator lin = new LinearInterpolator();
-			operatingAnim.setInterpolator(lin);
-			hotImgeImageView.startAnimation(operatingAnim);
-		}
-	}
-
-	public void setLeaveWater(byte[] b) {
-		System.out.println("当前水量："
-				+ new EhState(b).getRemainingHotWaterAmount());
-		leavewater.setText(new EhState(b).getRemainingHotWaterAmount() + "L");
-	}
-
-	public void setPower(byte[] b) {
-		System.out.println("当前功率：" + new EhState(b).getPower());
-		powerTv.setText(new EhState(b).getPower() + "kw");
-	}
-
-	public void setTargerTempertureUI(byte[] b) {
-		circularView.setTargerdegree(new EhState(b).getTargetTemperature());
-		target_tem.setText(new EhState(b).getTargetTemperature() + "℃");
-	}
-
+	// 有没有预约? 这个是 预约按钮无效的
 	public void setAppointmentButtonAble(boolean isAble) {
 		btn_appointment.setEnabled(isAble);
 		btn_power.setEnabled(isAble);
@@ -523,4 +353,116 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			CommonDialogUtil.showReconnectDialog(this);
 		}
 	}
+
+	@Override
+	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
+			int nConnId) {
+		modecheck(pResp);
+		temptertureCheck(pResp);
+		waterCheck(pResp);
+		onoffcheck(pResp);
+		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
+	}
+
+	/**
+	 * 模式处理
+	 * 
+	 * @param pResp
+	 */
+	public void modecheck(GasWaterHeaterStatusResp_t pResp) {
+
+		// 模式切换的api 跟 那个需求有出入
+		System.out.println("当前模式： " + pResp.getFunction_state());
+		/*
+		 * <!--功能状态：0x01（洗浴/普通模式）、0x02（注水模式）、0x03（厨房模式）、0x04（舒适模式）
+		 * 、0x05（DIY模式1）、
+		 * 0x06（DIY模式2）、0x07（DIY模式3）、0x08（节能模式）、0x09（@模式1）、0x0A（@模式2
+		 * ）、0x0B（@模式3）、
+		 * 0x0C（@模式4）、0x0D（@模式5）、0x0E（VIP模式1）、0x0F（VIP模式2）、0x10（0xfe
+		 * 预留）、0xff（故障模式）-->
+		 */
+		switch (pResp.getFunction_state()) {
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		case 3:
+			changetoKictienMode(pResp);
+			break;
+		case 4:
+			changetoSofeMode(pResp);
+			break;
+		case 5:
+
+			break;
+		case 6:
+
+			break;
+		case 7:
+
+			break;
+
+		case 8:
+			changetoEnergyMode(pResp);
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	/**
+	 * 开关处理
+	 * 
+	 * @param pResp
+	 */
+	public void onoffcheck(GasWaterHeaterStatusResp_t pResp) {
+		System.out.println("开关： " + pResp.getOn_off());// 1为开机0为关机
+		if (pResp.getOn_off() == 0) {
+			openView.setVisibility(View.VISIBLE);
+			rightButton.setVisibility(View.GONE);
+			ChangeStuteView.swichDeviceOff(stuteParent);
+		} else {
+			rightButton.setVisibility(View.VISIBLE);
+			openView.setVisibility(View.GONE);
+		}
+	}
+
+	/**
+	 * 水温处理
+	 * 
+	 * @param pResp
+	 */
+	public void temptertureCheck(final GasWaterHeaterStatusResp_t pResp) {
+		System.out.println("设置温度： " + pResp.getTargetTemperature());
+		System.out.println("进水温度： " + pResp.getIncomeTemperature());
+		System.out.println("出水温度： " + pResp.getOutputTemperature());
+
+		circularView.setTargerdegree(pResp.getOutputTemperature());
+		target_tem.setText(pResp.getTargetTemperature() + "℃");
+
+		tempter.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				circularView.setAngle(pResp.getOutputTemperature());
+				tempter.setText(pResp.getOutputTemperature() + "℃");
+			}
+		}, 2000);
+	}
+
+	/**
+	 * 水量处理
+	 * 
+	 * @param pResp
+	 */
+	public void waterCheck(GasWaterHeaterStatusResp_t pResp) {
+		System.out.println("注水流量： " + pResp.getTargetFilledVolume());
+		System.out.println("注水累加流量： " + pResp.getCumulativeFilledVolume());
+		System.out.println("当前水流量： " + pResp.getNowVolume());
+		System.out.println("当前设置水流量： " + pResp.getSetVolume());
+		leavewater.setText(pResp.getNowVolume() + "L");
+	}
+
 }
