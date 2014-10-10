@@ -57,6 +57,10 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".activity.main.gas.GasMainActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".activity.main.PatternActivity"
             android:screenOrientation="portrait" >
         </activity>

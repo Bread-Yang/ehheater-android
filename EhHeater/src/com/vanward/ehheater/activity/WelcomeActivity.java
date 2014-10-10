@@ -23,6 +23,7 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.application.EhHeaterApplication;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
@@ -210,10 +211,13 @@ public class WelcomeActivity extends GeneratedActivity {
 	@Override
 	public void OnLanLoginResp(LanLoginResp_t pResp, int nConnId) {
 		super.OnLanLoginResp(pResp, nConnId);
+		Log.d("emmm", "OnLanLoginResp@welcome: " + pResp.getResult());
 
 		if (pResp.getResult() == 0) {
 			mTvInfo.setText("设备已连接! 查询设备状态中..");
-			generated.SendStateReq(Global.connectId);
+//			generated.SendStateReq(Global.connectId);
+			startActivity(new Intent(this, GasMainActivity.class));
+			finish();
 		}
 	}
 
