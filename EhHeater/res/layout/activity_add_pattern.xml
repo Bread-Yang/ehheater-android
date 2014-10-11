@@ -118,8 +118,8 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:paddingTop="5dp"
-        android:background="#4471878B" />
+        android:background="#4471878B"
+        android:paddingTop="5dp" />
 
     <RelativeLayout
         android:id="@+id/RelativeLayout01"
@@ -170,7 +170,8 @@
                 android:minHeight="6dip"
                 android:progress="0"
                 android:progressDrawable="@drawable/seekbar_style"
-                android:thumb="@drawable/tiao3" />
+                android:thumb="@drawable/tiao3"
+                android:thumbOffset="0dip" />
         </LinearLayout>
     </RelativeLayout>
 
