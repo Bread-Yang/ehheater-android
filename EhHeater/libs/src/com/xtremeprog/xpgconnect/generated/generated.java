@@ -188,12 +188,12 @@ public class generated implements generatedConstants {
     return generatedJNI.DefaultBootstrapResp();
   }
 
-  public static int BuildBootstrapResp(XpgDataField did, XpgDataField mac, XpgDataField fwVer) {
-    return generatedJNI.BuildBootstrapResp(XpgDataField.getCPtr(did), did, XpgDataField.getCPtr(mac), mac, XpgDataField.getCPtr(fwVer), fwVer);
+  public static int BuildBootstrapResp(XpgDataField did, XpgDataField mac, XpgDataField fwVer, XpgDataField productKey) {
+    return generatedJNI.BuildBootstrapResp(XpgDataField.getCPtr(did), did, XpgDataField.getCPtr(mac), mac, XpgDataField.getCPtr(fwVer), fwVer, XpgDataField.getCPtr(productKey), productKey);
   }
 
-  public static int SendBootstrapResp(XpgDataField did, XpgDataField mac, XpgDataField fwVer) {
-    return generatedJNI.SendBootstrapResp(XpgDataField.getCPtr(did), did, XpgDataField.getCPtr(mac), mac, XpgDataField.getCPtr(fwVer), fwVer);
+  public static int SendBootstrapResp(XpgDataField did, XpgDataField mac, XpgDataField fwVer, XpgDataField productKey) {
+    return generatedJNI.SendBootstrapResp(XpgDataField.getCPtr(did), did, XpgDataField.getCPtr(mac), mac, XpgDataField.getCPtr(fwVer), fwVer, XpgDataField.getCPtr(productKey), productKey);
   }
 
   public static void DumpBootstrapResp(BootstrapResp_t pBootstrapResp) {
@@ -604,12 +604,12 @@ public class generated implements generatedConstants {
     return generatedJNI.DefaultStateResp();
   }
 
-  public static int BuildStateResp(short on_off, short system_running_state, short function_state, short order_state, short inner1_temp, short inner2_temp, short inner3_temp, short setting_temp, short setting_power, short remaining_heating_time, short remaining_hot_water, short error, int power_consumption) {
-    return generatedJNI.BuildStateResp(on_off, system_running_state, function_state, order_state, inner1_temp, inner2_temp, inner3_temp, setting_temp, setting_power, remaining_heating_time, remaining_hot_water, error, power_consumption);
+  public static int BuildStateResp(short on_off, short system_running_state, short function_state, short order_state, short inner1_temp, short inner2_temp, short inner3_temp, short setting_temp, short setting_power, short remaining_heating_time, short remaining_hot_water, short error, int power_consumption, int heating_tube_time, int machine_not_heating_time) {
+    return generatedJNI.BuildStateResp(on_off, system_running_state, function_state, order_state, inner1_temp, inner2_temp, inner3_temp, setting_temp, setting_power, remaining_heating_time, remaining_hot_water, error, power_consumption, heating_tube_time, machine_not_heating_time);
   }
 
-  public static int SendStateResp(int nConnId, short on_off, short system_running_state, short function_state, short order_state, short inner1_temp, short inner2_temp, short inner3_temp, short setting_temp, short setting_power, short remaining_heating_time, short remaining_hot_water, short error, int power_consumption) {
-    return generatedJNI.SendStateResp(nConnId, on_off, system_running_state, function_state, order_state, inner1_temp, inner2_temp, inner3_temp, setting_temp, setting_power, remaining_heating_time, remaining_hot_water, error, power_consumption);
+  public static int SendStateResp(int nConnId, short on_off, short system_running_state, short function_state, short order_state, short inner1_temp, short inner2_temp, short inner3_temp, short setting_temp, short setting_power, short remaining_heating_time, short remaining_hot_water, short error, int power_consumption, int heating_tube_time, int machine_not_heating_time) {
+    return generatedJNI.SendStateResp(nConnId, on_off, system_running_state, function_state, order_state, inner1_temp, inner2_temp, inner3_temp, setting_temp, setting_power, remaining_heating_time, remaining_hot_water, error, power_consumption, heating_tube_time, machine_not_heating_time);
   }
 
   public static void DumpStateResp(StateResp_t pStateResp) {
@@ -620,12 +620,12 @@ public class generated implements generatedConstants {
     return generatedJNI.DefaultGasWaterHeaterStatusResp();
   }
 
-  public static int BuildGasWaterHeaterStatusResp(short on_off, short priority, short function_state, short warmUp, short freezeProofingWarning, short callingDisp, short coOverproofWarning, short oxygenWarning, short cloudSmart, short waterFilling, short diyPreset1, short sprinkler, short flame, short airFan, short presetLevel, short firePower, short errorCode, short targetTemperature, short incomeTemperature, short outputTemperature, short presetTemperature, short targetFilledVolume, int cumulativeFilledVolume, short nowVolume, short setVolume, short preheatingTemperature, short preheatingHour, short preheatingMin, long cumulativeGas, long cumulativeVolume, short conversionSpeed, short hotWaterPower, short heatEfficiency, int cumulativeUseTime, int cumulativeOpenValveTimes, short reservationOne, short reservationTwo) {
-    return generatedJNI.BuildGasWaterHeaterStatusResp(on_off, priority, function_state, warmUp, freezeProofingWarning, callingDisp, coOverproofWarning, oxygenWarning, cloudSmart, waterFilling, diyPreset1, sprinkler, flame, airFan, presetLevel, firePower, errorCode, targetTemperature, incomeTemperature, outputTemperature, presetTemperature, targetFilledVolume, cumulativeFilledVolume, nowVolume, setVolume, preheatingTemperature, preheatingHour, preheatingMin, cumulativeGas, cumulativeVolume, conversionSpeed, hotWaterPower, heatEfficiency, cumulativeUseTime, cumulativeOpenValveTimes, reservationOne, reservationTwo);
+  public static int BuildGasWaterHeaterStatusResp(short on_off, short priority, short function_state, short water_function, short setWater_power, int setWater_cumulative, short CustomFunction, short CustomWaterTemperture, short CustomWaterProportion, short callingDisp, short sprinkler, short flame, short airFan, short firePower, short errorCode, short oxygenWarning, short coOverproofWarning, short targetTemperature, short incomeTemperature, short outputTemperature, short nowVolume, long cumulativeVolume, int cumulativeGas, long cumulativeUseTime, int cumulativeOpenValveTimes, short now_efficiency, short preheatingModel, short presetTemperature, short preheatingOneHour, short preheatingOneMin, short preheatingTwoHour, short preheatingTwoMin, short freezeProofingWarning, short mercurycontent, short return_water_temperature, short reservation_one, short reservation_two) {
+    return generatedJNI.BuildGasWaterHeaterStatusResp(on_off, priority, function_state, water_function, setWater_power, setWater_cumulative, CustomFunction, CustomWaterTemperture, CustomWaterProportion, callingDisp, sprinkler, flame, airFan, firePower, errorCode, oxygenWarning, coOverproofWarning, targetTemperature, incomeTemperature, outputTemperature, nowVolume, cumulativeVolume, cumulativeGas, cumulativeUseTime, cumulativeOpenValveTimes, now_efficiency, preheatingModel, presetTemperature, preheatingOneHour, preheatingOneMin, preheatingTwoHour, preheatingTwoMin, freezeProofingWarning, mercurycontent, return_water_temperature, reservation_one, reservation_two);
   }
 
-  public static int SendGasWaterHeaterStatusResp(int nConnId, short on_off, short priority, short function_state, short warmUp, short freezeProofingWarning, short callingDisp, short coOverproofWarning, short oxygenWarning, short cloudSmart, short waterFilling, short diyPreset1, short sprinkler, short flame, short airFan, short presetLevel, short firePower, short errorCode, short targetTemperature, short incomeTemperature, short outputTemperature, short presetTemperature, short targetFilledVolume, int cumulativeFilledVolume, short nowVolume, short setVolume, short preheatingTemperature, short preheatingHour, short preheatingMin, long cumulativeGas, long cumulativeVolume, short conversionSpeed, short hotWaterPower, short heatEfficiency, int cumulativeUseTime, int cumulativeOpenValveTimes, short reservationOne, short reservationTwo) {
-    return generatedJNI.SendGasWaterHeaterStatusResp(nConnId, on_off, priority, function_state, warmUp, freezeProofingWarning, callingDisp, coOverproofWarning, oxygenWarning, cloudSmart, waterFilling, diyPreset1, sprinkler, flame, airFan, presetLevel, firePower, errorCode, targetTemperature, incomeTemperature, outputTemperature, presetTemperature, targetFilledVolume, cumulativeFilledVolume, nowVolume, setVolume, preheatingTemperature, preheatingHour, preheatingMin, cumulativeGas, cumulativeVolume, conversionSpeed, hotWaterPower, heatEfficiency, cumulativeUseTime, cumulativeOpenValveTimes, reservationOne, reservationTwo);
+  public static int SendGasWaterHeaterStatusResp(int nConnId, short on_off, short priority, short function_state, short water_function, short setWater_power, int setWater_cumulative, short CustomFunction, short CustomWaterTemperture, short CustomWaterProportion, short callingDisp, short sprinkler, short flame, short airFan, short firePower, short errorCode, short oxygenWarning, short coOverproofWarning, short targetTemperature, short incomeTemperature, short outputTemperature, short nowVolume, long cumulativeVolume, int cumulativeGas, long cumulativeUseTime, int cumulativeOpenValveTimes, short now_efficiency, short preheatingModel, short presetTemperature, short preheatingOneHour, short preheatingOneMin, short preheatingTwoHour, short preheatingTwoMin, short freezeProofingWarning, short mercurycontent, short return_water_temperature, short reservation_one, short reservation_two) {
+    return generatedJNI.SendGasWaterHeaterStatusResp(nConnId, on_off, priority, function_state, water_function, setWater_power, setWater_cumulative, CustomFunction, CustomWaterTemperture, CustomWaterProportion, callingDisp, sprinkler, flame, airFan, firePower, errorCode, oxygenWarning, coOverproofWarning, targetTemperature, incomeTemperature, outputTemperature, nowVolume, cumulativeVolume, cumulativeGas, cumulativeUseTime, cumulativeOpenValveTimes, now_efficiency, preheatingModel, presetTemperature, preheatingOneHour, preheatingOneMin, preheatingTwoHour, preheatingTwoMin, freezeProofingWarning, mercurycontent, return_water_temperature, reservation_one, reservation_two);
   }
 
   public static void DumpGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pGasWaterHeaterStatusResp) {
@@ -824,22 +824,6 @@ public class generated implements generatedConstants {
     generatedJNI.DumpGasWaterHeaterCallCommandReq(GasWaterHeaterCallCommandReq_t.getCPtr(pGasWaterHeaterCallCommandReq), pGasWaterHeaterCallCommandReq);
   }
 
-  public static int DefaultGasWaterHeaterCloudIntelligenceCommandReq() {
-    return generatedJNI.DefaultGasWaterHeaterCloudIntelligenceCommandReq();
-  }
-
-  public static int BuildGasWaterHeaterCloudIntelligenceCommandReq(short cloudIntelligenceCommand) {
-    return generatedJNI.BuildGasWaterHeaterCloudIntelligenceCommandReq(cloudIntelligenceCommand);
-  }
-
-  public static int SendGasWaterHeaterCloudIntelligenceCommandReq(int nConnId, short cloudIntelligenceCommand) {
-    return generatedJNI.SendGasWaterHeaterCloudIntelligenceCommandReq(nConnId, cloudIntelligenceCommand);
-  }
-
-  public static void DumpGasWaterHeaterCloudIntelligenceCommandReq(GasWaterHeaterCloudIntelligenceCommandReq_t pGasWaterHeaterCloudIntelligenceCommandReq) {
-    generatedJNI.DumpGasWaterHeaterCloudIntelligenceCommandReq(GasWaterHeaterCloudIntelligenceCommandReq_t.getCPtr(pGasWaterHeaterCloudIntelligenceCommandReq), pGasWaterHeaterCloudIntelligenceCommandReq);
-  }
-
   public static int DefaultGasWaterHeaterModelCommandReq() {
     return generatedJNI.DefaultGasWaterHeaterModelCommandReq();
   }
@@ -856,32 +840,16 @@ public class generated implements generatedConstants {
     generatedJNI.DumpGasWaterHeaterModelCommandReq(GasWaterHeaterModelCommandReq_t.getCPtr(pGasWaterHeaterModelCommandReq), pGasWaterHeaterModelCommandReq);
   }
 
-  public static int DefaultGasWaterHeaterDesignTemperatureReq() {
-    return generatedJNI.DefaultGasWaterHeaterDesignTemperatureReq();
-  }
-
-  public static int BuildGasWaterHeaterDesignTemperatureReq(short designTemperature, short designWaterTemperature, short reservedOne, short reservedTwo) {
-    return generatedJNI.BuildGasWaterHeaterDesignTemperatureReq(designTemperature, designWaterTemperature, reservedOne, reservedTwo);
-  }
-
-  public static int SendGasWaterHeaterDesignTemperatureReq(int nConnId, short designTemperature, short designWaterTemperature, short reservedOne, short reservedTwo) {
-    return generatedJNI.SendGasWaterHeaterDesignTemperatureReq(nConnId, designTemperature, designWaterTemperature, reservedOne, reservedTwo);
-  }
-
-  public static void DumpGasWaterHeaterDesignTemperatureReq(GasWaterHeaterDesignTemperatureReq_t pGasWaterHeaterDesignTemperatureReq) {
-    generatedJNI.DumpGasWaterHeaterDesignTemperatureReq(GasWaterHeaterDesignTemperatureReq_t.getCPtr(pGasWaterHeaterDesignTemperatureReq), pGasWaterHeaterDesignTemperatureReq);
-  }
-
   public static int DefaultGasWaterHeaterPreheatTemperatureReq() {
     return generatedJNI.DefaultGasWaterHeaterPreheatTemperatureReq();
   }
 
-  public static int BuildGasWaterHeaterPreheatTemperatureReq(short preheat, short preheatTemperature, short preheat_hour, short preheat_min) {
-    return generatedJNI.BuildGasWaterHeaterPreheatTemperatureReq(preheat, preheatTemperature, preheat_hour, preheat_min);
+  public static int BuildGasWaterHeaterPreheatTemperatureReq(short preheat, short preheatTemperature, short preheat_oneHour, short preheat_oneMin, short preheat_twoHour, short preheat_twoMin) {
+    return generatedJNI.BuildGasWaterHeaterPreheatTemperatureReq(preheat, preheatTemperature, preheat_oneHour, preheat_oneMin, preheat_twoHour, preheat_twoMin);
   }
 
-  public static int SendGasWaterHeaterPreheatTemperatureReq(int nConnId, short preheat, short preheatTemperature, short preheat_hour, short preheat_min) {
-    return generatedJNI.SendGasWaterHeaterPreheatTemperatureReq(nConnId, preheat, preheatTemperature, preheat_hour, preheat_min);
+  public static int SendGasWaterHeaterPreheatTemperatureReq(int nConnId, short preheat, short preheatTemperature, short preheat_oneHour, short preheat_oneMin, short preheat_twoHour, short preheat_twoMin) {
+    return generatedJNI.SendGasWaterHeaterPreheatTemperatureReq(nConnId, preheat, preheatTemperature, preheat_oneHour, preheat_oneMin, preheat_twoHour, preheat_twoMin);
   }
 
   public static void DumpGasWaterHeaterPreheatTemperatureReq(GasWaterHeaterPreheatTemperatureReq_t pGasWaterHeaterPreheatTemperatureReq) {
@@ -892,12 +860,12 @@ public class generated implements generatedConstants {
     return generatedJNI.DefaultGasWaterHeaterDIYSettingReq();
   }
 
-  public static int BuildGasWaterHeaterDIYSettingReq(short presetsCommend, short setWaterTemperature, short setVolume, short reserved) {
-    return generatedJNI.BuildGasWaterHeaterDIYSettingReq(presetsCommend, setWaterTemperature, setVolume, reserved);
+  public static int BuildGasWaterHeaterDIYSettingReq(short DIYCommend, short DIYWaterTemperature, short DIYVolume) {
+    return generatedJNI.BuildGasWaterHeaterDIYSettingReq(DIYCommend, DIYWaterTemperature, DIYVolume);
   }
 
-  public static int SendGasWaterHeaterDIYSettingReq(int nConnId, short presetsCommend, short setWaterTemperature, short setVolume, short reserved) {
-    return generatedJNI.SendGasWaterHeaterDIYSettingReq(nConnId, presetsCommend, setWaterTemperature, setVolume, reserved);
+  public static int SendGasWaterHeaterDIYSettingReq(int nConnId, short DIYCommend, short DIYWaterTemperature, short DIYVolume) {
+    return generatedJNI.SendGasWaterHeaterDIYSettingReq(nConnId, DIYCommend, DIYWaterTemperature, DIYVolume);
   }
 
   public static void DumpGasWaterHeaterDIYSettingReq(GasWaterHeaterDIYSettingReq_t pGasWaterHeaterDIYSettingReq) {

@@ -917,24 +917,6 @@ public class XpgGeneratedContext {
     return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_GasWaterHeaterCallCommandReq_t_int__void(cPtr, false);
   }
 
-  public void setOnGasWaterHeaterCloudIntelligenceCommandReq(SWIGTYPE_p_f_size_t_p_GasWaterHeaterCloudIntelligenceCommandReq_t_int__void value) {
-    generatedJNI.XpgGeneratedContext_onGasWaterHeaterCloudIntelligenceCommandReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_GasWaterHeaterCloudIntelligenceCommandReq_t_int__void.getCPtr(value));
-  }
-
-  public SWIGTYPE_p_f_size_t_p_GasWaterHeaterCloudIntelligenceCommandReq_t_int__void getOnGasWaterHeaterCloudIntelligenceCommandReq() {
-    long cPtr = generatedJNI.XpgGeneratedContext_onGasWaterHeaterCloudIntelligenceCommandReq_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_GasWaterHeaterCloudIntelligenceCommandReq_t_int__void(cPtr, false);
-  }
-
-  public void setOnInternalGasWaterHeaterCloudIntelligenceCommandReq(SWIGTYPE_p_f_size_t_p_GasWaterHeaterCloudIntelligenceCommandReq_t_int__void value) {
-    generatedJNI.XpgGeneratedContext_onInternalGasWaterHeaterCloudIntelligenceCommandReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_GasWaterHeaterCloudIntelligenceCommandReq_t_int__void.getCPtr(value));
-  }
-
-  public SWIGTYPE_p_f_size_t_p_GasWaterHeaterCloudIntelligenceCommandReq_t_int__void getOnInternalGasWaterHeaterCloudIntelligenceCommandReq() {
-    long cPtr = generatedJNI.XpgGeneratedContext_onInternalGasWaterHeaterCloudIntelligenceCommandReq_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_GasWaterHeaterCloudIntelligenceCommandReq_t_int__void(cPtr, false);
-  }
-
   public void setOnGasWaterHeaterModelCommandReq(SWIGTYPE_p_f_size_t_p_GasWaterHeaterModelCommandReq_t_int__void value) {
     generatedJNI.XpgGeneratedContext_onGasWaterHeaterModelCommandReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_GasWaterHeaterModelCommandReq_t_int__void.getCPtr(value));
   }
@@ -951,24 +933,6 @@ public class XpgGeneratedContext {
   public SWIGTYPE_p_f_size_t_p_GasWaterHeaterModelCommandReq_t_int__void getOnInternalGasWaterHeaterModelCommandReq() {
     long cPtr = generatedJNI.XpgGeneratedContext_onInternalGasWaterHeaterModelCommandReq_get(swigCPtr, this);
     return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_GasWaterHeaterModelCommandReq_t_int__void(cPtr, false);
-  }
-
-  public void setOnGasWaterHeaterDesignTemperatureReq(SWIGTYPE_p_f_size_t_p_GasWaterHeaterDesignTemperatureReq_t_int__void value) {
-    generatedJNI.XpgGeneratedContext_onGasWaterHeaterDesignTemperatureReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_GasWaterHeaterDesignTemperatureReq_t_int__void.getCPtr(value));
-  }
-
-  public SWIGTYPE_p_f_size_t_p_GasWaterHeaterDesignTemperatureReq_t_int__void getOnGasWaterHeaterDesignTemperatureReq() {
-    long cPtr = generatedJNI.XpgGeneratedContext_onGasWaterHeaterDesignTemperatureReq_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_GasWaterHeaterDesignTemperatureReq_t_int__void(cPtr, false);
-  }
-
-  public void setOnInternalGasWaterHeaterDesignTemperatureReq(SWIGTYPE_p_f_size_t_p_GasWaterHeaterDesignTemperatureReq_t_int__void value) {
-    generatedJNI.XpgGeneratedContext_onInternalGasWaterHeaterDesignTemperatureReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_GasWaterHeaterDesignTemperatureReq_t_int__void.getCPtr(value));
-  }
-
-  public SWIGTYPE_p_f_size_t_p_GasWaterHeaterDesignTemperatureReq_t_int__void getOnInternalGasWaterHeaterDesignTemperatureReq() {
-    long cPtr = generatedJNI.XpgGeneratedContext_onInternalGasWaterHeaterDesignTemperatureReq_get(swigCPtr, this);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_GasWaterHeaterDesignTemperatureReq_t_int__void(cPtr, false);
   }
 
   public void setOnGasWaterHeaterPreheatTemperatureReq(SWIGTYPE_p_f_size_t_p_GasWaterHeaterPreheatTemperatureReq_t_int__void value) {

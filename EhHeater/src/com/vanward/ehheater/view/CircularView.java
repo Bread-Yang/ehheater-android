@@ -1,5 +1,6 @@
 package com.vanward.ehheater.view;
 
+import android.R.integer;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -56,17 +57,43 @@ public class CircularView extends View {
 			angle = 35;
 		}
 		angle = angle - 25;
-		return (int) (angle * 360 / 60);
+		return (int) (angle * 360 / angledegree);
+	}
+
+	public int perangle = 6;
+	public int angledegree = 60;
+	public int beginangle = 35;
+	public int endangle = 75;
+
+	public int getEndangle() {
+		return endangle;
+	}
+
+	public void setEndangle(int endangle) {
+		this.endangle = endangle;
+	}
+
+	public CircularView(Context context, int perangle, int angledegree,
+			int beginangle, int endangle) {
+		super(context);
+		this.perangle = perangle;
+		this.angledegree = angledegree;
+		this.beginangle = beginangle;
+		this.endangle = endangle;
+	}
+
+	private CircularView(Context context) {
+		super(context);
 	}
 
 	public float degreeToAngle(int degree) {
-		float f = (degree * 60 / 360);
-		int temp = (degree * 60 / 360);
+		float f = (degree * angledegree / 360);
+		int temp = (degree * angledegree / 360);
 		if (f - temp > 0) {
 			temp = temp + 1;
 		}
-		System.out.println("degreeToAngle : " + (degree * 60 / 360) + "temp： "
-				+ temp);
+		System.out.println("degreeToAngle : " + (degree * angledegree / 360)
+				+ "temp： " + temp);
 		temp = temp + 25;
 		return temp;
 	}
@@ -160,12 +187,12 @@ public class CircularView extends View {
 	};
 
 	public boolean isCanUpadateAndSetMinMax(int degree) {
-		if (degreeToAngle(degree) <= 35) {
+		if (degreeToAngle(degree) <= beginangle) {
 			System.out.println("执行");
-			setAngle(35);
+			setAngle(beginangle);
 			return false;
-		} else if (degreeToAngle(degree) >= 75) {
-			setAngle(75);
+		} else if (degreeToAngle(degree) >= endangle) {
+			setAngle(endangle);
 			return false;
 		} else {
 			return true;
@@ -246,7 +273,8 @@ public class CircularView extends View {
 							// olddegree = degree;
 							// }
 							olddegree = degree;
-							if (degree >= 60 && degree <= 300) {
+							if (degree >= angleToDegree(beginangle)
+									&& degree <= angleToDegree(endangle)) {
 								handler.sendEmptyMessage(0);
 							}
 
@@ -265,16 +293,17 @@ public class CircularView extends View {
 				int tempdegree = (int) finalangel(x, y, angel(x, y));
 				if (isclick) {
 					if (tempdegree > 180 && degree < 300) {
-						degree = angleToDegree(targerdegree) + 6;
+						degree = angleToDegree(targerdegree) + perangle;
 						// degree = degree + 6;
 					} else if (tempdegree < 180 && degree > 60) {
-						degree = angleToDegree(targerdegree) - 6;
+						degree = angleToDegree(targerdegree) - perangle;
 						// degree = degree - 6;
 					} else {
 						// degree = tempdegree;
 					}
 				}
-				if (degree >= 60 && degree <= 300) {
+				if (degree >= angleToDegree(beginangle)
+						&& degree <= angleToDegree(endangle)) {
 					if (isclick) {
 						handler.sendEmptyMessage(0);
 					}

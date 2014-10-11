@@ -98,7 +98,7 @@ public class AddPatternSettingDialogUtil implements OnSeekBarChangeListener,
 		this.name = name;
 		radioGroup = (RadioGroup) setting.findViewById(R.id.radioGroup1);
 		peopleRadioGroup = (RadioGroup) setting
-				.findViewById(R.id.power_radiogroup);
+				.findViewById(R.id.water_radiogroup);
 		peopleRadioGroup.setOnCheckedChangeListener(this);
 
 		return this;
@@ -132,7 +132,7 @@ public class AddPatternSettingDialogUtil implements OnSeekBarChangeListener,
 		((RadioButton) radioGroup.getChildAt(0)).setChecked(true);
 		seekBar = (SeekBar) setting.findViewById(R.id.seekBar1);
 		peopleradioGroup = (RadioGroup) setting
-				.findViewById(R.id.power_radiogroup);
+				.findViewById(R.id.water_radiogroup);
 
 		value = (TextView) setting.findViewById(R.id.textView2);
 		CustomSetVo customSetVo = new BaseDao(context).getDb().findById(name,

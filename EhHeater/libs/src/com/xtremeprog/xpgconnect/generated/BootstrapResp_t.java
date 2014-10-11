@@ -62,6 +62,15 @@ public class BootstrapResp_t {
     return (cPtr == 0) ? null : new XpgDataField(cPtr, false);
   }
 
+  public void setProductKey(XpgDataField value) {
+    generatedJNI.BootstrapResp_t_productKey_set(swigCPtr, this, XpgDataField.getCPtr(value), value);
+  }
+
+  public XpgDataField getProductKey() {
+    long cPtr = generatedJNI.BootstrapResp_t_productKey_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new XpgDataField(cPtr, false);
+  }
+
   public void setSzIp(String value) {
     generatedJNI.BootstrapResp_t_szIp_set(swigCPtr, this, value);
   }

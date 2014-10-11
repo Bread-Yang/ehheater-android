@@ -179,6 +179,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			public void run() {
 				circularView = new CircularView(MainActivity.this, llt_circle,
 						CircularView.CIRCULAR_SINGLE, 0);
+				circularView.setEndangle(75);
 				circularView.setAngle(35);
 				circularView.setOn(false);
 

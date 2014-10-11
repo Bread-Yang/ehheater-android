@@ -163,6 +163,14 @@ public class XpgEndpoint {
     return generatedJNI.XpgEndpoint_nConnectRetry_get(swigCPtr, this);
   }
 
+  public void setIsSdkInternal(short value) {
+    generatedJNI.XpgEndpoint_isSdkInternal_set(swigCPtr, this, value);
+  }
+
+  public short getIsSdkInternal() {
+    return generatedJNI.XpgEndpoint_isSdkInternal_get(swigCPtr, this);
+  }
+
   public XpgEndpoint() {
     this(generatedJNI.new_XpgEndpoint(), true);
   }

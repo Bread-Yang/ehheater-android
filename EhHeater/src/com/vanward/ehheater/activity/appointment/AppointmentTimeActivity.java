@@ -43,7 +43,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	Button ivTitleBtnLeft;
 	@ViewInject(id = R.id.ivTitleBtnRigh, click = "onClick")
 	Button ivTitleBtnRigh;
-	@ViewInject(id = R.id.power_radiogroup, click = "onClick")
+	@ViewInject(id = R.id.water_radiogroup, click = "onClick")
 	RadioGroup radioGroup;
 	@ViewInject(id = R.id.seekBar1, click = "onClick")
 	SeekBar seekBar1;

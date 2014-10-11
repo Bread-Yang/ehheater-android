@@ -39,7 +39,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	Button btn_new_device, btn_login;
 	EditText et_user, et_pwd;
 	TextView mTvReg;
-	
+
 	@Override
 	public void onBackPressed() {
 		android.os.Process.killProcess(android.os.Process.myPid());
@@ -50,22 +50,23 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		super.initUI();
 		setTopDismiss();
 		setCenterView(R.layout.login_layout);
-		
+
 		btn_new_device = (Button) findViewById(R.id.new_device_btn);
 		btn_login = (Button) findViewById(R.id.login_btn);
 		et_user = (EditText) findViewById(R.id.login_user_et);
 		et_pwd = (EditText) findViewById(R.id.login_pwd_et);
 		mTvReg = (TextView) findViewById(R.id.ll_tv_register);
-		
 
-		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_KILL_LOGIN_ACTIVITY);
+		IntentFilter filter = new IntentFilter(
+				Consts.INTENT_FILTER_KILL_LOGIN_ACTIVITY);
 		BroadcastReceiver receiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				finish();
 			}
 		};
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				receiver, filter);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
-		
+
 		switch (v.getId()) {
 		case R.id.new_device_btn:
 			break;
@@ -95,7 +96,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 							@Override
 							public void run() {
 								DialogUtil.dismissDialog();
-								Toast.makeText(getBaseContext(), "登录超时", 3000).show();
+								Toast.makeText(getBaseContext(), "登录超时", 3000)
+										.show();
 							}
 						});
 					}
@@ -108,57 +110,56 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			break;
 		}
 	}
-	Timer mLoginTimeoutTimer;	// 点击登录时触发此timer, 在登录回调中取消此timer
-	
+
+	Timer mLoginTimeoutTimer; // 点击登录时触发此timer, 在登录回调中取消此timer
+
 	@Override
 	protected void onPause() {
 		super.onPause();
 		Log.d("emmm", "login paused");
 		XPGConnectClient.RemoveActivity(this);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		Log.d("emmm", "login resumed");
 		XPGConnectClient.AddActivity(this);
 	}
-	
+
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		Global.connectId = connId;
-		
+
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) { // 建立连接成功
-			
+
 			XPGConnectClient.xpgcLogin(Global.connectId, et_user.getText()
 					.toString(), et_pwd.getText().toString());
-			
-			
-			
+
 		} else if (event == XPG_RESULT.ERROR_CONNECTION_CLOSED.swigValue()) { // 连接断开
-			
+
 		} else if (event == XPG_RESULT.ERROR_CONNECTION_ERROR.swigValue()) { // 连接错误
-			
+
 		} else {
 			// Unknown connection event?
 		}
-		
+
 	}
 
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		
+
 		loginCloudResponseTriggered = true;
 		if (mLoginTimeoutTimer != null) {
 			mLoginTimeoutTimer.cancel();
 		}
-		
+
 		if (result == 0 || result == 1) {
 			// 0和1都是登录成功
-			AccountService.setPendingUser(getBaseContext(), et_user.getText().toString(), 
-					et_pwd.getText().toString());
+			AccountService.setPendingUser(getBaseContext(), et_user.getText()
+					.toString(), et_pwd.getText().toString());
 			generated.SendBindingGetReq(Global.connectId);
 			onDeviceFoundTriggered = false;
 			new Timer().schedule(new TimerTask() {
@@ -166,7 +167,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				public void run() {
 					if (!onDeviceFoundTriggered) {
 						DialogUtil.dismissDialog();
-						startActivity(new Intent(getBaseContext(), ShitActivity.class));
+						startActivity(new Intent(getBaseContext(),
+								ShitActivity.class));
 					}
 				}
 			}, 6000);
@@ -176,19 +178,21 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			Toast.makeText(getBaseContext(), "用户名或密码错误", 3000).show();
 		}
 	}
+
 	boolean loginCloudResponseTriggered;
-	
+
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
-		
+
 		onDeviceFoundTriggered = true;
 		HeaterInfo hi = new HeaterInfo(endpoint);
-		
+
 		if (count++ == 0) {
-			AccountService.setUser(getBaseContext(), et_user.getText().toString(), 
-					et_pwd.getText().toString());
-			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac, hi.getMac());
+			AccountService.setUser(getBaseContext(), et_user.getText()
+					.toString(), et_pwd.getText().toString());
+			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac,
+					hi.getMac());
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
@@ -205,50 +209,54 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		Log.d("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);
 		new HeaterInfoService(getBaseContext()).saveDownloadedHeater(hi);
 	};
+
 	int count;
 	boolean onDeviceFoundTriggered;
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		/**only for test*/
+		/** only for test */
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 
-//			HeaterInfo hinfo = new HeaterInfo();
-//			hinfo.setMac("C8934641B3B4");
-//			hinfo.setDid("1");
-//			hinfo.setPasscode("FKAIDJKART");
-//			return hinfo;
-//			
-//			HeaterInfo hinfo = new HeaterInfo();
-//			hinfo.setMac("C8934642E4C7");
-//			hinfo.setDid("o4kvBWCq5QwcWuZZbm4w4Z");
-//			hinfo.setPasscode("JPDRRIXEKX");
-//			hinfo.setBinded(1);
-//			return hinfo;
-			
-			
+			// HeaterInfo hinfo = new HeaterInfo();
+			// hinfo.setMac("C8934641B3B4");
+			// hinfo.setDid("1");
+			// hinfo.setPasscode("FKAIDJKART");
+			// return hinfo;
+			//
+			// HeaterInfo hinfo = new HeaterInfo();
+			// hinfo.setMac("C8934642E4C7");
+			// hinfo.setDid("o4kvBWCq5QwcWuZZbm4w4Z");
+			// hinfo.setPasscode("JPDRRIXEKX");
+			// hinfo.setBinded(1);
+			// return hinfo;
+
 			HeaterInfo hinfo1 = new HeaterInfo();
 			hinfo1.setMac("C8934642E4C7");
 			hinfo1.setPasscode("JPDRRIXEKX");
-			
+
 			HeaterInfo hinfo2 = new HeaterInfo();
 			hinfo2.setMac("C8934642F763");
 			hinfo2.setPasscode("UMBXIWTCEM");
-			
+
 			HeaterInfo hinfo3 = new HeaterInfo();
 			hinfo3.setMac("C893464073FA");
 			hinfo3.setPasscode("GIKQLYIVFQ");
-			
+
+			HeaterInfo hinfo4 = new HeaterInfo();
+			hinfo4.setMac("C8934641968D");
+			hinfo4.setPasscode("JYUSQKCLJE");
+
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-//			hser.addNewHeater(hinfo1);
-//			hser.addNewHeater(hinfo2);
-			hser.addNewHeater(hinfo3);
-			
+			// hser.addNewHeater(hinfo1);
+			// hser.addNewHeater(hinfo2);
+			// hser.addNewHeater(hinfo3);
+			hser.addNewHeater(hinfo4);
 			Context context = getBaseContext();
 			AccountService.setUser(context, "111111", "111111");
-			
+
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 }

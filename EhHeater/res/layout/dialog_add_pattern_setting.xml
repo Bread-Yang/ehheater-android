@@ -40,7 +40,7 @@
             android:textSize="20dp" />
 
         <RadioGroup
-            android:id="@+id/power_radiogroup"
+            android:id="@+id/water_radiogroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"

@@ -61,6 +61,14 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".activity.main.gas.AddPattenActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.main.AddPattenActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".activity.main.gas.PatternActivity"
             android:screenOrientation="portrait" >
         </activity>

@@ -104,6 +104,7 @@ public class GeneratedJniJava {
         resp.setDid(obj.getDid());
         resp.setMac(obj.getMac());
         resp.setFwVer(obj.getFwVer());
+        resp.setProductKey(obj.getProductKey());
         for (Handler handler : lstHandlers)
         {
             Message msg = handler.obtainMessage(5, 0, 0, resp);
@@ -350,6 +351,8 @@ public class GeneratedJniJava {
         resp.setRemaining_hot_water(obj.getRemaining_hot_water());
         resp.setError(obj.getError());
         resp.setPower_consumption(obj.getPower_consumption());
+        resp.setHeating_tube_time(obj.getHeating_tube_time());
+        resp.setMachine_not_heating_time(obj.getMachine_not_heating_time());
         resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
@@ -372,40 +375,40 @@ public class GeneratedJniJava {
         resp.setOn_off(obj.getOn_off());
         resp.setPriority(obj.getPriority());
         resp.setFunction_state(obj.getFunction_state());
-        resp.setWarmUp(obj.getWarmUp());
-        resp.setFreezeProofingWarning(obj.getFreezeProofingWarning());
+        resp.setWater_function(obj.getWater_function());
+        resp.setSetWater_power(obj.getSetWater_power());
+        resp.setSetWater_cumulative(obj.getSetWater_cumulative());
+        resp.setCustomFunction(obj.getCustomFunction());
+        resp.setCustomWaterTemperture(obj.getCustomWaterTemperture());
+        resp.setCustomWaterProportion(obj.getCustomWaterProportion());
         resp.setCallingDisp(obj.getCallingDisp());
-        resp.setCoOverproofWarning(obj.getCoOverproofWarning());
-        resp.setOxygenWarning(obj.getOxygenWarning());
-        resp.setCloudSmart(obj.getCloudSmart());
-        resp.setWaterFilling(obj.getWaterFilling());
-        resp.setDiyPreset1(obj.getDiyPreset1());
         resp.setSprinkler(obj.getSprinkler());
         resp.setFlame(obj.getFlame());
         resp.setAirFan(obj.getAirFan());
-        resp.setPresetLevel(obj.getPresetLevel());
         resp.setFirePower(obj.getFirePower());
         resp.setErrorCode(obj.getErrorCode());
+        resp.setOxygenWarning(obj.getOxygenWarning());
+        resp.setCoOverproofWarning(obj.getCoOverproofWarning());
         resp.setTargetTemperature(obj.getTargetTemperature());
         resp.setIncomeTemperature(obj.getIncomeTemperature());
         resp.setOutputTemperature(obj.getOutputTemperature());
-        resp.setPresetTemperature(obj.getPresetTemperature());
-        resp.setTargetFilledVolume(obj.getTargetFilledVolume());
-        resp.setCumulativeFilledVolume(obj.getCumulativeFilledVolume());
         resp.setNowVolume(obj.getNowVolume());
-        resp.setSetVolume(obj.getSetVolume());
-        resp.setPreheatingTemperature(obj.getPreheatingTemperature());
-        resp.setPreheatingHour(obj.getPreheatingHour());
-        resp.setPreheatingMin(obj.getPreheatingMin());
-        resp.setCumulativeGas(obj.getCumulativeGas());
         resp.setCumulativeVolume(obj.getCumulativeVolume());
-        resp.setConversionSpeed(obj.getConversionSpeed());
-        resp.setHotWaterPower(obj.getHotWaterPower());
-        resp.setHeatEfficiency(obj.getHeatEfficiency());
+        resp.setCumulativeGas(obj.getCumulativeGas());
         resp.setCumulativeUseTime(obj.getCumulativeUseTime());
         resp.setCumulativeOpenValveTimes(obj.getCumulativeOpenValveTimes());
-        resp.setReservationOne(obj.getReservationOne());
-        resp.setReservationTwo(obj.getReservationTwo());
+        resp.setNow_efficiency(obj.getNow_efficiency());
+        resp.setPreheatingModel(obj.getPreheatingModel());
+        resp.setPresetTemperature(obj.getPresetTemperature());
+        resp.setPreheatingOneHour(obj.getPreheatingOneHour());
+        resp.setPreheatingOneMin(obj.getPreheatingOneMin());
+        resp.setPreheatingTwoHour(obj.getPreheatingTwoHour());
+        resp.setPreheatingTwoMin(obj.getPreheatingTwoMin());
+        resp.setFreezeProofingWarning(obj.getFreezeProofingWarning());
+        resp.setMercurycontent(obj.getMercurycontent());
+        resp.setReturn_water_temperature(obj.getReturn_water_temperature());
+        resp.setReservation_one(obj.getReservation_one());
+        resp.setReservation_two(obj.getReservation_two());
         resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {

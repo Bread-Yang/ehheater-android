@@ -12,133 +12,32 @@
         layout="@layout/main_title"
         android:focusable="true" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <com.vanward.ehheater.view.wheelview.WheelView
-            android:id="@+id/wheelView1"
-            android:layout_width="wrap_content"
-            android:layout_height="210dp"
-            android:layout_marginLeft="25dp"
-            android:layout_weight="1"
-            app:centerLabelPosition="30"
-            app:hasLeftBorder="false"
-            app:hasRightBorder="false"
-            app:textHighlightColor="@color/appointment_text_color"
-            app:textNormalColor="@color/red"
-            app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
-            app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="3dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="4dp"
-            android:text="时"
-            android:textSize="25sp" />
-
-        <com.vanward.ehheater.view.wheelview.WheelView
-            android:id="@+id/wheelView2"
-            android:layout_width="wrap_content"
-            android:layout_height="210dp"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="1"
-            app:centerLabelPosition="30"
-            app:hasLeftBorder="false"
-            app:hasRightBorder="false"
-            app:textHighlightColor="@color/appointment_text_color"
-            app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
-            app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="3dp"
-            android:paddingBottom="5dp"
-            android:paddingRight="15dp"
-            android:paddingTop="4dp"
-            android:text="分"
-            android:textSize="25sp" />
-    </LinearLayout>
-
     <RelativeLayout
-        android:id="@+id/rlt_number"
+        android:id="@+id/RelativeLayout03"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
         android:clickable="true" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/TextView03"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            android:text="@string/number"
+            android:text="姓名"
             android:textColor="@color/appointment_text_color"
             android:textSize="20sp" />
 
-        <RadioGroup
-            android:id="@+id/radioGroup1"
+        <EditText
+            android:id="@+id/nameedittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/textView1"
-            android:layout_below="@+id/textView1"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal" >
-
-            <RadioButton
-                android:id="@+id/radio0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@drawable/radio_selector"
-                android:checked="true"
-                android:text="  1人"
-                android:textColor="@color/appointment_text_color"
-                android:textSize="18sp" />
-
-            <RadioButton
-                android:id="@+id/radio1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@drawable/radio_selector"
-                android:text="  2人"
-                android:textColor="@color/appointment_text_color"
-                android:textSize="18sp" />
-
-            <RadioButton
-                android:id="@+id/radio2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@drawable/radio_selector"
-                android:text="  3人"
-                android:textColor="@color/appointment_text_color"
-                android:textSize="18sp" />
-
-            <RadioButton
-                android:id="@+id/radio00"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@drawable/radio_selector"
-                android:enabled="false"
-                android:text="  无"
-                android:textColor="@color/appointment_text_color"
-                android:textSize="18sp" />
-        </RadioGroup>
+            android:layout_alignLeft="@+id/TextView03"
+            android:layout_below="@+id/TextView03"
+            android:layout_marginTop="10dp" >
+        </EditText>
     </RelativeLayout>
 
     <View
@@ -189,12 +88,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/TextView01"
-                android:max="50"
+                android:gravity="center"
+                android:max="30"
                 android:maxHeight="6dip"
                 android:minHeight="6dip"
-                android:progress="20"
+                android:progress="15"
                 android:progressDrawable="@drawable/seekbar_style"
                 android:thumb="@drawable/tiao3" />
         </LinearLayout>
@@ -203,7 +102,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
         android:background="#4471878B" />
 
     <RelativeLayout
@@ -220,7 +118,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            android:text="功率"
+            android:text="注水量"
             android:textColor="@color/appointment_text_color"
             android:textSize="20sp" />
 
@@ -240,7 +138,8 @@
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
                 android:checked="true"
-                android:text="  1kw"
+                android:tag="50"
+                android:text=" 大"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
 
@@ -250,7 +149,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:text="  2kw"
+                android:tag="30"
+                android:text="  中"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
 
@@ -260,10 +160,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:text="  3kw"
+                android:tag="20"
+                android:text="  小"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
         </RadioGroup>
     </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B" />
 
 </LinearLayout>

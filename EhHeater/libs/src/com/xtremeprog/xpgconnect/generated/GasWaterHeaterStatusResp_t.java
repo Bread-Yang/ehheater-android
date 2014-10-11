@@ -91,20 +91,52 @@ public class GasWaterHeaterStatusResp_t {
     return generatedJNI.GasWaterHeaterStatusResp_t_function_state_get(swigCPtr, this);
   }
 
-  public void setWarmUp(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_warmUp_set(swigCPtr, this, value);
+  public void setWater_function(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_water_function_set(swigCPtr, this, value);
   }
 
-  public short getWarmUp() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_warmUp_get(swigCPtr, this);
+  public short getWater_function() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_water_function_get(swigCPtr, this);
   }
 
-  public void setFreezeProofingWarning(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_freezeProofingWarning_set(swigCPtr, this, value);
+  public void setSetWater_power(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_setWater_power_set(swigCPtr, this, value);
   }
 
-  public short getFreezeProofingWarning() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_freezeProofingWarning_get(swigCPtr, this);
+  public short getSetWater_power() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_setWater_power_get(swigCPtr, this);
+  }
+
+  public void setSetWater_cumulative(int value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_setWater_cumulative_set(swigCPtr, this, value);
+  }
+
+  public int getSetWater_cumulative() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_setWater_cumulative_get(swigCPtr, this);
+  }
+
+  public void setCustomFunction(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_CustomFunction_set(swigCPtr, this, value);
+  }
+
+  public short getCustomFunction() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_CustomFunction_get(swigCPtr, this);
+  }
+
+  public void setCustomWaterTemperture(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_CustomWaterTemperture_set(swigCPtr, this, value);
+  }
+
+  public short getCustomWaterTemperture() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_CustomWaterTemperture_get(swigCPtr, this);
+  }
+
+  public void setCustomWaterProportion(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_CustomWaterProportion_set(swigCPtr, this, value);
+  }
+
+  public short getCustomWaterProportion() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_CustomWaterProportion_get(swigCPtr, this);
   }
 
   public void setCallingDisp(short value) {
@@ -113,46 +145,6 @@ public class GasWaterHeaterStatusResp_t {
 
   public short getCallingDisp() {
     return generatedJNI.GasWaterHeaterStatusResp_t_callingDisp_get(swigCPtr, this);
-  }
-
-  public void setCoOverproofWarning(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_coOverproofWarning_set(swigCPtr, this, value);
-  }
-
-  public short getCoOverproofWarning() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_coOverproofWarning_get(swigCPtr, this);
-  }
-
-  public void setOxygenWarning(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_oxygenWarning_set(swigCPtr, this, value);
-  }
-
-  public short getOxygenWarning() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_oxygenWarning_get(swigCPtr, this);
-  }
-
-  public void setCloudSmart(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_cloudSmart_set(swigCPtr, this, value);
-  }
-
-  public short getCloudSmart() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_cloudSmart_get(swigCPtr, this);
-  }
-
-  public void setWaterFilling(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_waterFilling_set(swigCPtr, this, value);
-  }
-
-  public short getWaterFilling() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_waterFilling_get(swigCPtr, this);
-  }
-
-  public void setDiyPreset1(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_diyPreset1_set(swigCPtr, this, value);
-  }
-
-  public short getDiyPreset1() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_diyPreset1_get(swigCPtr, this);
   }
 
   public void setSprinkler(short value) {
@@ -179,14 +171,6 @@ public class GasWaterHeaterStatusResp_t {
     return generatedJNI.GasWaterHeaterStatusResp_t_airFan_get(swigCPtr, this);
   }
 
-  public void setPresetLevel(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_presetLevel_set(swigCPtr, this, value);
-  }
-
-  public short getPresetLevel() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_presetLevel_get(swigCPtr, this);
-  }
-
   public void setFirePower(short value) {
     generatedJNI.GasWaterHeaterStatusResp_t_firePower_set(swigCPtr, this, value);
   }
@@ -201,6 +185,22 @@ public class GasWaterHeaterStatusResp_t {
 
   public short getErrorCode() {
     return generatedJNI.GasWaterHeaterStatusResp_t_errorCode_get(swigCPtr, this);
+  }
+
+  public void setOxygenWarning(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_oxygenWarning_set(swigCPtr, this, value);
+  }
+
+  public short getOxygenWarning() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_oxygenWarning_get(swigCPtr, this);
+  }
+
+  public void setCoOverproofWarning(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_coOverproofWarning_set(swigCPtr, this, value);
+  }
+
+  public short getCoOverproofWarning() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_coOverproofWarning_get(swigCPtr, this);
   }
 
   public void setTargetTemperature(short value) {
@@ -227,76 +227,12 @@ public class GasWaterHeaterStatusResp_t {
     return generatedJNI.GasWaterHeaterStatusResp_t_outputTemperature_get(swigCPtr, this);
   }
 
-  public void setPresetTemperature(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_presetTemperature_set(swigCPtr, this, value);
-  }
-
-  public short getPresetTemperature() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_presetTemperature_get(swigCPtr, this);
-  }
-
-  public void setTargetFilledVolume(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_targetFilledVolume_set(swigCPtr, this, value);
-  }
-
-  public short getTargetFilledVolume() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_targetFilledVolume_get(swigCPtr, this);
-  }
-
-  public void setCumulativeFilledVolume(int value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_cumulativeFilledVolume_set(swigCPtr, this, value);
-  }
-
-  public int getCumulativeFilledVolume() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_cumulativeFilledVolume_get(swigCPtr, this);
-  }
-
   public void setNowVolume(short value) {
     generatedJNI.GasWaterHeaterStatusResp_t_nowVolume_set(swigCPtr, this, value);
   }
 
   public short getNowVolume() {
     return generatedJNI.GasWaterHeaterStatusResp_t_nowVolume_get(swigCPtr, this);
-  }
-
-  public void setSetVolume(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_setVolume_set(swigCPtr, this, value);
-  }
-
-  public short getSetVolume() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_setVolume_get(swigCPtr, this);
-  }
-
-  public void setPreheatingTemperature(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_preheatingTemperature_set(swigCPtr, this, value);
-  }
-
-  public short getPreheatingTemperature() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_preheatingTemperature_get(swigCPtr, this);
-  }
-
-  public void setPreheatingHour(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_preheatingHour_set(swigCPtr, this, value);
-  }
-
-  public short getPreheatingHour() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_preheatingHour_get(swigCPtr, this);
-  }
-
-  public void setPreheatingMin(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_preheatingMin_set(swigCPtr, this, value);
-  }
-
-  public short getPreheatingMin() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_preheatingMin_get(swigCPtr, this);
-  }
-
-  public void setCumulativeGas(long value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_cumulativeGas_set(swigCPtr, this, value);
-  }
-
-  public long getCumulativeGas() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_cumulativeGas_get(swigCPtr, this);
   }
 
   public void setCumulativeVolume(long value) {
@@ -307,35 +243,19 @@ public class GasWaterHeaterStatusResp_t {
     return generatedJNI.GasWaterHeaterStatusResp_t_cumulativeVolume_get(swigCPtr, this);
   }
 
-  public void setConversionSpeed(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_conversionSpeed_set(swigCPtr, this, value);
+  public void setCumulativeGas(int value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_cumulativeGas_set(swigCPtr, this, value);
   }
 
-  public short getConversionSpeed() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_conversionSpeed_get(swigCPtr, this);
+  public int getCumulativeGas() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_cumulativeGas_get(swigCPtr, this);
   }
 
-  public void setHotWaterPower(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_hotWaterPower_set(swigCPtr, this, value);
-  }
-
-  public short getHotWaterPower() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_hotWaterPower_get(swigCPtr, this);
-  }
-
-  public void setHeatEfficiency(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_heatEfficiency_set(swigCPtr, this, value);
-  }
-
-  public short getHeatEfficiency() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_heatEfficiency_get(swigCPtr, this);
-  }
-
-  public void setCumulativeUseTime(int value) {
+  public void setCumulativeUseTime(long value) {
     generatedJNI.GasWaterHeaterStatusResp_t_cumulativeUseTime_set(swigCPtr, this, value);
   }
 
-  public int getCumulativeUseTime() {
+  public long getCumulativeUseTime() {
     return generatedJNI.GasWaterHeaterStatusResp_t_cumulativeUseTime_get(swigCPtr, this);
   }
 
@@ -347,20 +267,100 @@ public class GasWaterHeaterStatusResp_t {
     return generatedJNI.GasWaterHeaterStatusResp_t_cumulativeOpenValveTimes_get(swigCPtr, this);
   }
 
-  public void setReservationOne(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_reservationOne_set(swigCPtr, this, value);
+  public void setNow_efficiency(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_now_efficiency_set(swigCPtr, this, value);
   }
 
-  public short getReservationOne() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_reservationOne_get(swigCPtr, this);
+  public short getNow_efficiency() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_now_efficiency_get(swigCPtr, this);
   }
 
-  public void setReservationTwo(short value) {
-    generatedJNI.GasWaterHeaterStatusResp_t_reservationTwo_set(swigCPtr, this, value);
+  public void setPreheatingModel(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_preheatingModel_set(swigCPtr, this, value);
   }
 
-  public short getReservationTwo() {
-    return generatedJNI.GasWaterHeaterStatusResp_t_reservationTwo_get(swigCPtr, this);
+  public short getPreheatingModel() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_preheatingModel_get(swigCPtr, this);
+  }
+
+  public void setPresetTemperature(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_presetTemperature_set(swigCPtr, this, value);
+  }
+
+  public short getPresetTemperature() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_presetTemperature_get(swigCPtr, this);
+  }
+
+  public void setPreheatingOneHour(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_preheatingOneHour_set(swigCPtr, this, value);
+  }
+
+  public short getPreheatingOneHour() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_preheatingOneHour_get(swigCPtr, this);
+  }
+
+  public void setPreheatingOneMin(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_preheatingOneMin_set(swigCPtr, this, value);
+  }
+
+  public short getPreheatingOneMin() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_preheatingOneMin_get(swigCPtr, this);
+  }
+
+  public void setPreheatingTwoHour(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_preheatingTwoHour_set(swigCPtr, this, value);
+  }
+
+  public short getPreheatingTwoHour() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_preheatingTwoHour_get(swigCPtr, this);
+  }
+
+  public void setPreheatingTwoMin(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_preheatingTwoMin_set(swigCPtr, this, value);
+  }
+
+  public short getPreheatingTwoMin() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_preheatingTwoMin_get(swigCPtr, this);
+  }
+
+  public void setFreezeProofingWarning(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_freezeProofingWarning_set(swigCPtr, this, value);
+  }
+
+  public short getFreezeProofingWarning() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_freezeProofingWarning_get(swigCPtr, this);
+  }
+
+  public void setMercurycontent(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_mercurycontent_set(swigCPtr, this, value);
+  }
+
+  public short getMercurycontent() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_mercurycontent_get(swigCPtr, this);
+  }
+
+  public void setReturn_water_temperature(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_return_water_temperature_set(swigCPtr, this, value);
+  }
+
+  public short getReturn_water_temperature() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_return_water_temperature_get(swigCPtr, this);
+  }
+
+  public void setReservation_one(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_reservation_one_set(swigCPtr, this, value);
+  }
+
+  public short getReservation_one() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_reservation_one_get(swigCPtr, this);
+  }
+
+  public void setReservation_two(short value) {
+    generatedJNI.GasWaterHeaterStatusResp_t_reservation_two_set(swigCPtr, this, value);
+  }
+
+  public short getReservation_two() {
+    return generatedJNI.GasWaterHeaterStatusResp_t_reservation_two_get(swigCPtr, this);
   }
 
   public void setChecksum(int value) {

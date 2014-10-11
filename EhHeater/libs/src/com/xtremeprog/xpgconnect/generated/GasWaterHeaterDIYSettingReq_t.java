@@ -67,36 +67,28 @@ public class GasWaterHeaterDIYSettingReq_t {
     return generatedJNI.GasWaterHeaterDIYSettingReq_t_command_get(swigCPtr, this);
   }
 
-  public void setPresetsCommend(short value) {
-    generatedJNI.GasWaterHeaterDIYSettingReq_t_presetsCommend_set(swigCPtr, this, value);
+  public void setDIYCommend(short value) {
+    generatedJNI.GasWaterHeaterDIYSettingReq_t_DIYCommend_set(swigCPtr, this, value);
   }
 
-  public short getPresetsCommend() {
-    return generatedJNI.GasWaterHeaterDIYSettingReq_t_presetsCommend_get(swigCPtr, this);
+  public short getDIYCommend() {
+    return generatedJNI.GasWaterHeaterDIYSettingReq_t_DIYCommend_get(swigCPtr, this);
   }
 
-  public void setSetWaterTemperature(short value) {
-    generatedJNI.GasWaterHeaterDIYSettingReq_t_setWaterTemperature_set(swigCPtr, this, value);
+  public void setDIYWaterTemperature(short value) {
+    generatedJNI.GasWaterHeaterDIYSettingReq_t_DIYWaterTemperature_set(swigCPtr, this, value);
   }
 
-  public short getSetWaterTemperature() {
-    return generatedJNI.GasWaterHeaterDIYSettingReq_t_setWaterTemperature_get(swigCPtr, this);
+  public short getDIYWaterTemperature() {
+    return generatedJNI.GasWaterHeaterDIYSettingReq_t_DIYWaterTemperature_get(swigCPtr, this);
   }
 
-  public void setSetVolume(short value) {
-    generatedJNI.GasWaterHeaterDIYSettingReq_t_setVolume_set(swigCPtr, this, value);
+  public void setDIYVolume(short value) {
+    generatedJNI.GasWaterHeaterDIYSettingReq_t_DIYVolume_set(swigCPtr, this, value);
   }
 
-  public short getSetVolume() {
-    return generatedJNI.GasWaterHeaterDIYSettingReq_t_setVolume_get(swigCPtr, this);
-  }
-
-  public void setReserved(short value) {
-    generatedJNI.GasWaterHeaterDIYSettingReq_t_reserved_set(swigCPtr, this, value);
-  }
-
-  public short getReserved() {
-    return generatedJNI.GasWaterHeaterDIYSettingReq_t_reserved_get(swigCPtr, this);
+  public short getDIYVolume() {
+    return generatedJNI.GasWaterHeaterDIYSettingReq_t_DIYVolume_get(swigCPtr, this);
   }
 
   public void setChecksum(int value) {

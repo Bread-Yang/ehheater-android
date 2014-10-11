@@ -83,20 +83,36 @@ public class GasWaterHeaterPreheatTemperatureReq_t {
     return generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheatTemperature_get(swigCPtr, this);
   }
 
-  public void setPreheat_hour(short value) {
-    generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_hour_set(swigCPtr, this, value);
+  public void setPreheat_oneHour(short value) {
+    generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_oneHour_set(swigCPtr, this, value);
   }
 
-  public short getPreheat_hour() {
-    return generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_hour_get(swigCPtr, this);
+  public short getPreheat_oneHour() {
+    return generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_oneHour_get(swigCPtr, this);
   }
 
-  public void setPreheat_min(short value) {
-    generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_min_set(swigCPtr, this, value);
+  public void setPreheat_oneMin(short value) {
+    generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_oneMin_set(swigCPtr, this, value);
   }
 
-  public short getPreheat_min() {
-    return generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_min_get(swigCPtr, this);
+  public short getPreheat_oneMin() {
+    return generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_oneMin_get(swigCPtr, this);
+  }
+
+  public void setPreheat_twoHour(short value) {
+    generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_twoHour_set(swigCPtr, this, value);
+  }
+
+  public short getPreheat_twoHour() {
+    return generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_twoHour_get(swigCPtr, this);
+  }
+
+  public void setPreheat_twoMin(short value) {
+    generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_twoMin_set(swigCPtr, this, value);
+  }
+
+  public short getPreheat_twoMin() {
+    return generatedJNI.GasWaterHeaterPreheatTemperatureReq_t_preheat_twoMin_get(swigCPtr, this);
   }
 
   public void setChecksum(int value) {

@@ -171,6 +171,22 @@ public class StateResp_t {
     return generatedJNI.StateResp_t_power_consumption_get(swigCPtr, this);
   }
 
+  public void setHeating_tube_time(int value) {
+    generatedJNI.StateResp_t_heating_tube_time_set(swigCPtr, this, value);
+  }
+
+  public int getHeating_tube_time() {
+    return generatedJNI.StateResp_t_heating_tube_time_get(swigCPtr, this);
+  }
+
+  public void setMachine_not_heating_time(int value) {
+    generatedJNI.StateResp_t_machine_not_heating_time_set(swigCPtr, this, value);
+  }
+
+  public int getMachine_not_heating_time() {
+    return generatedJNI.StateResp_t_machine_not_heating_time_get(swigCPtr, this);
+  }
+
   public void setChecksum(int value) {
     generatedJNI.StateResp_t_checksum_set(swigCPtr, this, value);
   }

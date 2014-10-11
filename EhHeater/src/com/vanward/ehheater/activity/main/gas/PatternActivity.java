@@ -164,52 +164,56 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 		case R.id.ivTitleBtnRigh:
-			AddPatternNameDialogUtil.instance(this)
-					.setNextButtonCall(new NextButtonCall() {
-						@Override
-						public void oncall(View v) {
-							final String name = AddPatternNameDialogUtil
-									.instance(PatternActivity.this).getName();
-							if (AddPatternNameDialogUtil.instance(
-									PatternActivity.this).isNameExit()) {
-								Toast.makeText(PatternActivity.this, "此名字已存在",
-										Toast.LENGTH_SHORT).show();
-								return;
-							}
 
-							if (name != null && name.length() > 0) {
-								AddPatternGasSettingDialogUtil
-										.instance(PatternActivity.this)
-										.initName(name, 0)
-										.nextButtonCall(new NextButtonCall() {
-
-											@Override
-											public void oncall(View v) {
-												// TODO Auto-generated method
-												// stub
-												GasCustomSetVo customSetVo = AddPatternGasSettingDialogUtil
-														.instance(
-																PatternActivity.this)
-														.getData();
-												customSetVo.setName(name);
-												new BaseDao(
-														PatternActivity.this)
-														.getDb().save(
-																customSetVo);
-												System.out.println("customSetVoid: "
-														+ customSetVo.getId());
-												initViewValue();
-												AddPatternGasSettingDialogUtil
-														.instance(
-																PatternActivity.this)
-														.dissmiss();
-											}
-										}).showDialog();
-							}
-							AddPatternNameDialogUtil.instance(
-									PatternActivity.this).dissmiss();
-						}
-					}).showDialog();
+			Intent intent = new Intent();
+			intent.setClass(this, AddPattenActivity.class);
+			startActivity(intent);
+//			AddPatternNameDialogUtil.instance(this)
+//					.setNextButtonCall(new NextButtonCall() {
+//						@Override
+//						public void oncall(View v) {
+//							final String name = AddPatternNameDialogUtil
+//									.instance(PatternActivity.this).getName();
+//							if (AddPatternNameDialogUtil.instance(
+//									PatternActivity.this).isNameExit()) {
+//								Toast.makeText(PatternActivity.this, "此名字已存在",
+//										Toast.LENGTH_SHORT).show();
+//								return;
+//							}
+//
+//							if (name != null && name.length() > 0) {
+//								AddPatternGasSettingDialogUtil
+//										.instance(PatternActivity.this)
+//										.initName(name, 0)
+//										.nextButtonCall(new NextButtonCall() {
+//
+//											@Override
+//											public void oncall(View v) {
+//												// TODO Auto-generated method
+//												// stub
+//												GasCustomSetVo customSetVo = AddPatternGasSettingDialogUtil
+//														.instance(
+//																PatternActivity.this)
+//														.getData();
+//												customSetVo.setName(name);
+//												new BaseDao(
+//														PatternActivity.this)
+//														.getDb().save(
+//																customSetVo);
+//												System.out.println("customSetVoid: "
+//														+ customSetVo.getId());
+//												initViewValue();
+//												AddPatternGasSettingDialogUtil
+//														.instance(
+//																PatternActivity.this)
+//														.dissmiss();
+//											}
+//										}).showDialog();
+//							}
+//							AddPatternNameDialogUtil.instance(
+//									PatternActivity.this).dissmiss();
+//						}
+//					}).showDialog();
 			break;
 		}
 	}
