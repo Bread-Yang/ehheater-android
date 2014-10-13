@@ -172,10 +172,11 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			Intent intent = new Intent();
 			intent.setClass(this, AddPattenActivity.class);
 			startActivity(intent);
-
+			break;
 		case R.id.radio3:
 			SendMsgModel.setToBathtubMode(this);
 			finish();
+			break;
 		case R.id.imageView1:
 			BathSettingDialogUtil.instance(this).showDialog();
 			break;

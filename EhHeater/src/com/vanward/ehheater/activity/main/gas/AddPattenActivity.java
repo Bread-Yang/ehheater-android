@@ -53,7 +53,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 		seekBar.setOnSeekBarChangeListener(this);
-		degree.setText("50℃");
+		degree.setText("35℃");
 	}
 
 	public GasCustomSetVo getData() {
@@ -91,7 +91,6 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 				new BaseDao(this).getDb().save(customSetVo);
 				finish();
 			}
-
 			break;
 
 		default:
