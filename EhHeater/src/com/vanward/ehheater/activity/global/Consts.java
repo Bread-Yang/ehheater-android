@@ -25,7 +25,7 @@ public class Consts {
 	public static String getHeaterName(HeaterInfo heater) {
 		String name = heater.getName();
 		if (TextUtils.isEmpty(name)) {
-			if (heater.getProductKey() == null) {
+			if (TextUtils.isEmpty(heater.getProductKey())) {
 				name = "燃" + Consts.HEATER_DEFAULT_NAME + heater.getId();
 			} else if (heater.getProductKey().equals(
 					"c2db7fd028fd11e4b605001ec9b6dcfe")) {

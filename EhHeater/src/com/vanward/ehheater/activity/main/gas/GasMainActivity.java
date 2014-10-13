@@ -105,8 +105,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
-		
+
 	}
 
 	@Override
@@ -255,7 +254,10 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("舒适模式");
-		circularView.setOn(true);
+		if (circularView != null) {
+			circularView.setOn(true);
+		}
+
 	}
 
 	/**
@@ -265,7 +267,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoKictienMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("厨房模式");
-		circularView.setOn(false);
+		if (circularView != null) {
+			circularView.setOn(false);
+		}
 	}
 
 	/**
@@ -288,7 +292,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoligenceMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("智能模式");
-		circularView.setOn(false);
+		if (circularView != null) {
+			circularView.setOn(false);
+		}
 	}
 
 	/**
@@ -298,7 +304,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("浴缸模式");
-		circularView.setOn(true);
+		if (circularView != null) {
+			circularView.setOn(true);
+		}
 	}
 
 	/**
