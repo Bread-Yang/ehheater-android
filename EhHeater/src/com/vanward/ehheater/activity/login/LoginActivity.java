@@ -251,9 +251,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			// hser.addNewHeater(hinfo1);
 			// hser.addNewHeater(hinfo2);
 			// hser.addNewHeater(hinfo3);
-			hser.addNewHeater(hinfo4);
-			Context context = getBaseContext();
-			AccountService.setUser(context, "111111", "111111");
+			 hser.addNewHeater(hinfo3);
+			 Context context = getBaseContext();
+			 AccountService.setUser(context, "111111", "111111");
 
 		}
 		return super.onKeyDown(keyCode, event);

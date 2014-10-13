@@ -105,27 +105,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		String tempname = modeTv.getText().toString();
-		// if (tempname.equals("夜电模式") && tempname.equals("晨浴模式")
-		// && tempname.equals("智能模式") && tempname.equals("自定义模式")) {
-		// return;
-		// }
-		boolean flag = false;
-		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
-				GasCustomSetVo.class);
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
-				if (tempname.equals(list.get(i).getName())) {
-					flag = true;
-				}
-			}
-			if (!flag) {
-				modeTv.setText("自定义模式");
-			}
-		} else {
-			modeTv.setText("自定义模式");
-		}
-
 	}
 
 	@Override
@@ -293,8 +272,11 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * @param pResp
 	 */
 	public void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
-		modeTv.setText(" 节能模式");
-		circularView.setOn(false);
+		modeTv.setText("节能模式");
+		if (circularView != null) {
+			circularView.setOn(false);
+		}
+
 	}
 
 	/**
@@ -325,11 +307,10 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
 
-		modeTv.setText("自定义模式");
-		circularView.setOn(true);
+		// modeTv.setText("自定义模式");
+		circularView.setOn(false);
 		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
 				GasCustomSetVo.class);
-
 		// 自定义模式的名字怎么显示。
 		// for (int i = 0; i < list.size(); i++) {
 		// CustomSetVo customSetVo = list.get(i);
@@ -493,8 +474,11 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("自定义设置水流量比例：" + pResp.getCustomWaterProportion());
 		if (pResp.getCustomFunction() != 0) {
 			GasCustomSetVo gasCustomSetVo = (GasCustomSetVo) new BaseDao(this)
-					.getDb().findById(1, GasCustomSetVo.class);
-			modeTv.setText(gasCustomSetVo.getName());
+					.getDb().findById(pResp.getCustomFunction(),
+							GasCustomSetVo.class);
+			if (gasCustomSetVo != null) {
+				modeTv.setText(gasCustomSetVo.getName());
+			}
 		}
 
 	}

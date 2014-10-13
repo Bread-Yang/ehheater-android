@@ -239,8 +239,8 @@
             android:tag="自定义模式"
             android:text="自定义"
             android:textColor="#5d7884"
-            android:visibility="gone"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <View
             android:id="@+id/view2"
@@ -292,18 +292,33 @@
             android:layout_alignParentLeft="true"
             android:background="#d4d4d4" />
 
-        <RadioButton
-            android:id="@+id/radio3"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:button="@drawable/radio_selector"
-            android:padding="10dp"
-            android:tag="浴缸模式"
-            android:text="浴缸"
-            android:textColor="#5d7884"
-            android:textSize="18sp" />
+            android:layout_weight="1" >
+
+            <RadioButton
+                android:id="@+id/radio3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:button="@drawable/radio_selector"
+                android:padding="10dp"
+                android:tag="浴缸模式"
+                android:text="浴缸"
+                android:textColor="#5d7884"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/icon_zheng" />
+
+        </RelativeLayout>
 
         <View
             android:id="@+id/View03"
@@ -349,7 +364,6 @@
             android:layout_height="1dp"
             android:layout_weight="1"
             android:background="#d4d4d4" />
-
     </RadioGroup>
 
 </RelativeLayout>

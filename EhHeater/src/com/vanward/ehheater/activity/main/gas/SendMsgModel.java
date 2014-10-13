@@ -1,6 +1,10 @@
 package com.vanward.ehheater.activity.main.gas;
 
+import android.content.Context;
+
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.view.BathSettingDialogUtil.BathSettingVo;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class SendMsgModel {
@@ -45,9 +49,38 @@ public class SendMsgModel {
 	}
 
 	// 浴缸模式
-	public static void setToBathtubMode() {
-		generated
-				.SendGasWaterHeaterModelCommandReq(Global.connectId, (short) 3);
+	public static void setToBathtubMode(final Context context) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				generated.SendGasWaterHeaterModelCommandReq(Global.connectId,
+						(short) 3);
+				BathSettingVo bathSettingVo = new BaseDao(context).getDb()
+						.findById("1", BathSettingVo.class);
+				if (bathSettingVo == null) {
+					bathSettingVo = new BathSettingVo("1", 35, 99);
+				}
+				try {
+					Thread.sleep(500);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				generated.SendGasWaterHeaterTargetTemperatureReq(
+						Global.connectId, (short) (bathSettingVo.getTem() + 35));
+
+				try {
+					Thread.sleep(500);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				generated.SendGasWaterHeaterSetWaterInjectionReq(
+						Global.connectId, (short) (bathSettingVo.getWater()));
+			}
+		}).start();
+
 	}
 
 	// 打开设备

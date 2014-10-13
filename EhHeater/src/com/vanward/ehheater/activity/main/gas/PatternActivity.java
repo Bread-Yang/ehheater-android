@@ -38,6 +38,7 @@ import com.vanward.ehheater.view.AddPatternButtonDialogUtil;
 import com.vanward.ehheater.view.AddPatternGasSettingDialogUtil;
 import com.vanward.ehheater.view.AddPatternNameDialogUtil;
 import com.vanward.ehheater.view.AddPatternSettingDialogUtil;
+import com.vanward.ehheater.view.BathSettingDialogUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
@@ -93,6 +94,9 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	Button ivTitleBtnRigh;
 	@ViewInject(id = R.id.zidingyiradio, click = "onClick")
 	LinearLayout zidingyiradioGroup;
+	@ViewInject(id = R.id.imageView1, click = "onClick")
+	ImageView yugaosetting;
+
 	private List<GasCustomSetVo> customSetVolist;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -140,7 +144,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 		case R.id.radio3:
-			SendMsgModel.setToBathtubMode();
+			SendMsgModel.setToBathtubMode(this);
 			finish();
 			break;
 		case R.id.radio4:
@@ -168,52 +172,12 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			Intent intent = new Intent();
 			intent.setClass(this, AddPattenActivity.class);
 			startActivity(intent);
-			// AddPatternNameDialogUtil.instance(this)
-			// .setNextButtonCall(new NextButtonCall() {
-			// @Override
-			// public void oncall(View v) {
-			// final String name = AddPatternNameDialogUtil
-			// .instance(PatternActivity.this).getName();
-			// if (AddPatternNameDialogUtil.instance(
-			// PatternActivity.this).isNameExit()) {
-			// Toast.makeText(PatternActivity.this, "此名字已存在",
-			// Toast.LENGTH_SHORT).show();
-			// return;
-			// }
-			//
-			// if (name != null && name.length() > 0) {
-			// AddPatternGasSettingDialogUtil
-			// .instance(PatternActivity.this)
-			// .initName(name, 0)
-			// .nextButtonCall(new NextButtonCall() {
-			//
-			// @Override
-			// public void oncall(View v) {
-			// // TODO Auto-generated method
-			// // stub
-			// GasCustomSetVo customSetVo = AddPatternGasSettingDialogUtil
-			// .instance(
-			// PatternActivity.this)
-			// .getData();
-			// customSetVo.setName(name);
-			// new BaseDao(
-			// PatternActivity.this)
-			// .getDb().save(
-			// customSetVo);
-			// System.out.println("customSetVoid: "
-			// + customSetVo.getId());
-			// initViewValue();
-			// AddPatternGasSettingDialogUtil
-			// .instance(
-			// PatternActivity.this)
-			// .dissmiss();
-			// }
-			// }).showDialog();
-			// }
-			// AddPatternNameDialogUtil.instance(
-			// PatternActivity.this).dissmiss();
-			// }
-			// }).showDialog();
+
+		case R.id.radio3:
+			SendMsgModel.setToBathtubMode(this);
+			finish();
+		case R.id.imageView1:
+			BathSettingDialogUtil.instance(this).showDialog();
 			break;
 		}
 	}
@@ -228,8 +192,9 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			ivTitleBtnRigh.setVisibility(View.VISIBLE);
 		}
 		String name = getIntent().getStringExtra("name");
-		name.replace("模式", "");
+		name = name.replace("模式", "");
 		setRadiocheck(name, getWindow().getDecorView());
+
 	}
 
 	public void setRadiocheck(String name, View root) {
@@ -241,14 +206,16 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				}
 			} else if (root instanceof RadioButton) {
 				RadioButton radioButton = ((RadioButton) root);
-				System.out.println(radioButton.getText());
-				if (radioButton.getTag().equals(name)) {
+				if (radioButton.getText().equals(name)) {
 					group.setOnCheckedChangeListener(null);
 					radioButton.setChecked(true);
+					System.out.println(radioButton.getText() + "true");
 					group.setOnCheckedChangeListener(this);
 				} else {
 					group.setOnCheckedChangeListener(null);
 					radioButton.setChecked(false);
+					System.out.println(name + "：" + radioButton.getText()
+							+ "false");
 					group.setOnCheckedChangeListener(this);
 				}
 
