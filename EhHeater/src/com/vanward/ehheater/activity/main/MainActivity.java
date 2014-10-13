@@ -215,6 +215,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 						temptertitleTextView.setText("当前温度");
 						tempter.setText(outlevel + "");
 					}
+
+					@Override
+					public void updateLocalUIdifferent(int outlevel) {
+						// TODO Auto-generated method stub
+
+					}
 				});
 				llt_circle.addView(circularView);
 			}

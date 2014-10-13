@@ -53,9 +53,6 @@ public class CircularView extends View {
 	}
 
 	public int angleToDegree(float angle) {
-		if (angle < 35) {
-			angle = 35;
-		}
 		angle = angle - 25;
 		return (int) (angle * 360 / angledegree);
 	}
@@ -180,6 +177,14 @@ public class CircularView extends View {
 				circularListener
 						.updateUIWhenAferSetListener((int) degreeToAngle(degree));
 				break;
+
+			// 圆圈位置跟设定的温度一致时的回调
+			case 3:
+				postInvalidate();
+				circularListener
+						.updateLocalUIdifferent((int) degreeToAngle(degree));
+				break;
+
 			}
 			super.handleMessage(msg);
 		}
@@ -220,7 +225,6 @@ public class CircularView extends View {
 
 				if (isOnLine(x, y)) {
 					moveCircular = MOVE_OUT;
-
 					System.out.println("degree: " + degree);
 				}
 				break;
@@ -233,7 +237,7 @@ public class CircularView extends View {
 				System.out.println("downxdownx: " + downx);
 				System.out.println("downx: " + x);
 				System.out.println("downx: " + ((downx - x) + (downy - y)));
-				if (Math.abs(downx - x) < 10 && Math.abs(downy - y) < 10) {
+				if (Math.abs(downx - x) < 20 && Math.abs(downy - y) < 20) {
 					// 这个是点击，move 全部不生效
 					isclick = true;
 					return true;
@@ -292,10 +296,10 @@ public class CircularView extends View {
 				y = event.getY();
 				int tempdegree = (int) finalangel(x, y, angel(x, y));
 				if (isclick) {
-					if (tempdegree > 180 && degree < 300) {
+					if (tempdegree > 180 && degree < 360) {
 						degree = angleToDegree(targerdegree) + perangle;
 						// degree = degree + 6;
-					} else if (tempdegree < 180 && degree > 60) {
+					} else if (tempdegree < 180 && degree > 0) {
 						degree = angleToDegree(targerdegree) - perangle;
 						// degree = degree - 6;
 					} else {
@@ -382,13 +386,20 @@ public class CircularView extends View {
 	}
 
 	public void setAngle(int level) {
+
 		if (level == 0) {
 			degree = 0;
 		} else {
 			degree = angleToDegree(level);
 		}
 		System.out.println("setAngle：  level=" + level + "degree=" + degree);
-		handler.sendEmptyMessage(2);
+		if (level < 25) {
+			degree = angleToDegree(25);
+			handler.sendEmptyMessage(3);
+		} else {
+			handler.sendEmptyMessage(2);
+		}
+
 	}
 
 	public void setPath() {

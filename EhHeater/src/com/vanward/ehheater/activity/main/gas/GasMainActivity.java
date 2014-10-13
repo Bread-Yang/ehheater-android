@@ -26,6 +26,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.R.id;
 import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
@@ -39,6 +40,7 @@ import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
+import com.vanward.ehheater.view.FreezeProofingDialogUtil;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
@@ -145,9 +147,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		powerTv = (TextView) findViewById(R.id.power_tv);
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
-
 		hotImgeImageView.clearAnimation();
-
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		rlt_start_device = (RelativeLayout) findViewById(R.id.start_device_rlt);
@@ -176,13 +176,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setEndangle(65);
 				circularView.setAngle(35);
 				circularView.setOn(true);
-				operatingAnim = AnimationUtils.loadAnimation(
-						GasMainActivity.this, R.anim.tip_4500);
-				LinearInterpolator lin = new LinearInterpolator();
-				operatingAnim.setInterpolator(lin);
-				hotImgeImageView.startAnimation(operatingAnim);
-				animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
-				animationDrawable.start();
+				hotImgeImageView.setVisibility(View.GONE);
 				circularView.setCircularListener(new CircleListener() {
 					@Override
 					public void levelListener(final int outlevel) {
@@ -204,6 +198,11 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 					public void updateUIWhenAferSetListener(final int outlevel) {
 						temptertitleTextView.setText("出水温度");
 						tempter.setText(outlevel + "");
+					}
+
+					@Override
+					public void updateLocalUIdifferent(int outlevel) {
+						temptertitleTextView.setText("出水温度");
 					}
 				});
 				llt_circle.addView(circularView);
@@ -382,6 +381,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		waterDeal(pResp);
 		onoffDeal(pResp);
 		warningDeal(pResp);
+		diyModeDeal(pResp);
+		freezeProofing(pResp);
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 
@@ -448,7 +449,13 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("进水温度： " + pResp.getIncomeTemperature());
 		System.out.println("出水温度： " + pResp.getOutputTemperature());
 		target_tem.setText(pResp.getTargetTemperature() + "℃");
-		circularView.setAngle(pResp.getOutputTemperature());
+		if (pResp.getOutputTemperature() < 25) {
+			circularView.setAngle(pResp.getOutputTemperature());
+			tempter.setText(pResp.getOutputTemperature() + "");
+		} else {
+			circularView.setAngle(pResp.getOutputTemperature());
+		}
+
 		circularView.setTargerdegree(pResp.getTargetTemperature());
 		// tempter.postDelayed(new Runnable() {
 		// @Override
@@ -478,6 +485,42 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void warningDeal(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("防冻警告：" + pResp.getFreezeProofingWarning());
 		System.out.println("氧护提示：" + pResp.getOxygenWarning());
+	}
+
+	public void diyModeDeal(GasWaterHeaterStatusResp_t pResp) {
+		System.out.println("自定义功能：" + pResp.getCustomFunction());
+		System.out.println("自定义设置水温：" + pResp.getCustomWaterTemperture());
+		System.out.println("自定义设置水流量比例：" + pResp.getCustomWaterProportion());
+		if (pResp.getCustomFunction() != 0) {
+			GasCustomSetVo gasCustomSetVo = (GasCustomSetVo) new BaseDao(this)
+					.getDb().findById(1, GasCustomSetVo.class);
+			modeTv.setText(gasCustomSetVo.getName());
+		}
+
+	}
+
+	/**
+	 * 防冻报警提示：0（无）、1（有）
+	 * 
+	 * @param pResp
+	 */
+	public void freezeProofing(GasWaterHeaterStatusResp_t pResp) {
+		System.out.println("防冻报警：" + pResp.getFreezeProofingWarning());
+		if (pResp.getFreezeProofingWarning() == 1) {
+			FreezeProofingDialogUtil.instance(this).showDialog();
+		}
+	}
+
+	/**
+	 * 氧护提示：0（无）、1（有）
+	 * 
+	 * @param pResp
+	 */
+	public void oxygenWarning(GasWaterHeaterStatusResp_t pResp) {
+		System.out.println("氧护提示：" + pResp.getOxygenWarning());
+		if (pResp.getFreezeProofingWarning() == 1) {
+			FreezeProofingDialogUtil.instance(this).showDialog();
+		}
 	}
 
 }

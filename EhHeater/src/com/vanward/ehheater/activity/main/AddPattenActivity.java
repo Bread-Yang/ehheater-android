@@ -113,6 +113,5 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onStopTrackingTouch(SeekBar arg0) {
 		// TODO Auto-generated method stub
-
 	}
 }
