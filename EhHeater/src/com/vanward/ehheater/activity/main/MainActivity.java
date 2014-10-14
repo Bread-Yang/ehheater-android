@@ -2,6 +2,7 @@ package com.vanward.ehheater.activity.main;
 
 import java.util.List;
 
+import android.R.integer;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
@@ -48,7 +50,7 @@ import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class MainActivity extends BaseSlidingFragmentActivity implements
-		OnClickListener {
+		OnClickListener, CircleListener {
 
 	protected SlidingMenu mSlidingMenu;
 
@@ -88,6 +90,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			initSlidingMenu();
 		}
 	};
+
+	private CountDownTimer mCountDownTimer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -173,7 +177,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 		initopenView();
 		updateTitle();
-
+		boolean InSetting = false;
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -191,37 +195,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 				animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 				animationDrawable.start();
-				circularView.setCircularListener(new CircleListener() {
-					@Override
-					public void levelListener(final int outlevel) {
-
-						SendMsgModel.setTempter(outlevel);
-						tempter.setText(outlevel + "");
-						// temptertitleTextView.setText("当前温度");
-						hotImgeImageView.setVisibility(View.GONE);
-						hotImgeImageView.clearAnimation();
-
-					}
-
-					@Override
-					public void updateUIListener(int outlevel) {
-						// TODO Auto-generated method stub
-						temptertitleTextView.setText("设定温度");
-						tempter.setText(outlevel + "");
-					}
-
-					@Override
-					public void updateUIWhenAferSetListener(final int outlevel) {
-						temptertitleTextView.setText("当前温度");
-						tempter.setText(outlevel + "");
-					}
-
-					@Override
-					public void updateLocalUIdifferent(int outlevel) {
-						// TODO Auto-generated method stub
-
-					}
-				});
+				circularView.setCircularListener(MainActivity.this);
 				llt_circle.addView(circularView);
 			}
 		}, 100);
@@ -242,6 +216,27 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
 		mSlidingMenu.setFadeEnabled(true);
 		mSlidingMenu.setBehindScrollScale(0.333f);
+	}
+
+	public void sentToMsgAfterSix(final int value) {
+		if (mCountDownTimer != null) {
+			mCountDownTimer.cancel();
+		}
+		mCountDownTimer = new CountDownTimer(6000, 1000) {
+			@Override
+			public void onTick(long arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFinish() {
+				SendMsgModel.setTempter(value);
+				tempter.setText(value + "");
+				Insetting = false;
+			}
+		};
+		mCountDownTimer.start();
 	}
 
 	private void updateTitle() {
@@ -290,8 +285,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	private void changeToIntelligenceModeUpdateUI(byte[] data) {
 		modeTv.setText("智能模式");
-		circularView.setOn(false);
-		setAppointmentButtonAble(false);
+		circularView.setOn(true);
+		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(null);
@@ -449,15 +444,11 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				+ new EhState(b).getInnerTemp2() + "   "
 				+ new EhState(b).getInnerTemp3());
 		// tempter.setText(new EhState(b).getInnerTemp2() + "");
+		if (!Insetting) {
+			circularView.setAngle(new EhState(b).getInnerTemp1());
+			tempter.setText(new EhState(b).getInnerTemp1() + "");
+		}
 
-		tempter.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				circularView.setAngle(new EhState(b).getInnerTemp1());
-				tempter.setText(new EhState(b).getInnerTemp1() + "");
-			}
-		}, 2000);
 		System.out.println("当前设置温度：" + new EhState(b).getTargetTemperature());
 	}
 
@@ -530,4 +521,38 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			CommonDialogUtil.showReconnectDialog(this);
 		}
 	}
+
+	boolean Insetting = false;
+
+	@Override
+	public void levelListener(final int outlevel) {
+		// SendMsgModel.setTempter(outlevel);
+		// tempter.setText(outlevel + "");
+		sentToMsgAfterSix(outlevel);
+		// temptertitleTextView.setText("当前温度");
+		hotImgeImageView.setVisibility(View.GONE);
+		hotImgeImageView.clearAnimation();
+	}
+
+	@Override
+	public void updateUIListener(int outlevel) {
+		// TODO Auto-generated method stub
+		temptertitleTextView.setText("设定温度");
+		tempter.setText(outlevel + "");
+		circularView.setTargerdegree(outlevel);
+		Insetting = true;
+	}
+
+	@Override
+	public void updateUIWhenAferSetListener(final int outlevel) {
+		temptertitleTextView.setText("当前温度");
+		tempter.setText(outlevel + "");
+	}
+
+	@Override
+	public void updateLocalUIdifferent(int outlevel) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

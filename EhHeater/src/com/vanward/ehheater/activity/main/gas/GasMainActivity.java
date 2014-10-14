@@ -8,12 +8,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -51,7 +53,7 @@ import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class GasMainActivity extends BaseSlidingFragmentActivity implements
-		OnClickListener {
+		OnClickListener, OnLongClickListener, CircleListener {
 
 	protected SlidingMenu mSlidingMenu;
 
@@ -64,6 +66,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	ViewGroup stuteParent;
 	Button btn_appointment;
 	CircularView circularView;
+
 	ImageView iv_wave, hotImgeImageView;
 	AnimationDrawable animationDrawable;
 	RelativeLayout rlt_start_device, content;
@@ -86,6 +89,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	private TextView powerTv;
 
 	private Button btn_info;
+	private Button mode;
+
+	private CountDownTimer mCountDownTimer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -140,14 +146,14 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		tempter = (TextView) findViewById(R.id.tempter);
 		leavewater = (TextView) findViewById(R.id.leavewater);
 		content = (RelativeLayout) findViewById(R.id.content);
-
+		mode = (Button) findViewById(R.id.pattern);
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
 
 		initopenView();
 		updateTitle();
-
+		mode.setOnLongClickListener(this);
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -157,34 +163,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setAngle(35);
 				circularView.setOn(true);
 				hotImgeImageView.setVisibility(View.GONE);
-				circularView.setCircularListener(new CircleListener() {
-					@Override
-					public void levelListener(final int outlevel) {
-						SendMsgModel.setTempter(outlevel);
-						tempter.setText(outlevel + "");
-						// temptertitleTextView.setText("当前温度");
-						hotImgeImageView.setVisibility(View.GONE);
-						hotImgeImageView.clearAnimation();
-					}
-
-					@Override
-					public void updateUIListener(int outlevel) {
-						// TODO Auto-generated method stub
-						temptertitleTextView.setText("设定温度");
-						tempter.setText(outlevel + "");
-					}
-
-					@Override
-					public void updateUIWhenAferSetListener(final int outlevel) {
-						temptertitleTextView.setText("出水温度");
-						tempter.setText(outlevel + "");
-					}
-
-					@Override
-					public void updateLocalUIdifferent(int outlevel) {
-						temptertitleTextView.setText("出水温度");
-					}
-				});
+				circularView.setCircularListener(GasMainActivity.this);
 				llt_circle.addView(circularView);
 			}
 		}, 100);
@@ -374,6 +353,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		warningDeal(pResp);
 		diyModeDeal(pResp);
 		freezeProofing(pResp);
+		flame(pResp);
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 
@@ -515,6 +495,75 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		if (pResp.getFreezeProofingWarning() == 1) {
 			FreezeProofingDialogUtil.instance(this).showDialog();
 		}
+	}
+
+	/**
+	 * 氧护提示：0（无）、1（有）
+	 * 
+	 * @param pResp
+	 */
+	public void flame(GasWaterHeaterStatusResp_t pResp) {
+		System.out.println("火焰：" + pResp.getFlame());
+	}
+
+	private boolean Insetting = false;
+
+	@Override
+	public boolean onLongClick(View arg0) {
+		SendMsgModel.setToSolfMode();
+		return false;
+	}
+
+	public void sentToMsgAfterSix(final int value) {
+		if (mCountDownTimer != null) {
+			mCountDownTimer.cancel();
+		}
+		mCountDownTimer = new CountDownTimer(6000, 1000) {
+
+			@Override
+			public void onTick(long arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onFinish() {
+				SendMsgModel.setTempter(value);
+				tempter.setText(value + "");
+				Insetting = false;
+			}
+		};
+		mCountDownTimer.start();
+	}
+
+	@Override
+	public void levelListener(final int outlevel) {
+
+		sentToMsgAfterSix(outlevel);
+		// SendMsgModel.setTempter(outlevel);
+		// tempter.setText(outlevel + "");
+		// temptertitleTextView.setText("当前温度");
+		hotImgeImageView.setVisibility(View.GONE);
+		hotImgeImageView.clearAnimation();
+	}
+
+	@Override
+	public void updateUIListener(int outlevel) {
+		// TODO Auto-generated method stub
+		temptertitleTextView.setText("设定温度");
+		tempter.setText(outlevel + "");
+		Insetting = true;
+	}
+
+	@Override
+	public void updateUIWhenAferSetListener(final int outlevel) {
+		temptertitleTextView.setText("出水温度");
+		tempter.setText(outlevel + "");
+	}
+
+	@Override
+	public void updateLocalUIdifferent(int outlevel) {
+		temptertitleTextView.setText("出水温度");
 	}
 
 }

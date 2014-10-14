@@ -27,6 +27,9 @@ public class CircularView extends View {
 	final static int MOVE_OUT = 2;
 	boolean isFromMyView;
 
+	final static int UpdateUIToSet = 0, UpdateUIToDefault = 2, SentToMsg = 1,
+			UpdateUILocalNumDiff = 3;
+
 	int moveCircular;
 	boolean islock;
 	float endX;
@@ -67,15 +70,6 @@ public class CircularView extends View {
 	}
 
 	public void setEndangle(int endangle) {
-		this.endangle = endangle;
-	}
-
-	public CircularView(Context context, int perangle, int angledegree,
-			int beginangle, int endangle) {
-		super(context);
-		this.perangle = perangle;
-		this.angledegree = angledegree;
-		this.beginangle = beginangle;
 		this.endangle = endangle;
 	}
 
@@ -150,36 +144,31 @@ public class CircularView extends View {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case 0:
+
+			// 把界面更新成设定温度
+			case UpdateUIToSet:
 				postInvalidate();
 				circularListener.updateUIListener((int) degreeToAngle(degree));
 				break;
-			case 1:
-				new CountDownTimer(2000, 1000) {
-					@Override
-					public void onTick(long millisUntilFinished) {
-					}
 
-					@Override
-					public void onFinish() {
-						postInvalidate();
-						circularListener
-								.levelListener((int) degreeToAngle(degree));
-					}
-				}.start();
-
+			// 发送指令。
+			case SentToMsg:
+				postInvalidate();
+				circularListener.levelListener((int) degreeToAngle(degree));
 				// postInvalidate();
 				// circularListener.levelListener((int) degreeToAngle(degree));
 				break;
 
-			case 2:
+			// 还原成当前温度
+			case UpdateUIToDefault:
+
 				postInvalidate();
 				circularListener
 						.updateUIWhenAferSetListener((int) degreeToAngle(degree));
 				break;
 
-			// 圆圈位置跟设定的温度一致时的回调
-			case 3:
+			// 圆圈位置跟设定的温度一致时的回调.,把圆圈中的数字 跟 圆圈的位置分开。
+			case UpdateUILocalNumDiff:
 				postInvalidate();
 				circularListener
 						.updateLocalUIdifferent((int) degreeToAngle(degree));
@@ -234,9 +223,6 @@ public class CircularView extends View {
 				isCanUpadateAndSetMinMax(degree);
 				x = event.getX();
 				y = event.getY();
-				System.out.println("downxdownx: " + downx);
-				System.out.println("downx: " + x);
-				System.out.println("downx: " + ((downx - x) + (downy - y)));
 				if (Math.abs(downx - x) < 20 && Math.abs(downy - y) < 20) {
 					// 这个是点击，move 全部不生效
 					isclick = true;
@@ -269,17 +255,10 @@ public class CircularView extends View {
 							} else if (degree < olddegree) {
 								outBmp = blueoutBmp;
 							}
-							// if (degree > 75) {
-							// degree = olddegree + 1;
-							// } else if (degree < 35) {
-							// degree = olddegree - 1;
-							// } else {
-							// olddegree = degree;
-							// }
 							olddegree = degree;
 							if (degree >= angleToDegree(beginangle)
 									&& degree <= angleToDegree(endangle)) {
-								handler.sendEmptyMessage(0);
+								handler.sendEmptyMessage(UpdateUIToSet);
 							}
 
 						}
@@ -309,9 +288,9 @@ public class CircularView extends View {
 				if (degree >= angleToDegree(beginangle)
 						&& degree <= angleToDegree(endangle)) {
 					if (isclick) {
-						handler.sendEmptyMessage(0);
+						handler.sendEmptyMessage(UpdateUIToSet);
 					}
-					handler.sendEmptyMessage(1);
+					handler.sendEmptyMessage(SentToMsg);
 				}
 			}
 		}
@@ -395,9 +374,9 @@ public class CircularView extends View {
 		System.out.println("setAngle：  level=" + level + "degree=" + degree);
 		if (level < 25) {
 			degree = angleToDegree(25);
-			handler.sendEmptyMessage(3);
+			handler.sendEmptyMessage(UpdateUILocalNumDiff);
 		} else {
-			handler.sendEmptyMessage(2);
+			handler.sendEmptyMessage(UpdateUIToDefault);
 		}
 
 	}
