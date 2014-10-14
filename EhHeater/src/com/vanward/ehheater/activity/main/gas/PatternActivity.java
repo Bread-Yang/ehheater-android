@@ -193,7 +193,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		} else {
 			ivTitleBtnRigh.setVisibility(View.VISIBLE);
 		}
-//		name = name.replace("模式", "");
+		// name = name.replace("模式", "");
 		setRadiocheck(name, getWindow().getDecorView());
 
 	}
