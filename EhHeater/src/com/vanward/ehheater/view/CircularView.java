@@ -408,7 +408,6 @@ public class CircularView extends View {
 				}
 			}
 		}
-
 	}
 
 	public void setPath() {

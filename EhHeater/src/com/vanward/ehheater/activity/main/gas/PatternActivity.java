@@ -98,6 +98,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	ImageView yugaosetting;
 
 	private List<GasCustomSetVo> customSetVolist;
+	private String name;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -168,7 +169,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 		case R.id.ivTitleBtnRigh:
-
 			Intent intent = new Intent();
 			intent.setClass(this, AddPattenActivity.class);
 			startActivity(intent);
@@ -186,14 +186,14 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	public void initViewValue() {
 		customSetVolist = new BaseDao(this).getDb().findAll(
 				GasCustomSetVo.class);
+		name = getIntent().getStringExtra("name");
 		addCustomView();
 		if (customSetVolist.size() >= 3) {
 			ivTitleBtnRigh.setVisibility(View.GONE);
 		} else {
 			ivTitleBtnRigh.setVisibility(View.VISIBLE);
 		}
-		String name = getIntent().getStringExtra("name");
-		name = name.replace("模式", "");
+//		name = name.replace("模式", "");
 		setRadiocheck(name, getWindow().getDecorView());
 
 	}
@@ -207,15 +207,15 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				}
 			} else if (root instanceof RadioButton) {
 				RadioButton radioButton = ((RadioButton) root);
-				if (radioButton.getText().equals(name)) {
+				if (radioButton.getTag().equals(name)) {
 					group.setOnCheckedChangeListener(null);
 					radioButton.setChecked(true);
-					System.out.println(radioButton.getText() + "true");
+					System.out.println(radioButton.getTag() + "true");
 					group.setOnCheckedChangeListener(this);
 				} else {
 					group.setOnCheckedChangeListener(null);
 					radioButton.setChecked(false);
-					System.out.println(name + "：" + radioButton.getText()
+					System.out.println(name + "：" + radioButton.getTag()
 							+ "false");
 					group.setOnCheckedChangeListener(this);
 				}
@@ -238,8 +238,14 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				size = customSetVolist.size();
 			}
 			for (int i = 0; i < size; i++) {
-				zidingyiradioGroup.addView(initCustomItemView(
-						customSetVolist.get(i), false));
+				if (name.equals(customSetVolist.get(i).getName())) {
+					zidingyiradioGroup.addView(initCustomItemView(
+							customSetVolist.get(i), true));
+				} else {
+					zidingyiradioGroup.addView(initCustomItemView(
+							customSetVolist.get(i), false));
+				}
+
 				View view2 = new View(this);
 				view2.setBackgroundColor(R.color.line);
 				LinearLayout.LayoutParams lParams = new LayoutParams(

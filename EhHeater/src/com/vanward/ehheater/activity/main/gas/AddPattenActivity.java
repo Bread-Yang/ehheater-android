@@ -99,9 +99,27 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		super.onClick(view);
 	}
 
+	public int heatmakeRange(int value) {
+		int index = 0;
+		if (value == 49) {
+			index = 50;
+		} else if (value > 49) {
+			int[] rangs = { 50, 55, 60, 65 };
+			for (int i = 0; i < rangs.length; i++) {
+				if (Math.abs(value - rangs[i]) <= 3) {
+					index = rangs[i];
+					break;
+				}
+			}
+		} else {
+			index = value;
+		}
+		return index;
+	}
+
 	@Override
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-		degree.setText(arg1 + 35 + "℃");
+		degree.setText(heatmakeRange(arg1 + 35) + "℃");
 	}
 
 	@Override
@@ -112,7 +130,6 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onStopTrackingTouch(SeekBar arg0) {
-		// TODO Auto-generated method stub
-
+		seekBar.setProgress(heatmakeRange(arg0.getProgress() + 35) - 35);
 	}
 }

@@ -89,7 +89,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/textView2"
-                android:max="50"
+                android:max="30"
                 android:maxHeight="6dip"
                 android:minHeight="6dip"
                 android:padding="10dp"
