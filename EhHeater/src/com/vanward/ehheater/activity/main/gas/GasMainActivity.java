@@ -159,6 +159,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			public void run() {
 				circularView = new CircularView(GasMainActivity.this,
 						llt_circle, CircularView.CIRCULAR_SINGLE, 0);
+				circularView.setHeat(true);
 				circularView.setEndangle(65);
 				circularView.setAngle(35);
 				circularView.setOn(true);
@@ -235,6 +236,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		modeTv.setText("舒适模式");
 		if (circularView != null) {
 			circularView.setOn(true);
+			circularView.setEndangle(48);
 		}
 
 	}
@@ -248,6 +250,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		modeTv.setText("厨房模式");
 		if (circularView != null) {
 			circularView.setOn(false);
+
 		}
 	}
 
@@ -260,6 +263,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		modeTv.setText("节能模式");
 		if (circularView != null) {
 			circularView.setOn(false);
+
 		}
 
 	}
@@ -285,6 +289,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		modeTv.setText("浴缸模式");
 		if (circularView != null) {
 			circularView.setOn(true);
+			circularView.setEndangle(65);
 		}
 	}
 
@@ -363,7 +368,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * @param pResp
 	 */
 	public void modeDeal(GasWaterHeaterStatusResp_t pResp) {
-
 		// 模式切换的api 跟 那个需求有出入
 		System.out.println("当前模式： " + pResp.getFunction_state());
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
@@ -419,6 +423,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("设置温度： " + pResp.getTargetTemperature());
 		System.out.println("进水温度： " + pResp.getIncomeTemperature());
 		System.out.println("出水温度： " + pResp.getOutputTemperature());
+		if (Insetting) {
+			return;
+		}
 		target_tem.setText(pResp.getTargetTemperature() + "℃");
 		if (pResp.getOutputTemperature() < 25) {
 			circularView.setAngle(pResp.getOutputTemperature());
@@ -511,7 +518,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public boolean onLongClick(View arg0) {
 		SendMsgModel.setToSolfMode();
-		return false;
+		return true;
 	}
 
 	public void sentToMsgAfterSix(final int value) {
@@ -523,7 +530,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			@Override
 			public void onTick(long arg0) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
@@ -552,6 +558,22 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		// TODO Auto-generated method stub
 		temptertitleTextView.setText("设定温度");
 		tempter.setText(outlevel + "");
+		if (outlevel >= 50) {
+			// 变小了
+			if (circularView.getTargerdegree() > outlevel) {
+				if (outlevel == 50) {
+					circularView.setTargerdegree(outlevel - 1);
+				} else {
+					circularView.setTargerdegree(outlevel - 3);
+				}
+
+			} else {
+				circularView.setTargerdegree(outlevel + 3);
+			}
+
+		} else {
+			circularView.setTargerdegree(outlevel);
+		}
 		Insetting = true;
 	}
 

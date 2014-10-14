@@ -21,6 +21,14 @@ import com.vanward.ehheater.R;
 
 //@SuppressLint("HandlerLeak")
 public class CircularView extends View {
+	public boolean isHeat() {
+		return isHeat;
+	}
+
+	public void setHeat(boolean isHeat) {
+		this.isHeat = isHeat;
+	}
+
 	CircleListener circularListener;
 
 	final static int MOVE_IN = 1;
@@ -258,6 +266,7 @@ public class CircularView extends View {
 							olddegree = degree;
 							if (degree >= angleToDegree(beginangle)
 									&& degree <= angleToDegree(endangle)) {
+								heatmakeRange(degreeToAngle(degree));
 								handler.sendEmptyMessage(UpdateUIToSet);
 							}
 
@@ -285,6 +294,8 @@ public class CircularView extends View {
 						// degree = tempdegree;
 					}
 				}
+
+				heatmakeRange(degreeToAngle(degree));
 				if (degree >= angleToDegree(beginangle)
 						&& degree <= angleToDegree(endangle)) {
 					if (isclick) {
@@ -377,6 +388,25 @@ public class CircularView extends View {
 			handler.sendEmptyMessage(UpdateUILocalNumDiff);
 		} else {
 			handler.sendEmptyMessage(UpdateUIToDefault);
+		}
+	}
+
+	boolean isHeat = false;
+
+	public void heatmakeRange(float value) {
+		if (isHeat) {
+			if (value == 49) {
+				degree = angleToDegree(50);
+			}
+			if (value > 49) {
+				int[] rangs = { 50, 55, 60, 65 };
+				for (int i = 0; i < rangs.length; i++) {
+					if (Math.abs(value - rangs[i]) <= 3) {
+						degree = angleToDegree(rangs[i]);
+						break;
+					}
+				}
+			}
 		}
 
 	}
