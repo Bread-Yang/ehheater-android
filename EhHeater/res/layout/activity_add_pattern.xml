@@ -25,7 +25,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            android:text="姓名"
+            android:text="名称"
             android:textColor="@color/appointment_text_color"
             android:textSize="20sp" />
 
@@ -74,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
+                android:checked="true"
                 android:tag="20"
                 android:text="  无"
                 android:textColor="@color/appointment_text_color"
@@ -85,7 +86,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:checked="true"
                 android:tag="50"
                 android:text=" 1人"
                 android:textColor="@color/appointment_text_color"
@@ -160,17 +160,15 @@
             <SeekBar
                 android:id="@+id/seekBar1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="28dp"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@+id/TextView01"
                 android:gravity="center"
                 android:max="50"
-                android:maxHeight="6dip"
-                android:minHeight="6dip"
                 android:progress="0"
                 android:progressDrawable="@drawable/seekbar_style"
-                android:thumb="@drawable/tiao3"
+                android:thumb="@drawable/seekbar_thumb"
                 android:thumbOffset="0dip" />
         </LinearLayout>
     </RelativeLayout>

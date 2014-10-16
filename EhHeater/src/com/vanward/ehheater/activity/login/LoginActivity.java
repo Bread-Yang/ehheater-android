@@ -251,7 +251,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			// hser.addNewHeater(hinfo1);
 			// hser.addNewHeater(hinfo2);
 			// hser.addNewHeater(hinfo3);
-			 hser.addNewHeater(hinfo3);
+			 hser.addNewHeater(hinfo2);
 			 Context context = getBaseContext();
 			 AccountService.setUser(context, "111111", "111111");
 

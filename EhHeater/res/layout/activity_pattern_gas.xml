@@ -40,7 +40,7 @@
             android:layout_alignParentTop="true"
             android:layout_margin="20dp"
             android:gravity="center"
-            android:text="暂无自定义模式"
+            android:text="暂无自定义情景"
             android:textColor="#c3c9cc"
             android:textSize="23sp" />
 

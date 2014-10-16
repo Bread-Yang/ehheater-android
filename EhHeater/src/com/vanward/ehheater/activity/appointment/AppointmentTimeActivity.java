@@ -9,14 +9,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.SendMsgModel;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.view.wheelview.WheelView;
@@ -45,6 +44,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	Button ivTitleBtnRigh;
 	@ViewInject(id = R.id.water_radiogroup, click = "onClick")
 	RadioGroup radioGroup;
+	@ViewInject(id = R.id.radioGroup1, click = "onClick")
+	RadioGroup peopleGroup;
 	@ViewInject(id = R.id.seekBar1, click = "onClick")
 	SeekBar seekBar1;
 
@@ -115,6 +116,64 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					.setChecked(true);
 		}
 
+		peopleGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				switch (checkedId) {
+				case R.id.radio00:
+					// unlock
+					unLockTempAndPower();
+					break;
+				case R.id.radio0:
+					// lock
+					// set args
+					lockTempAndPower();
+					setArgsForTempAndPower(45, 3);
+					break;
+				case R.id.radio1:
+					lockTempAndPower();
+					setArgsForTempAndPower(65, 3);
+					break;
+				case R.id.radio2:
+					lockTempAndPower();
+					setArgsForTempAndPower(75, 3);
+					break;
+				}
+			}
+		});
+		
+		peopleGroup.check(R.id.radio0);
+	}
+	
+	private void lockTempAndPower() {
+		seekBar1.setEnabled(false);
+		for(int i = 0; i < radioGroup.getChildCount(); i++){
+		    ((RadioButton)radioGroup.getChildAt(i)).setEnabled(false);
+		}
+	}
+	
+	private void unLockTempAndPower() {
+		seekBar1.setEnabled(true);
+		for(int i = 0; i < radioGroup.getChildCount(); i++){
+		    ((RadioButton)radioGroup.getChildAt(i)).setEnabled(true);
+		}
+	}
+	
+	private void setArgsForTempAndPower(int temp, int power) {
+		seekBar1.setProgress(temp-35);
+		switch (power) {
+		case 1:
+			radioGroup.check(R.id.RadioButton03);
+			break;
+		case 2:
+			radioGroup.check(R.id.RadioButton01);
+			break;
+		case 3:
+			radioGroup.check(R.id.RadioButton02);
+			break;
+		}
+		
 	}
 
 	@Override
@@ -209,8 +268,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					.toString();
 
 			int num = 0;
-			for (int i = 0; i < radioGroup.getChildCount(); i++) {
-				if (radioGroup.getCheckedRadioButtonId() == radioGroup
+			for (int i = 0; i < peopleGroup.getChildCount(); i++) {
+				if (peopleGroup.getCheckedRadioButtonId() == peopleGroup
 						.getChildAt(i).getId()) {
 					num = i;
 				}

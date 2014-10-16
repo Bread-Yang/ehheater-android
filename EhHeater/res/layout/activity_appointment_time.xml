@@ -103,7 +103,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:checked="true"
                 android:text="  1人"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
@@ -128,7 +127,7 @@
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
 
-            <RadioButton
+            <RadioButton android:visibility="gone"
                 android:id="@+id/radio00"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -192,11 +191,9 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/TextView01"
                 android:max="50"
-                android:maxHeight="6dip"
-                android:minHeight="6dip"
                 android:progress="20"
                 android:progressDrawable="@drawable/seekbar_style"
-                android:thumb="@drawable/tiao3" />
+                android:thumb="@drawable/seekbar_thumb" />
         </LinearLayout>
     </RelativeLayout>
 

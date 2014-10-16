@@ -9,18 +9,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
-import com.vanward.ehheater.view.CircularSeekBar;
-import com.vanward.ehheater.view.CircularSeekBar.OnSeekChangeListener;
 
 public class AddPattenActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
@@ -41,6 +41,9 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 	@ViewInject(id = R.id.power, click = "")
 	RadioGroup powerGroup;
 
+	@ViewInject(id = R.id.RadioGroup01, click = "")
+	RadioGroup peopleGroup;
+
 	@ViewInject(id = R.id.textView2, click = "")
 	TextView degree;
 
@@ -54,6 +57,62 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 		seekBar.setOnSeekBarChangeListener(this);
 		degree.setText("35℃");
+		peopleGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				switch (checkedId) {
+				case R.id.RadioButton07:
+					// unlock
+					unLockTempAndPower();
+					break;
+				case R.id.RadioButton05:
+					// lock
+					// set args
+					lockTempAndPower();
+					setArgsForTempAndPower(45, 3);
+					break;
+				case R.id.RadioButton04:
+					lockTempAndPower();
+					setArgsForTempAndPower(65, 3);
+					break;
+				case R.id.RadioButton06:
+					lockTempAndPower();
+					setArgsForTempAndPower(75, 3);
+					break;
+				}
+			}
+		});
+	}
+	
+	private void lockTempAndPower() {
+		seekBar.setEnabled(false);
+		for(int i = 0; i < powerGroup.getChildCount(); i++){
+		    ((RadioButton)powerGroup.getChildAt(i)).setEnabled(false);
+		}
+	}
+	
+	private void unLockTempAndPower() {
+		seekBar.setEnabled(true);
+		for(int i = 0; i < powerGroup.getChildCount(); i++){
+		    ((RadioButton)powerGroup.getChildAt(i)).setEnabled(true);
+		}
+	}
+	
+	private void setArgsForTempAndPower(int temp, int power) {
+		seekBar.setProgress(temp-35);
+		switch (power) {
+		case 1:
+			powerGroup.check(R.id.RadioButton03);
+			break;
+		case 2:
+			powerGroup.check(R.id.RadioButton01);
+			break;
+		case 3:
+			powerGroup.check(R.id.RadioButton02);
+			break;
+		}
+		
 	}
 
 	public CustomSetVo getData() {

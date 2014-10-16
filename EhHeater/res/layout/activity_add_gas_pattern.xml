@@ -26,7 +26,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            android:text="姓名"
+            android:text="名称"
             android:textColor="@color/appointment_text_color"
             android:textSize="20sp" />
 
@@ -90,12 +90,10 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/textView2"
                 android:max="30"
-                android:maxHeight="6dip"
-                android:minHeight="6dip"
                 android:padding="10dp"
                 android:progress="0"
                 android:progressDrawable="@drawable/seekbar_style"
-                android:thumb="@drawable/tiao3"
+                android:thumb="@drawable/seekbar_thumb"
                 android:thumbOffset="0dip" >
             </SeekBar>
         </LinearLayout>

@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="自定义模式"
+            android:text="自定义情景"
             android:textColor="#5d7884"
             android:textSize="18sp" />
 
@@ -40,7 +40,7 @@
             android:layout_alignParentTop="true"
             android:layout_margin="20dp"
             android:gravity="center"
-            android:text="暂无自定义模式"
+            android:text="暂无自定义情景"
             android:textColor="#c3c9cc"
             android:textSize="23sp" />
 
