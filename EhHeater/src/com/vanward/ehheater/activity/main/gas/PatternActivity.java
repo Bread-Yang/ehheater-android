@@ -304,7 +304,11 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																		PatternActivity.this)
 																		.getDb()
 																		.update(tempcustomSetVo);
-
+																SendMsgModel
+																		.setDIYModel(
+																				tempcustomSetVo
+																						.getId(),
+																				tempcustomSetVo);
 																initViewValue();
 																AddPatternGasSettingDialogUtil
 																		.instance(

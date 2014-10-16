@@ -138,7 +138,7 @@
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
                 android:checked="true"
-                android:tag="50"
+                android:tag="100"
                 android:text=" 大"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:tag="30"
+                android:tag="60"
                 android:text="  中"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
@@ -160,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:tag="20"
+                android:tag="40"
                 android:text="  小"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
