@@ -317,7 +317,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		// break;
 		// }
 		// }
-		circularView.setOn(true);
+		circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
 	}
