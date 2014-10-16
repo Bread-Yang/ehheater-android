@@ -230,7 +230,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements OnClickListene
 					ssid);
 			
 			configer.transmitSettings();
-			
+			isWaitingCallback = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -254,7 +254,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements OnClickListene
 	
 	@Override
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
-		if (easyLkRespCount++ == 0) {
+		if (easyLkRespCount++ == 0 && isWaitingCallback) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
 			stopEasyLink();
 			tempEndpoint = endpoint;
@@ -272,6 +272,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements OnClickListene
 	}
 	XpgEndpoint tempEndpoint;
 	int easyLkRespCount;
+	boolean isWaitingCallback = false;
 	
 	private void finishingConfig() {
 
