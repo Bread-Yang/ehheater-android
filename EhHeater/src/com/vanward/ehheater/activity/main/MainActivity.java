@@ -133,7 +133,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			modeTv.setText("自定义模式");
 		}
-
+		//自动切换到智能模式
+		modeTv.post(new Runnable() {
+			@Override
+			public void run() {
+				SendMsgModel.changeToIntelligenceModeWash();
+			}
+		});
 	}
 
 	@Override

@@ -104,14 +104,19 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
-		generated.SendStateReq(Global.connectId);
+		closeDevice();
+		rightButton.post(new Runnable() {
+			@Override
+			public void run() {
+				generated.SendStateReq(Global.connectId);
+			}
+		});
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
 	}
 
 	@Override
@@ -167,7 +172,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setCircularListener(GasMainActivity.this);
 				llt_circle.addView(circularView);
 			}
-		}, 100);
+		}, 50);
 	}
 
 	private void initSlidingMenu() {
@@ -221,7 +226,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			intent2.setClass(this, PatternActivity.class);
 			startActivity(intent2);
 			break;
-
 		case R.id.btn_information:
 			break;
 		}
@@ -250,7 +254,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		modeTv.setText("厨房模式");
 		if (circularView != null) {
 			circularView.setOn(false);
-
 		}
 	}
 
@@ -395,6 +398,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		default:
 			break;
 		}
+	}
+
+	public void closeDevice() {
+		openView.setVisibility(View.VISIBLE);
+		rightButton.setVisibility(View.GONE);
+		ChangeStuteView.swichDeviceOff(stuteParent);
 	}
 
 	/**
