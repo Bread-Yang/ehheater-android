@@ -2,6 +2,7 @@ package com.vanward.ehheater.service;
 
 import android.content.Context;
 
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.util.SharedPreferUtils;
@@ -20,6 +21,8 @@ public class HeaterInfoService {
 	 * @param heater
 	 */
 	public void addNewHeater(HeaterInfo heater) {
+		generateDefaultName(heater);
+		changeDuplicatedName(heater);
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
 		hdao.save(heater);
 		new SharedPreferUtils(context).put(ShareKey.CurDeviceMac,
@@ -32,6 +35,8 @@ public class HeaterInfoService {
 	 * @param heater
 	 */
 	public void saveDownloadedHeater(HeaterInfo heater) {
+		generateDefaultName(heater);
+		changeDuplicatedName(heater);
 		heater.setBinded(1);
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
 		hdao.save(heater);
@@ -81,5 +86,66 @@ public class HeaterInfoService {
 		hdao.getDb().dropTable(HeaterInfo.class);
 		hdao.getDb().createTable(HeaterInfo.class);
 	}
+	
+	public enum HeaterType {
+		
+		Eh(Consts.E_HEATER_DEFAULT_NAME, Consts.EH_P_KEY), 
+		ST(Consts.ST_HEATER_DEFAULT_NAME, Consts.ST_P_KEY), 
+		Unknown(Consts.HEATER_DEFAULT_NAME, "");
+		
+		public String defName, pkey;
+		HeaterType(String defName, String pkey) {
+			this.defName = defName;
+			this.pkey = pkey;
+		}
+		
+	}
+	
+	public HeaterType getHeaterType (HeaterInfo hinfo) {
+		
+		if (Consts.EH_P_KEY.equals(hinfo.getProductKey())) {
+			return HeaterType.Eh;
+		} else if (Consts.ST_P_KEY.equals(hinfo.getProductKey())) {
+			return HeaterType.ST;
+		} else {
+			return HeaterType.Unknown;
+		}
+		
+	}
+	
+	public void generateDefaultName(HeaterInfo hinfo) {
+		HeaterType type = getHeaterType(hinfo);
+		int count = new HeaterInfoDao(context).getHeaterCountOfType(type);
+
+		hinfo.setName(type.defName + (count+1));
+		
+	}
+	
+	public void changeDuplicatedName(HeaterInfo hinfo) {
+		duplicates = 1;
+		origName = hinfo.getName();
+		recurseChangeDuplicatedName(hinfo);
+	}
+	
+	private void recurseChangeDuplicatedName(HeaterInfo hinfo) {
+		// check name exists
+		// true
+			// reset hinfo.name according to a regulation
+			// method recurse
+		// fasle
+			// return (just do nothing)
+
+		duplicates++;
+		boolean nameExists = new HeaterInfoDao(context).nameExists(hinfo.getName());
+		if (nameExists) {
+			hinfo.setName(origName + " (" + duplicates + ")");
+			recurseChangeDuplicatedName(hinfo);
+		} else {
+			
+		}
+		
+	}
+	int duplicates;
+	String origName;
 
 }

@@ -160,7 +160,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			// 0和1都是登录成功
 			AccountService.setPendingUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
-			generated.SendBindingGetReq(Global.connectId);
+			generated.SendBindingGetV2Req(Global.connectId);
 			onDeviceFoundTriggered = false;
 			new Timer().schedule(new TimerTask() {
 				@Override

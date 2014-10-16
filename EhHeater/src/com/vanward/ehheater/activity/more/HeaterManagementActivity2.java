@@ -265,6 +265,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 				if (!TextUtils.isEmpty(nameSet)) {
 					// update name
 					heater.setName(nameSet);
+					new HeaterInfoService(getBaseContext()).changeDuplicatedName(heater);
 					new HeaterInfoDao(getBaseContext()).getDb().update(heater);
 					adapter.notifyDataSetChanged();
 
