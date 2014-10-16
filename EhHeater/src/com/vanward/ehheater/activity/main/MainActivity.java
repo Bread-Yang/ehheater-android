@@ -295,7 +295,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(null);
+		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
 		if (i == 0) {
 			ChangeStuteView.swichKeep(stuteParent);
@@ -410,6 +410,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
 		System.out.println("回调onTcpPacket");
+		System.out.println("MainActivity.onTcpPacket()： "+ new EhState(data).getRemainingHotWaterAmount() );
+		
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			setTempture(data);
 			setLeaveWater(data);

@@ -429,6 +429,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * @param pResp
 	 */
 	public void temptertureDeal(final GasWaterHeaterStatusResp_t pResp) {
+		if (circularView == null) {
+			return;
+		}
 		System.out.println("设置温度： " + pResp.getTargetTemperature());
 		System.out.println("进水温度： " + pResp.getIncomeTemperature());
 		System.out.println("出水温度： " + pResp.getOutputTemperature());

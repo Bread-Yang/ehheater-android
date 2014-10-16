@@ -259,7 +259,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	}
 
 	public View initCustomItemView(final GasCustomSetVo customSetVo,
-			Boolean isCheck) {
+			final Boolean isCheck) {
 		View view = LinearLayout.inflate(this,
 				R.layout.layout_addcustom_layout, null);
 		Button button = (Button) view.findViewById(R.id.textradio1);
@@ -304,11 +304,14 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																		PatternActivity.this)
 																		.getDb()
 																		.update(tempcustomSetVo);
-																SendMsgModel
-																		.setDIYModel(
-																				tempcustomSetVo
-																						.getId(),
-																				tempcustomSetVo);
+																if (isCheck) {
+																	SendMsgModel
+																			.setDIYModel(
+																					tempcustomSetVo
+																							.getId(),
+																					tempcustomSetVo);
+																}
+
 																initViewValue();
 																AddPatternGasSettingDialogUtil
 																		.instance(

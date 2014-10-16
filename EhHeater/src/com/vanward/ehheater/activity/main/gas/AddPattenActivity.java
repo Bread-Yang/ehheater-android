@@ -63,9 +63,21 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			Toast.makeText(this, "请输入姓名", Toast.LENGTH_SHORT).show();
 			return null;
 		}
+
 		customSetVo.setName(nameedittext.getText().toString());
 		customSetVo.setTempter(seekBar.getProgress() + 35);
-		List list = new BaseDao(this).getDb().findAll(GasCustomSetVo.class);
+		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
+				GasCustomSetVo.class);
+
+		for (int i = 0; i < list.size(); i++) {
+			if (nameedittext.getText().toString().equals(list.get(i).getName())) {
+				Toast.makeText(this, "请输出有效名字此名字已用！", Toast.LENGTH_SHORT)
+						.show();
+				return null;
+			}
+
+		}
+
 		customSetVo.setId(list.size() + 1);
 		View view = null;
 		for (int i = 0; i < waterGroup.getChildCount(); i++) {

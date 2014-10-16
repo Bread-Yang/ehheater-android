@@ -119,7 +119,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		CustomSetVo customSetVo = new CustomSetVo();
 		customSetVo.setConnid(Global.connectId);
 		if (nameedittext.getText().toString().length() <= 0) {
-			Toast.makeText(this, "请输入姓名", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "请输入名字", Toast.LENGTH_SHORT).show();
 			return null;
 		}
 		customSetVo.setName(nameedittext.getText().toString());
