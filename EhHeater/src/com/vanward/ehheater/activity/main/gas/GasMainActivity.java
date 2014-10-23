@@ -33,6 +33,7 @@ import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.LeftFragment;
+import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -42,6 +43,7 @@ import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
+import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.FreezeProofingDialogUtil;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
@@ -57,7 +59,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	protected SlidingMenu mSlidingMenu;
 
-	private TextView mTitleName, modeTv, temptertitleTextView;
+	private TextView mTitleName, modeTv, temptertitleTextView, sumwater, stute,
+			shuiliuliangText;
 
 	View btn_power;
 	TextView tempter, leavewater, target_tem;
@@ -67,7 +70,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	Button btn_appointment;
 	CircularView circularView;
 
-	ImageView iv_wave, hotImgeImageView;
+	ImageView iv_wave, hotImgeImageView, modeimg;
 	AnimationDrawable animationDrawable;
 	RelativeLayout rlt_start_device, content;
 
@@ -104,7 +107,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
-		closeDevice();
 		rightButton.post(new Runnable() {
 			@Override
 			public void run() {
@@ -145,13 +147,18 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		btn_info = (Button) findViewById(R.id.btn_information);
 		modeTv = (TextView) findViewById(R.id.mode_tv);
 		llt_circle = (LinearLayout) findViewById(R.id.circle_llt);
-		stuteParent = (ViewGroup) findViewById(R.id.stute);
+		// stuteParent = (ViewGroup) findViewById(R.id.stute);
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
 		iv_wave = (ImageView) findViewById(R.id.wave_bg);
+		modeimg = (ImageView) findViewById(R.id.modeimg);
 		tempter = (TextView) findViewById(R.id.tempter);
-		leavewater = (TextView) findViewById(R.id.leavewater);
+		leavewater = (TextView) findViewById(R.id.shuiliuliang);
+		sumwater = (TextView) findViewById(R.id.zhushuiliang);
+		shuiliuliangText = (TextView) findViewById(R.id.shuiliuliangText);
+
 		content = (RelativeLayout) findViewById(R.id.content);
 		mode = (Button) findViewById(R.id.pattern);
+		stute = (TextView) findViewById(R.id.stute);
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
@@ -171,6 +178,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				hotImgeImageView.setVisibility(View.GONE);
 				circularView.setCircularListener(GasMainActivity.this);
 				llt_circle.addView(circularView);
+				circularView.setVisibility(View.GONE);
 			}
 		}, 50);
 	}
@@ -213,7 +221,14 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
-			SendMsgModel.closeDevice();
+			DeviceOffUtil.instance(this).nextButtonCall(new NextButtonCall() {
+				@Override
+				public void oncall(View v) {
+					SendMsgModel.closeDevice();
+					DeviceOffUtil.instance(GasMainActivity.this).dissmiss();
+				}
+			}).showDialog();
+
 			break;
 		case R.id.appointment_btn:
 			Intent intent = new Intent();
@@ -238,9 +253,10 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("舒适模式");
+		modeimg.setImageResource(R.drawable.gas_home_icon_comfort);
 		if (circularView != null) {
-			circularView.setOn(true);
-			circularView.setEndangle(48);
+			circularView.setVisibility(View.VISIBLE);
+			circularView.setEndangle(65);
 		}
 
 	}
@@ -252,8 +268,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoKictienMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("厨房模式");
+		modeimg.setImageResource(R.drawable.gas_home_icon_kitchen);
 		if (circularView != null) {
-			circularView.setOn(false);
+			circularView.setVisibility(View.GONE);
 		}
 	}
 
@@ -264,8 +281,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("节能模式");
+		modeimg.setImageResource(R.drawable.gas_home_icon_intelligence);
 		if (circularView != null) {
-			circularView.setOn(false);
+			circularView.setVisibility(View.GONE);
 
 		}
 
@@ -278,8 +296,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoligenceMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("智能模式");
+		modeimg.setImageResource(R.drawable.gas_home_icon_energy);
 		if (circularView != null) {
-			circularView.setOn(false);
+			circularView.setVisibility(View.GONE);
 		}
 	}
 
@@ -290,8 +309,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("浴缸模式");
+		modeimg.setImageResource(R.drawable.gas_home_icon_bathtub);
 		if (circularView != null) {
-			circularView.setOn(true);
+			circularView.setVisibility(View.VISIBLE);
 			circularView.setEndangle(65);
 		}
 	}
@@ -308,15 +328,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		circularView.setOn(false);
 		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
 				GasCustomSetVo.class);
-		// 自定义模式的名字怎么显示。
-		// for (int i = 0; i < list.size(); i++) {
-		// CustomSetVo customSetVo = list.get(i);
-		// if (customSetVo.getPower() == power
-		// && customSetVo.getTempter() == targetTemperature) {
-		// modeTv.setText(customSetVo.getName());
-		// break;
-		// }
-		// }
 		circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
@@ -326,6 +337,24 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void setAppointmentButtonAble(boolean isAble) {
 		btn_appointment.setEnabled(isAble);
 		btn_power.setEnabled(isAble);
+	}
+
+	public void dealInHeat(GasWaterHeaterStatusResp_t pResp) {
+		if (pResp.getFlame() == 1) {
+			stute.setText("加热中");
+			hotImgeImageView.setVisibility(View.VISIBLE);
+			operatingAnim = AnimationUtils.loadAnimation(GasMainActivity.this,
+					R.anim.tip_4500);
+			LinearInterpolator lin = new LinearInterpolator();
+			operatingAnim.setInterpolator(lin);
+			hotImgeImageView.startAnimation(operatingAnim);
+
+			animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
+			animationDrawable.start();
+		} else {
+			hotImgeImageView.setVisibility(View.GONE);
+		}
+
 	}
 
 	public void initopenView() {
@@ -376,6 +405,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
 		// 0x05（智能模式）、0x06（自定义模式）
 
+		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
+		// 0x05（智能模式）、0x06（自定义模式）
+
 		switch (pResp.getFunction_state()) {
 		case 1:
 			changetoSofeMode(pResp);
@@ -414,12 +446,13 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("开关： " + pResp.getOn_off());// 1为开机0为关机
 		if (pResp.getOn_off() == 0) {
-			openView.setVisibility(View.VISIBLE);
 			rightButton.setVisibility(View.GONE);
-			ChangeStuteView.swichDeviceOff(stuteParent);
+			// ChangeStuteView.swichDeviceOff(stuteParent);
+			stute.setText("关机中");
 		} else {
 			rightButton.setVisibility(View.VISIBLE);
 			openView.setVisibility(View.GONE);
+			stute.setText("待机中");
 		}
 	}
 
@@ -439,11 +472,11 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			return;
 		}
 		target_tem.setText(pResp.getTargetTemperature() + "℃");
-		if (pResp.getOutputTemperature() < 25) {
-			circularView.setAngle(pResp.getOutputTemperature());
+		if (pResp.getTargetTemperature() < 25) {
+			circularView.setAngle(pResp.getTargetTemperature());
 			tempter.setText(pResp.getOutputTemperature() + "");
 		} else {
-			circularView.setAngle(pResp.getOutputTemperature());
+			circularView.setAngle(pResp.getTargetTemperature());
 		}
 
 		circularView.setTargerdegree(pResp.getTargetTemperature());
@@ -464,7 +497,22 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void waterDeal(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("当前水流量： " + pResp.getNowVolume());
 		System.out.println("当前设置水流量： " + pResp.getCustomWaterProportion());
+		System.out.println("当前累加注水量：" + pResp.getSetWater_cumulative());
+		System.out.println("设置注水量： " + pResp.getSetWater_power());
+		// 浴缸 设定注水量 累计注水量
+
 		leavewater.setText(pResp.getNowVolume() + "L");
+		if (pResp.getFunction_state() == 3) {
+			((View) sumwater.getParent()).setVisibility(View.VISIBLE);
+			sumwater.setText(pResp.getSetWater_power() + "0L");
+			shuiliuliangText.setText("累计注水量");
+			leavewater.setText(pResp.getSetWater_cumulative() + "L");
+		} else {
+			((View) sumwater.getParent()).setVisibility(View.GONE);
+			shuiliuliangText.setText("实时水流量");
+			leavewater.setText(pResp.getNowVolume() + "L");
+		}
+
 	}
 
 	/**
@@ -478,6 +526,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	public void diyModeDeal(GasWaterHeaterStatusResp_t pResp) {
+		modeimg.setVisibility(View.VISIBLE);
 		System.out.println("自定义功能：" + pResp.getCustomFunction());
 		System.out.println("自定义设置水温：" + pResp.getCustomWaterTemperture());
 		System.out.println("自定义设置水流量比例：" + pResp.getCustomWaterProportion());
@@ -537,7 +586,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
-		mCountDownTimer = new CountDownTimer(6000, 1000) {
+		mCountDownTimer = new CountDownTimer(3000, 1000) {
 
 			@Override
 			public void onTick(long arg0) {
@@ -591,13 +640,13 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
-		temptertitleTextView.setText("出水温度");
+		temptertitleTextView.setText("设定温度");
 		tempter.setText(outlevel + "");
 	}
 
 	@Override
 	public void updateLocalUIdifferent(int outlevel) {
-		temptertitleTextView.setText("出水温度");
+		temptertitleTextView.setText("设定温度");
 	}
 
 }

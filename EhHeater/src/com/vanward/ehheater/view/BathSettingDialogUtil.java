@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.MoringSeVo;
+import com.vanward.ehheater.activity.main.gas.SendMsgModel;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 
@@ -99,7 +100,7 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 		temtv = (TextView) dialog_morning_wash_number_setting
 				.findViewById(R.id.TextView01);
 		temtv.setTag(35);
-		waterttv.setTag(10);
+		waterttv.setTag(1);
 		seekBartem.setOnSeekBarChangeListener(this);
 		seekBarwater.setOnSeekBarChangeListener(this);
 		BathSettingVo bathSettingVo = new BaseDao(context).getDb().findById(1,
@@ -127,6 +128,7 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 								(Integer) waterttv.getTag(), (Integer) temtv
 										.getTag());
 						new BaseDao(context).getDb().replace(bathSettingVo);
+						nextButtonCall.oncall(v);
 						dissmiss();
 					}
 				});
@@ -139,8 +141,13 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 			temtv.setText((arg1 + 35) + "℃");
 			temtv.setTag(arg1);
 		} else if (arg0.equals(seekBarwater)) {
-			waterttv.setText((arg1 * 10) + "L");
-			waterttv.setTag(arg1);
+			if (arg1 == 0) {
+				seekBarwater.setProgress(1);
+			} else {
+				waterttv.setText((arg1 * 10) + "L");
+				waterttv.setTag(arg1);
+			}
+
 		}
 
 	}

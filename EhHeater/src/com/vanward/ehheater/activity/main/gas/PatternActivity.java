@@ -178,7 +178,18 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 		case R.id.imageView1:
-			BathSettingDialogUtil.instance(this).showDialog();
+			BathSettingDialogUtil.instance(this)
+					.nextButtonCall(new NextButtonCall() {
+
+						@Override
+						public void oncall(View v) {
+							if (radio3.isChecked()) {
+								SendMsgModel
+										.setToBathtubMode(PatternActivity.this);
+								finish();
+							}
+						}
+					}).showDialog();
 			break;
 		}
 	}
@@ -262,6 +273,8 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			final Boolean isCheck) {
 		View view = LinearLayout.inflate(this,
 				R.layout.layout_addcustom_layout, null);
+		final RadioButton radioButton = (RadioButton) view
+				.findViewById(R.id.radioButton1);
 		Button button = (Button) view.findViewById(R.id.textradio1);
 		view.findViewById(R.id.setting).setOnClickListener(
 				new OnClickListener() {
@@ -345,7 +358,40 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																		PatternActivity.this)
 																		.getDb()
 																		.delete(customSetVo);
+																if (isCheck) {
+																	customSetVolist = new BaseDao(
+																			PatternActivity.this)
+																			.getDb()
+																			.findAll(
+																					GasCustomSetVo.class);
+																	if (customSetVolist
+																			.size() != 0) {
+																		GasCustomSetVo tempcustomSetVo = new BaseDao(
+																				PatternActivity.this)
+																				.getDb()
+																				.findById(
+																						customSetVo
+																								.getId() + 1,
+																						GasCustomSetVo.class);
+																		if (tempcustomSetVo == null) {
+																			tempcustomSetVo = customSetVolist
+																					.get(0);
+																		}
+																		SendMsgModel
+																				.setDIYModel(
+																						tempcustomSetVo
+																								.getId(),
+																						tempcustomSetVo);
+																		finish();
+																	} else {
+																		SendMsgModel
+																				.setToSolfMode();
+																		finish();
+																	}
+																}
+
 																initViewValue();
+
 																SureDelDialogUtil
 																		.instance(
 																				PatternActivity.this)
@@ -359,8 +405,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 					}
 				});
 		button.setText(customSetVo.getName());
-		final RadioButton radioButton = (RadioButton) view
-				.findViewById(R.id.radioButton1);
+
 		radioButton.setTag(customSetVo.getName());
 		radioButton.setChecked(isCheck);
 		// 点击切换

@@ -54,7 +54,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		btn_new_device = (Button) findViewById(R.id.new_device_btn);
 		btn_login = (Button) findViewById(R.id.login_btn);
 		et_user = (EditText) findViewById(R.id.login_user_et);
+
 		et_pwd = (EditText) findViewById(R.id.login_pwd_et);
+
 		mTvReg = (TextView) findViewById(R.id.ll_tv_register);
 
 		IntentFilter filter = new IntentFilter(
@@ -124,6 +126,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.d("emmm", "login resumed");
+		et_user.setText(AccountService.getUserId(this));
+
 		XPGConnectClient.AddActivity(this);
 	}
 
@@ -158,6 +162,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		if (result == 0 || result == 1) {
 			// 0和1都是登录成功
+			SharedPreferUtils.saveUsername(this, et_user.getText().toString());
 			AccountService.setPendingUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
 			generated.SendBindingGetV2Req(Global.connectId);
@@ -244,17 +249,16 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			hinfo3.setPasscode("GIKQLYIVFQ");
 
 			HeaterInfo hinfo4 = new HeaterInfo();
-			hinfo4.setMac("C8934641968D");
-			hinfo4.setPasscode("JYUSQKCLJE");
+			hinfo4.setMac("C8934641B421");
+			hinfo4.setPasscode("TGKJROLIQU");
 
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			// hser.addNewHeater(hinfo1);
 			// hser.addNewHeater(hinfo2);
 			// hser.addNewHeater(hinfo3);
-			 hser.addNewHeater(hinfo2);
-			 Context context = getBaseContext();
-			 AccountService.setUser(context, "111111", "111111");
-
+			hser.addNewHeater(hinfo4);
+			Context context = getBaseContext();
+			AccountService.setUser(context, "111111", "111111");
 		}
 		return super.onKeyDown(keyCode, event);
 	}

@@ -2,6 +2,7 @@ package com.vanward.ehheater.activity.main;
 
 import java.util.List;
 
+import u.aly.i;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.app.Dialog;
@@ -143,56 +144,56 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 		case R.id.ivTitleBtnRigh:
-			
+
 			Intent intent = new Intent();
 			intent.setClass(this, AddPattenActivity.class);
 			startActivity(intent);
-			
-//			AddPatternNameDialogUtil.instance(this)
-//					.setNextButtonCall(new NextButtonCall() {
-//						@Override
-//						public void oncall(View v) {
-//							final String name = AddPatternNameDialogUtil
-//									.instance(PatternActivity.this).getName();
-//							if (AddPatternNameDialogUtil.instance(
-//									PatternActivity.this).isNameExit()) {
-//								Toast.makeText(PatternActivity.this, "此名字已存在",
-//										Toast.LENGTH_SHORT).show();
-//								return;
-//							}
-//
-//							if (name != null && name.length() > 0) {
-//								AddPatternSettingDialogUtil
-//										.instance(PatternActivity.this)
-//										.initName(name)
-//										.nextButtonCall(new NextButtonCall() {
-//
-//											@Override
-//											public void oncall(View v) {
-//												// TODO Auto-generated method
-//												// stub
-//												CustomSetVo customSetVo = AddPatternSettingDialogUtil
-//														.instance(
-//																PatternActivity.this)
-//														.getData();
-//												customSetVo.setName(name);
-//												new BaseDao(
-//														PatternActivity.this)
-//														.getDb().save(
-//																customSetVo);
-//
-//												initViewValue();
-//												AddPatternSettingDialogUtil
-//														.instance(
-//																PatternActivity.this)
-//														.dissmiss();
-//											}
-//										}).showDialog();
-//							}
-//							AddPatternNameDialogUtil.instance(
-//									PatternActivity.this).dissmiss();
-//						}
-//					}).showDialog();
+
+			// AddPatternNameDialogUtil.instance(this)
+			// .setNextButtonCall(new NextButtonCall() {
+			// @Override
+			// public void oncall(View v) {
+			// final String name = AddPatternNameDialogUtil
+			// .instance(PatternActivity.this).getName();
+			// if (AddPatternNameDialogUtil.instance(
+			// PatternActivity.this).isNameExit()) {
+			// Toast.makeText(PatternActivity.this, "此名字已存在",
+			// Toast.LENGTH_SHORT).show();
+			// return;
+			// }
+			//
+			// if (name != null && name.length() > 0) {
+			// AddPatternSettingDialogUtil
+			// .instance(PatternActivity.this)
+			// .initName(name)
+			// .nextButtonCall(new NextButtonCall() {
+			//
+			// @Override
+			// public void oncall(View v) {
+			// // TODO Auto-generated method
+			// // stub
+			// CustomSetVo customSetVo = AddPatternSettingDialogUtil
+			// .instance(
+			// PatternActivity.this)
+			// .getData();
+			// customSetVo.setName(name);
+			// new BaseDao(
+			// PatternActivity.this)
+			// .getDb().save(
+			// customSetVo);
+			//
+			// initViewValue();
+			// AddPatternSettingDialogUtil
+			// .instance(
+			// PatternActivity.this)
+			// .dissmiss();
+			// }
+			// }).showDialog();
+			// }
+			// AddPatternNameDialogUtil.instance(
+			// PatternActivity.this).dissmiss();
+			// }
+			// }).showDialog();
 			break;
 
 		case R.id.mornongsetting:
@@ -342,9 +343,11 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	}
 
 	public View initCustomItemView(final CustomSetVo customSetVo,
-			Boolean isCheck) {
+			final Boolean isCheck) {
 		View view = LinearLayout.inflate(this,
 				R.layout.layout_addcustom_layout, null);
+		final RadioButton radioButton = (RadioButton) view
+				.findViewById(R.id.radioButton1);
 		Button button = (Button) view.findViewById(R.id.textradio1);
 		view.findViewById(R.id.setting).setOnClickListener(
 				new OnClickListener() {
@@ -415,6 +418,24 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																		PatternActivity.this)
 																		.getDb()
 																		.delete(customSetVo);
+																System.out
+																		.println("isCheck: "
+																				+ isCheck);
+																if (radioButton
+																		.isChecked()) {
+																	customSetVolist = new BaseDao(
+																			PatternActivity.this)
+																			.getDb()
+																			.findAll(
+																					CustomSetVo.class);
+																	CustomSetVo customSetVo = null;
+																	if (customSetVolist
+																			.size() != 0) {
+																		customSetVo= customSetVolist.get(0);
+																		setToDIY(customSetVo);
+																		finish();
+																	}
+																}
 																initViewValue();
 																SureDelDialogUtil
 																		.instance(
@@ -430,8 +451,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				});
 
 		button.setText(customSetVo.getName());
-		final RadioButton radioButton = (RadioButton) view
-				.findViewById(R.id.radioButton1);
 		radioButton.setTag(customSetVo.getName());
 		radioButton.setChecked(isCheck);
 		// 点击切换
@@ -444,22 +463,8 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						try {
-							System.out.println("自定义");
-							SendMsgModel.changeToZidingyiMode();
-							Thread.sleep(700);
-							System.out.println("自定义 pow: "
-									+ customSetVo.getPower());
-							SendMsgModel.setPower(customSetVo.getPower());
-							Thread.sleep(700);
-							System.out.println("自定义 Tem: "
-									+ customSetVo.getTempter());
-							SendMsgModel.setTempter(customSetVo.getTempter());
-							finish();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						setToDIY(customSetVo);
+						finish();
 					}
 				}).start();
 
@@ -469,6 +474,22 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		radioButton.setOnClickListener(onClickListener);
 
 		return view;
+	}
+
+	public void setToDIY(CustomSetVo customSetVo) {
+		try {
+			System.out.println("自定义");
+			SendMsgModel.changeToZidingyiMode();
+			Thread.sleep(700);
+			System.out.println("自定义 pow: " + customSetVo.getPower());
+			SendMsgModel.setPower(customSetVo.getPower());
+			Thread.sleep(700);
+			System.out.println("自定义 Tem: " + customSetVo.getTempter());
+			SendMsgModel.setTempter(customSetVo.getTempter());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

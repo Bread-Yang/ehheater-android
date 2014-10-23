@@ -51,7 +51,6 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements O
 		}
 		
 		if ( view == btn_logout ){
-			
 			new SharedPreferUtils(getBaseContext()).clear();
 			new HeaterInfoService(getBaseContext()).deleteAllHeaters();
 			intent.setClass(getBaseContext(), LoginActivity.class);

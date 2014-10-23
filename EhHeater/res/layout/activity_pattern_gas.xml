@@ -251,27 +251,6 @@
             android:background="#d4d4d4" />
 
         <RadioButton
-            android:id="@+id/radio1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:button="@drawable/radio_selector"
-            android:padding="10dp"
-            android:tag="厨房模式"
-            android:text="厨房"
-            android:textColor="#5d7884"
-            android:textSize="18sp" />
-
-        <View
-            android:id="@+id/view2"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_alignBottom="@+id/textView2"
-            android:layout_alignParentLeft="true"
-            android:background="#d4d4d4" />
-
-        <RadioButton
             android:id="@+id/radio2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -281,6 +260,25 @@
             android:padding="10dp"
             android:tag="舒适模式"
             android:text="舒适"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#d4d4d4" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:button="@drawable/radio_selector"
+            android:padding="10dp"
+            android:tag="厨房模式"
+            android:text="厨房"
             android:textColor="#5d7884"
             android:textSize="18sp" />
 

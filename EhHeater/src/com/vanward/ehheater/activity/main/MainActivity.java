@@ -41,6 +41,7 @@ import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
+import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
@@ -133,7 +134,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			modeTv.setText("自定义模式");
 		}
-		//自动切换到智能模式
+		// 自动切换到智能模式
 		modeTv.post(new Runnable() {
 			@Override
 			public void run() {
@@ -192,7 +193,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setEndangle(75);
 				circularView.setAngle(35);
 				circularView.setOn(false);
-
 				operatingAnim = AnimationUtils.loadAnimation(MainActivity.this,
 						R.anim.tip_4500);
 				LinearInterpolator lin = new LinearInterpolator();
@@ -228,7 +228,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
-		mCountDownTimer = new CountDownTimer(6000, 1000) {
+		mCountDownTimer = new CountDownTimer(3000, 1000) {
 			@Override
 			public void onTick(long arg0) {
 				// TODO Auto-generated method stub
@@ -268,7 +268,14 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
-			SendMsgModel.closeDevice();
+			DeviceOffUtil.instance(this).nextButtonCall(new NextButtonCall() {
+				@Override
+				public void oncall(View v) {
+					SendMsgModel.closeDevice();
+					DeviceOffUtil.instance(MainActivity.this).dissmiss();
+				}
+			}).showDialog();
+
 			break;
 		case R.id.appointment_btn:
 			Intent intent = new Intent();
@@ -410,8 +417,9 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
 		System.out.println("回调onTcpPacket");
-		System.out.println("MainActivity.onTcpPacket()： "+ new EhState(data).getRemainingHotWaterAmount() );
-		
+		System.out.println("MainActivity.onTcpPacket()： "
+				+ new EhState(data).getRemainingHotWaterAmount());
+
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			setTempture(data);
 			setLeaveWater(data);

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class SharedPreferUtils {
 
-	private final String SHARED_PREFERENCES_KEY = "ehheater";
+	private static final String SHARED_PREFERENCES_KEY = "ehheater";
 
 	SharedPreferences share;
 
@@ -33,12 +33,31 @@ public class SharedPreferUtils {
 	public Boolean get(ShareKey key, Boolean defaultValue) {
 		return share.getBoolean(key.name(), defaultValue);
 	}
-	
+
 	/**
 	 * 清空
+	 * 
 	 * @param context
 	 */
-	public void clear(){
-		share.edit().clear().commit();
+	public void clear() {
+		put(ShareKey.UserPsw, "");
+		put(ShareKey.PendingUserId, "");
+		put(ShareKey.PendingUserPsw, "");
+		// share.edit().clear().commit();
 	}
+
+	public static void saveUsername(Context context, String username) {
+
+		SharedPreferences share = context.getSharedPreferences(
+				SHARED_PREFERENCES_KEY + "_2", Context.MODE_PRIVATE);
+		share.edit().putString("username", username);
+		share.edit().commit();
+	}
+
+	public static String getUsername(Context context) {
+		SharedPreferences share = context.getSharedPreferences(
+				SHARED_PREFERENCES_KEY + "_2", Context.MODE_PRIVATE);
+		return share.getString("username", "");
+	}
+
 }

@@ -63,12 +63,13 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/TextView01"
                 android:max="30"
-                android:maxHeight="6dip"
-                android:minHeight="6dip"
+                android:maxHeight="10dip"
+                android:minHeight="10dip"
                 android:padding="10dp"
                 android:progress="0"
                 android:progressDrawable="@drawable/seekbar_style"
-                android:thumb="@drawable/tiao3" />
+                android:thumb="@drawable/seekbar_thumb"
+                android:thumbOffset="0dip" />
         </RelativeLayout>
 
         <TextView
@@ -104,12 +105,13 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/textView2"
                 android:max="99"
-                android:maxHeight="6dip"
-                android:minHeight="6dip"
+                android:maxHeight="10dip"
+                android:minHeight="10dip"
                 android:padding="10dp"
                 android:progress="1"
                 android:progressDrawable="@drawable/seekbar_style"
-                android:thumb="@drawable/tiao3" >
+                android:thumb="@drawable/seekbar_thumb"
+                android:thumbOffset="0dip" >
             </SeekBar>
         </RelativeLayout>
     </LinearLayout>
@@ -148,7 +150,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@null"
-            android:text="确认"
+            android:text="保存"
             android:textColor="@color/white"
             android:textSize="20dp" />
     </LinearLayout>

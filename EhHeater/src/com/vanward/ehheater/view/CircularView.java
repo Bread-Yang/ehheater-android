@@ -264,9 +264,13 @@ public class CircularView extends View {
 								outBmp = blueoutBmp;
 							}
 							olddegree = degree;
+
 							if (degree >= angleToDegree(beginangle)
 									&& degree <= angleToDegree(endangle)) {
 								heatmakeRange(degreeToAngle(degree));
+								if (degree > angleToDegree(endangle)) {
+									degree = angleToDegree(endangle);
+								}
 								handler.sendEmptyMessage(UpdateUIToSet);
 							}
 
@@ -294,10 +298,13 @@ public class CircularView extends View {
 						// degree = tempdegree;
 					}
 				}
-
 				heatmakeRange(degreeToAngle(degree));
 				if (degree >= angleToDegree(beginangle)
 						&& degree <= angleToDegree(endangle)) {
+
+					if (degree > angleToDegree(endangle)) {
+						degree = angleToDegree(endangle);
+					}
 					if (isclick) {
 						handler.sendEmptyMessage(UpdateUIToSet);
 					}
@@ -313,6 +320,10 @@ public class CircularView extends View {
 	}
 
 	public void setTargerdegree(int targerdegree) {
+
+		if (targerdegree > endangle) {
+			targerdegree = endangle;
+		}
 		this.targerdegree = targerdegree;
 	}
 
@@ -376,12 +387,15 @@ public class CircularView extends View {
 	}
 
 	public void setAngle(int level) {
-
+		if (level > endangle) {
+			level = endangle;
+		}
 		if (level == 0) {
 			degree = 0;
 		} else {
 			degree = angleToDegree(level);
 		}
+
 		System.out.println("setAngle：  level=" + level + "degree=" + degree);
 		if (level < 25) {
 			degree = angleToDegree(25);
@@ -393,7 +407,7 @@ public class CircularView extends View {
 
 	boolean isHeat = false;
 
-	public void heatmakeRange(float value) {
+	public synchronized void heatmakeRange(float value) {
 		if (isHeat) {
 			if (value == 49) {
 				degree = angleToDegree(50);
@@ -403,6 +417,9 @@ public class CircularView extends View {
 				for (int i = 0; i < rangs.length; i++) {
 					if (Math.abs(value - rangs[i]) <= 3) {
 						degree = angleToDegree(rangs[i]);
+						if (degree > angleToDegree(endangle)) {
+							degree = angleToDegree(endangle);
+						}
 						break;
 					}
 				}
