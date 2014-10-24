@@ -24,7 +24,6 @@ import com.vanward.ehheater.view.CircularSeekBar.OnSeekChangeListener;
 
 public class AddPattenActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
-
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
 	TextView ivTitleName;
 	@ViewInject(id = R.id.ivTitleBtnLeft, click = "onClick")
@@ -60,7 +59,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		GasCustomSetVo customSetVo = new GasCustomSetVo();
 		customSetVo.setConnid(Global.connectId);
 		if (nameedittext.getText().toString().length() <= 0) {
-			Toast.makeText(this, "请输入姓名", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "请输入名称", Toast.LENGTH_SHORT).show();
 			return null;
 		}
 

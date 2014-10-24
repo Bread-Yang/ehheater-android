@@ -180,7 +180,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		case R.id.imageView1:
 			BathSettingDialogUtil.instance(this)
 					.nextButtonCall(new NextButtonCall() {
-
 						@Override
 						public void oncall(View v) {
 							if (radio3.isChecked()) {
