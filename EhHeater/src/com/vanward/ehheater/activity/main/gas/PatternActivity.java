@@ -439,6 +439,19 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 								PatternActivity.this).getName();
 
 						if (name != null && name.length() != 0) {
+							List<GasCustomSetVo> list = new BaseDao(
+									PatternActivity.this).getDb().findAll(
+									GasCustomSetVo.class);
+							for (int i = 0; i < list.size(); i++) {
+								GasCustomSetVo gasCustomSetVo = list.get(i);
+								if (gasCustomSetVo.getName().equals(name)) {
+									Toast.makeText(PatternActivity.this,
+											"请输入有效名字", Toast.LENGTH_SHORT)
+											.show();
+									return;
+								}
+							}
+
 							customSetVo.setName(name);
 							new BaseDao(PatternActivity.this).getDb().update(
 									customSetVo);
