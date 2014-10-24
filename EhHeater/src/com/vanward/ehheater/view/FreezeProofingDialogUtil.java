@@ -58,8 +58,10 @@ public class FreezeProofingDialogUtil {
 		this.lastButtonCall = lastButtonCall;
 	}
 
-	public void setNextButtonCall(NextButtonCall nextButtonCall) {
+	public FreezeProofingDialogUtil setNextButtonCall(
+			NextButtonCall nextButtonCall) {
 		this.nextButtonCall = nextButtonCall;
+		return this;
 	}
 
 	public static FreezeProofingDialogUtil instance(Context context) {
@@ -110,7 +112,6 @@ public class FreezeProofingDialogUtil {
 	}
 
 	public void showDialog() {
-		((RadioButton) radioGroup.getChildAt(0)).setChecked(true);
 
 		setting.findViewById(R.id.btn_error_bypass).setOnClickListener(
 				new OnClickListener() {
@@ -124,6 +125,7 @@ public class FreezeProofingDialogUtil {
 				new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						nextButtonCall.oncall(v);
 						dissmiss();
 					}
 				});

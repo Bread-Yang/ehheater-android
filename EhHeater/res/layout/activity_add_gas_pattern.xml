@@ -16,27 +16,18 @@
         android:id="@+id/RelativeLayout03"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="25dp"
         android:background="@color/activity_background"
         android:clickable="true" >
-
-        <TextView
-            android:id="@+id/TextView03"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="10dp"
-            android:text="名称"
-            android:textColor="@color/appointment_text_color"
-            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/nameedittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/TextView03"
-            android:layout_below="@+id/TextView03"
-            android:layout_marginTop="10dp" >
+            android:background="@drawable/white_button_bg"
+            android:hint="名称" >
+
+            <requestFocus />
         </EditText>
     </RelativeLayout>
 

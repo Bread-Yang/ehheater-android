@@ -13,22 +13,20 @@
         android:gravity="center"
         android:singleLine="true"
         android:text="@string/title_name"
-        android:textSize="20dp"
-        android:textColor="@color/title_color" />
+        android:textColor="@color/title_color"
+        android:textSize="20dp" />
 
     <Button
         android:id="@+id/ivTitleBtnLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="20dp"
-        android:minWidth="20dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:gravity="center"
-        
         android:background="@drawable/icon_menu"
-         />
+        android:gravity="center"
+        android:minHeight="20dp"
+        android:minWidth="20dp" />
 
     <Button
         android:id="@+id/ivTitleBtnRigh"

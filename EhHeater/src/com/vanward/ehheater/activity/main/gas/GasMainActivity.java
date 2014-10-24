@@ -32,6 +32,9 @@ import com.vanward.ehheater.R.id;
 import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.info.InfoErrorActivity;
+import com.vanward.ehheater.activity.info.InfoTipActivity;
+import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.activity.main.LeftFragment;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -90,7 +93,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	};
 
 	private TextView powerTv;
-
+	private ImageView tipsimg;
 	private Button btn_info;
 	private Button mode;
 
@@ -135,7 +138,10 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	private void initView(Bundle savedInstanceState) {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
 		rightButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
+		rightButton.setBackgroundResource(R.drawable.right_button_selector);
 		rightButton.setOnClickListener(this);
+		tipsimg = (ImageView) findViewById(R.id.infor_tip);
+		tipsimg.setOnClickListener(this);
 		btn_appointment = (Button) findViewById(R.id.appointment_btn);
 		powerTv = (TextView) findViewById(R.id.power_tv);
 		btn_power = findViewById(R.id.power);
@@ -221,13 +227,19 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
-			DeviceOffUtil.instance(this).nextButtonCall(new NextButtonCall() {
-				@Override
-				public void oncall(View v) {
-					SendMsgModel.closeDevice();
-					DeviceOffUtil.instance(GasMainActivity.this).dissmiss();
-				}
-			}).showDialog();
+			if (ison) {
+				DeviceOffUtil.instance(this)
+						.nextButtonCall(new NextButtonCall() {
+							@Override
+							public void oncall(View v) {
+								SendMsgModel.closeDevice();
+								DeviceOffUtil.instance(GasMainActivity.this)
+										.dissmiss();
+							}
+						}).showDialog();
+			} else {
+				SendMsgModel.openDevice();
+			}
 
 			break;
 		case R.id.appointment_btn:
@@ -242,7 +254,30 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			startActivity(intent2);
 			break;
 		case R.id.btn_information:
+			Intent intent3 = new Intent();
+			intent3.setClass(this, InformationActivity.class);
+			startActivity(intent3);
 			break;
+		case R.id.infor_tip:
+			FreezeProofingDialogUtil.instance(this).initName("提示")
+					.setNextButtonCall(new NextButtonCall() {
+
+						@Override
+						public void oncall(View v) {
+
+							Intent intent = new Intent();
+							// intent.putExtra("data", inforVo);
+							intent.setClass(GasMainActivity.this,
+									InfoErrorActivity.class);
+							intent.putExtra("name", "设备故障");
+							intent.putExtra("time", "2014/10/10 10:10");
+							intent.putExtra("detail", "电器故障");
+
+							startActivity(intent);
+						}
+					}).showDialog();
+			break;
+
 		}
 	}
 
@@ -341,6 +376,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	public void dealInHeat(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getFlame() == 1) {
+			// if (1 == 1) {
 			stute.setText("加热中");
 			hotImgeImageView.setVisibility(View.VISIBLE);
 			operatingAnim = AnimationUtils.loadAnimation(GasMainActivity.this,
@@ -351,8 +387,20 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 			animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 			animationDrawable.start();
+			setViewsAble(false, pResp);
+			rightButton.setEnabled(false);
+			if (pResp.getFunction_state() == 3) {
+				circularView.setVisibility(View.VISIBLE);
+				circularView.setEndangle(48);
+			} else {
+				circularView.setVisibility(View.GONE);
+				circularView.setEndangle(65);
+			}
 		} else {
 			hotImgeImageView.setVisibility(View.GONE);
+			setViewsAble(true, pResp);
+			rightButton.setEnabled(true);
+			circularView.setEndangle(65);
 		}
 
 	}
@@ -386,11 +434,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		modeDeal(pResp);
 		temptertureDeal(pResp);
 		waterDeal(pResp);
-		onoffDeal(pResp);
 		warningDeal(pResp);
 		diyModeDeal(pResp);
 		freezeProofing(pResp);
 		flame(pResp);
+		dealInHeat(pResp);
+		onoffDeal(pResp);
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 
@@ -443,15 +492,19 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * 
 	 * @param pResp
 	 */
+	boolean ison = false;
+
 	public void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("开关： " + pResp.getOn_off());// 1为开机0为关机
 		if (pResp.getOn_off() == 0) {
-			rightButton.setVisibility(View.GONE);
-			// ChangeStuteView.swichDeviceOff(stuteParent);
+			setViewsAble(false, pResp);
 			stute.setText("关机中");
+			ison = false;
 		} else {
-			rightButton.setVisibility(View.VISIBLE);
-			openView.setVisibility(View.GONE);
+			// rightButton.setVisibility(View.VISIBLE);
+			// openView.setVisibility(View.GONE);
+			setViewsAble(true, pResp);
+			ison = true;
 			stute.setText("待机中");
 		}
 	}
@@ -647,6 +700,22 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateLocalUIdifferent(int outlevel) {
 		temptertitleTextView.setText("设定温度");
+	}
+
+	public void setViewsAble(boolean isAble, GasWaterHeaterStatusResp_t pResp) {
+		if (isAble) {
+			if (pResp.getFunction_state() == 3
+					|| pResp.getFunction_state() == 1) {
+				circularView.setVisibility(View.VISIBLE);
+			} else {
+				circularView.setVisibility(View.GONE);
+			}
+
+		} else {
+			circularView.setVisibility(View.GONE);
+		}
+		mode.setEnabled(isAble);
+		// rightButton.setEnabled(isAble);
 	}
 
 }
