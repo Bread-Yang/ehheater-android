@@ -288,6 +288,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("舒适模式");
+		circularView.setOn(true);
 		modeimg.setImageResource(R.drawable.gas_home_icon_comfort);
 		if (circularView != null) {
 			circularView.setVisibility(View.VISIBLE);
@@ -344,6 +345,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("浴缸模式");
+		circularView.setOn(true);
 		modeimg.setImageResource(R.drawable.gas_home_icon_bathtub);
 		if (circularView != null) {
 			circularView.setVisibility(View.VISIBLE);

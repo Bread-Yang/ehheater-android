@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.LayoutParams;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +37,7 @@ public class InformationActivity extends Activity implements
 	ArrayList<View> pageViews = new ArrayList<View>();
 
 	private void initView(Context context) {
+
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		leftbutton.setOnClickListener(this);
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
@@ -43,8 +45,8 @@ public class InformationActivity extends Activity implements
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		title = (TextView) findViewById(R.id.ivTitleName);
 		title.setText("信息");
-		pageViews.add(new Button(this));
-		pageViews.add(new Button(this));
+		pageViews.add(new InforChartView(this));
+		pageViews.add(new InforElChartView(this));
 		pageViews.add(LinearLayout.inflate(this, R.layout.information_3, null));
 		pageViews.add(new InforHistoryView(this));
 
@@ -59,7 +61,7 @@ public class InformationActivity extends Activity implements
 			ImageView imageView = new ImageView(context);
 			// 设置小圆点imageview的参数
 			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-					30, 30);
+					15, 15);
 			layoutParams.setMargins(5, 0, 5, 0);
 			imageView.setLayoutParams(layoutParams);// 创建一个宽高均为20 的布局
 			// 将小圆点layout添加到数组中
@@ -101,7 +103,11 @@ public class InformationActivity extends Activity implements
 			/**
 			 * 显示页面的相关操作
 			 **/
-			((ViewPager) v).addView(contentView, 0);
+
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+					android.widget.LinearLayout.LayoutParams.FILL_PARENT,
+					android.widget.LinearLayout.LayoutParams.FILL_PARENT);
+			((ViewPager) v).addView(contentView, 0, lp);
 			return pageViews.get(position);
 		}
 

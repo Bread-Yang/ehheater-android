@@ -29,7 +29,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="2011/10/10 11:11"
-        android:textColor="#FF838181"
+        android:textColor="#FF656060"
         android:textSize="15dp" />
 
     <Button
@@ -53,9 +53,9 @@
         android:layout_above="@+id/button1"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/time"
-        android:layout_margin="10dp"
+        android:layout_margin="30dp"
         android:text="设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障设备故障"
-        android:textColor="#FF838181"
+        android:textColor="#FF848484"
         android:textSize="15dp" />
 
 </RelativeLayout>

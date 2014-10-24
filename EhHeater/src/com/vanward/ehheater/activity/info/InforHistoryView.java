@@ -48,7 +48,7 @@ public class InforHistoryView extends LinearLayout implements OnClickListener {
 		itemview.setOnClickListener(this);
 		name.setText(inforVo.getName());
 		simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
-		time.setText(simpleDateFormat.format(inforVo.getDate()));
+		time.setText("2014/11/11 11:11");
 		layout.addView(itemview, lParams);
 		itemview.setTag(inforVo);
 
@@ -97,7 +97,7 @@ public class InforHistoryView extends LinearLayout implements OnClickListener {
 		Intent intent = new Intent();
 		// intent.putExtra("data", inforVo);
 		intent.putExtra("name", inforVo.getName());
-		intent.putExtra("time", simpleDateFormat.format(inforVo.getDate()));
+		intent.putExtra("time", "2014/11/11 11:11");
 		if (inforVo.getStyle() == 1) {
 			intent.setClass(context, InfoErrorActivity.class);
 			intent.putExtra("detail", "电器故障");
