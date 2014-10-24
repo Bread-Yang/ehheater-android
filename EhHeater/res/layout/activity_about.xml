@@ -3,16 +3,70 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <include
+        android:id="@+id/include1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        layout="@layout/main_title" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="220dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/include1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:src="@drawable/about_logo" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_check_update"
+        android:layout_alignLeft="@+id/btn_check_update"
+        android:layout_alignRight="@+id/btn_check_update"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:gravity="left"
+        android:text="       广东万和新电气股份有限公司（成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。）"
+        android:textColor="#ff808080" />
+
     <Button
         android:id="@+id/btn_check_update"
         android:layout_width="300dp"
         android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="60dp"
+        android:layout_marginBottom="70dp"
+        android:visibility="invisible"
         android:background="@drawable/selector_yellow_bg"
         android:gravity="center"
         android:text="@string/check_update"
         android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btn_check_update"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp"
+        android:text="版本：1.0.0"
+        android:textColor="#ff808080"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:text="支持android:2.3以上"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#ff808080"
+        android:textSize="16sp" />
 
 </RelativeLayout>
