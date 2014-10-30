@@ -1,5 +1,8 @@
 package com.vanward.ehheater.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import u.aly.l;
 import android.app.Dialog;
 import android.content.Context;
@@ -18,7 +21,7 @@ import com.vanward.ehheater.activity.main.CustomSetVo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 
-public class FreezeProofingDialogUtil {
+public class ErrorDialogUtil {
 
 	int num;
 
@@ -26,7 +29,7 @@ public class FreezeProofingDialogUtil {
 
 	TextView value;
 
-	public FreezeProofingDialogUtil setDefaultCheck(int defaultCheck) {
+	public ErrorDialogUtil setDefaultCheck(int defaultCheck) {
 		this.defaultCheck = defaultCheck;
 		return this;
 	}
@@ -41,10 +44,32 @@ public class FreezeProofingDialogUtil {
 
 	private static Context context;
 	private Dialog setting;
-	private static FreezeProofingDialogUtil model;
+	private static ErrorDialogUtil model;
 
-	private FreezeProofingDialogUtil(Context context) {
+	public static Map<String, String> getMap() {
+		return map;
+	}
+
+	public static void setMap(Map<String, String> map) {
+		ErrorDialogUtil.map = map;
+	}
+
+	static Map<String, String> map = new HashMap<String, String>();
+
+	private ErrorDialogUtil(Context context) {
 		this.context = context;
+		map.put("1", "进水温度电路故障保护");
+		map.put("16", "假火焰故障保护");
+		map.put("17", "点火失败故障保护");
+		map.put("18", "意外熄火故障保护");
+		map.put("19", "温控电器故障保护");
+		map.put("32", "热电偶动作保护");
+		map.put("64", "风机电路故障保护");
+		map.put("80", "出水超温保护");
+		map.put("81", "进水超温保护");
+		map.put("96", "出水温度电路故障保护");
+		map.put("112", "拔码开关选择错误故障保护");
+
 	}
 
 	NextButtonCall nextButtonCall, lastButtonCall;
@@ -58,17 +83,16 @@ public class FreezeProofingDialogUtil {
 		this.lastButtonCall = lastButtonCall;
 	}
 
-	public FreezeProofingDialogUtil setNextButtonCall(
-			NextButtonCall nextButtonCall) {
+	public ErrorDialogUtil setNextButtonCall(NextButtonCall nextButtonCall) {
 		this.nextButtonCall = nextButtonCall;
 		return this;
 	}
 
-	public static FreezeProofingDialogUtil instance(Context context) {
+	public static ErrorDialogUtil instance(Context context) {
 		if (model == null) {
-			model = new FreezeProofingDialogUtil(context);
+			model = new ErrorDialogUtil(context);
 		}
-		FreezeProofingDialogUtil.context = context;
+		ErrorDialogUtil.context = context;
 		return model;
 	}
 
@@ -80,10 +104,13 @@ public class FreezeProofingDialogUtil {
 
 	String name = "";
 
-	public FreezeProofingDialogUtil initName(String name) {
+	public ErrorDialogUtil initName(String errorcode) {
 		setting = new Dialog(context, R.style.custom_dialog);
 		setting.setContentView(R.layout.dialog_device_error_tips);
-
+		TextView title = (TextView) setting.findViewById(R.id.tv_order_title);
+		TextView detail = (TextView) setting.findViewById(R.id.tv_detail);
+		title.setText("机器故障(" + errorcode + ")");
+		detail.setText(map.get(errorcode));
 		return this;
 	}
 

@@ -13,7 +13,7 @@
         layout="@layout/main_title" />
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
+        android:id="@+id/buttonrela"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/include1"

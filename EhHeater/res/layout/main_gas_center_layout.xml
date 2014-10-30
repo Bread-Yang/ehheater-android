@@ -50,8 +50,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:scaleType="center"
-                android:src="@drawable/main_wave"
-                android:visibility="gone" />
+                android:src="@drawable/main_fire"
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/hotanimition"
@@ -112,34 +112,6 @@
                         android:text="℃"
                         android:textColor="@color/title_color"
                         android:textSize="40dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="-10dp"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:text="设定注水量"
-                        android:textColor="#87420d"
-                        android:textSize="15dp" />
-
-                    <TextView
-                        android:id="@+id/zhushuiliang"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:shadowColor="#87420d"
-                        android:shadowDx="2"
-                        android:shadowDy="2"
-                        android:shadowRadius="2"
-                        android:text="40L"
-                        android:textColor="#FFf46310"
-                        android:textSize="20dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -325,14 +297,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/circle_bg"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:orientation="vertical"
             android:visibility="visible" >
 
             <LinearLayout
                 android:id="@+id/hotlayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
             </LinearLayout>
 
             <LinearLayout
@@ -359,6 +332,48 @@
                     android:text="待机中"
                     android:textSize="15dp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/icon_w" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="实时注水量"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/zhushuiliang"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:shadowColor="#87420d"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"
+                    android:text="40L"
+                    android:textColor="#FFf46310"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/settemper"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="/320L" />
+            </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
@@ -375,8 +390,7 @@
             android:layout_height="30dp"
             android:layout_alignLeft="@+id/circle_bg"
             android:layout_alignTop="@+id/mode_tv"
-            android:src="@drawable/information_warning" />
-
+          />
     </RelativeLayout>
 
 </RelativeLayout>

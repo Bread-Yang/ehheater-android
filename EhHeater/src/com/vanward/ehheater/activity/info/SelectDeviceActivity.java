@@ -34,7 +34,7 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 		TextView title = (TextView) findViewById(R.id.ivTitleName);
 		title.setText("设备选择");
 
-		findViewById(R.id.relativeLayout1).setOnClickListener(this);
+		findViewById(R.id.buttonrela).setOnClickListener(this);
 		findViewById(R.id.RelativeLayout01).setOnClickListener(this);
 	}
 

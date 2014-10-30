@@ -18,17 +18,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/device_error_title"
+            android:text="温馨提示"
             android:textColor="@color/white"
             android:textSize="19sp" />
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/tv_order_title"
-            android:src="@drawable/information_warning" />
     </RelativeLayout>
 
     <View
@@ -37,7 +29,6 @@
         android:background="#55ffffff" />
 
     <TextView
-           android:id="@+id/tv_detail"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -45,7 +36,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="@string/device_error_tips"
+        android:text="亲,水已注满,请立即关闭。"
         android:textColor="@color/white"
         android:textSize="20dp" />
 
@@ -61,29 +52,13 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/btn_error_bypass"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:padding="10dp"
-            android:text="我知道了"
-            android:textColor="@color/white"
-            android:textSize="18dp" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="#55ffffff" />
-
-        <Button
             android:id="@+id/btn_error_handle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
             android:padding="10dp"
-            android:text="寻求帮助"
+            android:text="确定"
             android:textColor="@color/white"
             android:textSize="18dp" />
     </LinearLayout>

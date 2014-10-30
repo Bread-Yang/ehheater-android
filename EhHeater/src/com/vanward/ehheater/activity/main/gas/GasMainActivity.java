@@ -1,5 +1,7 @@
 package com.vanward.ehheater.activity.main.gas;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import android.content.BroadcastReceiver;
@@ -47,7 +49,8 @@ import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
 import com.vanward.ehheater.view.DeviceOffUtil;
-import com.vanward.ehheater.view.FreezeProofingDialogUtil;
+import com.vanward.ehheater.view.ErrorDialogUtil;
+import com.vanward.ehheater.view.FullWaterWarnDialogUtil;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
@@ -66,7 +69,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			shuiliuliangText;
 
 	View btn_power;
-	TextView tempter, leavewater, target_tem;
+	TextView tempter, leavewater, target_tem, settemper;
 
 	LinearLayout llt_circle;
 	ViewGroup stuteParent;
@@ -121,6 +124,10 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
+		// GasWaterHeaterStatusResp_t resp_t = new GasWaterHeaterStatusResp_t();
+		// // resp_t.setFreezeProofingWarning((short) 1);
+		// resp_t.setOxygenWarning((short) 1);
+		// dealErrorWarnIcon(resp_t);
 		super.onResume();
 	}
 
@@ -149,6 +156,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		hotImgeImageView.clearAnimation();
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
+		settemper = (TextView) findViewById(R.id.settemper);
 		rlt_start_device = (RelativeLayout) findViewById(R.id.start_device_rlt);
 		btn_info = (Button) findViewById(R.id.btn_information);
 		modeTv = (TextView) findViewById(R.id.mode_tv);
@@ -161,14 +169,13 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		leavewater = (TextView) findViewById(R.id.shuiliuliang);
 		sumwater = (TextView) findViewById(R.id.zhushuiliang);
 		shuiliuliangText = (TextView) findViewById(R.id.shuiliuliangText);
-
 		content = (RelativeLayout) findViewById(R.id.content);
 		mode = (Button) findViewById(R.id.pattern);
 		stute = (TextView) findViewById(R.id.stute);
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
-
+		iv_wave.setVisibility(View.VISIBLE);
 		initopenView();
 		updateTitle();
 		mode.setOnLongClickListener(this);
@@ -259,23 +266,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			startActivity(intent3);
 			break;
 		case R.id.infor_tip:
-			FreezeProofingDialogUtil.instance(this).initName("提示")
-					.setNextButtonCall(new NextButtonCall() {
-
-						@Override
-						public void oncall(View v) {
-
-							Intent intent = new Intent();
-							// intent.putExtra("data", inforVo);
-							intent.setClass(GasMainActivity.this,
-									InfoErrorActivity.class);
-							intent.putExtra("name", "设备故障");
-							intent.putExtra("time", "2014/10/10 10:10");
-							intent.putExtra("detail", "电器故障");
-
-							startActivity(intent);
-						}
-					}).showDialog();
 			break;
 
 		}
@@ -346,6 +336,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("浴缸模式");
 		circularView.setOn(true);
+		((View) sumwater.getParent()).setVisibility(View.VISIBLE);
 		modeimg.setImageResource(R.drawable.gas_home_icon_bathtub);
 		if (circularView != null) {
 			circularView.setVisibility(View.VISIBLE);
@@ -380,7 +371,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		if (pResp.getFlame() == 1) {
 			// if (1 == 1) {
 			stute.setText("加热中");
+
 			hotImgeImageView.setVisibility(View.VISIBLE);
+
 			operatingAnim = AnimationUtils.loadAnimation(GasMainActivity.this,
 					R.anim.tip_4500);
 			LinearInterpolator lin = new LinearInterpolator();
@@ -391,6 +384,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			animationDrawable.start();
 			setViewsAble(false, pResp);
 			rightButton.setEnabled(false);
+			mode.setEnabled(false);
 			if (pResp.getFunction_state() == 3) {
 				circularView.setVisibility(View.VISIBLE);
 				circularView.setEndangle(48);
@@ -399,6 +393,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setEndangle(65);
 			}
 		} else {
+			mode.setEnabled(true);
+			hotImgeImageView.clearAnimation();
 			hotImgeImageView.setVisibility(View.GONE);
 			setViewsAble(true, pResp);
 			rightButton.setEnabled(true);
@@ -440,8 +436,10 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		diyModeDeal(pResp);
 		freezeProofing(pResp);
 		flame(pResp);
+
 		dealInHeat(pResp);
 		onoffDeal(pResp);
+		dealErrorWarnIcon(pResp);
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 
@@ -451,6 +449,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * @param pResp
 	 */
 	public void modeDeal(GasWaterHeaterStatusResp_t pResp) {
+		((View) sumwater.getParent()).setVisibility(View.GONE);
 		// 模式切换的api 跟 那个需求有出入
 		System.out.println("当前模式： " + pResp.getFunction_state());
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
@@ -458,7 +457,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
 		// 0x05（智能模式）、0x06（自定义模式）
-
 		switch (pResp.getFunction_state()) {
 		case 1:
 			changetoSofeMode(pResp);
@@ -505,9 +503,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			// rightButton.setVisibility(View.VISIBLE);
 			// openView.setVisibility(View.GONE);
-			setViewsAble(true, pResp);
-			ison = true;
-			stute.setText("待机中");
+			if (pResp.getFlame() != 1) {
+				setViewsAble(true, pResp);
+				ison = true;
+				stute.setText("待机中");
+			}
+
 		}
 	}
 
@@ -550,23 +551,31 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 * @param pResp
 	 */
 	public void waterDeal(GasWaterHeaterStatusResp_t pResp) {
+
 		System.out.println("当前水流量： " + pResp.getNowVolume());
 		System.out.println("当前设置水流量： " + pResp.getCustomWaterProportion());
 		System.out.println("当前累加注水量：" + pResp.getSetWater_cumulative());
 		System.out.println("设置注水量： " + pResp.getSetWater_power());
 		// 浴缸 设定注水量 累计注水量
-
+		shuiliuliangText.setText("实时水流量");
+		settemper.setText("/" + (pResp.getSetWater_power() * 10) + "L");
 		leavewater.setText(pResp.getNowVolume() + "L");
-		if (pResp.getFunction_state() == 3) {
-			((View) sumwater.getParent()).setVisibility(View.VISIBLE);
-			sumwater.setText(pResp.getSetWater_power() + "0L");
-			shuiliuliangText.setText("累计注水量");
-			leavewater.setText(pResp.getSetWater_cumulative() + "L");
-		} else {
-			((View) sumwater.getParent()).setVisibility(View.GONE);
-			shuiliuliangText.setText("实时水流量");
-			leavewater.setText(pResp.getNowVolume() + "L");
+		sumwater.setText(pResp.getSetWater_cumulative() + "L");
+
+		if (pResp.getSetWater_cumulative() == (pResp.getSetWater_power() * 10)) {
+			FullWaterWarnDialogUtil.instance(this).showDialog();
 		}
+
+		// if (pResp.getFunction_state() == 3) {
+		// ((View) sumwater.getParent()).setVisibility(View.VISIBLE);
+		// sumwater.setText(pResp.getSetWater_power() + "0L");
+		// shuiliuliangText.setText("累计注水量");
+		// leavewater.setText(pResp.getSetWater_cumulative() + "L");
+		// } else {
+		// ((View) sumwater.getParent()).setVisibility(View.GONE);
+		// shuiliuliangText.setText("实时水流量");
+		// leavewater.setText(pResp.getNowVolume() + "L");
+		// }
 
 	}
 
@@ -585,6 +594,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("自定义功能：" + pResp.getCustomFunction());
 		System.out.println("自定义设置水温：" + pResp.getCustomWaterTemperture());
 		System.out.println("自定义设置水流量比例：" + pResp.getCustomWaterProportion());
+
 		if (pResp.getCustomFunction() != 0) {
 			GasCustomSetVo gasCustomSetVo = (GasCustomSetVo) new BaseDao(this)
 					.getDb().findById(pResp.getCustomFunction(),
@@ -596,6 +606,49 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	}
 
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
+
+	public void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
+
+		freezeProofing(pResp);
+		oxygenWarning(pResp);
+		if (pResp.getErrorCode() != 0) {
+			tipsimg.setImageResource(R.drawable.icon_tip);
+
+			tipsimg.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					ErrorDialogUtil.instance(GasMainActivity.this)
+							.initName(pResp.getErrorCode() + "")
+							.setNextButtonCall(new NextButtonCall() {
+								@Override
+								public void oncall(View v) {
+									Intent intent = new Intent();
+									// intent.putExtra("data", inforVo);
+									intent.setClass(GasMainActivity.this,
+											InfoErrorActivity.class);
+									intent.putExtra("name",
+											"机器故障(" + pResp.getErrorCode()
+													+ ")");
+									intent.putExtra("time",
+											simpleDateFormat.format(new Date()));
+									intent.putExtra(
+											"detail",
+											ErrorDialogUtil
+													.instance(
+															GasMainActivity.this)
+													.getMap()
+													.get(pResp.getErrorCode()
+															+ ""));
+									startActivity(intent);
+								}
+							}).showDialog();
+				}
+			});
+		}
+	}
+
 	/**
 	 * 防冻报警提示：0（无）、1（有）
 	 * 
@@ -604,7 +657,25 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void freezeProofing(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("防冻报警：" + pResp.getFreezeProofingWarning());
 		if (pResp.getFreezeProofingWarning() == 1) {
-			FreezeProofingDialogUtil.instance(this).showDialog();
+			tipsimg.setImageResource(R.drawable.home_icon_tip);
+			tipsimg.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// 提醒
+					// ErrorDialogUtil.instance(this).showDialog();
+					Intent intent = new Intent();
+					// intent.putExtra("data", inforVo);
+					intent.setClass(GasMainActivity.this, InfoTipActivity.class);
+					intent.putExtra("name", "防冻报警");
+					intent.putExtra("time", simpleDateFormat.format(new Date()));
+					intent.putExtra("detail",
+							"亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。");
+					startActivity(intent);
+
+				}
+			});
+
 		}
 	}
 
@@ -615,8 +686,23 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void oxygenWarning(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("氧护提示：" + pResp.getOxygenWarning());
-		if (pResp.getFreezeProofingWarning() == 1) {
-			FreezeProofingDialogUtil.instance(this).showDialog();
+		if (pResp.getOxygenWarning() == 1) {
+			tipsimg.setImageResource(R.drawable.home_icon_tip);
+			tipsimg.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// 提醒
+					Intent intent = new Intent();
+					// intent.putExtra("data", inforVo);
+					intent.setClass(GasMainActivity.this, InfoTipActivity.class);
+					intent.putExtra("name", "智能养护");
+					intent.putExtra("time", simpleDateFormat.format(new Date()));
+					intent.putExtra("detail",
+							"亲，现检测到您热水器处于环境缺氧状态，机器已自动启动智能氧护措施，请确保您热水器处于通风环境下运行。");
+					startActivity(intent);
+				}
+			});
 		}
 	}
 

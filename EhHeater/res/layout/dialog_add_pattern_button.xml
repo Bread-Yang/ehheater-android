@@ -30,7 +30,7 @@
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="@null"
-        android:text="修改"
+        android:text="编辑"
         android:textColor="@color/white"
         android:textSize="20dp" />
 

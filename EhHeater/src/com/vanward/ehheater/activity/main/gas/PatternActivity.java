@@ -451,7 +451,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 									return;
 								}
 							}
-
 							customSetVo.setName(name);
 							new BaseDao(PatternActivity.this).getDb().update(
 									customSetVo);
