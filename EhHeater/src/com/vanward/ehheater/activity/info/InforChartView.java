@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +28,7 @@ import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
+import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
 
@@ -44,7 +46,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	String datalistjson = "";
 	String namelistjson = "";
 	private TextView last;
-	private TextView next, sumwater;
+	private TextView next;
 
 	public InforChartView(Context context) {
 		super(context);
@@ -55,6 +57,8 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		radioGroup.setOnCheckedChangeListener(this);
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
+		last.setOnClickListener(this);
+		next.setOnClickListener(this);
 		webView = (WebView) layout.findViewById(R.id.webView1);
 		webView.addJavascriptInterface(new Initobject(), "init");
 		webView.getSettings().setJavaScriptEnabled(true);
@@ -68,20 +72,66 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 				return true;
 			}
 		});
-		// chart4week();
-		// webView.reload();
+//		chart4week();
+//		webView.reload();
 		lParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);
 		addView(layout, lParams);
 		// initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
 		// initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
-
+		
 		radioGroup.check(R.id.radio0);
 	}
 
 	@Override
 	public void onClick(View arg0) {
+		switch (arg0.getId()) {
+		case R.id.last:
 
+			if (currentShowingPeriodType.equals("1")) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(currentShowingTime);
+				cal.add(Calendar.DATE, -7);
+				currentShowingTime = cal.getTimeInMillis();
+			}
+			
+			if (currentShowingPeriodType.equals("2")) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(currentShowingTime);
+				cal.add(Calendar.MONTH, -1);
+				currentShowingTime = cal.getTimeInMillis();
+			}
+			
+			if (currentShowingPeriodType.equals("3")) {
+				
+			}
+			
+			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1").execute();
+			
+			break;
+		case R.id.next:
+
+			if (currentShowingPeriodType.equals("1")) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(currentShowingTime);
+				cal.add(Calendar.DATE, 7);
+				currentShowingTime = cal.getTimeInMillis();
+			}
+			
+			if (currentShowingPeriodType.equals("2")) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(currentShowingTime);
+				cal.add(Calendar.MONTH, 1);
+				currentShowingTime = cal.getTimeInMillis();
+			}
+			
+			if (currentShowingPeriodType.equals("3")) {
+				
+			}
+			
+			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1").execute();
+			break;
+		}
 	}
 
 	class Initobject {
@@ -99,83 +149,83 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	public void chart4week() {
 		last.setText("上一周");
 		next.setText("下一周");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 7; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 7; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
+//		datalist.clear();
+//		namelist.clear();
+//		namelist.clear();
+//		for (int i = 0; i < 7; i++) {
+//			Xvo xvo = new Xvo();
+//			xvo.setName("int" + i);
+//			namelist.add(xvo);
+//		}
+//		Gson gson = new Gson();
+//		namelistjson = gson.toJson(namelist);
+//		System.out.println(namelistjson);
+//
+//		for (int i = 0; i < 7; i++) {
+//			Datavo datavo = new Datavo();
+//			datavo.setData(i * 10);
+//			datalist.add(datavo);
+//
+//		}
+//		datalistjson = gson.toJson(datalist);
+//		System.out.println(datalistjson);
 	}
 
 	public void chart4Month() {
 		last.setText("上一月");
 		next.setText("下一月");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 4; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 4; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
+//		datalist.clear();
+//		namelist.clear();
+//		namelist.clear();
+//		for (int i = 0; i < 4; i++) {
+//			Xvo xvo = new Xvo();
+//			xvo.setName("int" + i);
+//			namelist.add(xvo);
+//		}
+//		Gson gson = new Gson();
+//		namelistjson = gson.toJson(namelist);
+//		System.out.println(namelistjson);
+//
+//		for (int i = 0; i < 4; i++) {
+//			Datavo datavo = new Datavo();
+//			datavo.setData(i * 10);
+//			datalist.add(datavo);
+//
+//		}
+//		datalistjson = gson.toJson(datalist);
+//		System.out.println(datalistjson);
 	}
 
 	public void chart4Year() {
 		last.setText("上一年");
 		next.setText("下一年");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 12; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 12; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
+//		datalist.clear();
+//		namelist.clear();
+//		namelist.clear();
+//		for (int i = 0; i < 12; i++) {
+//			Xvo xvo = new Xvo();
+//			xvo.setName("int" + i);
+//			namelist.add(xvo);
+//		}
+//		Gson gson = new Gson();
+//		namelistjson = gson.toJson(namelist);
+//		System.out.println(namelistjson);
+//
+//		for (int i = 0; i < 12; i++) {
+//			Datavo datavo = new Datavo();
+//			datavo.setData(i * 10);
+//			datalist.add(datavo);
+//
+//		}
+//		datalistjson = gson.toJson(datalist);
+//		System.out.println(datalistjson);
 	}
 
 	@Override
 	public void onCheckedChanged(RadioGroup arg0, final int arg1) {
 
 		currentShowingTime = Calendar.getInstance().getTimeInMillis();
-
+		
 		if (arg1 == R.id.radio0) {
 			currentShowingPeriodType = "1";
 		} else if (arg1 == R.id.radio1) {
@@ -183,32 +233,34 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		} else if (arg1 == R.id.radio2) {
 			currentShowingPeriodType = "3";
 		}
-
-		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
-				.execute();
-
-		// webView.reload();
-
+		
+		
+		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1").execute();
+		
+		
+//		webView.reload();
+		
 	}
-
 	long currentShowingTime;
 	String currentShowingPeriodType = "1";
-
+	
+	
+	
 	class LoadDataTask extends AsyncTask<Void, Void, String> {
-
+		
 		String did;
 		long dateTime2query;
 		String resultType;
 		String expendType;
-
-		public LoadDataTask(long dateTime2query, String resultType,
-				String expendType) {
-			this.did = "EohJ73eV37ABqVPm4jZcNT"; // TODO get did here
+		
+		public LoadDataTask(long dateTime2query, String resultType, String expendType) {
+//			this.did = "EohJ73eV37ABqVPm4jZcNT";
+			this.did = new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 			this.dateTime2query = dateTime2query;
 			this.resultType = resultType;
 			this.expendType = expendType;
 		}
-
+		
 		@Override
 		protected void onPreExecute() {
 			DialogUtil.instance().showLoadingDialog(context, "");
@@ -216,54 +268,64 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 		@Override
 		protected String doInBackground(Void... params) {
-			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType,
-					expendType);
+			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType, expendType);
 		}
-
+		
 		@Override
 		protected void onPostExecute(String result) {
-
+			
 			// use result to form namelist and datalist
-
+			
 			Log.d("emmm", "theString: " + result);
-
+			
 			try {
-				dododo(result);
+				dododo(resultType, result);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-
+			
+			
 			if (resultType.equals("1")) {
 				chart4week();
 			}
-
+			
 			if (resultType.equals("2")) {
 				chart4Month();
 			}
-
+			
 			if (resultType.equals("3")) {
 				chart4Year();
 			}
 
 			webView.reload();
-
+			
 			DialogUtil.dismissDialog();
-
+			
 		}
-
-		private void dododo(String input) throws JSONException {
-
+		
+		
+		private void dododo(String resultType, String input) throws JSONException {
+			
 			JSONArray jr = new JSONArray(input);
 			List<Xvo> nameLi = new ArrayList<Xvo>();
 			List<Datavo> dataLi = new ArrayList<Datavo>();
-
-			for (int i = 0; i < jr.length(); i++) {
+			
+			for (int i = 0; i<jr.length(); i++) {
 				JSONObject jo = jr.getJSONObject(i);
-
+				
+				long timeStamp = jo.getLong("time");
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(timeStamp);
+				String name = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.CHINA);
+				
+				if (!resultType.equals("3")) {
+					name += cal.get(Calendar.DATE);
+				}
+				
 				Xvo xvo = new Xvo();
-				xvo.setName(jo.getLong("time") + "");
+				xvo.setName(name);
 				nameLi.add(xvo);
-
+				
 				Datavo dvo = new Datavo();
 				try {
 					dvo.setData(Integer.parseInt(jo.getString("amount")));
@@ -271,17 +333,18 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 					dvo.setData(0);
 				}
 				dataLi.add(dvo);
-
+				
 			}
-
+			
 			Gson gson = new Gson();
 			namelistjson = gson.toJson(nameLi);
 			datalistjson = gson.toJson(dataLi);
+
 			Log.d("emmm", "namelistjson:" + namelistjson);
 			Log.d("emmm", "datalistjson:" + datalistjson);
+			
 		}
-
+		
 	}
-
-	
+  
 }

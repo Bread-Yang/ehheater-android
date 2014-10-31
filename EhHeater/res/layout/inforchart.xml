@@ -95,7 +95,7 @@
                 android:id="@+id/last"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="" />
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="TextView" />
+                android:text="" />
         </LinearLayout>
     </RelativeLayout>
 

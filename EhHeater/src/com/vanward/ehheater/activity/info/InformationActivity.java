@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -171,7 +170,13 @@ public class InformationActivity extends Activity implements
 			}
 		}
 
+		if (position == 1 && tempToken++ == 0) {
+			// load
+			((InforElChartView)pageViews.get(1)).selectDefault(); 
+		}
+	
 	}
+	private int tempToken = 0;
 
 	@Override
 	public void onClick(View arg0) {
