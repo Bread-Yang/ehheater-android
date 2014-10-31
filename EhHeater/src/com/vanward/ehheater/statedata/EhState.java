@@ -40,8 +40,10 @@ public class EhState {
 			setPower(data[13]);
 			setRemainingHeatingTime(data[14]);
 			setRemainingHotWaterAmount(data[15]);
-			setErrorCode(data[17]);
-			setElectricityConsumption((short) 0);
+			setErrorCode(data[16]);
+			int highElec = data[17]*256;
+			int lowElec = data[18];
+			setElectricityConsumption((short) (highElec+lowElec));
 			setCheckSum((short) 0);
 		} catch (Exception e) {
 			// TODO: handle exception

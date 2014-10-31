@@ -89,7 +89,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.d("emmm", "onLoginCloudResp:" + result);
+		Log.d("emmm", "onLoginCloudResp@DummySendBinding:" + result);
 		
 		generated.SendBindingSetReq(tempConnId, generated.String2XpgData(did2bind), 
 				generated.String2XpgData(passcode2bind));
@@ -97,7 +97,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	
 	public void OnBindingSetResp(BindingSetResp_t pResp, int nConnId) {
 		super.OnBindingSetResp(pResp, nConnId);
-		Log.d("emmm", "OnBindingSetResp:" + pResp.getResult());
+		Log.d("emmm", "OnBindingSetResp@DummySendBinding:" + pResp.getResult());
 		
 		setResult(RESULT_OK);
 		XPGConnectClient.RemoveActivity(this);
