@@ -50,17 +50,14 @@ public class InformationActivity extends Activity implements
 		rightbButton.setVisibility(View.GONE);
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		title = (TextView) findViewById(R.id.ivTitleName);
-		
-	
-View view3=LinearLayout.inflate(this, R.layout.information_3,null);
+
+		View view3 = LinearLayout.inflate(this, R.layout.information_3, null);
 		title.setText("信息");
 		pageViews.add(new InforChartView(this));
 		pageViews.add(new InforElChartView(this));
 		pageViews.add(view3);
 		pageViews.add(new InforHistoryView(this));
 
-		
-		
 		gastv = (TextView) view3.findViewById(R.id.gastv);
 		watertv = (TextView) view3.findViewById(R.id.watertv);
 		heattv = (TextView) view3.findViewById(R.id.heattv);
@@ -212,17 +209,16 @@ View view3=LinearLayout.inflate(this, R.layout.information_3,null);
 						DialogUtil.instance().dismissDialog();
 						super.onFailure(t, errorNo, strMsg);
 					}
-
 				});
 
 	}
 
 	public void setViewData() {
 		System.out.println(mcuVo.getCumulativeGas());
-		gastv.setText(mcuVo.getCumulativeGas()+"L");
-		watertv.setText(mcuVo.getCumulativeVolume()+"L");
+		gastv.setText(mcuVo.getCumulativeGas() + "L");
+		watertv.setText(mcuVo.getCumulativeVolume() + "L");
 		// heatxiaolv.setText(mcuVo.get);
-		taptv.setText(mcuVo.getCumulativeOpenValveTimes()+"");
+		taptv.setText(mcuVo.getCumulativeOpenValveTimes() + "");
 		// heattv.setText(mcuVo.get);
 
 	}
