@@ -87,6 +87,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		case R.id.new_device_btn:
 			break;
 		case R.id.login_btn:
+
+			if (et_user.getText().length() <= 0
+					|| et_pwd.getText().length() <= 0) {
+				Toast.makeText(this, "请输入手机号/密码", Toast.LENGTH_LONG).show();
+				return;
+			}
 			DialogUtil.instance().showLoadingDialog(this, "");
 			loginCloudResponseTriggered = false;
 			mLoginTimeoutTimer = new Timer();
@@ -251,12 +257,11 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			HeaterInfo hinfo4 = new HeaterInfo();
 			hinfo4.setMac("C8934641B421");
 			hinfo4.setPasscode("TGKJROLIQU");
-			
-			
+
 			HeaterInfo hinfo5 = new HeaterInfo();
 			hinfo5.setMac("C8934641B3B4");
 			hinfo5.setPasscode("CJAVOWVRGR");
-			
+
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			// hser.addNewHeater(hinfo1);
 			// hser.addNewHeater(hinfo2);

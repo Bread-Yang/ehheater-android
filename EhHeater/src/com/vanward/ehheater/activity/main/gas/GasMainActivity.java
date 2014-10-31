@@ -307,7 +307,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("节能模式");
-		modeimg.setImageResource(R.drawable.gas_home_icon_intelligence);
+		modeimg.setImageResource(R.drawable.gas_home_icon_energy);
 		if (circularView != null) {
 			circularView.setVisibility(View.GONE);
 
@@ -322,7 +322,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void changetoligenceMode(GasWaterHeaterStatusResp_t pResp) {
 		modeTv.setText("智能模式");
-		modeimg.setImageResource(R.drawable.gas_home_icon_energy);
+		modeimg.setImageResource(R.drawable.gas_home_icon_intelligence);
 		if (circularView != null) {
 			circularView.setVisibility(View.GONE);
 		}

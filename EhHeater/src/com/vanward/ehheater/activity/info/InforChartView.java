@@ -286,5 +286,5 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		}
 		
 	}
-
+  
 }
