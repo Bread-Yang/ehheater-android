@@ -93,6 +93,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 		
 		generated.SendBindingSetReq(tempConnId, generated.String2XpgData(did2bind), 
 				generated.String2XpgData(passcode2bind));
+		Log.d("emmm", "sendingBinding@DummySendBinding: " + did2bind + "-" + passcode2bind);
 	}
 	
 	public void OnBindingSetResp(BindingSetResp_t pResp, int nConnId) {
