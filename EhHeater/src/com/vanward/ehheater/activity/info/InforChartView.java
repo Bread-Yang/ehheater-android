@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +28,7 @@ import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
+import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
 
@@ -55,6 +57,8 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		radioGroup.setOnCheckedChangeListener(this);
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
+		last.setOnClickListener(this);
+		next.setOnClickListener(this);
 		webView = (WebView) layout.findViewById(R.id.webView1);
 		webView.addJavascriptInterface(new Initobject(), "init");
 		webView.getSettings().setJavaScriptEnabled(true);
@@ -81,7 +85,53 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 	@Override
 	public void onClick(View arg0) {
+		switch (arg0.getId()) {
+		case R.id.last:
 
+			if (currentShowingPeriodType.equals("1")) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(currentShowingTime);
+				cal.add(Calendar.DATE, -7);
+				currentShowingTime = cal.getTimeInMillis();
+			}
+			
+			if (currentShowingPeriodType.equals("2")) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(currentShowingTime);
+				cal.add(Calendar.MONTH, -1);
+				currentShowingTime = cal.getTimeInMillis();
+			}
+			
+			if (currentShowingPeriodType.equals("3")) {
+				
+			}
+			
+			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1").execute();
+			
+			break;
+		case R.id.next:
+
+			if (currentShowingPeriodType.equals("1")) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(currentShowingTime);
+				cal.add(Calendar.DATE, 7);
+				currentShowingTime = cal.getTimeInMillis();
+			}
+			
+			if (currentShowingPeriodType.equals("2")) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(currentShowingTime);
+				cal.add(Calendar.MONTH, 1);
+				currentShowingTime = cal.getTimeInMillis();
+			}
+			
+			if (currentShowingPeriodType.equals("3")) {
+				
+			}
+			
+			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1").execute();
+			break;
+		}
 	}
 
 	class Initobject {
@@ -204,7 +254,8 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		String expendType;
 		
 		public LoadDataTask(long dateTime2query, String resultType, String expendType) {
-			this.did = "EohJ73eV37ABqVPm4jZcNT";	// TODO get did here
+//			this.did = "EohJ73eV37ABqVPm4jZcNT";
+			this.did = new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 			this.dateTime2query = dateTime2query;
 			this.resultType = resultType;
 			this.expendType = expendType;
@@ -228,7 +279,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 			Log.d("emmm", "theString: " + result);
 			
 			try {
-				dododo(result);
+				dododo(resultType, result);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -253,7 +304,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		}
 		
 		
-		private void dododo(String input) throws JSONException {
+		private void dododo(String resultType, String input) throws JSONException {
 			
 			JSONArray jr = new JSONArray(input);
 			List<Xvo> nameLi = new ArrayList<Xvo>();
@@ -262,8 +313,17 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 			for (int i = 0; i<jr.length(); i++) {
 				JSONObject jo = jr.getJSONObject(i);
 				
+				long timeStamp = jo.getLong("time");
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(timeStamp);
+				String name = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.CHINA);
+				
+				if (!resultType.equals("3")) {
+					name += cal.get(Calendar.DATE);
+				}
+				
 				Xvo xvo = new Xvo();
-				xvo.setName(jo.getLong("time") + "");
+				xvo.setName(name);
 				nameLi.add(xvo);
 				
 				Datavo dvo = new Datavo();
