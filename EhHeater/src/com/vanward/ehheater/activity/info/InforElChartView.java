@@ -200,7 +200,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		}
 		
 		
-		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "2").execute();
+		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "3").execute();
 		
 		
 //		webView.reload();
@@ -211,7 +211,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 	
 	public void selectDefault() {
 		currentShowingTime = Calendar.getInstance().getTimeInMillis();
-		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "2").execute();
+		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "3").execute();
 	}
 	
 	class LoadDataTask extends AsyncTask<Void, Void, String> {
