@@ -134,7 +134,6 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 			Datavo datavo = new Datavo();
 			datavo.setData(i * 10);
 			datalist.add(datavo);
-
 		}
 		datalistjson = gson.toJson(datalist);
 		System.out.println(datalistjson);
