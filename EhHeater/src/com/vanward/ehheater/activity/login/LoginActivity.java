@@ -259,8 +259,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			hinfo4.setPasscode("TGKJROLIQU");
 
 			HeaterInfo hinfo5 = new HeaterInfo();
-			hinfo5.setMac("C8934641B3B4");
-			hinfo5.setPasscode("CJAVOWVRGR");
+			hinfo5.setMac("C8934641B41D");
+			hinfo5.setPasscode("CCVXPHVUCO");
 
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			// hser.addNewHeater(hinfo1);

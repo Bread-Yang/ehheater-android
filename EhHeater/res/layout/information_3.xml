@@ -21,7 +21,7 @@
             android:textSize="23sp" />
 
         <TextView
-            android:id="@+id/TextView08"
+            android:id="@+id/watertv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -43,7 +43,7 @@
         android:paddingRight="20dp" >
 
         <TextView
-            android:id="@+id/TextView05"
+            android:id="@+id/TextView06"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -53,7 +53,7 @@
             android:textSize="23sp" />
 
         <TextView
-            android:id="@+id/TextView06"
+            android:id="@+id/gastv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -85,7 +85,7 @@
             android:textSize="23sp" />
 
         <TextView
-            android:id="@+id/TextView03"
+            android:id="@+id/heattv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -117,7 +117,7 @@
             android:textSize="23sp" />
 
         <TextView
-            android:id="@+id/TextView01"
+            android:id="@+id/heatxiaolv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -139,7 +139,7 @@
         android:paddingRight="20dp" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/taptv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

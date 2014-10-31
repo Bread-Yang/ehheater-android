@@ -26,6 +26,8 @@ public class InformationActivity extends Activity implements
 	private ViewPager mViewPager;
 	private Button leftbutton, rightbButton;
 	TextView title;
+	TextView gastv, watertv, heatxiaolv, taptv, heattv;
+	McuVo mcuVo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,13 @@ public class InformationActivity extends Activity implements
 		rightbButton.setVisibility(View.GONE);
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		title = (TextView) findViewById(R.id.ivTitleName);
+		mcuVo = new McuVo();
+		gastv = (TextView) findViewById(R.id.gastv);
+		watertv = (TextView) findViewById(R.id.watertv);
+		heattv = (TextView) findViewById(R.id.heattv);
+		taptv = (TextView) findViewById(R.id.taptv);
+		heatxiaolv = (TextView) findViewById(R.id.heatxiaolv);
+
 		title.setText("信息");
 		pageViews.add(new InforChartView(this));
 		pageViews.add(new InforElChartView(this));
@@ -160,6 +169,15 @@ public class InformationActivity extends Activity implements
 		default:
 			break;
 		}
+
+	}
+
+	public void setViewData() {
+		gastv.setText(mcuVo.getCumulativeGas());
+		watertv.setText(mcuVo.getCumulativeVolume());
+		// heatxiaolv.setText(mcuVo.get);
+		taptv.setText(mcuVo.getCumulativeOpenValveTimes());
+		// heattv.setText(mcuVo.get);
 
 	}
 }
