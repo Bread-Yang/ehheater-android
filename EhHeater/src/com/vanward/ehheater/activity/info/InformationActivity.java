@@ -41,6 +41,8 @@ public class InformationActivity extends Activity implements
 	}
 
 	ArrayList<View> pageViews = new ArrayList<View>();
+	private TextView sumwater;
+	private TextView sumgas;
 
 	private void initView(Context context) {
 
@@ -53,14 +55,19 @@ public class InformationActivity extends Activity implements
 
 		View view3 = LinearLayout.inflate(this, R.layout.information_3, null);
 		title.setText("信息");
-		pageViews.add(new InforChartView(this));
-		pageViews.add(new InforElChartView(this));
+		InforChartView inforChartView = new InforChartView(this);
+		InforElChartView inforElChartView = new InforElChartView(this);
+		pageViews.add(inforChartView);
+		pageViews.add(inforElChartView);
 		pageViews.add(view3);
 		pageViews.add(new InforHistoryView(this));
 
 		gastv = (TextView) view3.findViewById(R.id.gastv);
 		watertv = (TextView) view3.findViewById(R.id.watertv);
 		heattv = (TextView) view3.findViewById(R.id.heattv);
+
+		sumwater = (TextView) inforChartView.findViewById(R.id.sumwater);
+		sumgas = (TextView) inforElChartView.findViewById(R.id.sumgas);
 		taptv = (TextView) view3.findViewById(R.id.taptv);
 		heatxiaolv = (TextView) view3.findViewById(R.id.heatxiaolv);
 		// 创建imageviews数组，大小是要显示的图片的数量
@@ -92,6 +99,8 @@ public class InformationActivity extends Activity implements
 		// 设置viewpager的适配器和监听事件
 		mViewPager.setAdapter(new NavigationPageAdapter());
 		mViewPager.setOnPageChangeListener(InformationActivity.this);
+
+		getdata();
 	}
 
 	// 设置要显示的pageradapter类
@@ -161,9 +170,7 @@ public class InformationActivity extends Activity implements
 				imageViews[i].setBackgroundResource(R.drawable.dian2);
 			}
 		}
-		if (position == 2) {
-			getdata();
-		}
+
 	}
 
 	@Override
@@ -220,6 +227,7 @@ public class InformationActivity extends Activity implements
 		// heatxiaolv.setText(mcuVo.get);
 		taptv.setText(mcuVo.getCumulativeOpenValveTimes() + "");
 		// heattv.setText(mcuVo.get);
-
+		sumwater.setText(mcuVo.getCumulativeVolume() + "L");
+		sumgas.setText(mcuVo.getCumulativeGas() + "L");
 	}
 }
