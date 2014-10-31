@@ -556,6 +556,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("当前设置水流量： " + pResp.getCustomWaterProportion());
 		System.out.println("当前累加注水量：" + pResp.getSetWater_cumulative());
 		System.out.println("设置注水量： " + pResp.getSetWater_power());
+
+		System.out.println("累计用水量：" + pResp.getCumulativeVolume());
+		System.out.println("累计燃气量：" + pResp.getCumulativeGas());
 		// 浴缸 设定注水量 累计注水量
 		shuiliuliangText.setText("实时水流量");
 		settemper.setText("/" + (pResp.getSetWater_power() * 10) + "L");
