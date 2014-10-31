@@ -2,6 +2,8 @@ package com.vanward.ehheater.activity.info;
 
 import java.util.ArrayList;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,7 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.DialogUtil;
 
 public class InformationActivity extends Activity implements
 		OnPageChangeListener, OnClickListener {
@@ -46,19 +50,22 @@ public class InformationActivity extends Activity implements
 		rightbButton.setVisibility(View.GONE);
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		title = (TextView) findViewById(R.id.ivTitleName);
-		mcuVo = new McuVo();
-		gastv = (TextView) findViewById(R.id.gastv);
-		watertv = (TextView) findViewById(R.id.watertv);
-		heattv = (TextView) findViewById(R.id.heattv);
-		taptv = (TextView) findViewById(R.id.taptv);
-		heatxiaolv = (TextView) findViewById(R.id.heatxiaolv);
-
+		
+	
+View view3=LinearLayout.inflate(this, R.layout.information_3,null);
 		title.setText("信息");
 		pageViews.add(new InforChartView(this));
 		pageViews.add(new InforElChartView(this));
-		pageViews.add(LinearLayout.inflate(this, R.layout.information_3, null));
+		pageViews.add(view3);
 		pageViews.add(new InforHistoryView(this));
 
+		
+		
+		gastv = (TextView) view3.findViewById(R.id.gastv);
+		watertv = (TextView) view3.findViewById(R.id.watertv);
+		heattv = (TextView) view3.findViewById(R.id.heattv);
+		taptv = (TextView) view3.findViewById(R.id.taptv);
+		heatxiaolv = (TextView) view3.findViewById(R.id.heatxiaolv);
 		// 创建imageviews数组，大小是要显示的图片的数量
 		imageViews = new ImageView[pageViews.size()];
 		// 实例化小圆点的linearLayout和viewpager
@@ -157,6 +164,9 @@ public class InformationActivity extends Activity implements
 				imageViews[i].setBackgroundResource(R.drawable.dian2);
 			}
 		}
+		if (position == 2) {
+			getdata();
+		}
 	}
 
 	@Override
@@ -172,11 +182,47 @@ public class InformationActivity extends Activity implements
 
 	}
 
+	public void getdata() {
+		FinalHttp finalHttp = new FinalHttp();
+		finalHttp.get(
+				"http://122.10.94.216:8080/EhHeaterWeb/userinfo/getNewData",
+				new AjaxCallBack<String>() {
+
+					@Override
+					public void onStart() {
+
+						DialogUtil.instance().showDialog();
+						super.onStart();
+					}
+
+					@Override
+					public void onSuccess(String t) {
+						Gson gson = new Gson();
+						System.out.println(t);
+						mcuVo = gson.fromJson(t, McuVo.class);
+						setViewData();
+						DialogUtil.instance().dismissDialog();
+						super.onSuccess(t);
+					}
+
+					@Override
+					public void onFailure(Throwable t, int errorNo,
+							String strMsg) {
+						// TODO Auto-generated method stub
+						DialogUtil.instance().dismissDialog();
+						super.onFailure(t, errorNo, strMsg);
+					}
+
+				});
+
+	}
+
 	public void setViewData() {
-		gastv.setText(mcuVo.getCumulativeGas());
-		watertv.setText(mcuVo.getCumulativeVolume());
+		System.out.println(mcuVo.getCumulativeGas());
+		gastv.setText(mcuVo.getCumulativeGas()+"L");
+		watertv.setText(mcuVo.getCumulativeVolume()+"L");
 		// heatxiaolv.setText(mcuVo.get);
-		taptv.setText(mcuVo.getCumulativeOpenValveTimes());
+		taptv.setText(mcuVo.getCumulativeOpenValveTimes()+"");
 		// heattv.setText(mcuVo.get);
 
 	}

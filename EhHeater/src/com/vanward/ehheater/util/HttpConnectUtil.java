@@ -69,7 +69,6 @@ public class HttpConnectUtil {
 	private static void testJson(String input) throws JSONException {
 		
 		JSONArray jr = new JSONArray(input);
-		
 		for (int i = 0; i<jr.length(); i++) {
 			JSONObject jo = jr.getJSONObject(i);
 			Log.d("emmm", "theString: " + jo.getString("amount") + "-" + jo.getString("time"));
