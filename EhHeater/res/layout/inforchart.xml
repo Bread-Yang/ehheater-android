@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/radio_left_bg"
             android:button="@null"
-            android:checked="true"
+            android:checked="false"
             android:text="按周"
             android:textColor="@drawable/radoo_select1" />
 
