@@ -79,30 +79,31 @@ public class HeaterInfoService {
 		HeaterInfo hi = hdao.getHeaterByMac(mac);
 		hdao.getDb().deleteById(HeaterInfo.class, hi.getId());
 	}
-	
+
 	public void deleteAllHeaters() {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
-//		hdao.getDb().deleteAll(HeaterInfo.class);
+		// hdao.getDb().deleteAll(HeaterInfo.class);
 		hdao.getDb().dropTable(HeaterInfo.class);
 		hdao.getDb().createTable(HeaterInfo.class);
 	}
-	
+
 	public enum HeaterType {
-		
-		Eh(Consts.E_HEATER_DEFAULT_NAME, Consts.EH_P_KEY), 
-		ST(Consts.ST_HEATER_DEFAULT_NAME, Consts.ST_P_KEY), 
-		Unknown(Consts.HEATER_DEFAULT_NAME, "");
-		
+
+		Eh(Consts.E_HEATER_DEFAULT_NAME, Consts.EH_P_KEY), ST(
+				Consts.ST_HEATER_DEFAULT_NAME, Consts.ST_P_KEY), Unknown(
+				Consts.HEATER_DEFAULT_NAME, "");
+
 		public String defName, pkey;
+
 		HeaterType(String defName, String pkey) {
 			this.defName = defName;
 			this.pkey = pkey;
 		}
-		
+
 	}
-	
-	public HeaterType getHeaterType (HeaterInfo hinfo) {
-		
+
+	public HeaterType getHeaterType(HeaterInfo hinfo) {
+
 		if (Consts.EH_P_KEY.equals(hinfo.getProductKey())) {
 			return HeaterType.Eh;
 		} else if (Consts.ST_P_KEY.equals(hinfo.getProductKey())) {
@@ -110,41 +111,43 @@ public class HeaterInfoService {
 		} else {
 			return HeaterType.Unknown;
 		}
-		
+
 	}
-	
+
 	public void generateDefaultName(HeaterInfo hinfo) {
 		HeaterType type = getHeaterType(hinfo);
 		int count = new HeaterInfoDao(context).getHeaterCountOfType(type);
 
-		hinfo.setName(type.defName + (count+1));
-		
+		hinfo.setName(type.defName + (count + 1));
+
 	}
-	
+
 	public void changeDuplicatedName(HeaterInfo hinfo) {
 		duplicates = 1;
 		origName = hinfo.getName();
 		recurseChangeDuplicatedName(hinfo);
 	}
-	
+
 	private void recurseChangeDuplicatedName(HeaterInfo hinfo) {
 		// check name exists
 		// true
-			// reset hinfo.name according to a regulation
-			// method recurse
+		// reset hinfo.name according to a regulation
+		// method recurse
 		// fasle
-			// return (just do nothing)
+		// return (just do nothing)
 
 		duplicates++;
-		boolean nameExists = new HeaterInfoDao(context).nameExists(hinfo.getName());
+		boolean nameExists = new HeaterInfoDao(context).nameExists(hinfo
+				.getName());
 		if (nameExists) {
 			hinfo.setName(origName + " (" + duplicates + ")");
 			recurseChangeDuplicatedName(hinfo);
 		} else {
-			
+
 		}
-		
+
 	}
+
 	int duplicates;
 	String origName;
 
