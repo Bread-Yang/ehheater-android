@@ -175,7 +175,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
-		iv_wave.setVisibility(View.VISIBLE);
+
 		initopenView();
 		updateTitle();
 		mode.setOnLongClickListener(this);
@@ -385,6 +385,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			setViewsAble(false, pResp);
 			rightButton.setEnabled(false);
 			mode.setEnabled(false);
+			iv_wave.setVisibility(View.VISIBLE);
 			if (pResp.getFunction_state() == 3) {
 				circularView.setVisibility(View.VISIBLE);
 				circularView.setEndangle(48);
@@ -399,6 +400,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			setViewsAble(true, pResp);
 			rightButton.setEnabled(true);
 			circularView.setEndangle(65);
+			iv_wave.setVisibility(View.GONE);
 		}
 
 	}
@@ -605,6 +607,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			if (gasCustomSetVo != null) {
 				modeTv.setText(gasCustomSetVo.getName());
 			}
+			modeimg.setVisibility(View.GONE);
+		} else {
+			modeimg.setVisibility(View.VISIBLE);
 		}
 
 	}
@@ -615,15 +620,20 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 		freezeProofing(pResp);
 		oxygenWarning(pResp);
+		System.out.println("错误码：" + pResp.getErrorCode());
 		if (pResp.getErrorCode() != 0) {
+			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.icon_tip);
 
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
-					ErrorDialogUtil.instance(GasMainActivity.this)
-							.initName(pResp.getErrorCode() + "")
+					ErrorDialogUtil
+							.instance(GasMainActivity.this)
+							.initName(
+									Integer.toHexString(pResp.getErrorCode())
+											+ "")
 							.setNextButtonCall(new NextButtonCall() {
 								@Override
 								public void oncall(View v) {
@@ -631,8 +641,11 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 									// intent.putExtra("data", inforVo);
 									intent.setClass(GasMainActivity.this,
 											InfoErrorActivity.class);
-									intent.putExtra("name",
-											"机器故障(" + pResp.getErrorCode()
+									intent.putExtra(
+											"name",
+											"机器故障("
+													+ Integer.toHexString(pResp
+															.getErrorCode())
 													+ ")");
 									intent.putExtra("time",
 											simpleDateFormat.format(new Date()));
@@ -649,6 +662,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 							}).showDialog();
 				}
 			});
+		} else {
+			tipsimg.setVisibility(View.GONE);
 		}
 	}
 
@@ -660,6 +675,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void freezeProofing(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("防冻报警：" + pResp.getFreezeProofingWarning());
 		if (pResp.getFreezeProofingWarning() == 1) {
+			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.home_icon_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
@@ -690,6 +706,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void oxygenWarning(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("氧护提示：" + pResp.getOxygenWarning());
 		if (pResp.getOxygenWarning() == 1) {
+			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.home_icon_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
@@ -761,7 +778,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIListener(int outlevel) {
 		// TODO Auto-generated method stub
-		temptertitleTextView.setText("设定温度");
+		temptertitleTextView.setText("设置水温");
 		tempter.setText(outlevel + "");
 		if (outlevel >= 50) {
 			// 变小了
@@ -784,13 +801,13 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
-		temptertitleTextView.setText("设定温度");
+		temptertitleTextView.setText("设置水温");
 		tempter.setText(outlevel + "");
 	}
 
 	@Override
 	public void updateLocalUIdifferent(int outlevel) {
-		temptertitleTextView.setText("设定温度");
+		temptertitleTextView.setText("设置水温");
 	}
 
 	public void setViewsAble(boolean isAble, GasWaterHeaterStatusResp_t pResp) {

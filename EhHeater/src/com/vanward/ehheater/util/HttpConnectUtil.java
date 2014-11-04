@@ -27,7 +27,7 @@ public class HttpConnectUtil {
 					expendType + "&resultType=" + resultType;
 
 //	        HttpGet httpGet = new HttpGet("http://172.16.1.130:8080/EhHeaterWeb/userinfo/getgasdata2?did=EohJ73eV37ABqVPm4jZcNT&dateTime=1414743947000&expendType=1&resultType=1");
-	        HttpGet httpGet = new HttpGet("http://122.10.94.216:8080/EhHeaterWeb/userinfo/getgasdata2" + para);
+	        HttpGet httpGet = new HttpGet("http://122.10.94.216:8080/EhHeaterWeb/userinfo/getgasdata" + para);
 	        
 		    HttpParams paras = new BasicHttpParams();
 		    

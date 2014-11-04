@@ -2,6 +2,9 @@ package com.vanward.ehheater.activity.info;
 
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Activity;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
 
 public class InformationActivity extends Activity implements
@@ -29,7 +34,7 @@ public class InformationActivity extends Activity implements
 	private ViewPager mViewPager;
 	private Button leftbutton, rightbButton;
 	TextView title;
-	TextView gastv, watertv, heatxiaolv, taptv, heattv;
+	TextView heatxiaolv, taptv, heattv;
 	McuVo mcuVo;
 
 	@Override
@@ -61,8 +66,6 @@ public class InformationActivity extends Activity implements
 		pageViews.add(view3);
 		pageViews.add(new InforHistoryView(this));
 
-		gastv = (TextView) view3.findViewById(R.id.gastv);
-		watertv = (TextView) view3.findViewById(R.id.watertv);
 		heattv = (TextView) view3.findViewById(R.id.heattv);
 
 		sumwater = (TextView) inforChartView.findViewById(R.id.sumwater);
@@ -172,10 +175,11 @@ public class InformationActivity extends Activity implements
 
 		if (position == 1 && tempToken++ == 0) {
 			// load
-			((InforElChartView)pageViews.get(1)).selectDefault(); 
+			((InforElChartView) pageViews.get(1)).selectDefault();
 		}
-	
+
 	}
+
 	private int tempToken = 0;
 
 	@Override
@@ -193,45 +197,60 @@ public class InformationActivity extends Activity implements
 
 	public void getdata() {
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get(
-				"http://122.10.94.216:8080/EhHeaterWeb/userinfo/getNewData",
-				new AjaxCallBack<String>() {
+		HeaterInfoService heaterInfoService = new HeaterInfoService(this);
 
-					@Override
-					public void onStart() {
+		System.out
+				.println("http://122.10.94.216:8080/EhHeaterWeb/userinfo/getNewData?did="
+						+ heaterInfoService.getCurrentSelectedHeater().getDid());
 
-						DialogUtil.instance().showDialog();
-						super.onStart();
-					}
+		finalHttp
+				.get("http://122.10.94.216:8080/EhHeaterWeb/userinfo/getNewData?did="
+						+ heaterInfoService.getCurrentSelectedHeater().getDid(),
+						new AjaxCallBack<String>() {
 
-					@Override
-					public void onSuccess(String t) {
-						Gson gson = new Gson();
-						System.out.println(t);
-						mcuVo = gson.fromJson(t, McuVo.class);
-						setViewData();
-						DialogUtil.instance().dismissDialog();
-						super.onSuccess(t);
-					}
+							@Override
+							public void onStart() {
+								DialogUtil.instance().showDialog();
+								super.onStart();
+							}
 
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						// TODO Auto-generated method stub
-						DialogUtil.instance().dismissDialog();
-						super.onFailure(t, errorNo, strMsg);
-					}
-				});
+							@Override
+							public void onSuccess(String t) {
+
+								try {
+									JSONObject jsonObject = new JSONObject(t);
+									t = jsonObject.getJSONObject("result")
+											.toString();
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								Gson gson = new Gson();
+								System.out.println("tt:" + t);
+								mcuVo = gson.fromJson(t, McuVo.class);
+								setViewData();
+								DialogUtil.instance().dismissDialog();
+								super.onSuccess(t);
+							}
+
+							@Override
+							public void onFailure(Throwable t, int errorNo,
+									String strMsg) {
+								// TODO Auto-generated method stub
+								DialogUtil.instance().dismissDialog();
+								super.onFailure(t, errorNo, strMsg);
+							}
+						});
 
 	}
 
 	public void setViewData() {
 		System.out.println(mcuVo.getCumulativeGas());
-		gastv.setText(mcuVo.getCumulativeGas() + "L");
-		watertv.setText(mcuVo.getCumulativeVolume() + "L");
 		// heatxiaolv.setText(mcuVo.get);
 		taptv.setText(mcuVo.getCumulativeOpenValveTimes() + "");
-		// heattv.setText(mcuVo.get);
+		if (mcuVo != null && mcuVo.getCumulatUseTime() != null) {
+			heattv.setText(mcuVo.getCumulatUseTime() + "mins");
+		}
 		sumwater.setText(mcuVo.getCumulativeVolume() + "L");
 		sumgas.setText(mcuVo.getCumulativeGas() + "L");
 	}

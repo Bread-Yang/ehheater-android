@@ -29,13 +29,12 @@ public class InforHistoryView extends LinearLayout implements OnClickListener {
 		lParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.WRAP_CONTENT);
 		addView(layout, lParams);
-		initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
-		initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
+	//	initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
+	//	initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
 	}
 
 	public void initItemView(InforVo inforVo) {
 		View itemview = inflate(context, R.layout.inforhistory_item, null);
-
 		ImageView imageView = (ImageView) itemview.findViewById(R.id.icon);
 		TextView name = (TextView) itemview.findViewById(R.id.inforname);
 		TextView time = (TextView) itemview.findViewById(R.id.time);
@@ -51,7 +50,6 @@ public class InforHistoryView extends LinearLayout implements OnClickListener {
 		time.setText("2014/11/11 11:11");
 		layout.addView(itemview, lParams);
 		itemview.setTag(inforVo);
-
 	}
 
 	public class InforVo implements Serializable {

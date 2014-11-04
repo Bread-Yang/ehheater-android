@@ -25,7 +25,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/white_button_bg"
-            android:hint="名称" >
+            android:hint="名称"
+            android:maxLines="1"
+            android:maxLength="15"
+         >
 
             <requestFocus />
         </EditText>

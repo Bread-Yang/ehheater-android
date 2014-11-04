@@ -553,7 +553,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIListener(int outlevel) {
 		// TODO Auto-generated method stub
-		temptertitleTextView.setText("设定温度");
+		temptertitleTextView.setText("设置水温");
 		tempter.setText(outlevel + "");
 		circularView.setTargerdegree(outlevel);
 		Insetting = true;

@@ -4,7 +4,7 @@ import com.vanward.ehheater.activity.feedback.HeaterDevice;
 
 public class Global {
 	
-	public static String current_did = "1";
+	public static String current_did;
 
 	public static int connectId;
 	

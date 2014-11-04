@@ -322,6 +322,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																					tempcustomSetVo
 																							.getId(),
 																					tempcustomSetVo);
+																	finish();
 																}
 
 																initViewValue();

@@ -4,97 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp" >
-
-        <TextView
-            android:id="@+id/TextView07"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="使用水量"
-            android:textColor="#FF807a79"
-            android:textSize="23sp" />
-
-        <TextView
-            android:id="@+id/watertv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="0L"
-            android:textColor="#FFf86e00"
-            android:textSize="30sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#80808080" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp" >
-
-        <TextView
-            android:id="@+id/TextView06"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="煤气耗量"
-            android:textColor="#FF807a79"
-            android:textSize="23sp" />
-
-        <TextView
-            android:id="@+id/gastv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="0L"
-            android:textColor="#FFf86e00"
-            android:textSize="30sp" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#80808080" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp" >
-
-        <TextView
-            android:id="@+id/TextView04"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="热水产率"
-            android:textColor="#FF807a79"
-            android:textSize="23sp" />
-
-        <TextView
-            android:id="@+id/heattv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="0%"
-            android:textColor="#FFf86e00"
-            android:textSize="30sp" />
-    </RelativeLayout>
-
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
@@ -112,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="热效率"
+            android:text="实时热效率"
             android:textColor="#FF807a79"
             android:textSize="23sp" />
 
@@ -144,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="燃气阀开关数"
+            android:text="总计使用次数"
             android:textColor="#FF807a79"
             android:textSize="23sp" />
 
@@ -155,6 +64,38 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="0"
+            android:textColor="#FFf86e00"
+            android:textSize="30sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#80808080" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
+
+        <TextView
+            android:id="@+id/TextView04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="总计使用时长"
+            android:textColor="#FF807a79"
+            android:textSize="23sp" />
+
+        <TextView
+            android:id="@+id/heattv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="0%"
             android:textColor="#FFf86e00"
             android:textSize="30sp" />
     </RelativeLayout>

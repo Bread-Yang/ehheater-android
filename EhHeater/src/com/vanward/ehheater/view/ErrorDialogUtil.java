@@ -110,7 +110,7 @@ public class ErrorDialogUtil {
 		TextView title = (TextView) setting.findViewById(R.id.tv_order_title);
 		TextView detail = (TextView) setting.findViewById(R.id.tv_detail);
 		title.setText("机器故障(" + errorcode + ")");
-		detail.setText(map.get(errorcode));
+		detail.setText(map.get(Integer.parseInt(errorcode,16)+""));
 		return this;
 	}
 
