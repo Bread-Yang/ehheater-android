@@ -15,14 +15,12 @@ public class AppointmentNumberActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
 
 	private int number;
-
 	private RadioGroup rg_number;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_appointment_number);
-
 		findViewById();
 		setListener();
 		init();

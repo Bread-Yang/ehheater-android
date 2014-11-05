@@ -43,17 +43,18 @@ public class AppointmentDaysActivity extends EhHeaterBaseActivity implements
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.putExtra("days", days);
-				setResult(RESULT_OK, intent);
+				AppointmentModel.getInstance(AppointmentDaysActivity.this)
+						.setDays(days);
 				finish();
 			}
 		});
 	}
 
 	private void init() {
-		Intent intent = getIntent();
-		days = intent.getIntArrayExtra("days");
+		days = AppointmentModel.getInstance(this).getDays();
+		if (days == null) {
+			days = new int[7];
+		}
 		if (days[0] == 1) {
 			cb_Monday.setChecked(true);
 		}

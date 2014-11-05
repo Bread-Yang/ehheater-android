@@ -29,6 +29,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
@@ -279,7 +280,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.appointment_btn:
 			Intent intent = new Intent();
-			intent.setClass(this, AppointmentTimeActivity.class);
+			intent.setClass(this, AppointmentListActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.pattern:

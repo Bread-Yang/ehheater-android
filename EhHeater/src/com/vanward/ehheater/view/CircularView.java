@@ -301,9 +301,10 @@ public class CircularView extends View {
 				heatmakeRange(degreeToAngle(degree));
 				if (degree >= angleToDegree(beginangle)
 						&& degree <= angleToDegree(endangle)) {
-
 					if (degree > angleToDegree(endangle)) {
 						degree = angleToDegree(endangle);
+					} else if (degree < angleToDegree(beginangle)) {
+						degree = angleToDegree(beginangle);
 					}
 					if (isclick) {
 						handler.sendEmptyMessage(UpdateUIToSet);

@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
@@ -23,12 +27,11 @@ import com.vanward.ehheater.view.wheelview.adapters.AbstractWheelTextAdapter;
 import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
 
 public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
-		OnSeekBarChangeListener {
+		OnSeekBarChangeListener, OnClickListener {
 
 	private WheelView wheelView1, wheelView2;
 
 	private TextView tv_days, tv_number;
-
 	private int number = 2;
 
 	private int[] days = { 0, 0, 0, 0, 0, 0, 0 };
@@ -48,9 +51,23 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	RadioGroup peopleGroup;
 	@ViewInject(id = R.id.seekBar1, click = "onClick")
 	SeekBar seekBar1;
-
 	@ViewInject(id = R.id.textView2, click = "onClick")
 	TextView textView2;
+	@ViewInject(id = R.id.switch1, click = "onClick")
+	ImageButton switch1;
+	@ViewInject(id = R.id.rlt_number, click = "onClick")
+	RelativeLayout fenrenxiLayout;
+	@ViewInject(id = R.id.RelativeLayout01, click = "onClick")
+	RelativeLayout temLayout;
+	@ViewInject(id = R.id.RelativeLayout02, click = "onClick")
+	RelativeLayout powerLayout;
+
+	@ViewInject(id = R.id.RelativeLayout04, click = "onClick")
+	RelativeLayout replaceweek;
+
+	@ViewInject(id = R.id.select_week, click = "onClick")
+	TextView select_week;
+	int power = 1, temper, peoplenum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +85,11 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		tv_number = (TextView) findViewById(R.id.tv_number);
 		wheelView1 = (WheelView) findViewById(R.id.wheelView1);
 		wheelView2 = (WheelView) findViewById(R.id.wheelView2);
+		fenrenxiLayout.setVisibility(View.GONE);
 	}
 
 	private void setListener() {
 		btn_right.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
@@ -91,7 +108,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				finish();
 			}
 		});
-
+		switch1.setOnClickListener(this);
+		switch1.setTag(1);
 	}
 
 	private void init() {
@@ -104,7 +122,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				wheelView2));
 		ivTitleName.setText("预约");
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
-
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 
 		AppointMentVo appointMentVo = new BaseDao(this).getDb().findById(1,
@@ -112,12 +129,11 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		if (appointMentVo != null) {
 			wheelView1.setCurrentItem(appointMentVo.getHour());
 			wheelView2.setCurrentItem(appointMentVo.getMin());
-			((RadioButton) radioGroup.getChildAt(appointMentVo.getNum()))
-					.setChecked(true);
+
 		}
 
 		peopleGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
@@ -128,40 +144,60 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				case R.id.radio0:
 					// lock
 					// set args
-					lockTempAndPower();
+					// lockTempAndPower();
 					setArgsForTempAndPower(45, 3);
 					break;
 				case R.id.radio1:
-					lockTempAndPower();
+					// lockTempAndPower();
 					setArgsForTempAndPower(65, 3);
 					break;
 				case R.id.radio2:
-					lockTempAndPower();
+					// lockTempAndPower();
 					setArgsForTempAndPower(75, 3);
+					break;
+				}
+
+			}
+		});
+
+		peopleGroup.check(R.id.radio0);
+		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup arg0, int arg1) {
+				System.out.println("dsadas");
+				switch (arg1) {
+				case R.id.RadioButton03:
+					power = 1;
+					break;
+				case R.id.RadioButton01:
+					power = 2;
+					break;
+				case R.id.RadioButton02:
+					power = 3;
+					break;
+
+				default:
 					break;
 				}
 			}
 		});
-		
-		peopleGroup.check(R.id.radio0);
+
 	}
-	
+
 	private void lockTempAndPower() {
-		seekBar1.setEnabled(false);
-		for(int i = 0; i < radioGroup.getChildCount(); i++){
-		    ((RadioButton)radioGroup.getChildAt(i)).setEnabled(false);
+		for (int i = 0; i < radioGroup.getChildCount(); i++) {
+			((RadioButton) radioGroup.getChildAt(i)).setEnabled(false);
 		}
 	}
-	
+
 	private void unLockTempAndPower() {
-		seekBar1.setEnabled(true);
-		for(int i = 0; i < radioGroup.getChildCount(); i++){
-		    ((RadioButton)radioGroup.getChildAt(i)).setEnabled(true);
+		for (int i = 0; i < radioGroup.getChildCount(); i++) {
+			((RadioButton) radioGroup.getChildAt(i)).setEnabled(true);
 		}
 	}
-	
+
 	private void setArgsForTempAndPower(int temp, int power) {
-		seekBar1.setProgress(temp-35);
+		seekBar1.setProgress(temp - 35);
 		switch (power) {
 		case 1:
 			radioGroup.check(R.id.RadioButton03);
@@ -173,7 +209,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			radioGroup.check(R.id.RadioButton02);
 			break;
 		}
-		
+
 	}
 
 	@Override
@@ -250,6 +286,33 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		}
 	}
 
+	String[] dateString = { "一", "二", "三", "四", "五", "六", "日" };
+	String weektext = "";
+
+	@Override
+	protected void onResume() {
+
+		boolean isallcheck = true;
+		if (AppointmentModel.getInstance(this).getDays() != null) {
+			for (int i = 0; i < AppointmentModel.getInstance(this).getDays().length; i++) {
+				if (AppointmentModel.getInstance(this).getDays()[i] == 1) {
+					weektext = weektext + "星期" + dateString[i] + ",";
+				} else {
+					isallcheck = false;
+				}
+			}
+			select_week.setText(weektext);
+			if (isallcheck) {
+				select_week.setText("每天");
+				weektext = "每天";
+			}
+		} else {
+			select_week.setText(weektext);
+		}
+
+		super.onResume();
+	}
+
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
@@ -259,6 +322,30 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 
+		case R.id.RelativeLayout04:
+			System.out.println("dasdas");
+			Intent intent = new Intent();
+			intent.setClass(AppointmentTimeActivity.this,
+					AppointmentDaysActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.switch1:
+
+			if ((Integer) switch1.getTag() == 1) {
+				fenrenxiLayout.setVisibility(View.VISIBLE);
+				temLayout.setVisibility(View.GONE);
+				powerLayout.setVisibility(View.GONE);
+				switch1.setImageResource(R.drawable.on);
+				switch1.setTag(0);
+			} else {
+				fenrenxiLayout.setVisibility(View.GONE);
+				temLayout.setVisibility(View.VISIBLE);
+				powerLayout.setVisibility(View.VISIBLE);
+				switch1.setImageResource(R.drawable.off);
+				switch1.setTag(1);
+			}
+			break;
+
 		case R.id.ivTitleBtnRigh:
 			String hour = ((AbstractWheelTextAdapter) wheelView1
 					.getViewAdapter()).getItemText(wheelView1.getCurrentItem())
@@ -266,7 +353,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			String minute = ((AbstractWheelTextAdapter) wheelView2
 					.getViewAdapter()).getItemText(wheelView2.getCurrentItem())
 					.toString();
-
 			int num = 0;
 			for (int i = 0; i < peopleGroup.getChildCount(); i++) {
 				if (peopleGroup.getCheckedRadioButtonId() == peopleGroup
@@ -274,11 +360,13 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					num = i;
 				}
 			}
-			AppointMentVo appointMentVo = new AppointMentVo("1",
-					Integer.parseInt(hour), Integer.parseInt(minute), num);
-			new BaseDao(this).getDb().replace(appointMentVo);
-			SendMsgModel.sentAppolitionment(Integer.parseInt(hour),
-					Integer.parseInt(minute), num + 1);
+			// int hour, int minute, int looper, int[] days, int power,int
+			// peopleNum, int temper
+			System.out.println("weektext: " + weektext);
+			Appointment appointMent = new Appointment(Integer.parseInt(hour),
+					Integer.parseInt(minute), 1, weektext, power, peoplenum,
+					temper);
+			new BaseDao(this).getDb().save(appointMent);
 			finish();
 			break;
 
@@ -291,6 +379,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 		// TODO Auto-generated method stub
 		textView2.setText(arg1 + 35 + "℃");
+		temper = arg1 + 35;
 	}
 
 	@Override
@@ -302,6 +391,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onStopTrackingTouch(SeekBar arg0) {
 		// TODO Auto-generated method stub
-
 	}
+
 }

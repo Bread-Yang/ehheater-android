@@ -4,28 +4,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import net.tsz.afinal.FinalActivity;
+import net.tsz.afinal.annotation.view.ViewInject;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.vanward.ehheater.util.db.DBService;
 import com.vanward.ehheater.view.swipelistview.SwipeListView;
-import com.xtremeprog.xpgconnect.generated.generated;
 
-public class AppointmentListActivity extends EhHeaterBaseActivity {
+public class AppointmentListActivity extends Activity implements
+		OnClickListener {
+
+	@ViewInject(id = R.id.ivTitleName, click = "onClick")
+	TextView ivTitleName;
+	@ViewInject(id = R.id.ivTitleBtnLeft, click = "onClick")
+	Button ivTitleBtnLeft;
+	@ViewInject(id = R.id.ivTitleBtnRigh, click = "")
+	Button ivTitleBtnRigh;
 
 	private SwipeListView lv_listview;
 	private List<Appointment> adapter_date = new ArrayList<Appointment>();
@@ -34,13 +41,20 @@ public class AppointmentListActivity extends EhHeaterBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setCenterView(R.layout.activity_appointment_list);
+		setContentView(R.layout.activity_appointment_list);
+		FinalActivity.initInjectedView(this);
 		findViewById();
+	}
+
+	@Override
+	protected void onResume() {
 		reflashList();
+		reflashright();
+		super.onResume();
 	}
 
 	private void findViewById() {
-		btn_right.setOnClickListener(new OnClickListener() {
+		ivTitleBtnRigh.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -51,12 +65,25 @@ public class AppointmentListActivity extends EhHeaterBaseActivity {
 		});
 		lv_listview = (SwipeListView) findViewById(R.id.lv_listview);
 		adapter = new AppointmentListAdapter();
+
 		lv_listview.setAdapter(adapter);
+		ivTitleName.setText("预约");
+		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
+		ivTitleBtnRigh.setBackgroundResource(R.drawable.icon_add);
+
+	}
+
+	public void reflashright() {
+
+		if (AppointmentModel.getInstance(this).getAdapter_date().size() >= 3) {
+			ivTitleBtnRigh.setVisibility(View.GONE);
+		} else {
+			ivTitleBtnRigh.setVisibility(View.VISIBLE);
+		}
 	}
 
 	public void reflashList() {
-		adapter_date.addAll(AppointmentModel.getInstance(this)
-				.getAdapter_date());
+		adapter_date = AppointmentModel.getInstance(this).getAdapter_date();
 		adapter.notifyDataSetChanged();
 	}
 
@@ -117,7 +144,7 @@ public class AppointmentListActivity extends EhHeaterBaseActivity {
 			item.put("days", text);
 			item.put("temp", temp + "度");
 			item.put("number", number + "人");
-	//		adapter_date.add(item);
+			// adapter_date.add(item);
 			adapter.notifyDataSetChanged();
 		}
 	}
@@ -149,35 +176,39 @@ public class AppointmentListActivity extends EhHeaterBaseActivity {
 						R.layout.item_appointment_list, null);
 				holder.tv_time = (TextView) convertView
 						.findViewById(R.id.tv_time);
+				holder.name = (TextView) convertView
+						.findViewById(R.id.textView1);
 				holder.tv_temperature = (TextView) convertView
 						.findViewById(R.id.tv_temperature);
 				holder.tv_days = (TextView) convertView
 						.findViewById(R.id.tv_days);
-				holder.tb_switch = (ToggleButton) convertView
-						.findViewById(R.id.tb_switch);
+				holder.tb_switch = (ImageButton) convertView
+						.findViewById(R.id.switch1);
 				holder.btn_delete = (Button) convertView
 						.findViewById(R.id.btn_delete);
+
+				holder.tv_power = (TextView) convertView
+						.findViewById(R.id.tv_number);
+
 				holder.rltback = convertView.findViewById(R.id.rlt_back);
 				holder.rltfont = convertView.findViewById(R.id.rlt_front);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			Appointment appointment = adapter_date.get(position);
+			final Appointment appointment = adapter_date.get(position);
 			holder.tv_time.setText(appointment.getHour() + ":"
 					+ appointment.getMinute());
-		//	holder.tv_temperature.setText(item.get("temperature"));
-			holder.tv_days.setText(appointment.getDays());
-			holder.tb_switch
-					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			holder.tv_temperature.setText(appointment.getTemper() + "度");
+			holder.tv_power.setText(appointment.getPower() + "Kw");
+			holder.tv_days.setText(appointment.getDates());
+			holder.name.setText("预约" + (position + 1));
+			holder.tb_switch.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
 
-						@Override
-						public void onCheckedChanged(CompoundButton buttonView,
-								boolean isChecked) {
-							// generated.SendSettingOrderReq(nConnId, (short)
-							// 99, (short) 99);
-						}
-					});
+				}
+			});
 			LinearLayout.LayoutParams lp1 = new LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			holder.rltfont.setLayoutParams(lp1);
@@ -189,7 +220,12 @@ public class AppointmentListActivity extends EhHeaterBaseActivity {
 
 				@Override
 				public void onClick(View arg0) {
-					System.out.println("点击btn_delete");
+					if (appointment != null) {
+						DBService.getInstance(AppointmentListActivity.this)
+								.delete(appointment);
+					}
+					reflashright();
+					reflashList();
 				}
 			});
 
@@ -200,10 +236,24 @@ public class AppointmentListActivity extends EhHeaterBaseActivity {
 			TextView tv_time;
 			TextView tv_temperature;
 			TextView tv_days;
-			ToggleButton tb_switch;
+			TextView tv_power;
+			TextView name;
+			ImageButton tb_switch;
 			Button btn_delete;
 			View rltfont, rltback;
 
+		}
+	}
+
+	@Override
+	public void onClick(View arg0) {
+		switch (arg0.getId()) {
+		case R.id.ivTitleBtnLeft:
+			finish();
+			break;
+
+		default:
+			break;
 		}
 	}
 }

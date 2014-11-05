@@ -42,6 +42,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 
 	@ViewInject(id = R.id.textView2, click = "")
 	TextView degree;
+	private TextView textView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 		seekBar.setOnSeekBarChangeListener(this);
 		degree.setText("35℃");
+		textView= (TextView)findViewById(R.id.textView2);
 	}
 
 	public GasCustomSetVo getData() {
@@ -129,7 +131,22 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 	}
 
 	@Override
-	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
+	public void onProgressChanged(SeekBar seekbar1, int arg1, boolean arg2) {
+		
+		
+		int position=seekbar1.getProgress();
+		float x=  seekbar1.getWidth();
+		float seekbarWidth=seekbar1.getX();
+		float y=seekbar1.getY();
+		float width=(position * x)/100 +seekbarWidth;
+		System.out.println("width: "+ width);
+		System.out.println("x: "+ x);
+		System.out.println("position: "+ position);
+		
+		textView.setText(position+"");
+		textView.setX(width);
+		textView.setY(y);
+		textView.invalidate();
 		degree.setText(heatmakeRange(arg1 + 35) + "℃");
 	}
 

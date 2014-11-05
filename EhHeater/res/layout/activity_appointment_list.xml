@@ -6,6 +6,11 @@
     android:background="@drawable/home_bg"
     android:orientation="vertical" >
 
+    
+     <include
+        android:id="@+id/top_layout"
+        layout="@layout/main_title"
+        android:focusable="true" />
     <com.vanward.ehheater.view.swipelistview.SwipeListView
         android:id="@+id/lv_listview"
         android:layout_width="fill_parent"
