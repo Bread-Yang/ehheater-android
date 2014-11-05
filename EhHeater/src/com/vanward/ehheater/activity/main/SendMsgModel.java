@@ -10,7 +10,7 @@ public class SendMsgModel {
 		generated.SendPatternSettingReq(Global.connectId, (short) 3);
 
 		try {
-			Thread.sleep(500);
+			Thread.sleep(1500);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -21,38 +21,54 @@ public class SendMsgModel {
 		} else if (num == 3) {
 			generated.SendPatternSettingReq(Global.connectId, (short) 7);
 		}
-
 	}
 
 	// 发送预约 时间人数
-	public static void sentAppolitionment(int hour, int min, int num) {
+	public static void sentAppolitionment(final int hour, final int min,
+			final int num) {
 		// generated.SendPatternSettingReq(Global.connectId, (short) 3);
-		generated.SendSettingOrderReq(Global.connectId, (short) hour,
-				(short) min);
 
-		try {
-			Thread.sleep(500);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		if (num == 1) {
-			generated.SendPatternSettingReq(Global.connectId, (short) 5);
-		} else if (num == 2) {
-			generated.SendPatternSettingReq(Global.connectId, (short) 6);
-		} else if (num == 3) {
-			generated.SendPatternSettingReq(Global.connectId, (short) 7);
-		}
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				generated.SendSettingOrderReq(Global.connectId, (short) hour,
+						(short) min);
+
+				try {
+					Thread.sleep(500);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				if (num == 1) {
+					generated
+							.SendPatternSettingReq(Global.connectId, (short) 5);
+				} else if (num == 2) {
+					generated
+							.SendPatternSettingReq(Global.connectId, (short) 6);
+				} else if (num == 3) {
+					generated
+							.SendPatternSettingReq(Global.connectId, (short) 7);
+				}
+
+			}
+		}).start();
 
 	}
 
 	// 智能模式
 	public static void changeToIntelligenceModeWash() {
-		generated.SendPatternSettingReq(Global.connectId, (short) 2);
+		generated.SendPatternSettingReq(Global.connectId, (short) 8);
 	}
 
 	// 自定义
 	public static void changeToZidingyiMode() {
 		generated.SendPatternSettingReq(Global.connectId, (short) 1);
+	}
+
+	// 自定义
+	public static void changeToJishiMode() {
+		generated.SendPatternSettingReq(Global.connectId, (short) 2);
 	}
 
 	public static void setPower(int i) {
@@ -71,7 +87,8 @@ public class SendMsgModel {
 	// 打开设备
 	public static void openDevice() {
 		generated.SendOnOffReq(Global.connectId, (short) 1);
-	}	// 打开设备
+	} // 打开设备
+
 	public static void closeDevice() {
 		generated.SendOnOffReq(Global.connectId, (short) 0);
 	}

@@ -46,12 +46,11 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	private Button btn_add;
 	private HeaterAdapter adapter;
 	boolean isEdit;
-	
+
 	private String macOfHeaterBeingDeleted;
 	private String didOfHeaterBeingDeleted;
 	private int tempConnId = -2;
 
-	
 	@Override
 	public void initUI() {
 		super.initUI();
@@ -59,7 +58,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		setTopText(R.string.device_manager);
 		setRightButtonBackground(R.drawable.icon_edit);
 		setLeftButtonBackground(R.drawable.icon_back);
-		
+
 		findViewById();
 		setListener();
 		init();
@@ -75,41 +74,49 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
-		adapter = new HeaterAdapter(new HeaterInfoDao(getBaseContext()).getAll());
+		adapter = new HeaterAdapter(
+				new HeaterInfoDao(getBaseContext()).getAll());
 		lv_listview.setAdapter(adapter);
 	}
 
 	@Override
 	public void onClick(View view) {
 		super.onClick(view);
-		
-		if( view == btn_right ){
-			if( isEdit ){
+
+		if (view == btn_right) {
+			if (isEdit) {
 				setRightButtonBackground(R.drawable.icon_edit);
-			}else{
+			} else {
 				setRightButtonBackground(R.drawable.menu_icon_ye);
 			}
 			isEdit = !isEdit;
 			adapter.notifyDataSetChanged();
 		}
-		
-		if( view == btn_add ){
+
+		if (view == btn_add) {
 			startActivity(new Intent(getBaseContext(), ShitActivity.class));
 		}
+		if (view == btn_left) {
+			if (new HeaterInfoDao(getBaseContext()).getAll().size() == 0) {
+				startActivity(new Intent(getBaseContext(), ShitActivity.class));
+			} else {
+				onBackPressed();
+			}
+		}
 	}
-	
+
 	class HeaterAdapter extends BaseAdapter {
 
 		List<HeaterInfo> list;
-		
+
 		public HeaterAdapter(List<HeaterInfo> list) {
 			this.list = list;
 		}
-		
-		public void setList(List<HeaterInfo> list){
+
+		public void setList(List<HeaterInfo> list) {
 			this.list = list;
 		}
-		
+
 		@Override
 		public int getCount() {
 			return list.size();
@@ -128,28 +135,37 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.activity_heater_management_list, null);
+				convertView = getLayoutInflater().inflate(
+						R.layout.activity_heater_management_list, null);
 			}
 			HeaterInfo item = list.get(position);
-			TextView nameTv = (TextView)convertView.findViewById(R.id.device_name);
-			ImageView actionBtn = ((ImageView)convertView.findViewById(R.id.action_btn));
-			
+			TextView nameTv = (TextView) convertView
+					.findViewById(R.id.device_name);
+			ImageView actionBtn = ((ImageView) convertView
+					.findViewById(R.id.action_btn));
+
 			actionBtn.setVisibility(View.VISIBLE);
-			actionBtn.setImageResource( isEdit ? R.drawable.icon_del : R.drawable.menu_icon_ye );
-			if (!isEdit && !getCurDeviceMac(getBaseContext()).equals(item.getMac())) {
+			actionBtn.setImageResource(isEdit ? R.drawable.icon_del
+					: R.drawable.menu_icon_ye);
+			if (!isEdit
+					&& !getCurDeviceMac(getBaseContext()).equals(item.getMac())) {
 				actionBtn.setVisibility(View.INVISIBLE);
 			}
 			actionBtn.setTag(item);
 			actionBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					if( isEdit ){
-						macOfHeaterBeingDeleted = ((HeaterInfo)view.getTag()).getMac();
-						didOfHeaterBeingDeleted = ((HeaterInfo)view.getTag()).getDid();
+					if (isEdit) {
+						macOfHeaterBeingDeleted = ((HeaterInfo) view.getTag())
+								.getMac();
+						didOfHeaterBeingDeleted = ((HeaterInfo) view.getTag())
+								.getDid();
 						deleteHeater();
-//						XpgDataField data = generated.String2XpgData(((HeaterInfo)view.getTag()).getDid());
-//						DialogUtil.instance().showLoadingDialog(getBaseContext(), "");
-//						generated.SendBindingDelReq(getConnId(), data );
+						// XpgDataField data =
+						// generated.String2XpgData(((HeaterInfo)view.getTag()).getDid());
+						// DialogUtil.instance().showLoadingDialog(getBaseContext(),
+						// "");
+						// generated.SendBindingDelReq(getConnId(), data );
 					}
 				}
 			});
@@ -167,12 +183,13 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			return convertView;
 		}
 
-	} 
-	
+	}
+
 	private void deleteHeater() {
 		if (TextUtils.isEmpty(didOfHeaterBeingDeleted)) {
 			// local delete
-			new HeaterInfoService(getBaseContext()).deleteHeater(macOfHeaterBeingDeleted);
+			new HeaterInfoService(getBaseContext())
+					.deleteHeater(macOfHeaterBeingDeleted);
 			deleted();
 		} else {
 			// server delete
@@ -180,12 +197,13 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					if (/*失败*/tempConnId == -2) {
+					if (/* 失败 */tempConnId == -2) {
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								DialogUtil.dismissDialog();
-								Toast.makeText(getBaseContext(), "删除失败", 3000).show();
+								Toast.makeText(getBaseContext(), "删除失败", 3000)
+										.show();
 							}
 						});
 					}
@@ -194,88 +212,105 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			XPGConnShortCuts.connect2big();
 		}
 	}
-	
+
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.d("emmm", "onConnectEvent@HeaterManagement: " + connId + "-" + event);
-		
+		Log.d("emmm", "onConnectEvent@HeaterManagement: " + connId + "-"
+				+ event);
+
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
 			// 连接成功
 			tempConnId = connId;
-			XPGConnectClient.xpgcLogin(tempConnId, AccountService.getUserId(getBaseContext()),
-					AccountService.getUserPsw(getBaseContext()));	// login to server
+			XPGConnectClient.xpgcLogin(tempConnId,
+					AccountService.getUserId(getBaseContext()),
+					AccountService.getUserPsw(getBaseContext())); // login to
+																	// server
 		}
 	}
-	
+
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
 		Log.d("emmm", "onLoginCloudResp@HeaterManagement: " + result);
-		
-		generated.SendBindingDelReq(tempConnId, generated.String2XpgData(didOfHeaterBeingDeleted));
+
+		generated.SendBindingDelReq(tempConnId,
+				generated.String2XpgData(didOfHeaterBeingDeleted));
 	}
-	
+
 	@Override
 	public void OnBindingDelResp(BindingDelResp_t pResp, int nConnId) {
 		super.OnBindingDelResp(pResp, nConnId);
 		Log.d("emmm", "OnBindingDelResp@HeaterManagement: " + pResp.getResult());
-		
+
 		DialogUtil.dismissDialog();
-		
-		if ( pResp.getResult() == 0 ){
-			new HeaterInfoService(getBaseContext()).deleteHeater(macOfHeaterBeingDeleted);
+
+		if (pResp.getResult() == 0) {
+			new HeaterInfoService(getBaseContext())
+					.deleteHeater(macOfHeaterBeingDeleted);
 			deleted();
 		} else {
-			Toast.makeText(getBaseContext(), R.string.failure, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getBaseContext(), R.string.failure,
+					Toast.LENGTH_SHORT).show();
 		}
 	}
-	
+
 	private void deleted() {
-		Toast.makeText(getBaseContext(), R.string.success, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getBaseContext(), R.string.success, Toast.LENGTH_SHORT)
+				.show();
 		if (getCurDeviceMac(getBaseContext()).equals(macOfHeaterBeingDeleted)) {
 			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac, "");
+			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac,
+					"");
 		}
 		adapter.setList(new HeaterInfoDao(getBaseContext()).getAll());
 		adapter.notifyDataSetChanged();
 
-		Intent heaterNameIntent = new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
-		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(heaterNameIntent);
+		Intent heaterNameIntent = new Intent(
+				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
+		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
+				heaterNameIntent);
 	}
-	
+
 	private String getCurDeviceMac(Context context) {
 		return new SharedPreferUtils(context).get(ShareKey.CurDeviceMac, "");
 	}
-	
+
 	private void showRenameDialog(final HeaterInfo heater) {
 		final Dialog renameDialog = new Dialog(this, R.style.custom_dialog);
 		renameDialog.setContentView(R.layout.dialog_rename_heater);
-		final EditText etName = (EditText) renameDialog.findViewById(R.id.drename_et);
-		renameDialog.findViewById(R.id.drename_btn_cancel).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				renameDialog.dismiss();
-			}
-		});
-		renameDialog.findViewById(R.id.drename_btn_confirm).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String nameSet = etName.getText().toString();
-				if (!TextUtils.isEmpty(nameSet)) {
-					// update name
-					heater.setName(nameSet);
-					new HeaterInfoService(getBaseContext()).changeDuplicatedName(heater);
-					new HeaterInfoDao(getBaseContext()).getDb().update(heater);
-					adapter.notifyDataSetChanged();
+		final EditText etName = (EditText) renameDialog
+				.findViewById(R.id.drename_et);
+		renameDialog.findViewById(R.id.drename_btn_cancel).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						renameDialog.dismiss();
+					}
+				});
+		renameDialog.findViewById(R.id.drename_btn_confirm).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						String nameSet = etName.getText().toString();
+						if (!TextUtils.isEmpty(nameSet)) {
+							// update name
+							heater.setName(nameSet);
+							new HeaterInfoService(getBaseContext())
+									.changeDuplicatedName(heater);
+							new HeaterInfoDao(getBaseContext()).getDb().update(
+									heater);
+							adapter.notifyDataSetChanged();
 
-					Intent heaterNameIntent = new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
-					LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(heaterNameIntent);
-				}
-				renameDialog.dismiss();
-			}
-		});
+							Intent heaterNameIntent = new Intent(
+									Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
+							LocalBroadcastManager.getInstance(getBaseContext())
+									.sendBroadcast(heaterNameIntent);
+						}
+						renameDialog.dismiss();
+					}
+				});
 		renameDialog.show();
 	}
-	
+
 }

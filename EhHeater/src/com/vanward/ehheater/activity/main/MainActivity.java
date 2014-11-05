@@ -290,7 +290,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			startActivity(intent2);
 			break;
 		case R.id.power:
-			setPower();
+			Tojishi();
 			break;
 		case R.id.btn_information:
 			break;
@@ -299,6 +299,22 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	private void changeToIntelligenceModeUpdateUI(byte[] data) {
 		modeTv.setText("智能模式");
+		circularView.setOn(true);
+		setAppointmentButtonAble(true);
+		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
+		powerTv.setText(3 + "kw");
+		btn_power.setOnClickListener(this);
+		int i = new EhState(data).getRemainingHeatingTime();
+		if (i == 0) {
+			ChangeStuteView.swichKeep(stuteParent);
+		} else {
+			ChangeStuteView.swichLeaveMinView(stuteParent, i);
+		}
+
+	}
+
+	private void changeTojishiModeUpdateUI(byte[] data) {
+		modeTv.setText("即时加热模式");
 		circularView.setOn(true);
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
@@ -361,6 +377,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
 		}
 
+	}
+
+	public void Tojishi() {
+		SendMsgModel.changeToJishiMode();
 	}
 
 	public void setPower() {
@@ -432,13 +452,15 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			// 非常奇怪 智能模式设置成功，可是返回值 确实1 跟p0 文档不符合。设置进去的时候是2 ，晨浴模式成功。
 			int mode = new EhState(data).getFunctionState();
 			if (mode == 1) {
-				changeToIntelligenceModeUpdateUI(data);
+				changeTojishiModeUpdateUI(data);
 			} else if (mode == 3) {
 				changeToMorningWashUpdateUI(data);
 			} else if (mode == 4) {
 				changeToCustomModeUpdateUI(data);
 			} else if (mode == 2) {
 				changeToNightModeUpdateUI(data);
+			} else if (mode == 7) {
+				changeToIntelligenceModeUpdateUI(data);
 			}
 
 			byte b = new EhState(data).getSystemRunningState();
@@ -530,12 +552,15 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		});
 	}
 
+	boolean isConnect = true;
+
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-			
+			ChangeStuteView.swichdisconnect(stuteParent);
+			isConnect = false;
 			CommonDialogUtil.showReconnectDialog(this);
 		}
 	}
