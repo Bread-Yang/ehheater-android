@@ -535,6 +535,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
+			
 			CommonDialogUtil.showReconnectDialog(this);
 		}
 	}
