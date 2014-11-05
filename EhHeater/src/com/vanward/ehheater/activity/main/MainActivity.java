@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -95,6 +96,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	private CountDownTimer mCountDownTimer;
 
+	boolean canupdateView = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,7 +110,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
-
+		canupdateView = false;
 		generated.SendStateReq(Global.connectId);
 	}
 
@@ -115,6 +118,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		canupdateView = true;
 		String tempname = modeTv.getText().toString();
 		if (tempname.equals("夜电模式") && tempname.equals("晨浴模式")
 				&& tempname.equals("智能模式") && tempname.equals("自定义模式")) {
@@ -136,12 +140,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			modeTv.setText("自定义模式");
 		}
 		// 自动切换到智能模式
-		modeTv.post(new Runnable() {
-			@Override
-			public void run() {
-				SendMsgModel.changeToIntelligenceModeWash();
-			}
-		});
+//		modeTv.post(new Runnable() {
+//			@Override
+//			public void run() {
+//				SendMsgModel.changeToIntelligenceModeWash();
+//			}
+//		});
 	}
 
 	@Override
@@ -305,7 +309,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
+		if (i == 0 || i == -1) {
 			ChangeStuteView.swichKeep(stuteParent);
 		} else {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
@@ -321,7 +325,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
+
+		if (i == 0 || i == -1) {
 			ChangeStuteView.swichKeep(stuteParent);
 		} else {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
@@ -335,9 +340,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		setAppointmentButtonAble(false);
 		ChangeStuteView.swichNight(stuteParent);
 		powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(null);
 		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
+		if (i == 0 || i == -1) {
 			ChangeStuteView.swichNight(stuteParent);
 		} else {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
@@ -371,7 +375,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		// powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
+		if (i == 0 || i == -1) {
 			ChangeStuteView.swichKeep(stuteParent);
 		} else {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
@@ -417,7 +421,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		modeTv.setText("晨浴模式");
 		ChangeStuteView.swichMorningWash(stuteParent);
 		powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(null);
 		int i = new EhState(data).getRemainingHeatingTime();
 		System.out.println("测试晨浴i: " + i);
 		if (i == 0) {
@@ -440,6 +443,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("回调onTcpPacket");
 		System.out.println("MainActivity.onTcpPacket()： "
 				+ new EhState(data).getRemainingHotWaterAmount());
+
+		if (!canupdateView) {
+			return;
+		}
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			setTempture(data);
@@ -534,8 +541,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	public void setAppointmentButtonAble(boolean isAble) {
-		btn_appointment.setEnabled(isAble);
-		btn_power.setEnabled(isAble);
+	//	btn_appointment.setEnabled(isAble);
 	}
 
 	public void initopenView() {
