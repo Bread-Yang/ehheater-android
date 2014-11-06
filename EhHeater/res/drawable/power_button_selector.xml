@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/icon_power_down" android:state_pressed="true"></item>
-    <item android:drawable="@drawable/icon_power" android:state_enabled="true"></item>
-    <item android:drawable="@drawable/icon_power_unavailable" android:state_enabled="false"></item>
+    <item android:drawable="@drawable/icon_jishi_down" android:state_pressed="true"></item>
+    <item android:drawable="@drawable/icon_jishi" ></item>
 
 </selector>

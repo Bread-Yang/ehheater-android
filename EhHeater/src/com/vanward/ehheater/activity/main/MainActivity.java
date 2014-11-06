@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -34,6 +35,7 @@ import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -99,19 +101,21 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	private CountDownTimer mCountDownTimer;
 
+	boolean canupdateView = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initSlidingMenu();
 		setContentView(R.layout.main_center_layout);
-		initView(savedInstanceState);
+		initView();
 		initData();
 
 		IntentFilter filter = new IntentFilter(
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
-
+		canupdateView = false;
 //		generated.SendStateReq(Global.connectId);
 		
 		HeaterInfo curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
@@ -170,6 +174,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		canupdateView = true;
 		String tempname = modeTv.getText().toString();
 		if (tempname.equals("夜电模式") && tempname.equals("晨浴模式")
 				&& tempname.equals("智能模式") && tempname.equals("自定义模式")) {
@@ -185,18 +190,18 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				}
 			}
 			if (!flag) {
-				modeTv.setText("自定义模式");
+				modeTv.setText("智能模式");
 			}
 		} else {
-			modeTv.setText("自定义模式");
+			modeTv.setText("智能模式");
 		}
 		// 自动切换到智能模式
-		modeTv.post(new Runnable() {
-			@Override
-			public void run() {
-				SendMsgModel.changeToIntelligenceModeWash();
-			}
-		});
+		// modeTv.post(new Runnable() {
+		// @Override
+		// public void run() {
+		// SendMsgModel.changeToIntelligenceModeWash();
+		// }
+		// });
 	}
 
 	@Override
@@ -209,7 +214,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
-	private void initView(Bundle savedInstanceState) {
+	private void initView() {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
 		rightButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightButton.setOnClickListener(this);
@@ -286,7 +291,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		mCountDownTimer = new CountDownTimer(3000, 1000) {
 			@Override
 			public void onTick(long arg0) {
-
 			}
 
 			@Override
@@ -309,6 +313,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	}
 
+	boolean ison = false;
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -321,13 +327,20 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
-			DeviceOffUtil.instance(this).nextButtonCall(new NextButtonCall() {
-				@Override
-				public void oncall(View v) {
-					SendMsgModel.closeDevice();
-					DeviceOffUtil.instance(MainActivity.this).dissmiss();
-				}
-			}).showDialog();
+
+			if (ison) {
+				DeviceOffUtil.instance(this)
+						.nextButtonCall(new NextButtonCall() {
+							@Override
+							public void oncall(View v) {
+								SendMsgModel.closeDevice();
+								DeviceOffUtil.instance(MainActivity.this)
+										.dissmiss();
+							}
+						}).showDialog();
+			} else {
+				SendMsgModel.openDevice();
+			}
 
 			break;
 		case R.id.appointment_btn:
@@ -342,9 +355,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			startActivity(intent2);
 			break;
 		case R.id.power:
-			setPower();
+			Tojishi();
 			break;
 		case R.id.btn_information:
+			Intent intent3 = new Intent();
+			intent3.setClass(this, InformationActivity.class);
+			startActivity(intent3);
+
 			break;
 		}
 	}
@@ -357,7 +374,24 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
+		if (i == 0 || i == -1) {
+			ChangeStuteView.swichKeep(stuteParent);
+		} else {
+			ChangeStuteView.swichLeaveMinView(stuteParent, i);
+		}
+
+	}
+
+	private void changeTojishiModeUpdateUI(byte[] data) {
+		modeTv.setText("即时加热模式");
+		circularView.setOn(false);
+		setAppointmentButtonAble(true);
+		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
+		powerTv.setText(3 + "kw");
+		btn_power.setOnClickListener(this);
+		int i = new EhState(data).getRemainingHeatingTime();
+
+		if (i == 0 || i == -1) {
 			ChangeStuteView.swichKeep(stuteParent);
 		} else {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
@@ -371,9 +405,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		setAppointmentButtonAble(false);
 		ChangeStuteView.swichNight(stuteParent);
 		powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(null);
 		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
+		if (i == 0 || i == -1) {
 			ChangeStuteView.swichNight(stuteParent);
 		} else {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
@@ -398,7 +431,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			CustomSetVo customSetVo = list.get(i);
 			if (customSetVo.getPower() == power
 					&& customSetVo.getTempter() == targetTemperature) {
-				modeTv.setText(customSetVo.getName());
+				if (customSetVo.getName().length()>6) {
+					modeTv.setText(customSetVo.getName().substring(0, 6)+"...");
+				}else {
+					modeTv.setText(customSetVo.getName());
+				}
+			
 				break;
 			}
 		}
@@ -407,12 +445,16 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		// powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0) {
+		if (i == 0 || i == -1) {
 			ChangeStuteView.swichKeep(stuteParent);
 		} else {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
 		}
 
+	}
+
+	public void Tojishi() {
+		SendMsgModel.changeToJishiMode();
 	}
 
 	public void setPower() {
@@ -449,11 +491,11 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		modeTv.setText("晨浴模式");
 		ChangeStuteView.swichMorningWash(stuteParent);
 		powerTv.setText(3 + "kw");
-		btn_power.setOnClickListener(null);
 		int i = new EhState(data).getRemainingHeatingTime();
 		System.out.println("测试晨浴i: " + i);
 		if (i == 0) {
 			ChangeStuteView.swichMorningWash(stuteParent);
+
 		} else if (new EhState(data).getSystemRunningState() == 1) {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
 		}
@@ -478,6 +520,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("MainActivity.onTcpPacket()： "
 				+ new EhState(data).getRemainingHotWaterAmount());
 
+		if (!canupdateView) {
+			return;
+		}
+
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			DialogUtil.dismissDialog();
 			
@@ -491,25 +537,34 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			// 非常奇怪 智能模式设置成功，可是返回值 确实1 跟p0 文档不符合。设置进去的时候是2 ，晨浴模式成功。
 			int mode = new EhState(data).getFunctionState();
 			if (mode == 1) {
-				changeToIntelligenceModeUpdateUI(data);
+				changeTojishiModeUpdateUI(data);
 			} else if (mode == 3) {
 				changeToMorningWashUpdateUI(data);
 			} else if (mode == 4) {
 				changeToCustomModeUpdateUI(data);
 			} else if (mode == 2) {
 				changeToNightModeUpdateUI(data);
+			} else if (mode == 7) {
+				changeToIntelligenceModeUpdateUI(data);
 			}
 
 			byte b = new EhState(data).getSystemRunningState();
 			System.out.println("onTcpPacket: " + b);
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
-				openView.setVisibility(View.VISIBLE);
-				rightButton.setVisibility(View.GONE);
-				ChangeStuteView.swichDeviceOff(stuteParent);
-			} else {
+				// openView.setVisibility(View.VISIBLE);
 				rightButton.setVisibility(View.VISIBLE);
-				openView.setVisibility(View.GONE);
+				findViewById(R.id.pattern).setEnabled(false);
+				findViewById(R.id.power).setEnabled(false);
+				ChangeStuteView.swichDeviceOff(stuteParent);
+				ison = false;
+			} else {
+				// rightButton.setVisibility(View.VISIBLE);
+				// openView.setVisibility(View.GONE);
+				findViewById(R.id.pattern).setEnabled(true);
+				findViewById(R.id.power).setEnabled(true);
+
+				ison = true;
 			}
 		}
 
@@ -520,7 +575,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				+ new EhState(b).getInnerTemp2() + "   "
 				+ new EhState(b).getInnerTemp3());
 		// tempter.setText(new EhState(b).getInnerTemp2() + "");
-		if (!Insetting) {
+		if (!Insetting&&circularView!=null) {
 			circularView.setAngle(new EhState(b).getInnerTemp1());
 			tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
@@ -571,8 +626,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	public void setAppointmentButtonAble(boolean isAble) {
-		btn_appointment.setEnabled(isAble);
-		btn_power.setEnabled(isAble);
+		// btn_appointment.setEnabled(isAble);
 	}
 
 	public void initopenView() {
@@ -589,6 +643,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		});
 	}
 
+	boolean isConnect = true;
+
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
@@ -596,6 +652,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
+			ChangeStuteView.swichdisconnect(stuteParent);
+			isConnect = false;
 			DialogUtil.instance().showReconnectDialog(this);
 		}
 	}

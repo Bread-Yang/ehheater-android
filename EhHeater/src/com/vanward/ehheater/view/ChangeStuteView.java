@@ -57,10 +57,22 @@ public class ChangeStuteView {
 				R.layout.comment_statue_layout, null);
 		TextView min = (TextView) view.findViewById(R.id.min);
 		TextView textView = (TextView) view.findViewById(R.id.text);
-		textView.setText("保温中");
+		textView.setText("关机中");
 		min.setVisibility(View.GONE);
 		parent.addView(view);
 	}
+	public static void swichdisconnect(ViewGroup parent) {
+		parent.removeAllViews();
+		View view = LinearLayout.inflate(parent.getContext(),
+				R.layout.comment_statue_layout, null);
+		TextView min = (TextView) view.findViewById(R.id.min);
+		TextView textView = (TextView) view.findViewById(R.id.text);
+		textView.setText("未连接");
+		min.setVisibility(View.GONE);
+		parent.addView(view);
+	}
+
+	
 
 	public static void swichKeep(ViewGroup parent) {
 		parent.removeAllViews();

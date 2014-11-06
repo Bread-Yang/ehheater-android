@@ -16,6 +16,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
+        android:paddingBottom="10dp"
         android:clickable="true" >
 
         <EditText
@@ -25,50 +26,70 @@
             android:layout_margin="25dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/white_button_bg"
-            android:hint="名称" >
-
-            <requestFocus />
-        </EditText>
+            android:hint="名称"
+            android:lines="1"
+            android:maxLength="15" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout04"
+        android:id="@+id/RelativeLayout05"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@color/activity_background"
         android:clickable="true" >
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#4471878B"
+            android:paddingTop="5dp" />
+
         <TextView
-            android:id="@+id/TextView04"
+            android:id="@+id/TextView03"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
             android:text="分人洗"
             android:textColor="@color/appointment_text_color"
             android:textSize="20sp" />
 
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/off" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B"
+        android:paddingTop="5dp" />
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout04"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/activity_background"
+            android:paddingBottom="10dp" 
+        android:clickable="true" >
+
         <RadioGroup
             android:id="@+id/RadioGroup01"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/TextView04"
-            android:layout_below="@+id/TextView04"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal" >
-
-            <RadioButton
-                android:id="@+id/RadioButton07"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@drawable/radio_selector"
-                android:checked="true"
-                android:tag="20"
-                android:text="  无"
-                android:textColor="@color/appointment_text_color"
-                android:textSize="18sp" />
+            android:orientation="horizontal"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" >
 
             <RadioButton
                 android:id="@+id/RadioButton05"
@@ -112,7 +133,7 @@
         android:paddingTop="5dp" />
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout01"
+        android:id="@+id/tem_latout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
@@ -169,7 +190,7 @@
         android:background="#4471878B" />
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout02"
+         android:id="@+id/power_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"

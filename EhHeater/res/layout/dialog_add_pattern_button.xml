@@ -15,7 +15,8 @@
         android:background="@null"
         android:text="重命名"
         android:textColor="@color/white"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:visibility="gone" />
 
     <View
         android:layout_width="fill_parent"

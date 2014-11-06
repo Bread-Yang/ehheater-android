@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.main.SendMsgModel;
 import com.vanward.ehheater.util.db.DBService;
 import com.vanward.ehheater.view.swipelistview.SwipeListView;
 
@@ -203,12 +204,22 @@ public class AppointmentListActivity extends Activity implements
 			holder.tv_power.setText(appointment.getPower() + "Kw");
 			holder.tv_days.setText(appointment.getDates());
 			holder.name.setText("预约" + (position + 1));
+			holder.tb_switch.setImageResource(R.drawable.on);
+			holder.tb_switch.setTag(0);
 			holder.tb_switch.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
+					if ((Integer) arg0.getTag() == 1) {
+						((ImageButton) arg0).setImageResource(R.drawable.on);
+						arg0.setTag(0);
+					} else {
+						arg0.setTag(1);
+						((ImageButton) arg0).setImageResource(R.drawable.off);
+					}
 
 				}
 			});
+
 			LinearLayout.LayoutParams lp1 = new LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			holder.rltfont.setLayoutParams(lp1);

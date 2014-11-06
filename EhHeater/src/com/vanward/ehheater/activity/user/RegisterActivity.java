@@ -22,6 +22,7 @@ import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.UserRegisterResp_t;
 
@@ -76,7 +77,10 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 
 		switch (v.getId()) {
 		case R.id.ar_btn_confirm:
-
+			if (!NetworkStatusUtil.isConnected(this)) {
+				Toast.makeText(getBaseContext(), "请连接至wifi网络", 500).show();
+				return;
+			}
 			if (isInputValid()) {
 				DialogUtil.instance().showLoadingDialog(this, "");
 				new Timer().schedule(new TimerTask() {

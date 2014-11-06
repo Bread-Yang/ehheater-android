@@ -99,6 +99,7 @@
             android:padding="10dp"
             android:text="自定义"
             android:textColor="#5d7884"
+            android:visibility="gone"
             android:textSize="18sp" />
 
         <View
@@ -192,6 +193,7 @@
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:button="@drawable/radio_selector"
+            android:visibility="gone"
             android:tag="自定义模式" />
 
         <View

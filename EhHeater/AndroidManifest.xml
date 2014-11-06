@@ -53,6 +53,7 @@
             android:name=".activity.info.SelectDeviceActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
+             
         </activity>
         <activity
             android:name=".activity.user.RegisterActivity"
@@ -67,11 +68,12 @@
         <activity
             android:name=".activity.main.MainActivity"
             android:screenOrientation="portrait" >
-        
+          
         </activity>
         <activity
             android:name=".activity.main.gas.GasMainActivity"
             android:screenOrientation="portrait" >
+             
         </activity>
         <activity
             android:name=".activity.main.gas.AddPattenActivity"

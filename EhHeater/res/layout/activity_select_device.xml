@@ -13,7 +13,7 @@
         layout="@layout/main_title" />
 
     <RelativeLayout
-        android:id="@+id/buttonrela"
+        android:id="@+id/elect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/include1"
@@ -54,7 +54,7 @@
         android:background="#80808080" />
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout01"
+        android:id="@+id/gas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp" >
@@ -73,7 +73,7 @@
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/setting_img3" />
+            android:src="@drawable/device_line_img2" />
 
         <TextView
             android:id="@+id/TextView01"

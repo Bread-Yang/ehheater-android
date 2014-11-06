@@ -94,10 +94,12 @@
         android:text="请站在热水器旁, 保证热水器的电源已经连接"/>
     
     <ImageView 
+         android:id="@+id/img"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginTop="32dp"
         android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/setting_img1"/>
 
 </LinearLayout>

@@ -12,7 +12,7 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 
 public class AutoConfigureFailActivity extends EhHeaterBaseActivity {
-	
+
 	@Override
 	public void initUI() {
 		super.initUI();
@@ -20,31 +20,34 @@ public class AutoConfigureFailActivity extends EhHeaterBaseActivity {
 		setLeftButtonBackground(R.drawable.icon_back);
 		setRightButton(View.INVISIBLE);
 		setCenterView(R.layout.activity_auto_conf_fail);
-		
+
 		findViewById(R.id.aacf_btn_retry).setOnClickListener(this);
 		findViewById(R.id.aacf_btn_manual).setOnClickListener(this);
 
-		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_KILL_AUTO_CONFIGURE_FAIL_ACTIVITY);
+		IntentFilter filter = new IntentFilter(
+				Consts.INTENT_FILTER_KILL_AUTO_CONFIGURE_FAIL_ACTIVITY);
 		BroadcastReceiver receiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				finish();
 			}
 		};
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				receiver, filter);
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
-		switch(v.getId()) {
+		switch (v.getId()) {
 		case R.id.aacf_btn_retry:
-			onBackPressed();
+			finish();
 			break;
 		case R.id.aacf_btn_manual:
-			startActivity(new Intent(getBaseContext(), ManualConfStep1Activity.class));
+			startActivity(new Intent(getBaseContext(),
+					ManualConfStep1Activity.class));
 			break;
 		}
 	}
-	
+
 }

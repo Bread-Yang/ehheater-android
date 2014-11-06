@@ -196,10 +196,13 @@ public class CircularView extends View {
 	public boolean isCanUpadateAndSetMinMax(int degree) {
 		if (degreeToAngle(degree) <= beginangle) {
 			System.out.println("执行");
-			setAngle(beginangle);
+			
+		//	degree = angleToDegree(beginangle);
+			setAngleInsetting(beginangle);
 			return false;
 		} else if (degreeToAngle(degree) >= endangle) {
-			setAngle(endangle);
+			//degree = angleToDegree(endangle);
+			setAngleInsetting(endangle);
 			return false;
 		} else {
 			return true;
@@ -229,11 +232,12 @@ public class CircularView extends View {
 					moveCircular = MOVE_OUT;
 					System.out.println("degree: " + degree);
 				}
+
 				break;
 			case MotionEvent.ACTION_MOVE:
 				System.out.println("test: move");
 				System.out.println("degree： " + degree);
-				isCanUpadateAndSetMinMax(degree);
+				 isCanUpadateAndSetMinMax(degree);
 				x = event.getX();
 				y = event.getY();
 				if (Math.abs(downx - x) < 20 && Math.abs(downy - y) < 20) {
@@ -273,7 +277,7 @@ public class CircularView extends View {
 							if (degree >= angleToDegree(beginangle)
 									&& degree <= angleToDegree(endangle)) {
 								heatmakeRange(degreeToAngle(degree));
-								if (degree > angleToDegree(endangle)) {
+								if (degree >= angleToDegree(endangle)) {
 									degree = angleToDegree(endangle);
 								}
 								handler.sendEmptyMessage(UpdateUIToSet);
@@ -293,10 +297,10 @@ public class CircularView extends View {
 				y = event.getY();
 				int tempdegree = (int) finalangel(x, y, angel(x, y));
 				if (isclick) {
-					if (tempdegree > 180 && degree < 360) {
+					if (tempdegree > olddegree && degree < 360) {
 						degree = angleToDegree(targerdegree) + perangle;
 						// degree = degree + 6;
-					} else if (tempdegree < 180 && degree > 0) {
+					} else if (tempdegree < olddegree && degree > 0) {
 						degree = angleToDegree(targerdegree) - perangle;
 						// degree = degree - 6;
 					} else {
@@ -304,18 +308,16 @@ public class CircularView extends View {
 					}
 				}
 				heatmakeRange(degreeToAngle(degree));
-				if (degree >= angleToDegree(beginangle)
-						&& degree <= angleToDegree(endangle)) {
-					if (degree > angleToDegree(endangle)) {
-						degree = angleToDegree(endangle);
-					} else if (degree < angleToDegree(beginangle)) {
-						degree = angleToDegree(beginangle);
-					}
-					if (isclick) {
-						handler.sendEmptyMessage(UpdateUIToSet);
-					}
-					handler.sendEmptyMessage(SentToMsg);
+				if (degree >= angleToDegree(endangle)) {
+					degree = angleToDegree(endangle);
+				} else if (degree <= angleToDegree(beginangle)) {
+					degree = angleToDegree(beginangle);
 				}
+				olddegree = degree;
+				if (isclick) {
+					handler.sendEmptyMessage(UpdateUIToSet);
+				}
+				handler.sendEmptyMessage(SentToMsg);
 			}
 		}
 		return true;
@@ -410,6 +412,27 @@ public class CircularView extends View {
 			handler.sendEmptyMessage(UpdateUIToDefault);
 		}
 	}
+	
+	
+	public void setAngleInsetting(int level) {
+		if (level > endangle) {
+			level = endangle;
+		}
+		if (level == 0) {
+			degree = 0;
+		} else {
+			degree = angleToDegree(level);
+		}
+
+		System.out.println("setAngle：  level=" + level + "degree=" + degree);
+		if (level < 25) {
+			degree = angleToDegree(25);
+			handler.sendEmptyMessage(UpdateUIToSet);
+		} else {
+			handler.sendEmptyMessage(UpdateUIToSet);
+		}
+	}
+	
 
 	boolean isHeat = false;
 

@@ -9,7 +9,7 @@
     <string name="register">注册</string>
     <string name="login">登录</string>
     <string name="login_tips">如果您购买了新设备,请进行设备配置</string>
-    <string name="setting_new_device">配置新设备</string>
+    <string name="setting_new_device">配置热水器</string>
     <string name="msg_empty_account">账号还没填写</string>
     <string name="msg_empty_password">密码还没填写</string>
     <string name="hint_input_phone_number">请输入您的手机号</string>
