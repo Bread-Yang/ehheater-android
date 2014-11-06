@@ -155,7 +155,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendStateReq(Global.connectId);
 			} else {
 				// TODO 设备不在线
-				ChangeStuteView.swichDeviceOff(stuteParent);
 				
 			}
 			
@@ -352,7 +351,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			startActivity(intent2);
 			break;
 		case R.id.power:
-			Tojishi();
+			if (v.isSelected()) {
+				
+			} else {
+				v.setSelected(true);
+				Tojishi();
+			}
+				
 			break;
 		case R.id.btn_information:
 			Intent intent3 = new Intent();
@@ -387,12 +392,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	private void changeTojishiModeUpdateUI(byte[] data) {
-		modeTv.setText("即时加热模式");
+		modeTv.setText("即时加热");
 		circularView.setOn(false);
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
+		btn_power.setSelected(true);
 		int i = new EhState(data).getRemainingHeatingTime();
 
 		if (i == 0 || i == -1) {
@@ -530,6 +536,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			DialogUtil.dismissDialog();
+			
+			
+			btn_power.setSelected(false);
+			
 			setTempture(data);
 			setLeaveWater(data);
 			setPower(data);
@@ -558,6 +568,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
 				rightButton.setVisibility(View.VISIBLE);
+				btn_power.setSelected(false);
 				findViewById(R.id.pattern).setEnabled(false);
 				findViewById(R.id.power).setEnabled(false);
 				ChangeStuteView.swichDeviceOff(stuteParent);

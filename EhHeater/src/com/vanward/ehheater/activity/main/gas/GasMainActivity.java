@@ -162,7 +162,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendStateReq(Global.connectId);
 			} else {
 				// TODO 设备不在线
-				ChangeStuteView.swichDeviceOff(stuteParent);
+				stute.setText("设备不在线");
 			}
 			
 			updateTitle();   // connect回调可能是由于切换了热水器, 需更新title
@@ -430,7 +430,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 			animationDrawable.start();
 			setViewsAble(false, pResp);
-			rightButton.setEnabled(false);
+			/*rightButton.setEnabled(false);*/	// 所有模式在加热状态下, 都可以关机, 2014.11.7日
 			mode.setEnabled(false);
 			iv_wave.setVisibility(View.VISIBLE);
 			if (pResp.getFunction_state() == 1) {
