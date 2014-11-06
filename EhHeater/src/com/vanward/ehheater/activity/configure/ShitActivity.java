@@ -100,6 +100,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		applyCurWifiSsid();
 		XPGConnectClient.AddActivity(this);
 	}
 
@@ -189,7 +190,10 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 	private void applyCurWifiSsid() {
 		String curWifiSsid = new EasyLinkWifiManager(getBaseContext())
 				.getCurrentSSID();
-		mTvWifiSsid.setText(curWifiSsid);
+		if (mTvWifiSsid != null) {
+			mTvWifiSsid.setText(curWifiSsid);
+		}
+
 		new SharedPreferUtils(getBaseContext()).put(ShareKey.PendingSsid,
 				curWifiSsid);
 	}
@@ -202,7 +206,8 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 				Toast.makeText(getBaseContext(), "请连接至wifi网络", 500).show();
 				return;
 			}
-			if (mRlStepContainer.getChildCount() == 1 && mTvWifiSsid != null) {
+			if ((mRlStepContainer.getChildCount() == 1 || mRlStepContainer
+					.getChildCount() == 2) && mTvWifiSsid != null) {
 				applyCurWifiSsid();
 			}
 
@@ -214,11 +219,10 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 				return;
 			}
 
-			if (mRlStepContainer.getChildCount() == 2 && mEtWifiPsw != null
-					&& TextUtils.isEmpty(mEtWifiPsw.getText())) {
-				Toast.makeText(getBaseContext(), "请输入wifi密码", 500).show();
-				return;
-			}
+//			if (mRlStepContainer.getChildCount() == 2 &&TextUtils.isEmpty(mEtWifiPsw.getText().toString())&& mEtWifiPsw != null) {
+//				Toast.makeText(getBaseContext(), "请输入wifi密码", 500).show();
+//				return;
+//			}
 
 			nextStep();
 			break;
@@ -241,7 +245,6 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 		try {
 			configer = new FirstTimeConfig2(this, pss, null, gateway, ssid);
-
 			configer.transmitSettings();
 			isWaitingCallback = true;
 		} catch (Exception e) {

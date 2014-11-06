@@ -34,6 +34,7 @@ import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -103,7 +104,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		initSlidingMenu();
 		setContentView(R.layout.main_center_layout);
-		initView(savedInstanceState);
+		initView();
 		initData();
 
 		IntentFilter filter = new IntentFilter(
@@ -140,12 +141,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			modeTv.setText("自定义模式");
 		}
 		// 自动切换到智能模式
-//		modeTv.post(new Runnable() {
-//			@Override
-//			public void run() {
-//				SendMsgModel.changeToIntelligenceModeWash();
-//			}
-//		});
+		// modeTv.post(new Runnable() {
+		// @Override
+		// public void run() {
+		// SendMsgModel.changeToIntelligenceModeWash();
+		// }
+		// });
 	}
 
 	@Override
@@ -159,7 +160,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
-	private void initView(Bundle savedInstanceState) {
+	private void initView() {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
 		rightButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightButton.setOnClickListener(this);
@@ -237,7 +238,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			@Override
 			public void onTick(long arg0) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
@@ -260,6 +260,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	}
 
+	boolean ison = false;
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -273,13 +275,20 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
-			DeviceOffUtil.instance(this).nextButtonCall(new NextButtonCall() {
-				@Override
-				public void oncall(View v) {
-					SendMsgModel.closeDevice();
-					DeviceOffUtil.instance(MainActivity.this).dissmiss();
-				}
-			}).showDialog();
+
+			if (ison) {
+				DeviceOffUtil.instance(this)
+						.nextButtonCall(new NextButtonCall() {
+							@Override
+							public void oncall(View v) {
+								SendMsgModel.closeDevice();
+								DeviceOffUtil.instance(MainActivity.this)
+										.dissmiss();
+							}
+						}).showDialog();
+			} else {
+				SendMsgModel.openDevice();
+			}
 
 			break;
 		case R.id.appointment_btn:
@@ -297,6 +306,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			Tojishi();
 			break;
 		case R.id.btn_information:
+			Intent intent3 = new Intent();
+			intent3.setClass(this, InformationActivity.class);
+			startActivity(intent3);
+
 			break;
 		}
 	}
@@ -425,6 +438,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("测试晨浴i: " + i);
 		if (i == 0) {
 			ChangeStuteView.swichMorningWash(stuteParent);
+
 		} else if (new EhState(data).getSystemRunningState() == 1) {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
 		}
@@ -474,12 +488,19 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			System.out.println("onTcpPacket: " + b);
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
-				openView.setVisibility(View.VISIBLE);
-				rightButton.setVisibility(View.GONE);
-				ChangeStuteView.swichDeviceOff(stuteParent);
-			} else {
+				// openView.setVisibility(View.VISIBLE);
 				rightButton.setVisibility(View.VISIBLE);
-				openView.setVisibility(View.GONE);
+				findViewById(R.id.pattern).setEnabled(false);
+				findViewById(R.id.power).setEnabled(false);
+				ChangeStuteView.swichDeviceOff(stuteParent);
+				ison = false;
+			} else {
+				// rightButton.setVisibility(View.VISIBLE);
+				// openView.setVisibility(View.GONE);
+				findViewById(R.id.pattern).setEnabled(true);
+				findViewById(R.id.power).setEnabled(true);
+
+				ison = true;
 			}
 		}
 
@@ -490,7 +511,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				+ new EhState(b).getInnerTemp2() + "   "
 				+ new EhState(b).getInnerTemp3());
 		// tempter.setText(new EhState(b).getInnerTemp2() + "");
-		if (!Insetting) {
+		if (!Insetting&&circularView!=null) {
 			circularView.setAngle(new EhState(b).getInnerTemp1());
 			tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
@@ -541,7 +562,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	public void setAppointmentButtonAble(boolean isAble) {
-	//	btn_appointment.setEnabled(isAble);
+		// btn_appointment.setEnabled(isAble);
 	}
 
 	public void initopenView() {
