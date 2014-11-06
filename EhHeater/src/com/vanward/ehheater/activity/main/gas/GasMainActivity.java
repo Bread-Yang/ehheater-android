@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -44,6 +45,7 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
@@ -152,9 +154,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 			
-			if (Global.connectId != -1) {
-				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-			}
 			
 			Global.connectId = connId;
 			
@@ -163,7 +162,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendStateReq(Global.connectId);
 			} else {
 				// TODO 设备不在线
-				
+				ChangeStuteView.swichDeviceOff(stuteParent);
 			}
 			
 			updateTitle();   // connect回调可能是由于切换了热水器, 需更新title
@@ -189,6 +188,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
@@ -403,8 +403,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 		// modeTv.setText("自定义模式");
 		circularView.setOn(false);
-		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
-				GasCustomSetVo.class);
+		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(GasCustomSetVo.class);
 		circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
@@ -832,6 +831,11 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIListener(int outlevel) {
 		temptertitleTextView.setText("设置水温");
+//		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.menu_icon_setting);
+//		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+//		img.setBounds( 0, 0, dp32, dp32 );
+//		temptertitleTextView.setCompoundDrawables(img, null, null, null);
+		
 		tempter.setText(outlevel + "");
 		if (outlevel >= 50) {
 			// 变小了
@@ -855,6 +859,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
 		temptertitleTextView.setText("设置水温");
+//		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.icon_temperature);
+//		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+//		img.setBounds( 0, 0, dp32, dp32 );
+//		temptertitleTextView.setCompoundDrawables(img, null, null, null);
+		
+		
 		tempter.setText(outlevel + "");
 	}
 

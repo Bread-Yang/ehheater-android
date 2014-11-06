@@ -35,6 +35,7 @@ import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.EasyLinkDialogUtil;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
@@ -54,10 +55,20 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	private Map<Integer, View> mMapStepViews = new HashMap<Integer, View>();
 	static int curindex = 0;
+	
+	HeaterType mType = HeaterType.Eh;
+	
+	private void initHeaterType() {
+		String typeStr = getIntent().getStringExtra("type");
+		if (typeStr.equals("gas")) {
+			mType = HeaterType.ST;
+		}
+	}
 
 	@Override
 	public void initUI() {
 		super.initUI();
+		initHeaterType();
 		curindex = 0;
 		setCenterView(R.layout.activity_configure);
 		setRightButton(View.INVISIBLE);
@@ -166,40 +177,54 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		switch (whichStep) {
 
 		case 1:
-			v = getLayoutInflater().inflate(R.layout.activity_configure_step1,
-					mRlStepContainer, false);
+			v = getLayoutInflater().inflate(R.layout.activity_configure_step1, mRlStepContainer, false);
 			TextView s1tip = (TextView) v.findViewById(R.id.acs1_tv_tip);
-
 			ImageView img = (ImageView) v.findViewById(R.id.img);
-			if (getIntent().getStringExtra("type").equals("gas")) {
-				img.setImageResource(R.drawable.device_img1);
-			} else {
+			
+			switch (mType) {
+			case Eh:
 				img.setImageResource(R.drawable.setting_img1);
+				break;
+			case ST:
+				img.setImageResource(R.drawable.setting_img5);
+				break;
+			default:
+				break;
 			}
+			
 			TextStyleUtil.setColorStringInTextView(s1tip,
 					Color.parseColor("#ff5f00"), new String[] { "电源" });
+			
 			break;
 
 		case 2:
-			v = getLayoutInflater().inflate(R.layout.activity_configure_step2,
-					mRlStepContainer, false);
+			v = getLayoutInflater().inflate(R.layout.activity_configure_step2, mRlStepContainer, false);
 			mTvWifiSsid = (TextView) v.findViewById(R.id.acs2_tv_ssid);
 			mEtWifiPsw = (EditText) v.findViewById(R.id.acs2_et_psw);
 
 			applyCurWifiSsid();
 			break;
 		case 3:
-			v = getLayoutInflater().inflate(R.layout.activity_configure_step3,
-					mRlStepContainer, false);
+			v = getLayoutInflater().inflate(R.layout.activity_configure_step3, mRlStepContainer, false);
 			TextView s3tip = (TextView) v.findViewById(R.id.acs3_tv_tip);
-			TextStyleUtil.setColorStringInTextView(s3tip,
-					Color.parseColor("#ff5f00"), new String[] { "3秒", "三声" });
-			img = (ImageView) v.findViewById(R.id.img);
-			if (getIntent().getStringExtra("type").equals("gas")) {
-				img.setImageResource(R.drawable.device_img1);
-			} else {
-				img.setImageResource(R.drawable.setting_img1);
+			ImageView img3 = (ImageView) v.findViewById(R.id.img);
+
+			
+			switch (mType) {
+			case Eh:
+				img3.setImageResource(R.drawable.setting_img4);
+				s3tip.setText(R.string.setup_step3_eh);
+				TextStyleUtil.setColorStringInTextView(s3tip, Color.parseColor("#ff5f00"), new String[] { "3秒", "响一声" });
+				break;
+			case ST:
+				img3.setImageResource(R.drawable.setting_img5);
+				s3tip.setText(R.string.setup_step3_st);
+				TextStyleUtil.setColorStringInTextView(s3tip, Color.parseColor("#ff5f00"), new String[] { "一下", "听到蜂鸣" });
+				break;
+			default:
+				break;
 			}
+			
 
 			break;
 

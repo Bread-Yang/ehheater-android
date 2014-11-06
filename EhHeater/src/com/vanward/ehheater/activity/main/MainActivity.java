@@ -7,8 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -43,6 +43,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
@@ -111,12 +112,9 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		initView();
 		initData();
 
-		IntentFilter filter = new IntentFilter(
-				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				heaterNameChangeReceiver, filter);
+		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(heaterNameChangeReceiver, filter);
 		canupdateView = false;
-//		generated.SendStateReq(Global.connectId);
 		
 		HeaterInfo curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
 		String mac = curHeater.getMac();
@@ -150,10 +148,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 			
-			if (Global.connectId != -1) {
-				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-			}
-			
 			Global.connectId = connId;
 			
 			if (isOnline) {
@@ -161,6 +155,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendStateReq(Global.connectId);
 			} else {
 				// TODO 设备不在线
+				ChangeStuteView.swichDeviceOff(stuteParent);
 				
 			}
 			
@@ -176,8 +171,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		super.onResume();
 		canupdateView = true;
 		String tempname = modeTv.getText().toString();
-		if (tempname.equals("夜电模式") && tempname.equals("晨浴模式")
-				&& tempname.equals("智能模式") && tempname.equals("自定义模式")) {
+		if (tempname.equals("夜电模式") || tempname.equals("晨浴模式")
+				|| tempname.equals("智能模式") || tempname.equals("自定义模式")) {
 			return;
 		}
 		boolean flag = false;
@@ -211,6 +206,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
@@ -241,6 +237,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
+		powerTv.setOnClickListener(this);
 
 		initopenView();
 		updateTitle();
@@ -363,6 +360,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			startActivity(intent3);
 
 			break;
+			
+		case R.id.power_tv:
+			if (currentModeCode == 7 || currentModeCode == 4) {
+				setPower();
+			}
+			break;
+			
 		}
 	}
 
@@ -535,6 +539,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			System.out.println("当前模式：" + new EhState(data).getFunctionState());
 			// 非常奇怪 智能模式设置成功，可是返回值 确实1 跟p0 文档不符合。设置进去的时候是2 ，晨浴模式成功。
 			int mode = new EhState(data).getFunctionState();
+			currentModeCode = mode;
 			if (mode == 1) {
 				changeTojishiModeUpdateUI(data);
 			} else if (mode == 3) {
@@ -566,8 +571,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				ison = true;
 			}
 		}
-
 	}
+	private int currentModeCode = -1;
 
 	public void setTempture(final byte[] b) {
 		System.out.println("当前水温：" + new EhState(b).getInnerTemp1() + "   "
@@ -671,7 +676,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void updateUIListener(int outlevel) {
-		temptertitleTextView.setText("设置水温");
+		temptertitleTextView.setText("设置温度");
+		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.menu_icon_setting);
+		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+		img.setBounds( 0, 0, dp32, dp32 );
+		temptertitleTextView.setCompoundDrawables(img, null, null, null);
+		
 		tempter.setText(outlevel + "");
 		circularView.setTargerdegree(outlevel);
 		Insetting = true;
@@ -680,6 +690,11 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
 		temptertitleTextView.setText("当前水温");
+		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.icon_temperature);
+		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+		img.setBounds( 0, 0, dp32, dp32 );
+		temptertitleTextView.setCompoundDrawables(img, null, null, null);
+		
 		tempter.setText(outlevel + "");
 	}
 

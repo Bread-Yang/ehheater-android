@@ -176,7 +176,9 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		case R.id.ivTitleBtnRigh:
 			CustomSetVo customSetVo = getData();
 			if (customSetVo != null) {
-				new BaseDao(this).getDb().delete(oldcustomSetVo);
+				if (oldcustomSetVo != null) {
+					new BaseDao(this).getDb().delete(oldcustomSetVo);
+				}
 				new BaseDao(this).getDb().replace(customSetVo);
 				finish();
 			}

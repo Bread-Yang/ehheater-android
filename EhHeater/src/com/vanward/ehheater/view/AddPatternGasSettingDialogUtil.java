@@ -162,7 +162,25 @@ public class AddPatternGasSettingDialogUtil implements OnSeekBarChangeListener,
 	@Override
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 		// TODO Auto-generated method stub
-		value.setText(arg1 + 35 + "℃");
+
+		int position=arg0.getProgress();
+		int temp= position + 35;
+
+		if (48>=temp) 
+			;
+		else if(49 ==temp)
+			temp = 48;
+		else if(50 <=temp&& 53>temp)
+			temp  = 50;
+		else if(53<=temp&&58>temp)
+			temp  = 55;
+		else if(58<=temp&&63>temp)
+			temp  = 60;
+		else if(63<=temp&&65>=temp)
+			temp  = 65;
+		
+		
+		value.setText(temp + "℃");
 	}
 
 	@Override

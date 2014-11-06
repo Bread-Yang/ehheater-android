@@ -106,7 +106,7 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 		BathSettingVo bathSettingVo = new BaseDao(context).getDb().findById(1,
 				BathSettingVo.class);
 		if (bathSettingVo != null) {
-			seekBartem.setProgress(bathSettingVo.getTem());
+			seekBartem.setProgress(bathSettingVo.getTem()-35);
 			seekBarwater.setProgress(bathSettingVo.getWater());
 		}
 
@@ -138,8 +138,26 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 	@Override
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 		if (arg0.equals(seekBartem)) {
-			temtv.setText((arg1 + 35) + "℃");
-			temtv.setTag(arg1);
+			
+
+			int temp= arg1 + 35;
+			
+			
+			if (48>=temp) 
+				;
+			else if(49 ==temp)
+				temp = 48;
+			else if(50 <=temp&& 53>temp)
+				temp  = 50;
+			else if(53<=temp&&58>temp)
+				temp  = 55;
+			else if(58<=temp&&63>temp)
+				temp  = 60;
+			else if(63<=temp&&65>=temp)
+				temp  = 65;
+			
+			temtv.setText(temp + "℃");
+			temtv.setTag(temp);
 		} else if (arg0.equals(seekBarwater)) {
 			if (arg1 == 0) {
 				seekBarwater.setProgress(1);

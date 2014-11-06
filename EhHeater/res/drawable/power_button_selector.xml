@@ -2,6 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@drawable/icon_jishi_down" android:state_pressed="true"></item>
+    <item android:drawable="@drawable/icon_instant_heating_unavailable" android:state_enabled="false"></item>
     <item android:drawable="@drawable/icon_jishi" ></item>
 
 </selector>

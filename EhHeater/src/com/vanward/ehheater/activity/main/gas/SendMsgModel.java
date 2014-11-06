@@ -59,7 +59,7 @@ public class SendMsgModel {
 				BathSettingVo bathSettingVo = new BaseDao(context).getDb()
 						.findById("1", BathSettingVo.class);
 				if (bathSettingVo == null) {
-					bathSettingVo = new BathSettingVo("1", 35, 99);
+					bathSettingVo = new BathSettingVo("1", 99, 35);  
 				}
 				try {
 					Thread.sleep(500);
@@ -68,7 +68,7 @@ public class SendMsgModel {
 					e.printStackTrace();
 				}
 				generated.SendGasWaterHeaterTargetTemperatureReq(
-						Global.connectId, (short) (bathSettingVo.getTem() + 35));
+						Global.connectId, (short) (bathSettingVo.getTem()));
 
 				try {
 					Thread.sleep(500);

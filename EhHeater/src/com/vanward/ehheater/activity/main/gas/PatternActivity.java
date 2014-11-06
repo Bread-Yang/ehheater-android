@@ -294,7 +294,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 								}).editButtonCall(new NextButtonCall() {
 									@Override
 									public void oncall(View v) {
-
+										/*
 										AddPatternGasSettingDialogUtil
 												.instance(PatternActivity.this)
 												.initName(
@@ -331,7 +331,15 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																				PatternActivity.this)
 																		.dissmiss();
 															}
-														}).showDialog();
+														}).showDialog();*/
+										
+
+										Intent intent = new Intent();
+										intent.setClass(PatternActivity.this, AddPattenActivity.class);
+										intent.putExtra("gasCusVoId", customSetVo.getId());
+										startActivity(intent);
+										
+										
 										AddPatternButtonDialogUtil.instance(
 												PatternActivity.this)
 												.dissmiss();

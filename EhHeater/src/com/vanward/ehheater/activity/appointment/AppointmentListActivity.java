@@ -59,8 +59,7 @@ public class AppointmentListActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(AppointmentListActivity.this,
-						AppointmentTimeActivity.class);
+				Intent intent = new Intent(AppointmentListActivity.this, AppointmentTimeActivity.class);
 				startActivityForResult(intent, 1);
 			}
 		});

@@ -31,7 +31,7 @@ public class Consts {
 
 	public static final String HEATER_DEFAULT_NAME = "热水器";
 	public static final String E_HEATER_DEFAULT_NAME = "电热水器";
-	public static final String ST_HEATER_DEFAULT_NAME = "燃热水器";
+	public static final String ST_HEATER_DEFAULT_NAME = "燃气热水器";
 	
 	public static final String EH_P_KEY = "c2db7fd028fd11e4b605001ec9b6dcfe";
 	public static final String ST_P_KEY = "b82d55ee2f3e11e488f7001ec9b6dcfe";

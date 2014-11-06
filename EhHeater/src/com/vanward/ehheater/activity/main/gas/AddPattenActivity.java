@@ -55,10 +55,41 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		seekBar.setOnSeekBarChangeListener(this);
 		degree.setText("35℃");
 		textView= (TextView)findViewById(R.id.textView2);
+		
+		
+		int voId = getIntent().getIntExtra("gasCusVoId", -1);
+		if (voId != -1) {
+			gasVo = new BaseDao(this).getDb().findById(voId, GasCustomSetVo.class);
+			setData(gasVo);
+		}
+	}
+	GasCustomSetVo gasVo;
+	
+	private void setData(GasCustomSetVo gasVo) {
+		nameedittext.setText(gasVo.getName());
+		seekBar.setProgress(gasVo.getTempter()-35);
+		
+		int water = gasVo.getWaterval();
+		
+		switch (water) {
+		case 40:
+			waterGroup.check(R.id.RadioButton02);
+			break;
+		case 60:
+			waterGroup.check(R.id.RadioButton01);
+			break;
+		case 100:
+			waterGroup.check(R.id.RadioButton03);
+			break;
+		}
+		
 	}
 
 	public GasCustomSetVo getData() {
 		GasCustomSetVo customSetVo = new GasCustomSetVo();
+		if (gasVo != null) {
+			customSetVo = gasVo;
+		}
 		customSetVo.setConnid(Global.connectId);
 		if (nameedittext.getText().toString().length() <= 0) {
 			Toast.makeText(this, "请输入名称", Toast.LENGTH_SHORT).show();
@@ -70,16 +101,18 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
 				GasCustomSetVo.class);
 
-		for (int i = 0; i < list.size(); i++) {
-			if (nameedittext.getText().toString().equals(list.get(i).getName())) {
-				Toast.makeText(this, "请输出有效名字此名字已用！", Toast.LENGTH_SHORT)
-						.show();
-				return null;
+
+		if (gasVo == null) {
+			for (int i = 0; i < list.size(); i++) {
+				if (nameedittext.getText().toString().equals(list.get(i).getName())) {
+					Toast.makeText(this, "请输出有效名字此名字已用！", Toast.LENGTH_SHORT)
+							.show();
+					return null;
+				}
 			}
-
+			customSetVo.setId(list.size() + 1);
 		}
-
-		customSetVo.setId(list.size() + 1);
+		
 		View view = null;
 		for (int i = 0; i < waterGroup.getChildCount(); i++) {
 			if (waterGroup.getCheckedRadioButtonId() == waterGroup
@@ -101,7 +134,10 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		case R.id.ivTitleBtnRigh:
 			GasCustomSetVo customSetVo = getData();
 			if (customSetVo != null) {
-				new BaseDao(this).getDb().save(customSetVo);
+				if (gasVo != null) {
+					new BaseDao(this).getDb().delete(gasVo);
+				}
+				new BaseDao(this).getDb().replace(customSetVo);
 				finish();
 			}
 			break;
@@ -135,6 +171,23 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		
 		
 		int position=seekbar1.getProgress();
+		int temp= position + 35;
+		
+		
+		if (48>=temp) 
+			;
+		else if(49 ==temp)
+			temp = 48;
+		else if(50 <=temp&& 53>temp)
+			temp  = 50;
+		else if(53<=temp&&58>temp)
+			temp  = 55;
+		else if(58<=temp&&63>temp)
+			temp  = 60;
+		else if(63<=temp&&65>=temp)
+			temp  = 65;
+		
+		
 		float x=  seekbar1.getWidth();
 		float seekbarWidth=seekbar1.getX();
 		float y=seekbar1.getY();
@@ -143,16 +196,15 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		System.out.println("x: "+ x);
 		System.out.println("position: "+ position);
 		
-		textView.setText(position+"");
-		textView.setX(width);
-		textView.setY(y);
-		textView.invalidate();
+		textView.setText(temp+"");
+//		textView.setX(width);
+//		textView.setY(y);
+//		textView.invalidate();
 		degree.setText(heatmakeRange(arg1 + 35) + "℃");
 	}
 
 	@Override
 	public void onStartTrackingTouch(SeekBar arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

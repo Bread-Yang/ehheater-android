@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.activity.more.AboutActivity;
 import com.vanward.ehheater.activity.more.AccountManagementActivity;
@@ -34,6 +35,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.UIUtil;
+import com.xtremeprog.xpgconnect.XPGConnectClient;
 
 public class LeftFragment extends LinearLayout implements
 		android.view.View.OnClickListener, OnItemClickListener {
@@ -189,6 +191,8 @@ public class LeftFragment extends LinearLayout implements
 			HeaterType newHeaterType = hser.getHeaterType(heaterInfo);
 			
 			hser.setCurrentSelectedHeater(heaterInfo.getMac());	// TODO 这里不应该写这里, 应该卸载连接成功的回调里
+			
+			XPGConnectClient.xpgcDisconnectAsync(Global.connectId); // 连接另一个设备之前, 断开现连接
 			
 			if (newHeaterType.equals(oriHeaterType)) {
 				

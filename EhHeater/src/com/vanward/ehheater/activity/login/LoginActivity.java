@@ -20,6 +20,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.user.RegisterActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
@@ -179,8 +180,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				public void run() {
 					if (!onDeviceFoundTriggered) {
 						DialogUtil.dismissDialog();
-						startActivity(new Intent(getBaseContext(),
-								ShitActivity.class));
+						startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
 					}
 				}
 			}, 6000);

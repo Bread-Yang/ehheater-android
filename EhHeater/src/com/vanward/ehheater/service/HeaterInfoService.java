@@ -122,7 +122,11 @@ public class HeaterInfoService {
 		HeaterType type = getHeaterType(hinfo);
 		int count = new HeaterInfoDao(context).getHeaterCountOfType(type);
 
-		hinfo.setName(type.defName + (count + 1));
+		if (count == 0) {
+			hinfo.setName(type.defName);
+		} else {
+			hinfo.setName(type.defName + " (" + (count + 1) + ")");
+		}
 
 	}
 
