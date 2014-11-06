@@ -526,7 +526,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			DialogUtil.dismissDialog();
-			
 			setTempture(data);
 			setLeaveWater(data);
 			setPower(data);
@@ -571,7 +570,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	public void setTempture(final byte[] b) {
-		System.out.println("当前温度：" + new EhState(b).getInnerTemp1() + "   "
+		System.out.println("当前水温：" + new EhState(b).getInnerTemp1() + "   "
 				+ new EhState(b).getInnerTemp2() + "   "
 				+ new EhState(b).getInnerTemp3());
 		// tempter.setText(new EhState(b).getInnerTemp2() + "");
@@ -680,7 +679,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
-		temptertitleTextView.setText("当前温度");
+		temptertitleTextView.setText("当前水温");
 		tempter.setText(outlevel + "");
 	}
 

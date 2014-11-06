@@ -196,14 +196,6 @@
             android:visibility="gone"
             android:tag="自定义模式" />
 
-        <View
-            android:id="@+id/view2"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_alignBottom="@+id/textView2"
-            android:layout_alignParentLeft="true"
-            android:background="#d4d4d4" />
-
         <RadioButton
             android:id="@+id/radio1"
             android:layout_width="wrap_content"

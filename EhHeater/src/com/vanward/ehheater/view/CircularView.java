@@ -151,6 +151,12 @@ public class CircularView extends View {
 
 	public void setOn(boolean isOn) {
 		this.isOn = isOn;
+		if (isOn) {
+			setVisibility(View.VISIBLE);
+		}else {
+			setVisibility(View.GONE);
+		}
+		
 	}
 
 	public Handler handler = new Handler() {

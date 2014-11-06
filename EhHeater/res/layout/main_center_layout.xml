@@ -207,28 +207,30 @@
                     android:onClick="onClick"
                     android:padding="0dp"
                     android:text="即时加热"
-                    android:textColor="@color/an_hui" />
+                    android:textColor="@color/an_hui"
+                    android:textSize="14sp" />
 
                 <Button
                     android:id="@+id/pattern"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:background="@null"
                     android:drawablePadding="5dp"
-                       android:layout_marginLeft="15dp"
                     android:drawableTop="@drawable/pattern_button_selector"
                     android:gravity="center"
                     android:onClick="onClick"
                     android:padding="0dp"
                     android:text="模式"
-                    android:textColor="@color/an_hui"/>
+                    android:textSize="14sp"
+                    android:textColor="@color/an_hui" />
 
                 <Button
                     android:id="@+id/appointment_btn"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                       android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:background="@null"
                     android:drawablePadding="5dp"
@@ -237,13 +239,14 @@
                     android:onClick="onClick"
                     android:padding="0dp"
                     android:text="预约"
+                       android:textSize="14sp"
                     android:textColor="@color/an_hui" />
 
                 <Button
                     android:id="@+id/btn_information"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                       android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_weight="1"
                     android:background="@color/transparent"
                     android:button="@null"
@@ -253,7 +256,7 @@
                     android:onClick="onClick"
                     android:text="@string/information"
                     android:textColor="@color/an_hui"
-                    android:textSize="15dp"
+                       android:textSize="14sp"
                     android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>

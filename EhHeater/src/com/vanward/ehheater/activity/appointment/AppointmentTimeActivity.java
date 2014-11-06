@@ -125,7 +125,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				wheelView1));
 		wheelView2.setViewAdapter(new NumericWheelAdapter(this, 0, 59, "%02d",
 				wheelView2));
-		ivTitleName.setText("预约");
+		ivTitleName.setText("添加");
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 

@@ -418,7 +418,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	public void dealInHeat(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getFlame() == 1) {
-			// if (1 == 1) {
 			stute.setText("加热中");
 
 			hotImgeImageView.setVisibility(View.VISIBLE);
@@ -435,7 +434,9 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			rightButton.setEnabled(false);
 			mode.setEnabled(false);
 			iv_wave.setVisibility(View.VISIBLE);
-			if (pResp.getFunction_state() == 3) {
+			if (pResp.getFunction_state() == 1) {
+				rightButton.setEnabled(true);
+				mode.setEnabled(false);
 				circularView.setVisibility(View.VISIBLE);
 				circularView.setEndangle(48);
 			} else {
