@@ -93,6 +93,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	@ViewInject(id = R.id.zidingyiradio, click = "onClick")
 	LinearLayout zidingyiradioGroup;
 	private List<CustomSetVo> customSetVolist;
+	private String name;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -197,7 +198,12 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			break;
 
 		case R.id.mornongsetting:
-			setMorningWashPeople(false);
+			if (name.equals("晨浴模式")) {
+				setMorningWashPeople(true);
+			}else {
+				setMorningWashPeople(false);
+			}
+		
 			break;
 		}
 	}
@@ -283,7 +289,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		} else {
 			ivTitleBtnRigh.setVisibility(View.VISIBLE);
 		}
-		String name = getIntent().getStringExtra("name");
+		name = getIntent().getStringExtra("name");
 		name.replace("模式", "");
 		setRadiocheck(name, getWindow().getDecorView());
 	}
@@ -295,7 +301,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				for (int i = 0; i < viewGroup.getChildCount(); i++) {
 					setRadiocheck(name, viewGroup.getChildAt(i));
 				}
-
 			} else if (root instanceof RadioButton) {
 				RadioButton radioButton = ((RadioButton) root);
 				System.out.println(radioButton.getText());
@@ -308,7 +313,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 					radioButton.setChecked(false);
 					group.setOnCheckedChangeListener(this);
 				}
-
 			}
 		} catch (Exception e) {
 
@@ -368,34 +372,10 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 								}).editButtonCall(new NextButtonCall() {
 									@Override
 									public void oncall(View v) {
-										AddPatternSettingDialogUtil
-												.instance(PatternActivity.this)
-												.initName(customSetVo.getName())
-												.nextButtonCall(
-														new NextButtonCall() {
-															@Override
-															public void oncall(
-																	View v) {
-																CustomSetVo customSetVo = AddPatternSettingDialogUtil
-																		.instance(
-																				PatternActivity.this)
-																		.getData();
-																new BaseDao(
-																		PatternActivity.this)
-																		.getDb()
-																		.replace(
-																				customSetVo);
-																initViewValue();
-																AddPatternSettingDialogUtil
-																		.instance(
-																				PatternActivity.this)
-																		.dissmiss();
-															}
-														}).showDialog();
-										AddPatternButtonDialogUtil.instance(
-												PatternActivity.this)
-												.dissmiss();
-
+										intent= new  Intent(PatternActivity.this,AddPattenActivity.class);
+										intent.putExtra("index", customSetVo.getName());
+										startActivity(intent);
+										AddPatternButtonDialogUtil.instance(PatternActivity.this).dissmiss();
 									}
 								})
 

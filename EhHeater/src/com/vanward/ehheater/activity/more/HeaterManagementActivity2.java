@@ -26,6 +26,7 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
@@ -94,11 +95,11 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		}
 
 		if (view == btn_add) {
-			startActivity(new Intent(getBaseContext(), ShitActivity.class));
+			startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
 		}
 		if (view == btn_left) {
 			if (new HeaterInfoDao(getBaseContext()).getAll().size() == 0) {
-				startActivity(new Intent(getBaseContext(), ShitActivity.class));
+				startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
 			} else {
 				onBackPressed();
 			}

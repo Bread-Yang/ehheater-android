@@ -1,5 +1,9 @@
 package com.vanward.ehheater.activity.appointment;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.content.Intent;
@@ -17,6 +21,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
@@ -291,7 +296,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	protected void onResume() {
-
+		weektext = "";
 		boolean isallcheck = true;
 		if (AppointmentModel.getInstance(this).getDays() != null) {
 			for (int i = 0; i < AppointmentModel.getInstance(this).getDays().length; i++) {
@@ -307,7 +312,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				weektext = "每天";
 			}
 		} else {
-			select_week.setText(weektext);
+			select_week.setText("永不");
 		}
 
 		super.onResume();
@@ -324,10 +329,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 		case R.id.RelativeLayout04:
 			System.out.println("dasdas");
-			Intent intent = new Intent();
-			intent.setClass(AppointmentTimeActivity.this,
-					AppointmentDaysActivity.class);
-			startActivity(intent);
+			// Intent intent = new Intent();
+			// intent.setClass(AppointmentTimeActivity.this,
+			// AppointmentDaysActivity.class);
+			// startActivity(intent);
 			break;
 		case R.id.switch1:
 
@@ -360,6 +365,18 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					num = i;
 				}
 			}
+
+			Date date = new Date();
+
+			if (date.getHours() > Integer.parseInt(hour)) {
+				Toast.makeText(this, "请选择正确预约时间", Toast.LENGTH_SHORT).show();
+				return;
+			}else if (date.getHours() == Integer.parseInt(hour)&&date.getMinutes() > Integer.parseInt(minute))  {
+				Toast.makeText(this, "请选择正确预约时间", Toast.LENGTH_SHORT).show();
+		       return;
+			}
+			SendMsgModel.sentAppolitionment(Integer.parseInt(hour),
+					Integer.parseInt(minute), peoplenum);
 			// int hour, int minute, int looper, int[] days, int power,int
 			// peopleNum, int temper
 			System.out.println("weektext: " + weektext);
@@ -367,6 +384,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					Integer.parseInt(minute), 1, weektext, power, peoplenum,
 					temper);
 			new BaseDao(this).getDb().save(appointMent);
+
 			finish();
 			break;
 

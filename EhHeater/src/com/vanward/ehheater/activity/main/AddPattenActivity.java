@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -21,6 +23,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.util.db.DBService;
 
 public class AddPattenActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
@@ -46,7 +49,21 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 
 	@ViewInject(id = R.id.textView2, click = "")
 	TextView degree;
-
+	
+	@ViewInject(id = R.id.tem_latout, click = "")
+	RelativeLayout temlayout;
+	
+	@ViewInject(id = R.id.power_layout, click = "")
+	RelativeLayout powerLayout;
+	
+	
+	@ViewInject(id = R.id.imageButton1, click = "onClick")
+	ImageButton swich;
+	@ViewInject(id = R.id.RelativeLayout04, click = "onClick")
+	RelativeLayout peopleNum;
+	private CustomSetVo oldcustomSetVo;
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,15 +74,18 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 		seekBar.setOnSeekBarChangeListener(this);
 		degree.setText("35℃");
+		swich.setTag(1);
+		setData();
+		peopleNum.setVisibility(View.GONE);
 		peopleGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
-				case R.id.RadioButton07:
-					// unlock
-					unLockTempAndPower();
-					break;
+//				case R.id.RadioButton07:
+//					// unlock
+//					unLockTempAndPower();
+//					break;
 				case R.id.RadioButton05:
 					// lock
 					// set args
@@ -85,22 +105,32 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		});
 	}
 	
+	public void setData(){
+	     String name=	getIntent().getStringExtra("index");
+	     if (name!=null) {
+	    	    oldcustomSetVo=	DBService.getInstance(this).findById(name, CustomSetVo.class);
+	  	     nameedittext.setText(oldcustomSetVo.getName());
+	  	   setArgsForTempAndPower(oldcustomSetVo.getTempter(),oldcustomSetVo.getPower());
+		}
+	  
+	}
+
 	private void lockTempAndPower() {
 		seekBar.setEnabled(false);
-		for(int i = 0; i < powerGroup.getChildCount(); i++){
-		    ((RadioButton)powerGroup.getChildAt(i)).setEnabled(false);
+		for (int i = 0; i < powerGroup.getChildCount(); i++) {
+			((RadioButton) powerGroup.getChildAt(i)).setEnabled(false);
 		}
 	}
-	
+
 	private void unLockTempAndPower() {
 		seekBar.setEnabled(true);
-		for(int i = 0; i < powerGroup.getChildCount(); i++){
-		    ((RadioButton)powerGroup.getChildAt(i)).setEnabled(true);
+		for (int i = 0; i < powerGroup.getChildCount(); i++) {
+			((RadioButton) powerGroup.getChildAt(i)).setEnabled(true);
 		}
 	}
-	
+
 	private void setArgsForTempAndPower(int temp, int power) {
-		seekBar.setProgress(temp-35);
+		seekBar.setProgress(temp - 35);
 		switch (power) {
 		case 1:
 			powerGroup.check(R.id.RadioButton03);
@@ -112,7 +142,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			powerGroup.check(R.id.RadioButton02);
 			break;
 		}
-		
+
 	}
 
 	public CustomSetVo getData() {
@@ -146,12 +176,27 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		case R.id.ivTitleBtnRigh:
 			CustomSetVo customSetVo = getData();
 			if (customSetVo != null) {
-				new BaseDao(this).getDb().save(customSetVo);
+				new BaseDao(this).getDb().delete(oldcustomSetVo);
+				new BaseDao(this).getDb().replace(customSetVo);
 				finish();
 			}
 
 			break;
-
+		case R.id.imageButton1:
+			if ((Integer) swich.getTag() == 1) {
+				peopleNum.setVisibility(View.VISIBLE);
+				temlayout.setVisibility(View.GONE);
+				powerLayout.setVisibility(View.GONE);
+				swich.setImageResource(R.drawable.on);
+				swich.setTag(0);
+			} else {
+				peopleNum.setVisibility(View.GONE);
+				temlayout.setVisibility(View.VISIBLE);
+				powerLayout.setVisibility(View.VISIBLE);
+				swich.setImageResource(R.drawable.off);
+				swich.setTag(1);
+			}
+			break;
 		default:
 			break;
 		}

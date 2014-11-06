@@ -28,7 +28,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/custom_dialog2" >
-              <intent-filter>
+                 <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -48,6 +48,7 @@
             android:name=".activity.info.SelectDeviceActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
+             
         </activity>
         <activity
             android:name=".activity.user.RegisterActivity"
@@ -67,6 +68,7 @@
         <activity
             android:name=".activity.main.gas.GasMainActivity"
             android:screenOrientation="portrait" >
+             
         </activity>
         <activity
             android:name=".activity.main.gas.AddPattenActivity"
@@ -75,6 +77,7 @@
         <activity
             android:name=".activity.main.AddPattenActivity"
             android:screenOrientation="portrait" >
+             
         </activity>
         <activity
             android:name=".activity.main.gas.PatternActivity"
@@ -83,6 +86,7 @@
         <activity
             android:name=".activity.main.PatternActivity"
             android:screenOrientation="portrait" >
+           
         </activity>
         <activity
             android:name=".activity.info.InfoErrorActivity"
@@ -149,6 +153,7 @@
         <activity
             android:name=".activity.more.HeaterManagementActivity2"
             android:screenOrientation="portrait" >
+          
         </activity>
         <activity
             android:name=".activity.more.HelpActivity"

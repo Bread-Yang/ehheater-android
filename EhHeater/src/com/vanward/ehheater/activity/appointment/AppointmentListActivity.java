@@ -204,6 +204,7 @@ public class AppointmentListActivity extends Activity implements
 			holder.tv_power.setText(appointment.getPower() + "Kw");
 			holder.tv_days.setText(appointment.getDates());
 			holder.name.setText("预约" + (position + 1));
+			holder.tb_switch.setImageResource(R.drawable.on);
 			holder.tb_switch.setTag(0);
 			holder.tb_switch.setOnClickListener(new OnClickListener() {
 				@Override
@@ -211,8 +212,6 @@ public class AppointmentListActivity extends Activity implements
 					if ((Integer) arg0.getTag() == 1) {
 						((ImageButton) arg0).setImageResource(R.drawable.on);
 						arg0.setTag(0);
-						SendMsgModel.sentAppolitionment(appointment.getHour(),
-								appointment.getMinute(), 2);
 					} else {
 						arg0.setTag(1);
 						((ImageButton) arg0).setImageResource(R.drawable.off);

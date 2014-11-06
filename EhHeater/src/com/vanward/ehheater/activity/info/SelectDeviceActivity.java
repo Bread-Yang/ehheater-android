@@ -34,16 +34,22 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 		TextView title = (TextView) findViewById(R.id.ivTitleName);
 		title.setText("设备选择");
 
-		findViewById(R.id.buttonrela).setOnClickListener(this);
-		findViewById(R.id.RelativeLayout01).setOnClickListener(this);
+		findViewById(R.id.elect).setOnClickListener(this);
+		findViewById(R.id.gas).setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View arg0) {
 		if (arg0.getId() == R.id.ivTitleBtnLeft) {
 			finish();
-		} else {
-			startActivity(new Intent(getBaseContext(), ShitActivity.class));
+		} else if (arg0.getId() == R.id.elect) {
+			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
+			intent.putExtra("type", "elect");
+			startActivity(intent);
+		} else if (arg0.getId() == R.id.gas) {
+			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
+			intent.putExtra("type", "gas");
+			startActivity(intent);
 		}
 
 	}

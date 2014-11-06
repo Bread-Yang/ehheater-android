@@ -89,8 +89,14 @@ public class WashNumDialogUtil {
 
 		if (moringSeVo != null) {
 			System.out.println("people: " + moringSeVo.getPeople());
-			((RadioButton) radioGroup.getChildAt(moringSeVo.getPeople() - 1))
-					.setChecked(true);
+			try {
+				((RadioButton) radioGroup
+						.getChildAt(moringSeVo.getPeople() - 1))
+						.setChecked(true);
+			} catch (Exception e) {
+				// TODO: handle exception
+				
+			}
 		}
 
 		dialog_morning_wash_number_setting.findViewById(R.id.diss)

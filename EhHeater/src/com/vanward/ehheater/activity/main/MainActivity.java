@@ -135,10 +135,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				}
 			}
 			if (!flag) {
-				modeTv.setText("自定义模式");
+				modeTv.setText("智能模式");
 			}
 		} else {
-			modeTv.setText("自定义模式");
+			modeTv.setText("智能模式");
 		}
 		// 自动切换到智能模式
 		// modeTv.post(new Runnable() {
@@ -332,7 +332,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	private void changeTojishiModeUpdateUI(byte[] data) {
 		modeTv.setText("即时加热模式");
-		circularView.setOn(true);
+		circularView.setOn(false);
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		powerTv.setText(3 + "kw");
@@ -379,7 +379,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			CustomSetVo customSetVo = list.get(i);
 			if (customSetVo.getPower() == power
 					&& customSetVo.getTempter() == targetTemperature) {
-				modeTv.setText(customSetVo.getName());
+				if (customSetVo.getName().length()>6) {
+					modeTv.setText(customSetVo.getName().substring(0, 6)+"...");
+				}else {
+					modeTv.setText(customSetVo.getName());
+				}
+			
 				break;
 			}
 		}
