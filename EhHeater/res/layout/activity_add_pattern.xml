@@ -97,10 +97,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:tag="50"
+                android:tag="1"
                 android:text=" 1人"
                 android:textColor="@color/appointment_text_color"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:checked="true" />
 
             <RadioButton
                 android:id="@+id/RadioButton04"
@@ -108,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:tag="30"
+                android:tag="2"
                 android:text="  2人"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
@@ -119,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:tag="20"
+                android:tag="3"
                 android:text="  3人"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="18sp" />
