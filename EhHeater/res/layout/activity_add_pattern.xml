@@ -176,7 +176,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_toRightOf="@+id/TextView01"
                 android:gravity="center"
-                android:max="50"
+                android:max="40"
                 android:progress="0"
                 android:progressDrawable="@drawable/seekbar_style"
                 android:thumb="@drawable/seekbar_thumb"

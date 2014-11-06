@@ -202,6 +202,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		DialogUtil.dismissDialog();
+	};
 
 	@Override
 	public void onBackPressed() {
@@ -567,6 +573,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
+				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
 				findViewById(R.id.pattern).setEnabled(false);
