@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -30,34 +31,30 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.R.id;
 import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
+import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InfoTipActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
-import com.vanward.ehheater.activity.main.LeftFragment;
-import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.dao.HeaterInfoDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.statedata.EhState;
-import com.vanward.ehheater.util.CommonDialogUtil;
-import com.vanward.ehheater.util.TcpPacketCheckUtil;
+import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
 import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.FullWaterWarnDialogUtil;
-import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
-import com.vanward.ehheater.view.wheelview.WheelView;
+import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
-import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class GasMainActivity extends BaseSlidingFragmentActivity implements
@@ -113,17 +110,71 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
-		rightButton.post(new Runnable() {
-			@Override
-			public void run() {
-				generated.SendStateReq(Global.connectId);
+		
+//		rightButton.post(new Runnable() {
+//			@Override
+//			public void run() {
+//				generated.SendStateReq(Global.connectId);
+//			}
+//		});
+		
+		
+
+		HeaterInfo curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
+		String mac = curHeater.getMac();
+		String passcode = curHeater.getPasscode();
+		String userId = AccountService.getUserId(getBaseContext());
+		String userPsw = AccountService.getUserPsw(getBaseContext());
+		
+		ConnectActivity.connectToDevice(this, mac, passcode, userId, userPsw);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY && resultCode == RESULT_OK) {
+			
+			int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
+			boolean isOnline = data.getBooleanExtra(Consts.INTENT_EXTRA_ISONLINE, true);
+			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
+			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+
+			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			
+			if (!TextUtils.isEmpty(passcode)) {
+				curHeater.setPasscode(passcode);
 			}
-		});
+			if (!TextUtils.isEmpty(did)) {
+				curHeater.setDid(did);
+			}
+			
+			new HeaterInfoDao(getBaseContext()).save(curHeater);
+			
+			if (Global.connectId != -1) {
+				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+			}
+			
+			Global.connectId = connId;
+			
+			if (isOnline) {
+				DialogUtil.instance().showQueryingDialog(this);
+				generated.SendStateReq(Global.connectId);
+			} else {
+				// TODO 设备不在线
+				
+			}
+			
+			updateTitle();   // connect回调可能是由于切换了热水器, 需更新title
+			mSlidingMenu.showContent();
+			
+		}
+		
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		// GasWaterHeaterStatusResp_t resp_t = new GasWaterHeaterStatusResp_t();
 		// // resp_t.setFreezeProofingWarning((short) 1);
 		// resp_t.setOxygenWarning((short) 1);
@@ -133,7 +184,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 	}
 
@@ -223,7 +273,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.start_device_rlt:
 			/* generated.SendOnOffReq(Global.connectId, (short) 1); */
@@ -424,13 +473,18 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-			CommonDialogUtil.showReconnectDialog(this);
+			DialogUtil.instance().showReconnectDialog(this);
 		}
 	}
 
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
+		if (nConnId != Global.connectId) {
+			return;
+		}
+		DialogUtil.dismissDialog();
+		
 		modeDeal(pResp);
 		temptertureDeal(pResp);
 		waterDeal(pResp);
@@ -751,7 +805,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 			@Override
 			public void onTick(long arg0) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
@@ -777,7 +830,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void updateUIListener(int outlevel) {
-		// TODO Auto-generated method stub
 		temptertitleTextView.setText("设置水温");
 		tempter.setText(outlevel + "");
 		if (outlevel >= 50) {

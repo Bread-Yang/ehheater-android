@@ -18,7 +18,6 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_select_device);
@@ -44,6 +43,7 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 			finish();
 		} else {
 			startActivity(new Intent(getBaseContext(), ShitActivity.class));
+			finish();
 		}
 
 	}

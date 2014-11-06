@@ -2,9 +2,9 @@ package com.vanward.ehheater.activity.main;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +17,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.WelcomeActivity;
+import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.activity.more.AboutActivity;
 import com.vanward.ehheater.activity.more.AccountManagementActivity;
 import com.vanward.ehheater.activity.more.HeaterManagementActivity2;
@@ -28,7 +30,9 @@ import com.vanward.ehheater.activity.more.HelpActivity;
 import com.vanward.ehheater.activity.more.RemindSettingActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.UIUtil;
 
 public class LeftFragment extends LinearLayout implements
@@ -174,13 +178,40 @@ public class LeftFragment extends LinearLayout implements
 			System.out.println("heaterInfo.getMac(): " + heaterInfo.getMac());
 			return;
 		} else {
-			new HeaterInfoService(getContext())
-					.setCurrentSelectedHeater(heaterInfo.getMac());
-			Intent intent = new Intent();
-			intent.setClass(getContext(), WelcomeActivity.class);
-			intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
-			intent.putExtra(Consts.INTENT_EXTRA_FLAG_AS_DIALOG, true);
-			getContext().startActivity(intent);
+			
+			
+			Activity hostActivity = (Activity) getContext();
+			String userId = AccountService.getUserId(getContext());
+			String userPsw = AccountService.getUserPsw(getContext());
+			
+			HeaterInfoService hser = new HeaterInfoService(getContext());
+			HeaterType oriHeaterType = hser.getCurHeaterType();
+			HeaterType newHeaterType = hser.getHeaterType(heaterInfo);
+			
+			hser.setCurrentSelectedHeater(heaterInfo.getMac());	// TODO 这里不应该写这里, 应该卸载连接成功的回调里
+			
+			if (newHeaterType.equals(oriHeaterType)) {
+				
+				ConnectActivity.connectToDevice(hostActivity, heaterInfo.getMac(), heaterInfo.getPasscode(), userId, userPsw);
+				
+			} else {
+				
+				switch (newHeaterType) {
+				case Eh:
+					hostActivity.startActivity(new Intent(hostActivity, MainActivity.class));
+					hostActivity.finish();
+					break;
+				case ST:
+					hostActivity.startActivity(new Intent(hostActivity, GasMainActivity.class));
+					hostActivity.finish();
+					break;
+				default:
+					Toast.makeText(hostActivity, "无法识别该设备", Toast.LENGTH_LONG).show();
+					break;
+				}
+				
+			}
+			
 		}
 
 	}

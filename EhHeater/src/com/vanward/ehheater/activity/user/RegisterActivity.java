@@ -115,10 +115,8 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 
 		if (pResp.getResult() == 0) {
 			Toast.makeText(getBaseContext(), "注册成功", 1000).show();
-			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
-					.toString(), mEtPsw.getText().toString());
-			startActivity(new Intent(getBaseContext(),
-					SelectDeviceActivity.class));
+			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText().toString(), mEtPsw.getText().toString());
+			startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
 			finish();
 		} else {
 			Toast.makeText(getBaseContext(), "该号码已注册", 1000).show();

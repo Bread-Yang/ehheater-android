@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.BitmapDecodeCacheUtil;
 
 //@SuppressLint("HandlerLeak")
 public class CircularView extends View {
@@ -106,15 +107,19 @@ public class CircularView extends View {
 		mPaint.setAntiAlias(true);// 抗锯齿
 		mPaint.setColor(Color.WHITE);
 		this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-		bgBmp = BitmapFactory.decodeResource(getResources(),
-				R.drawable.home_yuan_tiao3);
-		dianbmp = BitmapFactory.decodeResource(getResources(),
-				R.drawable.home_yuan_tiao_dian);
+
+//		bgBmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao3);
+//		dianbmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao_dian);
+		bgBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao3);
+		dianbmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao_dian);
+		
 		outBmp = dianbmp;
-		redoutBmp = BitmapFactory.decodeResource(getResources(),
-				R.drawable.home_yuan_tiao);
-		blueoutBmp = BitmapFactory.decodeResource(getResources(),
-				R.drawable.home_yuan_tiao_lan);
+
+//		redoutBmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao);
+//		blueoutBmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao_lan);
+		redoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao);
+		blueoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao_lan);
+		
 		// Shader shader = new BitmapShader(bgBmp, Shader.TileMode.CLAMP,
 		// Shader.TileMode.CLAMP);
 		needleW = outBmp.getWidth();

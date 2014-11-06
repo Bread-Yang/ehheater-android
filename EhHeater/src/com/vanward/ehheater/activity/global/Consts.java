@@ -17,6 +17,17 @@ public class Consts {
 	public static final String INTENT_EXTRA_DID2BIND = "did2bind";
 	public static final String INTENT_EXTRA_PASSCODE2BIND = "passcode2bind";
 	public static final String INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH = "configure_activity_should_kill_process";
+	
+
+	public static final String INTENT_EXTRA_MAC = "mac";
+	public static final String INTENT_EXTRA_DID = "did";
+	public static final String INTENT_EXTRA_PASSCODE = "passcode";
+	public static final String INTENT_EXTRA_CONNID = "connid";
+	public static final String INTENT_EXTRA_ISONLINE = "isOnline";
+	
+	public static final int REQUESTCODE_CONNECT_ACTIVITY = 1000;
+	public static final int REQUESTCODE_UPLOAD_BINDING = 1002;
+	public static final int REQUESTCODE_LOGIN = 1003;
 
 	public static final String HEATER_DEFAULT_NAME = "热水器";
 	public static final String E_HEATER_DEFAULT_NAME = "电热水器";

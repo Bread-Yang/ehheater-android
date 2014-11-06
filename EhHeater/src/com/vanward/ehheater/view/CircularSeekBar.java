@@ -6,6 +6,7 @@
 package com.vanward.ehheater.view;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.BitmapDecodeCacheUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -215,9 +216,15 @@ public class CircularSeekBar extends View {
 	 * Inits the drawable.
 	 */
 	public void initDrawable() {
-		progressMark = BitmapFactory.decodeResource(mContext.getResources(),
+//		progressMark = BitmapFactory.decodeResource(mContext.getResources(),
+//				R.drawable.scrubber_control_normal_holo);
+//		progressMarkPressed = BitmapFactory.decodeResource(
+//				mContext.getResources(),
+//				R.drawable.scrubber_control_pressed_holo);
+		
+		progressMark = BitmapDecodeCacheUtil.getBitmapFromRes(mContext.getResources(),
 				R.drawable.scrubber_control_normal_holo);
-		progressMarkPressed = BitmapFactory.decodeResource(
+		progressMarkPressed = BitmapDecodeCacheUtil.getBitmapFromRes(
 				mContext.getResources(),
 				R.drawable.scrubber_control_pressed_holo);
 	}

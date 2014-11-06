@@ -113,6 +113,10 @@ public class HeaterInfoService {
 		}
 
 	}
+	
+	public HeaterType getCurHeaterType() {
+		return getHeaterType(getCurrentSelectedHeater());
+	}
 
 	public void generateDefaultName(HeaterInfo hinfo) {
 		HeaterType type = getHeaterType(hinfo);

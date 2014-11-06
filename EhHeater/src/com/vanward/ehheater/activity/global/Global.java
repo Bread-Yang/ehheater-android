@@ -6,7 +6,7 @@ public class Global {
 	
 	public static String current_did;
 
-	public static int connectId;
+	public static int connectId = -1;
 	
 	public static int connType;
 

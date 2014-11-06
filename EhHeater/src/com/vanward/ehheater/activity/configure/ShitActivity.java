@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -29,8 +28,9 @@ import com.easylink.android.FirstTimeConfig2;
 import com.easylink.android.FirstTimeConfigListener;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.WelcomeActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -295,7 +295,9 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
 		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
-		new HeaterInfoService(getBaseContext()).addNewHeater(hinfo);
+		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+		hser.addNewHeater(hinfo);
+		
 		Log.d("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
 				+ "-" + hinfo.getPasscode());
 
@@ -312,13 +314,45 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
 				killerIntent);
 
-		Intent intent = new Intent();
-		intent.setClass(getBaseContext(), WelcomeActivity.class);
-		intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
-		startActivity(intent);
+//		Intent intent = new Intent();
+//		intent.setClass(getBaseContext(), WelcomeActivity.class);
+//		intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
+//		startActivity(intent);
+		
+		Intent intent = null;
 
-		XPGConnectClient.RemoveActivity(this);
-		finish();
+		switch (hser.getHeaterType(hinfo)) {
+		
+		case Eh:
+			
+			intent = new Intent(getBaseContext(), MainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			
+			XPGConnectClient.RemoveActivity(this);
+			finish();
+			
+			startActivity(intent);
+			break;
+			
+		case ST:
+			
+			intent = new Intent(getBaseContext(), GasMainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			
+			XPGConnectClient.RemoveActivity(this);
+			finish();
+			
+			startActivity(intent);
+			break;
+			
+		default:
+			Toast.makeText(getBaseContext(), "无法识别该设备", Toast.LENGTH_LONG).show();
+			break;
+			
+		}
+
 	}
 
 	private class EasyLinkTimeoutCounter extends CountDownTimer {

@@ -18,10 +18,8 @@ import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.WelcomeActivity;
 import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.user.RegisterActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
@@ -64,6 +62,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		BroadcastReceiver receiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
+				
+				LoginActivity.this.setResult(-256);
 				finish();
 			}
 		};
@@ -140,11 +140,11 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Global.connectId = connId;
+		tempConnId = connId;
 
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) { // 建立连接成功
 
-			XPGConnectClient.xpgcLogin(Global.connectId, et_user.getText()
+			XPGConnectClient.xpgcLogin(tempConnId, et_user.getText()
 					.toString(), et_pwd.getText().toString());
 
 		} else if (event == XPG_RESULT.ERROR_CONNECTION_CLOSED.swigValue()) { // 连接断开
@@ -156,6 +156,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 	}
+	private int tempConnId = -1;
 
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
@@ -171,7 +172,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			SharedPreferUtils.saveUsername(this, et_user.getText().toString());
 			AccountService.setPendingUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
-			generated.SendBindingGetV2Req(Global.connectId);
+			generated.SendBindingGetV2Req(tempConnId);
 			onDeviceFoundTriggered = false;
 			new Timer().schedule(new TimerTask() {
 				@Override
@@ -200,21 +201,25 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		HeaterInfo hi = new HeaterInfo(endpoint);
 
 		if (count++ == 0) {
-			AccountService.setUser(getBaseContext(), et_user.getText()
-					.toString(), et_pwd.getText().toString());
-			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac,
-					hi.getMac());
+			AccountService.setUser(getBaseContext(), et_user.getText().toString(), et_pwd.getText().toString());
+			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac, hi.getMac());
+			
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
 					// 接收设备列表结束, 这时候只要重新进入welcomeActivity, 就可以正常连接设备了
-					Intent intent = new Intent();
-					intent.setClass(getBaseContext(), WelcomeActivity.class);
-					intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
-					startActivity(intent);
+					
+//					Intent intent = new Intent();
+//					intent.setClass(getBaseContext(), WelcomeActivity.class);
+//					intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
+//					startActivity(intent);
+//					finish();
+					
+					setResult(RESULT_OK);
 					finish();
 				}
 			}, 2000);
+			
 		}
 
 		Log.d("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);

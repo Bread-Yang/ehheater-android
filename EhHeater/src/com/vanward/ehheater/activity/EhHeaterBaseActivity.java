@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.util.CommonDialogUtil;
 import com.vanward.ehheater.util.LoadingDialog;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
