@@ -443,10 +443,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		int power = ehState.getPower();
 		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
 				CustomSetVo.class);
+		
 		for (int i = 0; i < list.size(); i++) {
+			
 			CustomSetVo customSetVo = list.get(i);
-			if (customSetVo.getPower() == power
-					&& customSetVo.getTempter() == targetTemperature) {
+			
+			if (customSetVo.getPower() == power && customSetVo.getTempter() == targetTemperature) {
+				
 				if (customSetVo.getName().length()>6) {
 					modeTv.setText(customSetVo.getName().substring(0, 6)+"...");
 				}else {
@@ -455,6 +458,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			
 				break;
 			}
+			
 		}
 		circularView.setOn(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
@@ -560,19 +564,20 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				changeTojishiModeUpdateUI(data);
 			} else if (mode == 3) {
 				changeToMorningWashUpdateUI(data);
-			} else if (mode == 4) {
+			} else if (mode == 4 || mode == 6) {
 				changeToCustomModeUpdateUI(data);
 			} else if (mode == 2) {
 				changeToNightModeUpdateUI(data);
 			} else if (mode == 7) {
 				changeToIntelligenceModeUpdateUI(data);
-			}
+			} 
 
 			byte b = new EhState(data).getSystemRunningState();
 			System.out.println("onTcpPacket: " + b);
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
+				circularView.setOn(false);
 				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
@@ -586,6 +591,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				findViewById(R.id.pattern).setEnabled(true);
 				findViewById(R.id.power).setEnabled(true);
 
+				circularView.setOn(true);
 				ison = true;
 			}
 		}

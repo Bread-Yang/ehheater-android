@@ -183,8 +183,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 						@Override
 						public void oncall(View v) {
 							if (radio3.isChecked()) {
-								SendMsgModel
-										.setToBathtubMode(PatternActivity.this);
+								SendMsgModel.setToBathtubMode(PatternActivity.this);
 								finish();
 							}
 						}
