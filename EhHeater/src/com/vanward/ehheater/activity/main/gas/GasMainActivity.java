@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -44,6 +45,7 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
@@ -152,9 +154,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 			
-			if (Global.connectId != -1) {
-				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-			}
 			
 			Global.connectId = connId;
 			
@@ -163,7 +162,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendStateReq(Global.connectId);
 			} else {
 				// TODO 设备不在线
-				
+				stute.setText("设备不在线");
 			}
 			
 			updateTitle();   // connect回调可能是由于切换了热水器, 需更新title
@@ -189,6 +188,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
@@ -400,12 +400,13 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 
 	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
+		
+		circularView.setVisibility(View.VISIBLE);
 
 		// modeTv.setText("自定义模式");
-		circularView.setOn(false);
-		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
-				GasCustomSetVo.class);
-		circularView.setOn(false);
+//		circularView.setOn(false);
+//		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(GasCustomSetVo.class);
+//		circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
 	}
@@ -431,7 +432,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 			animationDrawable.start();
 			setViewsAble(false, pResp);
-			rightButton.setEnabled(false);
+			/*rightButton.setEnabled(false);*/	// 所有模式在加热状态下, 都可以关机, 2014.11.7日
 			mode.setEnabled(false);
 			iv_wave.setVisibility(View.VISIBLE);
 			if (pResp.getFunction_state() == 1) {
@@ -507,13 +508,18 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void modeDeal(GasWaterHeaterStatusResp_t pResp) {
 		((View) sumwater.getParent()).setVisibility(View.GONE);
+		
 		// 模式切换的api 跟 那个需求有出入
 		System.out.println("当前模式： " + pResp.getFunction_state());
+		
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
 		// 0x05（智能模式）、0x06（自定义模式）
 
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
 		// 0x05（智能模式）、0x06（自定义模式）
+		
+		currentModeCode = pResp.getFunction_state();
+		
 		switch (pResp.getFunction_state()) {
 		case 1:
 			changetoSofeMode(pResp);
@@ -537,6 +543,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		}
 	}
+	private int currentModeCode = -1;
 
 	public void closeDevice() {
 		openView.setVisibility(View.VISIBLE);
@@ -553,6 +560,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	public void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("开关： " + pResp.getOn_off());// 1为开机0为关机
+		
 		if (pResp.getOn_off() == 0) {
 			setViewsAble(false, pResp);
 			stute.setText("关机中");
@@ -560,6 +568,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			// rightButton.setVisibility(View.VISIBLE);
 			// openView.setVisibility(View.GONE);
+			
 			if (pResp.getFlame() != 1) {
 				setViewsAble(true, pResp);
 				ison = true;
@@ -656,19 +665,24 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("自定义设置水流量比例：" + pResp.getCustomWaterProportion());
 
 		if (pResp.getCustomFunction() != 0) {
-			GasCustomSetVo gasCustomSetVo = (GasCustomSetVo) new BaseDao(this)
-					.getDb().findById(pResp.getCustomFunction(),
-							GasCustomSetVo.class);
-			if (gasCustomSetVo != null) {
-				modeTv.setText(gasCustomSetVo.getName());
+			
+			curGasCustomVo = (GasCustomSetVo) new BaseDao(this).getDb().findById(pResp.getCustomFunction(), 
+					GasCustomSetVo.class);
+			
+			if (curGasCustomVo != null) {
+				modeTv.setText(curGasCustomVo.getName());
 			}
+			
 			modeimg.setVisibility(View.GONE);
+			
 		} else {
+			
 			modeimg.setVisibility(View.VISIBLE);
+			
 		}
 
 	}
-
+	private GasCustomSetVo curGasCustomVo = null;
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
 
 	public void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
@@ -810,7 +824,14 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 			@Override
 			public void onFinish() {
-				SendMsgModel.setTempter(value);
+				if (currentModeCode == 6 && curGasCustomVo != null) {
+					generated.SendGasWaterHeaterDIYSettingReq(Global.connectId, 
+							(short) curGasCustomVo.getId(), 
+							(short) value, 
+							(short) curGasCustomVo.getWaterval());
+				} else {
+					SendMsgModel.setTempter(value);
+				}
 				tempter.setText(value + "");
 				Insetting = false;
 			}
@@ -832,6 +853,11 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIListener(int outlevel) {
 		temptertitleTextView.setText("设置水温");
+//		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.menu_icon_setting);
+//		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+//		img.setBounds( 0, 0, dp32, dp32 );
+//		temptertitleTextView.setCompoundDrawables(img, null, null, null);
+		
 		tempter.setText(outlevel + "");
 		if (outlevel >= 50) {
 			// 变小了
@@ -855,6 +881,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
 		temptertitleTextView.setText("设置水温");
+//		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.icon_temperature);
+//		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+//		img.setBounds( 0, 0, dp32, dp32 );
+//		temptertitleTextView.setCompoundDrawables(img, null, null, null);
+		
+		
 		tempter.setText(outlevel + "");
 	}
 
@@ -866,7 +898,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void setViewsAble(boolean isAble, GasWaterHeaterStatusResp_t pResp) {
 		if (isAble) {
 			if (pResp.getFunction_state() == 3
-					|| pResp.getFunction_state() == 1) {
+					|| pResp.getFunction_state() == 1
+					|| pResp.getFunction_state() == 6) {
 				circularView.setVisibility(View.VISIBLE);
 			} else {
 				circularView.setVisibility(View.GONE);

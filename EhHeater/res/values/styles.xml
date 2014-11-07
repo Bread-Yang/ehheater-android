@@ -40,6 +40,7 @@
     
     <style name="custom_dialog2" parent="DialogBaseTheme">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
     
     <style name="dialogStyle" parent="@android:style/Theme.Dialog">

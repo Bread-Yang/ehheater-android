@@ -458,6 +458,14 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 
 	public void setToDIY(CustomSetVo customSetVo) {
 		try {
+			
+			int persons = customSetVo.getPeoplenum();
+			
+			if (persons >= 1 && persons <= 3) {
+				generated.SendPatternSettingReq(Global.connectId, (short) (persons+4));
+				return;
+			}
+			
 			System.out.println("自定义");
 			SendMsgModel.changeToZidingyiMode();
 			Thread.sleep(700);
@@ -466,6 +474,8 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			Thread.sleep(700);
 			System.out.println("自定义 Tem: " + customSetVo.getTempter());
 			SendMsgModel.setTempter(customSetVo.getTempter());
+			
+			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

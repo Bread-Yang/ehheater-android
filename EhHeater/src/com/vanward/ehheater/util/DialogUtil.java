@@ -73,6 +73,8 @@ public class DialogUtil {
 				String userId = AccountService.getUserId(act);
 				String userPsw = AccountService.getUserPsw(act);
 				
+
+				reconnectDialog.dismiss();
 				ConnectActivity.connectToDevice(act, mac, passcode, userId, userPsw);
 				
 			}

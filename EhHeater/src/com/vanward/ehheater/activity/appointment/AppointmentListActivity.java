@@ -59,8 +59,7 @@ public class AppointmentListActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(AppointmentListActivity.this,
-						AppointmentTimeActivity.class);
+				Intent intent = new Intent(AppointmentListActivity.this, AppointmentTimeActivity.class);
 				startActivityForResult(intent, 1);
 			}
 		});
@@ -198,10 +197,12 @@ public class AppointmentListActivity extends Activity implements
 				holder = (ViewHolder) convertView.getTag();
 			}
 			final Appointment appointment = adapter_date.get(position);
-			holder.tv_time.setText(appointment.getHour() + ":"
-					+ appointment.getMinute());
-			holder.tv_temperature.setText(appointment.getTemper() + "度");
-			holder.tv_power.setText(appointment.getPower() + "Kw");
+//			holder.tv_time.setText(appointment.getHour() + ":" + appointment.getMinute());
+			
+			holder.tv_time.setText(String.format("%02d:%02d", appointment.getHour(), appointment.getMinute()));
+			
+			holder.tv_temperature.setText(appointment.getTemper() + "℃");
+			holder.tv_power.setText(appointment.getPower() + "kw");
 			holder.tv_days.setText(appointment.getDates());
 			holder.name.setText("预约" + (position + 1));
 			holder.tb_switch.setImageResource(R.drawable.on);

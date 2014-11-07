@@ -144,6 +144,18 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 					.findViewById(R.id.device_name);
 			ImageView actionBtn = ((ImageView) convertView
 					.findViewById(R.id.action_btn));
+			ImageView deviceImage = (ImageView) convertView.findViewById(R.id.device_img);
+			switch (new HeaterInfoService(getBaseContext()).getHeaterType(item)) {
+			case Eh:
+				deviceImage.setImageResource(R.drawable.setting_img3);
+				break;
+			case ST:
+				deviceImage.setImageResource(R.drawable.device_line_img2);
+				break;
+			default:
+				deviceImage.setImageResource(R.drawable.setting_img3);
+				break;
+			}
 
 			actionBtn.setVisibility(View.VISIBLE);
 			actionBtn.setImageResource(isEdit ? R.drawable.icon_del

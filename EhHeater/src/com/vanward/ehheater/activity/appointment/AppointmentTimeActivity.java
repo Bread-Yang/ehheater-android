@@ -369,10 +369,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			Date date = new Date();
 
 			if (date.getHours() > Integer.parseInt(hour)) {
-				Toast.makeText(this, "请选择正确预约时间", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "预约时间不能早于当前时间", Toast.LENGTH_SHORT).show();
 				return;
 			}else if (date.getHours() == Integer.parseInt(hour)&&date.getMinutes() > Integer.parseInt(minute))  {
-				Toast.makeText(this, "请选择正确预约时间", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "预约时间不能早于当前时间", Toast.LENGTH_SHORT).show();
 		       return;
 			}
 			SendMsgModel.sentAppolitionment(Integer.parseInt(hour),

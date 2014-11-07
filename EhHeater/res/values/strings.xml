@@ -15,7 +15,7 @@
     <string name="hint_input_phone_number">请输入您的手机号</string>
     <string name="show_password">显示密码</string>
     <string name="intelligence">智能</string>
-    <string name="morning_wash">晨浴</string>
+    <string name="morning_wash">用水时段</string>
     <string name="separate_wash">分人洗</string>
     <string name="information">信息</string>
     <string name="last_step">上一步</string>
@@ -115,4 +115,7 @@
     <string name="failure">失败</string>
 
     <string name="heater_wifi_ssid">XPG-GAgent</string>
+    
+    <string name="setup_step3_eh">在关机状态下, 长按热水器节能键3秒, 蜂鸣器响一声之后松手, 并点击下一步</string>
+    <string name="setup_step3_st">在关机状态下, 按热水器预设键一下, 听到蜂鸣之后, 点击下一步</string>
 </resources>

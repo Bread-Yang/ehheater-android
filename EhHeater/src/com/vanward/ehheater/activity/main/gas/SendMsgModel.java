@@ -54,30 +54,33 @@ public class SendMsgModel {
 
 			@Override
 			public void run() {
-				generated.SendGasWaterHeaterModelCommandReq(Global.connectId,
-						(short) 3);
-				BathSettingVo bathSettingVo = new BaseDao(context).getDb()
-						.findById("1", BathSettingVo.class);
+				
+				generated.SendGasWaterHeaterModelCommandReq(Global.connectId, (short) 3);
+				
+				BathSettingVo bathSettingVo = new BaseDao(context).getDb().findById("1", BathSettingVo.class);
+				
 				if (bathSettingVo == null) {
-					bathSettingVo = new BathSettingVo("1", 35, 99);
+					bathSettingVo = new BathSettingVo("1", 99, 35);  
 				}
+				
 				try {
 					Thread.sleep(500);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				generated.SendGasWaterHeaterTargetTemperatureReq(
-						Global.connectId, (short) (bathSettingVo.getTem() + 35));
+				
+				generated.SendGasWaterHeaterTargetTemperatureReq(Global.connectId, (short) (bathSettingVo.getTem()));
 
 				try {
 					Thread.sleep(500);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				generated.SendGasWaterHeaterSetWaterInjectionReq(
-						Global.connectId, (short) (bathSettingVo.getWater()));
+				
+				generated.SendGasWaterHeaterSetWaterInjectionReq(Global.connectId, (short) (bathSettingVo.getWater()));
+
+				
+				
 			}
 		}).start();
 
