@@ -116,59 +116,62 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
 		canupdateView = false;
-//		generated.SendStateReq(Global.connectId);
-		
-		HeaterInfo curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
+		// generated.SendStateReq(Global.connectId);
+
+		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
+				.getCurrentSelectedHeater();
 		String mac = curHeater.getMac();
 		String passcode = curHeater.getPasscode();
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());
-		
+
 		ConnectActivity.connectToDevice(this, mac, passcode, userId, userPsw);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY && resultCode == RESULT_OK) {
-			
+
+		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
+				&& resultCode == RESULT_OK) {
+
 			int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
-			boolean isOnline = data.getBooleanExtra(Consts.INTENT_EXTRA_ISONLINE, true);
+			boolean isOnline = data.getBooleanExtra(
+					Consts.INTENT_EXTRA_ISONLINE, true);
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
 
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			if (!TextUtils.isEmpty(passcode)) {
 				curHeater.setPasscode(passcode);
 			}
 			if (!TextUtils.isEmpty(did)) {
 				curHeater.setDid(did);
 			}
-			
+
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
-			
+
 			if (Global.connectId != -1) {
 				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			}
-			
+
 			Global.connectId = connId;
-			
+
 			if (isOnline) {
 				DialogUtil.instance().showQueryingDialog(this);
 				generated.SendStateReq(Global.connectId);
 			} else {
 				// TODO 设备不在线
-				
+
 			}
-			
-			updateTitle();   // connect回调可能是由于切换了热水器, 需更新title
+
+			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
 			mSlidingMenu.showContent();
-			
+
 		}
-		
+
 	}
 
 	@Override
@@ -177,7 +180,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		canupdateView = true;
 		String tempname = modeTv.getText().toString();
 		if (tempname.equals("夜电模式") && tempname.equals("晨浴模式")
-				&& tempname.equals("智能模式") && tempname.equals("自定义模式")) {
+				&& tempname.equals("智能模式") && tempname.equals("自定义模式")
+				&& tempname.equals("即时加热")) {
 			return;
 		}
 		boolean flag = false;
@@ -310,7 +314,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		if (heaterInfo != null) {
 			mTitleName.setText(Consts.getHeaterName(heaterInfo));
 		}
-
 	}
 
 	boolean ison = false;
@@ -383,7 +386,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	private void changeTojishiModeUpdateUI(byte[] data) {
-		modeTv.setText("即时加热模式");
+		modeTv.setText("即时加热");
 		circularView.setOn(false);
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
@@ -431,12 +434,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			CustomSetVo customSetVo = list.get(i);
 			if (customSetVo.getPower() == power
 					&& customSetVo.getTempter() == targetTemperature) {
-				if (customSetVo.getName().length()>6) {
-					modeTv.setText(customSetVo.getName().substring(0, 6)+"...");
-				}else {
+				if (customSetVo.getName().length() > 6) {
+					modeTv.setText(customSetVo.getName().substring(0, 6)
+							+ "...");
+				} else {
 					modeTv.setText(customSetVo.getName());
 				}
-			
+
 				break;
 			}
 		}
@@ -515,7 +519,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		if (connId != Global.connectId) {
 			return;
 		}
-		
+
 		System.out.println("回调onTcpPacket");
 		System.out.println("MainActivity.onTcpPacket()： "
 				+ new EhState(data).getRemainingHotWaterAmount());
@@ -574,7 +578,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				+ new EhState(b).getInnerTemp2() + "   "
 				+ new EhState(b).getInnerTemp3());
 		// tempter.setText(new EhState(b).getInnerTemp2() + "");
-		if (!Insetting&&circularView!=null) {
+		if (!Insetting && circularView != null) {
 			circularView.setAngle(new EhState(b).getInnerTemp1());
 			tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
@@ -648,7 +652,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		Log.d("emmm", "onConnectEvent@MainActivity:" + connId + "-" + event);
-		
+
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			ChangeStuteView.swichdisconnect(stuteParent);
@@ -687,10 +691,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	public void updateLocalUIdifferent(int outlevel) {
 
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		/**only for test*/
+		/** only for test */
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 		}
 		return super.onKeyDown(keyCode, event);

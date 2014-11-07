@@ -59,6 +59,15 @@ public class SendMsgModel {
 	// 智能模式
 	public static void changeToIntelligenceModeWash() {
 		generated.SendPatternSettingReq(Global.connectId, (short) 8);
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		generated.SendSettingWaterTempReq(Global.connectId, (short) 45);
+		
 	}
 
 	// 自定义
