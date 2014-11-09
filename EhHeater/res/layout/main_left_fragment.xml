@@ -47,8 +47,8 @@
         android:id="@+id/device_switch_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" 
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <ImageView
             android:layout_width="fill_parent"
@@ -58,10 +58,46 @@
         <ListView
             android:id="@+id/device_listview"
             android:layout_width="match_parent"
-            android:layout_height="100dp" 
-            android:dividerHeight="1dp">
+            android:layout_height="100dp"
+            android:dividerHeight="1dp" >
         </ListView>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_line" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:id="@+id/tv_season_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/mode_icon_summer"
+            android:drawablePadding="13dp"
+            android:gravity="center_vertical"
+            android:text="@string/summer_mode" />
+
+        <Button
+            android:id="@+id/btn_season_mode"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:drawableRight="@drawable/menu_selector"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" />
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="fill_parent"

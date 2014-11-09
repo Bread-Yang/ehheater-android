@@ -122,6 +122,8 @@
     <string name="intellectual">智能</string>
     <string name="setting_temperature">设置温度</string>
     <string name="current_temperature">当前温度</string>
+    <string name="heating_temperature">供暖温度</string>
+    <string name="outlet_temperature">出水温度</string>
     <string name="shutdown">关机中</string>
     <string name="standby">待机中</string>
     <string name="gas_consumption">燃气耗量</string>

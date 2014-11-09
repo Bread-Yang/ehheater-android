@@ -42,15 +42,16 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 					public void onCheckedChanged(RadioGroup arg0, int checkedId) {
 						switch (checkedId) {
 						case R.id.rb_model_default:
-
+							FurnaceSendMsgModel.setToNormalHeating();
 							break;
 						case R.id.rb_mode_outdoor:
-
+							FurnaceSendMsgModel.setToOutdoorHeating();
 							break;
 						case R.id.rb_mode_night:
-
+							FurnaceSendMsgModel.setToNightHeating();
 							break;
 						}
+						finish();
 					}
 				});
 
@@ -60,12 +61,13 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 			public void onCheckedChanged(RadioGroup arg0, int checkedId) {
 				switch (checkedId) {
 				case R.id.rb_model_comfort:
-
+					FurnaceSendMsgModel.setToComfortBath();
 					break;
 				case R.id.rb_mode_bath:
-
+					FurnaceSendMsgModel.setToNormalBath();
 					break;
 				}
+				finish();
 			}
 		});
 	}

@@ -85,7 +85,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.main.furnace.FurnaceSwitchPatternActivity"
+            android:name=".activity.main.furnace.FurnaceSeasonActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
