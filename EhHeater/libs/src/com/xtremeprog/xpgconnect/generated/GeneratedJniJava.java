@@ -343,8 +343,8 @@ public class GeneratedJniJava {
         resp.setFunction_state(obj.getFunction_state());
         resp.setOrder_state(obj.getOrder_state());
         resp.setInner1_temp(obj.getInner1_temp());
-        resp.setInner2_temp(obj.getInner2_temp());
-        resp.setInner3_temp(obj.getInner3_temp());
+        resp.setBook_time_hour(obj.getBook_time_hour());
+        resp.setBook_time_min(obj.getBook_time_min());
         resp.setSetting_temp(obj.getSetting_temp());
         resp.setSetting_power(obj.getSetting_power());
         resp.setRemaining_heating_time(obj.getRemaining_heating_time());
@@ -421,6 +421,57 @@ public class GeneratedJniJava {
         }
     }
 
+    public static void OnDERYStatusResp(long cPtr, int nConnId) {
+        DERYStatusResp_t obj = new DERYStatusResp_t(cPtr, false);
+        DERYStatusResp_t resp = new DERYStatusResp_t();
+        resp.setHeader(obj.getHeader());
+        resp.setP0_version(obj.getP0_version());
+        resp.setResp_address(obj.getResp_address());
+        resp.setCommand(obj.getCommand());
+        resp.setOnOff(obj.getOnOff());
+        resp.setSafeLight(obj.getSafeLight());
+        resp.setError(obj.getError());
+        resp.setSeasonState(obj.getSeasonState());
+        resp.setFireState(obj.getFireState());
+        resp.setBathWater(obj.getBathWater());
+        resp.setHeatingSend(obj.getHeatingSend());
+        resp.setBathMode(obj.getBathMode());
+        resp.setMachineType(obj.getMachineType());
+        resp.setDraughtState(obj.getDraughtState());
+        resp.setWaterPumpState(obj.getWaterPumpState());
+        resp.setTeeValState(obj.getTeeValState());
+        resp.setCDIState(obj.getCDIState());
+        resp.setAutifreezeState(obj.getAutifreezeState());
+        resp.setAutifreezeState_rp(obj.getAutifreezeState_rp());
+        resp.setOpenHeating(obj.getOpenHeating());
+        resp.setPressureVal(obj.getPressureVal());
+        resp.setBathTemTarget(obj.getBathTemTarget());
+        resp.setBathTemNow(obj.getBathTemNow());
+        resp.setHeatingTemTarget(obj.getHeatingTemTarget());
+        resp.setBothTemTarget(obj.getBothTemTarget());
+        resp.setOutDoorTem(obj.getOutDoorTem());
+        resp.setHeatingMode(obj.getHeatingMode());
+        resp.setGasCount(obj.getGasCount());
+        resp.setGasCountNow(obj.getGasCountNow());
+        resp.setSerial(obj.getSerial());
+        resp.setReservation_one(obj.getReservation_one());
+        resp.setReservation_two(obj.getReservation_two());
+        resp.setReservation_three(obj.getReservation_three());
+        resp.setReservation_four(obj.getReservation_four());
+        resp.setReservation_five(obj.getReservation_five());
+        resp.setReservation_six(obj.getReservation_six());
+        resp.setChecksum(obj.getChecksum());
+        for (Handler handler : lstHandlers)
+        {
+            Message msg = handler.obtainMessage(21, nConnId, 0, resp);
+            handler.sendMessage(msg);
+        }
+        for (GeneratedJniListener listener : lstListeners)
+        {
+            listener.OnDERYStatusResp(resp, nConnId);
+        }
+    }
+
     public static void OnHeartbeatResp(long cPtr, int nConnId) {
         HeartbeatResp_t obj = new HeartbeatResp_t(cPtr, false);
         HeartbeatResp_t resp = new HeartbeatResp_t();
@@ -431,7 +482,7 @@ public class GeneratedJniJava {
         resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(21, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(22, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)

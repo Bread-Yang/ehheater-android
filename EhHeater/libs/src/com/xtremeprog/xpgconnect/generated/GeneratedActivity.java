@@ -164,6 +164,11 @@ public class GeneratedActivity extends Activity
     }
 
     @Override
+    public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
+        generated.DumpDERYStatusResp(pResp);
+    }
+
+    @Override
     public void OnHeartbeatResp(HeartbeatResp_t pResp, int nConnId) {
         generated.DumpHeartbeatResp(pResp);
     }

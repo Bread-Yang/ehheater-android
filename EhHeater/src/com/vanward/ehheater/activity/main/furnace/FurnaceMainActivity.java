@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.content.LocalBroadcastManager;
@@ -15,6 +16,9 @@ import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -31,6 +35,7 @@ import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
+import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -42,13 +47,18 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private Button btn_top_right, btn_appointment, btn_setting,
 			btn_intellectual;
 
-	private TextView mTitleName, tv_mode, tv_status;
+	private TextView mTitleName, tv_mode_tips, tv_status,
+			tv_current_or_setting_temperature;
 
 	private LinearLayout llt_circle;
 
-	private ImageView iv_rotate_animation;
+	private ImageView iv_fire_wave_animation, iv_rotate_animation, iv_mode;
 
 	private RelativeLayout rlt_content, rlt_open;
+
+	private RadioGroup rg_winner;
+
+	private RadioButton rb_summer;
 
 	private CircularView circularView;
 
@@ -112,17 +122,37 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		btn_setting = ((Button) findViewById(R.id.btn_setting));
 		btn_intellectual = ((Button) findViewById(R.id.btn_intellectual));
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
-		tv_mode = (TextView) findViewById(R.id.tv_mode);
+		rg_winner = (RadioGroup) findViewById(R.id.rg_winner);
+		rb_summer = (RadioButton) findViewById(R.id.rb_summer);
 		tv_status = (TextView) findViewById(R.id.tv_status);
+		tv_mode_tips = (TextView) findViewById(R.id.tv_mode_tips);
+		tv_current_or_setting_temperature = (TextView) findViewById(R.id.tv_current_or_setting_temperature);
 		rlt_content = (RelativeLayout) findViewById(R.id.rlt_content);
 		llt_circle = (LinearLayout) findViewById(R.id.llt_circle);
+		iv_fire_wave_animation = (ImageView) findViewById(R.id.iv_fire_wave_animation);
 		iv_rotate_animation = (ImageView) findViewById(R.id.iv_rotate_animation);
+		iv_mode = (ImageView) findViewById(R.id.iv_mode);
 	}
 
 	private void setListener() {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
 		btn_top_right.setOnClickListener(this);
 		btn_setting.setOnClickListener(this);
+
+		rg_winner.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup arg0, int checkedId) {
+				switch (checkedId) {
+				case R.id.rb_supply_heating:
+					rg_winner.setBackgroundResource(R.drawable.home_xuan_bg1);
+					break;
+				case R.id.rb_bath:
+					rg_winner.setBackgroundResource(R.drawable.home_xuan_bg2);
+					break;
+				}
+			}
+		});
 	}
 
 	private void updateTitle() {
@@ -161,53 +191,136 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setOn(true);
 				circularView.setCircularListener(FurnaceMainActivity.this);
 
-				iv_rotate_animation.setVisibility(View.GONE);
+//				iv_rotate_animation.setVisibility(View.GONE);
 				llt_circle.addView(circularView);
 				// circularView.setVisibility(View.GONE);
 			}
 		});
+		
+		((AnimationDrawable)iv_rotate_animation.getDrawable()).start();
+		((AnimationDrawable)iv_fire_wave_animation.getDrawable()).start();
 	}
 
 	@Override
-	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
-			int nConnId) {
-		onOffDeal(pResp);
+	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
 
-		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
+		if (nConnId != Global.connectId) {
+			return;
+		}
+
+		onOffDeal(pResp);
+		seasonAndModeDeal(pResp); // switch season
+
+		super.OnDERYStatusResp(pResp, nConnId);
 	}
 
-	private void onOffDeal(GasWaterHeaterStatusResp_t pResp) {
-		if (pResp.getOn_off() == 0) {
+	private void onOffDeal(DERYStatusResp_t pResp) {
+		if (pResp.getOnOff() == 0) { // shutdown
 			setCircularViewEnable(false, pResp);
-			tv_status.setText(R.string.shutdown); // 关机
+			tv_status.setText(R.string.shutdown);
 			btn_setting.setEnabled(false);
 			isOn = false;
-		} else {
-			// rightButton.setVisibility(View.VISIBLE);
-			// openView.setVisibility(View.GONE);
-			if (pResp.getFlame() != 1) {
-				setCircularViewEnable(true, pResp);
-				tv_status.setText(R.string.standby);
-				btn_setting.setEnabled(true);
-				isOn = true;
-			}
-
+		} else if (pResp.getOnOff() == 1) { // standby
+			setCircularViewEnable(true, pResp);
+			tv_status.setText(R.string.standby);
+			btn_setting.setEnabled(true);
+			isOn = true;
 		}
 	}
 
-	private void setCircularViewEnable(boolean enable,
-			GasWaterHeaterStatusResp_t pResp) {
-		if (enable) {
-			if (pResp.getFunction_state() == 3
-					|| pResp.getFunction_state() == 1) {
-				circularView.setVisibility(View.VISIBLE);
-			} else {
-				circularView.setVisibility(View.GONE);
+	private void seasonAndModeDeal(DERYStatusResp_t pResp) {
+		if (pResp.getSeasonState() == 0) { // summer
+			rg_winner.setVisibility(View.GONE);
+			rb_summer.setVisibility(View.VISIBLE);
+			iv_mode.setImageResource(R.drawable.mode_icon_summer);
+
+			if (pResp.getBathMode() == 0) { // 0 - normal bath(temp : 30 - 60)
+				tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+						getResources().getDrawable(R.drawable.mode_icon_bath),
+						null, null, null);
+				tv_mode_tips.setText(R.string.mode_bath);
+			} else if (pResp.getBathMode() == 1) { // 1 - comfort bath(temp : 35
+													// - 45)
+				tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+						getResources()
+								.getDrawable(R.drawable.mode_icon_comfort),
+						null, null, null);
+				tv_mode_tips.setText(R.string.mode_comfort);
 			}
+			
+			if (pResp.getFireState() == 0) { // 0 : no flame
+				iv_fire_wave_animation.setVisibility(View.GONE);
+			} else if (pResp.getFireState() == 1) { // 1 : have flame
+				iv_fire_wave_animation.setVisibility(View.VISIBLE);
+				if (pResp.getBathWater() == 0) { // 0 : have bath current
+					tv_status.setText(R.string.bathing);
+				}
+			}
+		} else if (pResp.getSeasonState() == 1) { // winner
+			rg_winner.setVisibility(View.VISIBLE);
+			rb_summer.setVisibility(View.GONE);
+			iv_mode.setImageResource(R.drawable.mode_icon_winner);
+
+			if (pResp.getHeatingMode() == 0xA0) { // 0xA0 - normal mode
+				tv_mode_tips
+						.setCompoundDrawablesWithIntrinsicBounds(getResources()
+								.getDrawable(R.drawable.mode_icon_normal),
+								null, null, null);
+				tv_mode_tips.setText(R.string.mode_outdoor);
+			} else if (pResp.getHeatingMode() == 0xA1) { // 0xA1 - night mode
+			// tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(
+			// R.drawable.mode_icon_comfort), null, null, null);
+				tv_mode_tips.setText(R.string.mode_night);
+			} else if (pResp.getHeatingMode() == 0xA2) { // 0xA2 - outdoor mode
+				tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+						getResources()
+								.getDrawable(R.drawable.mode_icon_outdoor),
+						null, null, null);
+				tv_mode_tips.setText(R.string.mode_outdoor);
+			}
+
+			if (pResp.getFireState() == 0) { // 0 : no flame
+				iv_fire_wave_animation.setVisibility(View.GONE);
+			} else if (pResp.getFireState() == 1) { // 1 : have flame
+				if (pResp.getBathWater() == 0) { // 0 : have bath current
+					tv_status.setText(R.string.bathing);
+
+					if (pResp.getBathMode() == 0) { // 0 - normal bath(temp : 30
+													// - 60)
+						tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+								getResources().getDrawable(
+										R.drawable.mode_icon_bath), null, null,
+								null);
+						tv_mode_tips.setText(R.string.mode_bath);
+					} else if (pResp.getBathMode() == 1) { // 1 - comfort
+															// bath(temp : 35 -
+															// 45)
+						tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+								getResources().getDrawable(
+										R.drawable.mode_icon_comfort), null,
+								null, null);
+						tv_mode_tips.setText(R.string.mode_comfort);
+					}
+				} else { // 1 : no bath current
+					tv_status.setText(R.string.supplying_heat);
+				}
+			}
+		}
+	}
+
+	private void temperatureDeal(DERYStatusResp_t pResp) {
+		if (circularView == null) {
+			return;
+		}
+		// tv_current_or_setting_temperature.setText(pResp.get)
+	}
+
+	private void setCircularViewEnable(boolean enable, DERYStatusResp_t pResp) {
+		if (enable) {
+			circularView.setVisibility(View.VISIBLE);
 		} else {
 			circularView.setVisibility(View.GONE);
 		}
-		tv_mode.setEnabled(enable);
 	}
 
 	private void sendToMsgAfterThreeSeconds(final int value) {
@@ -218,7 +331,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			@Override
 			public void onTick(long arg0) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override

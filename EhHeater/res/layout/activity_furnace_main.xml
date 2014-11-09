@@ -15,53 +15,73 @@
         android:layout_height="fill_parent"
         android:layout_below="@+id/top_layout" >
 
-        <RadioGroup
-            android:id="@+id/rg_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/home_tip_bg"
-            android:orientation="horizontal" >
+        <RelativeLayout
+            android:id="@+id/rlt_mode"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-            <RadioButton
+            <RadioGroup
+                android:id="@+id/rg_winner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:button="@null"
-                android:gravity="center"
-                android:text="设置45" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/home_xuan_bg1"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/rb_supply_heating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawablePadding="-5dp"
+                    android:drawableTop="@drawable/selector_bg_furnace_main_supply_heating"
+                    android:gravity="center"
+                    android:text="设置45℃"
+                    android:textColor="@drawable/selector_text_color_furnace_main"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_bath"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawablePadding="-5dp"
+                    android:drawableTop="@drawable/selector_bg_furnace_main_bath"
+                    android:gravity="center"
+                    android:text="设置45℃"
+                    android:textColor="@drawable/selector_text_color_furnace_main"
+                    android:textSize="12sp" />
+            </RadioGroup>
 
             <RadioButton
+                android:id="@+id/rb_summer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
+                android:background="@drawable/home_xuan_bg3"
                 android:button="@null"
+                android:checked="true"
+                android:drawablePadding="-14dp"
+                android:drawableTop="@drawable/selector_bg_furnace_main_bath"
                 android:gravity="center"
-                android:text="设置45" />
-        </RadioGroup>
-
-        <TextView
-            android:id="@+id/tv_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/home_tip_bg"
-            android:gravity="center_horizontal"
-            android:paddingTop="3dp"
-            android:text="智能模式"
-            android:textColor="@color/an_hui"
-            android:textSize="23dp"
-            android:visibility="gone" />
+                android:text="设置45℃"
+                android:textColor="@drawable/selector_text_color_furnace_main"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/iv_circle_bg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rg_mode"
+            android:layout_below="@+id/rlt_mode"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
             android:background="@drawable/home_yuan_bg" />
 
         <RelativeLayout
@@ -73,18 +93,20 @@
             android:layout_alignTop="@+id/iv_circle_bg" >
 
             <ImageView
-                android:id="@+id/iv_fire_wave_bg"
+                android:id="@+id/iv_fire_wave_animation"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:scaleType="center"
                 android:src="@drawable/main_fire"
+                android:layout_marginBottom="4dp"
                 android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/iv_rotate_animation"
                 android:layout_width="fill_parent"
+                android:layout_marginLeft="2dp"
                 android:layout_height="fill_parent"
-                android:src="@drawable/hotani" />
+                android:src="@drawable/anim_furmace_main_heating" />
 
             <LinearLayout
                 android:id="@+id/llt_circle"
@@ -104,10 +126,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:drawableLeft="@drawable/gas_home_icon_bathtub_thumbnail"
+                    android:drawableLeft="@drawable/mode_icon_bath"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
-                    android:text="@string/bath_mode"
+                    android:text="@string/mode_bath"
                     android:textColor="@color/an_hui"
                     android:textSize="18dp" />
 
@@ -121,8 +143,8 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="bottom"
-                        android:layout_marginBottom="15dp"
-                        android:src="@drawable/gas_home_icon_bathtub" />
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/mode_icon_summer" />
 
                     <TextView
                         android:id="@+id/tv_temperature"
@@ -182,8 +204,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/icon_bg" />
 
             <ImageView
@@ -196,8 +218,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="170dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginLeft="180dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/icon_bg" />
         </RelativeLayout>
 
@@ -220,7 +242,7 @@
                 android:background="@null"
                 android:checked="true"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/pattern_button_selector"
+                android:drawableTop="@drawable/selector_bg_furnace_main_appointment"
                 android:gravity="center"
                 android:onClick="onClick"
                 android:padding="0dp"
@@ -236,11 +258,11 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/appation_button_selector"
+                android:drawableTop="@drawable/selector_bg_furnace_main_setting"
                 android:gravity="center"
                 android:onClick="onClick"
                 android:padding="0dp"
-                android:text="@string/appointment"
+                android:text="@string/setting"
                 android:textColor="@color/an_hui" />
 
             <Button
@@ -252,7 +274,7 @@
                 android:background="@color/transparent"
                 android:button="@null"
                 android:drawablePadding="5dp"
-                android:drawableTop="@drawable/main_select4"
+                android:drawableTop="@drawable/selector_bg_furnace_main_intellectual"
                 android:gravity="center"
                 android:onClick="onClick"
                 android:text="@string/intellectual"
@@ -267,40 +289,31 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_circle_bg"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
             android:orientation="vertical"
             android:visibility="visible" >
-
-            <LinearLayout
-                android:id="@+id/hotlayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/btn_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/icon_w" />
+                    android:background="@drawable/icon_device_status" />
 
                 <TextView
                     android:id="@+id/tv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10dp"
                     android:background="@color/transparent"
                     android:minHeight="20dp"
                     android:text="@string/standby"
+                    android:textColor="@color/appointment_text_color"
                     android:textSize="15dp" />
             </LinearLayout>
 
@@ -315,53 +328,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/icon_w" />
+                    android:background="@drawable/icon_device_consumption" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/gas_consumption"
-                    android:textSize="15dp" />
+                    android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/zhushuiliang"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="5dp"
-                    android:shadowColor="#87420d"
-                    android:shadowDx="2"
-                    android:shadowDy="2"
-                    android:shadowRadius="2"
-                    android:text="23"
-                    android:textColor="#FFf46310"
-                    android:textSize="20dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/gas_consumption"
+                        android:textColor="@color/appointment_text_color"
+                        android:textSize="15dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="m³/h"
-                    android:textColor="#FFf46310" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="5dp"
+                        android:shadowColor="#87420d"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="2"
+                        android:text="23"
+                        android:textColor="#FFf46310"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:text="m³/h"
+                        android:textColor="#FFf46310" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/start_device_rlt"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/white"
-            android:visibility="gone" >
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/infor_tip"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignLeft="@+id/iv_circle_bg"
-            android:layout_alignTop="@+id/tv_mode" />
     </RelativeLayout>
 
 </RelativeLayout>

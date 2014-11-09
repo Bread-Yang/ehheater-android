@@ -33,12 +33,18 @@ public class Utils
 
     public static String GetFileLineMethod()
     { 
-        StackTraceElement traceElement = ((new Exception()).getStackTrace())[1]; 
-        StringBuffer toStringBuffer = new StringBuffer("[").append( 
-        traceElement.getFileName()).append(" | ").append( 
-        traceElement.getLineNumber()).append(" | ").append( 
-        traceElement.getMethodName()).append("]"); 
-        return toStringBuffer.toString(); 
+    	try {
+    		  StackTraceElement traceElement = ((new Exception()).getStackTrace())[1]; 
+    	        StringBuffer toStringBuffer = new StringBuffer("[").append( 
+    	        traceElement.getFileName()).append(" | ").append( 
+    	        traceElement.getLineNumber()).append(" | ").append( 
+    	        traceElement.getMethodName()).append("]"); 
+    	        return toStringBuffer.toString(); 
+		} catch (Exception e) {
+			return "";
+		}
+      
+       
     }
 
     public static String _FILE_() { 

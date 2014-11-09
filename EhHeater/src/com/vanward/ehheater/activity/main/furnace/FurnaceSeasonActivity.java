@@ -9,14 +9,14 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 
-public class FurnaceSwitchPatternActivity extends EhHeaterBaseActivity {
+public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 
 	private RadioGroup rg_mode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setCenterView(R.layout.activity_furnace_switch_pattern);
+		setCenterView(R.layout.activity_furnace_season);
 		setTopText(R.string.mode);
 		setLeftButtonBackground(R.drawable.icon_back);
 		setRightButton(View.GONE);
@@ -26,7 +26,7 @@ public class FurnaceSwitchPatternActivity extends EhHeaterBaseActivity {
 	}
 
 	private void findViewById() {
-		rg_mode = (RadioGroup) findViewById(R.id.rg_mode);
+		rg_mode = (RadioGroup) findViewById(R.id.rg_winner);
 	}
 
 	private void setListener() {
