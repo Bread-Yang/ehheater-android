@@ -585,7 +585,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
-				circularView.setOn(false);
+				//circularView.setOn(false);
 				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
@@ -599,7 +599,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				findViewById(R.id.pattern).setEnabled(true);
 				findViewById(R.id.power).setEnabled(true);
 
-				circularView.setOn(true);
+				//circularView.setOn(true);
 				ison = true;
 			}
 		}

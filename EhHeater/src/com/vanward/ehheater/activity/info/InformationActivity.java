@@ -251,7 +251,11 @@ public class InformationActivity extends Activity implements
 		if (mcuVo != null && mcuVo.getCumulatUseTime() != null) {
 			heattv.setText(mcuVo.getCumulatUseTime() + "mins");
 		}
-		sumwater.setText(mcuVo.getCumulativeVolume() + "L");
-		sumgas.setText(mcuVo.getCumulativeGas() + "L");
+		if (mcuVo!=null&&mcuVo.getCumulativeVolume()!=null) {
+			sumwater.setText(mcuVo.getCumulativeVolume() + "L");
+		}
+		if (mcuVo!=null&&mcuVo.getCumulativeGas()!=null) {
+			sumgas.setText(mcuVo.getCumulativeGas() + "L");
+		}
 	}
 }

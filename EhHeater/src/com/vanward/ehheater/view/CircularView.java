@@ -313,6 +313,7 @@ public class CircularView extends View {
 						// degree = tempdegree;
 					}
 				}
+				System.out.println("test;"+ degree);
 				heatmakeRange(degreeToAngle(degree));
 				if (degree >= angleToDegree(endangle)) {
 					degree = angleToDegree(endangle);

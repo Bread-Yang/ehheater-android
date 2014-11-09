@@ -28,7 +28,7 @@
             app:hasLeftBorder="false"
             app:hasRightBorder="false"
             app:textHighlightColor="@color/appointment_text_color"
-            app:textNormalColor="@color/red"
+            app:textNormalColor="@color/appointment_text_color"
             app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
             app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
 

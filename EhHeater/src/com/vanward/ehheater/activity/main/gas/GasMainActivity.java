@@ -112,64 +112,81 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
-		
-//		rightButton.post(new Runnable() {
-//			@Override
-//			public void run() {
-//				generated.SendStateReq(Global.connectId);
-//			}
-//		});
-		
-		
 
-		HeaterInfo curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
+		// rightButton.post(new Runnable() {
+		// @Override
+		// public void run() {
+		// generated.SendStateReq(Global.connectId);
+		// }
+		// });
+
+		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
+				.getCurrentSelectedHeater();
 		String mac = curHeater.getMac();
 		String passcode = curHeater.getPasscode();
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());
-		
 		ConnectActivity.connectToDevice(this, mac, passcode, userId, userPsw);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY && resultCode == RESULT_OK) {
-			
+
+		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
+				&& resultCode == RESULT_OK) {
+
 			int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
-			boolean isOnline = data.getBooleanExtra(Consts.INTENT_EXTRA_ISONLINE, true);
+			boolean isOnline = data.getBooleanExtra(
+					Consts.INTENT_EXTRA_ISONLINE, true);
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
 
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			if (!TextUtils.isEmpty(passcode)) {
 				curHeater.setPasscode(passcode);
 			}
 			if (!TextUtils.isEmpty(did)) {
 				curHeater.setDid(did);
 			}
-			
+
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
-			
-			
+
 			Global.connectId = connId;
-			
+
 			if (isOnline) {
 				DialogUtil.instance().showQueryingDialog(this);
-				generated.SendStateReq(Global.connectId);
+				generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						for (int i = 0; i < 10; i++) {
+							if (DialogUtil.instance().getIsShowing()) {
+								generated
+										.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
+								try {
+									Thread.sleep(5 * 1000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				}).start();
+
 			} else {
 				// TODO 设备不在线
 				stute.setText("设备不在线");
 			}
-			
-			updateTitle();   // connect回调可能是由于切换了热水器, 需更新title
+
+			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
 			mSlidingMenu.showContent();
-			
+
 		}
-		
+
 	}
 
 	@Override
@@ -400,13 +417,14 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 
 	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
-		
+
 		circularView.setVisibility(View.VISIBLE);
 
 		// modeTv.setText("自定义模式");
-//		circularView.setOn(false);
-//		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(GasCustomSetVo.class);
-//		circularView.setOn(false);
+		// circularView.setOn(false);
+		// List<GasCustomSetVo> list = new
+		// BaseDao(this).getDb().findAll(GasCustomSetVo.class);
+		// circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
 	}
@@ -432,7 +450,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 			animationDrawable.start();
 			setViewsAble(false, pResp);
-			/*rightButton.setEnabled(false);*/	// 所有模式在加热状态下, 都可以关机, 2014.11.7日
+			/* rightButton.setEnabled(false); */// 所有模式在加热状态下, 都可以关机, 2014.11.7日
 			mode.setEnabled(false);
 			iv_wave.setVisibility(View.VISIBLE);
 			if (pResp.getFunction_state() == 1) {
@@ -486,7 +504,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			return;
 		}
 		DialogUtil.dismissDialog();
-		
+
 		modeDeal(pResp);
 		temptertureDeal(pResp);
 		waterDeal(pResp);
@@ -508,18 +526,18 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	 */
 	public void modeDeal(GasWaterHeaterStatusResp_t pResp) {
 		((View) sumwater.getParent()).setVisibility(View.GONE);
-		
+
 		// 模式切换的api 跟 那个需求有出入
 		System.out.println("当前模式： " + pResp.getFunction_state());
-		
+
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
 		// 0x05（智能模式）、0x06（自定义模式）
 
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
 		// 0x05（智能模式）、0x06（自定义模式）
-		
+
 		currentModeCode = pResp.getFunction_state();
-		
+
 		switch (pResp.getFunction_state()) {
 		case 1:
 			changetoSofeMode(pResp);
@@ -543,6 +561,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		}
 	}
+
 	private int currentModeCode = -1;
 
 	public void closeDevice() {
@@ -560,7 +579,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	public void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("开关： " + pResp.getOn_off());// 1为开机0为关机
-		
+
 		if (pResp.getOn_off() == 0) {
 			setViewsAble(false, pResp);
 			stute.setText("关机中");
@@ -568,7 +587,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			// rightButton.setVisibility(View.VISIBLE);
 			// openView.setVisibility(View.GONE);
-			
+
 			if (pResp.getFlame() != 1) {
 				setViewsAble(true, pResp);
 				ison = true;
@@ -665,23 +684,24 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("自定义设置水流量比例：" + pResp.getCustomWaterProportion());
 
 		if (pResp.getCustomFunction() != 0) {
-			
-			curGasCustomVo = (GasCustomSetVo) new BaseDao(this).getDb().findById(pResp.getCustomFunction(), 
-					GasCustomSetVo.class);
-			
+
+			curGasCustomVo = (GasCustomSetVo) new BaseDao(this).getDb()
+					.findById(pResp.getCustomFunction(), GasCustomSetVo.class);
+
 			if (curGasCustomVo != null) {
 				modeTv.setText(curGasCustomVo.getName());
 			}
-			
+
 			modeimg.setVisibility(View.GONE);
-			
+
 		} else {
-			
+
 			modeimg.setVisibility(View.VISIBLE);
-			
+
 		}
 
 	}
+
 	private GasCustomSetVo curGasCustomVo = null;
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
 
@@ -825,9 +845,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			@Override
 			public void onFinish() {
 				if (currentModeCode == 6 && curGasCustomVo != null) {
-					generated.SendGasWaterHeaterDIYSettingReq(Global.connectId, 
-							(short) curGasCustomVo.getId(), 
-							(short) value, 
+					generated.SendGasWaterHeaterDIYSettingReq(Global.connectId,
+							(short) curGasCustomVo.getId(), (short) value,
 							(short) curGasCustomVo.getWaterval());
 				} else {
 					SendMsgModel.setTempter(value);
@@ -853,11 +872,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIListener(int outlevel) {
 		temptertitleTextView.setText("设置水温");
-//		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.menu_icon_setting);
-//		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-//		img.setBounds( 0, 0, dp32, dp32 );
-//		temptertitleTextView.setCompoundDrawables(img, null, null, null);
-		
+		// Drawable img =
+		// getBaseContext().getResources().getDrawable(R.drawable.menu_icon_setting);
+		// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+		// img.setBounds( 0, 0, dp32, dp32 );
+		// temptertitleTextView.setCompoundDrawables(img, null, null, null);
+
 		tempter.setText(outlevel + "");
 		if (outlevel >= 50) {
 			// 变小了
@@ -881,12 +901,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
 		temptertitleTextView.setText("设置水温");
-//		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.icon_temperature);
-//		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-//		img.setBounds( 0, 0, dp32, dp32 );
-//		temptertitleTextView.setCompoundDrawables(img, null, null, null);
-		
-		
+		// Drawable img =
+		// getBaseContext().getResources().getDrawable(R.drawable.icon_temperature);
+		// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+		// img.setBounds( 0, 0, dp32, dp32 );
+		// temptertitleTextView.setCompoundDrawables(img, null, null, null);
+
 		tempter.setText(outlevel + "");
 	}
 
