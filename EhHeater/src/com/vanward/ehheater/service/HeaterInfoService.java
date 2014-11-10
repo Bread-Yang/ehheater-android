@@ -90,7 +90,8 @@ public class HeaterInfoService {
 	public enum HeaterType {
 
 		Eh(Consts.E_HEATER_DEFAULT_NAME, Consts.EH_P_KEY), ST(
-				Consts.ST_HEATER_DEFAULT_NAME, Consts.ST_P_KEY), Unknown(
+				Consts.ST_HEATER_DEFAULT_NAME, Consts.ST_P_KEY), EH_FURNACE(
+				Consts.EH_FURNACE_DEFAULT_NAME, Consts.EH_FURNACE_PRODUCT_KEY), Unknown(
 				Consts.HEATER_DEFAULT_NAME, "");
 
 		public String defName, pkey;
@@ -113,7 +114,7 @@ public class HeaterInfoService {
 		}
 
 	}
-	
+
 	public HeaterType getCurHeaterType() {
 		return getHeaterType(getCurrentSelectedHeater());
 	}

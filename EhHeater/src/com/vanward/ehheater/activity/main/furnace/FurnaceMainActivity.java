@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -24,10 +23,11 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.gas.SendMsgModel;
 import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
@@ -36,7 +36,6 @@ import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
-import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
@@ -104,6 +103,14 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendStateReq(Global.connectId);
 			}
 		});
+		
+		HeaterInfo curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
+		String mac = curHeater.getMac();
+		String passcode = curHeater.getPasscode();
+		String userId = AccountService.getUserId(getBaseContext());
+		String userPsw = AccountService.getUserPsw(getBaseContext());
+		
+		ConnectActivity.connectToDevice(this, mac, passcode, userId, userPsw);
 	}
 
 	private void initSlidingMenu() {
@@ -196,7 +203,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		rlt_open.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				SendMsgModel.openDevice();
+				FurnaceSendMsgModel.openDevice();
 			}
 		});
 	}
@@ -409,14 +416,14 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 						.nextButtonCall(new NextButtonCall() {
 							@Override
 							public void oncall(View v) {
-								SendMsgModel.closeDevice();
+								FurnaceSendMsgModel.closeDevice();
 								DeviceOffUtil
 										.instance(FurnaceMainActivity.this)
 										.dissmiss();
 							}
 						}).showDialog();
 			} else {
-				SendMsgModel.openDevice();
+				FurnaceSendMsgModel.openDevice();
 			}
 			break;
 

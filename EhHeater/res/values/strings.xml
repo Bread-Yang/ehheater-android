@@ -118,6 +118,7 @@
 
     <!-- 壁挂炉用到的字段 -->
 
+    <string name="eh_furnace">万和壁挂炉</string>
     <string name="setting">设置</string>
     <string name="intellectual">智能</string>
     <string name="setting_temperature">设置温度</string>

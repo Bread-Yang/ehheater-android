@@ -2,8 +2,6 @@ package com.vanward.ehheater.activity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,27 +18,16 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.DummySendBindingReqActivity;
 import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
-import com.vanward.ehheater.application.EhHeaterApplication;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
-import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.NetworkStatusUtil;
-import com.vanward.ehheater.util.TcpPacketCheckUtil;
-import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
-import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
-import com.xtremeprog.xpgconnect.generated.LanLoginResp_t;
-import com.xtremeprog.xpgconnect.generated.PasscodeResp_t;
-import com.xtremeprog.xpgconnect.generated.XPG_WAN_LAN;
-import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
-import com.xtremeprog.xpgconnect.generated.generated;
 
 public class WelcomeActivity extends GeneratedActivity {
 

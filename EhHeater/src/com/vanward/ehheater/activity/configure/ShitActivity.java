@@ -31,6 +31,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
@@ -62,6 +63,8 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		String typeStr = getIntent().getStringExtra("type");
 		if (typeStr.equals("gas")) {
 			mType = HeaterType.ST;
+		} else if (typeStr.equals("furnace")) {
+			mType = HeaterType.EH_FURNACE;
 		}
 	}
 
@@ -390,6 +393,18 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		case ST:
 			
 			intent = new Intent(getBaseContext(), GasMainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			
+			XPGConnectClient.RemoveActivity(this);
+			finish();
+			
+			startActivity(intent);
+			break;
+			
+		case EH_FURNACE:
+			
+			intent = new Intent(getBaseContext(), FurnaceMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			
