@@ -112,12 +112,14 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		initView();
 		initData();
 
-		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(heaterNameChangeReceiver, filter);
+		IntentFilter filter = new IntentFilter(
+				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				heaterNameChangeReceiver, filter);
 		canupdateView = false;
 
-		
-		HeaterInfo curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
+		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
+				.getCurrentSelectedHeater();
 		String mac = curHeater.getMac();
 		String passcode = curHeater.getPasscode();
 		String userId = AccountService.getUserId(getBaseContext());
@@ -210,7 +212,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -365,12 +367,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.power:
 			if (v.isSelected()) {
-				
+
 			} else {
 				v.setSelected(true);
 				Tojishi();
 			}
-				
+
 			break;
 		case R.id.btn_information:
 			Intent intent3 = new Intent();
@@ -378,13 +380,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			startActivity(intent3);
 
 			break;
-			
+
 		case R.id.power_tv:
 			if (currentModeCode == 7 || currentModeCode == 4) {
 				setPower();
 			}
 			break;
-			
+
 		}
 	}
 
@@ -450,23 +452,24 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		int power = ehState.getPower();
 		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
 				CustomSetVo.class);
-		
+
 		for (int i = 0; i < list.size(); i++) {
-			
+
 			CustomSetVo customSetVo = list.get(i);
 
-			
-			if (customSetVo.getPower() == power && customSetVo.getTempter() == targetTemperature) {
-				
-				if (customSetVo.getName().length()>6) {
-					modeTv.setText(customSetVo.getName().substring(0, 6)+"...");
-				}else {
+			if (customSetVo.getPower() == power
+					&& customSetVo.getTempter() == targetTemperature) {
+
+				if (customSetVo.getName().length() > 6) {
+					modeTv.setText(customSetVo.getName().substring(0, 6)
+							+ "...");
+				} else {
 					modeTv.setText(customSetVo.getName());
 				}
 
 				break;
 			}
-			
+
 		}
 		circularView.setOn(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
@@ -554,10 +557,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			DialogUtil.dismissDialog();
-			
-			
 			btn_power.setSelected(false);
-			
 			setTempture(data);
 			setLeaveWater(data);
 			setPower(data);
@@ -578,14 +578,14 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				changeToNightModeUpdateUI(data);
 			} else if (mode == 7) {
 				changeToIntelligenceModeUpdateUI(data);
-			} 
+			}
 
 			byte b = new EhState(data).getSystemRunningState();
 			System.out.println("onTcpPacket: " + b);
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
-				//circularView.setOn(false);
+				// circularView.setOn(false);
 				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
@@ -599,11 +599,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				findViewById(R.id.pattern).setEnabled(true);
 				findViewById(R.id.power).setEnabled(true);
 
-				//circularView.setOn(true);
+				// circularView.setOn(true);
 				ison = true;
 			}
 		}
 	}
+
 	private int currentModeCode = -1;
 
 	public void setTempture(final byte[] b) {
@@ -709,11 +710,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIListener(int outlevel) {
 		temptertitleTextView.setText("设置温度");
-		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.menu_icon_setting);
+		Drawable img = getBaseContext().getResources().getDrawable(
+				R.drawable.menu_icon_setting);
 		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-		img.setBounds( 0, 0, dp32, dp32 );
+		img.setBounds(0, 0, dp32, dp32);
 		temptertitleTextView.setCompoundDrawables(img, null, null, null);
-		
+
 		tempter.setText(outlevel + "");
 		circularView.setTargerdegree(outlevel);
 		Insetting = true;
@@ -722,11 +724,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
 		temptertitleTextView.setText("当前水温");
-		Drawable img = getBaseContext().getResources().getDrawable(R.drawable.icon_temperature);
+		Drawable img = getBaseContext().getResources().getDrawable(
+				R.drawable.icon_temperature);
 		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-		img.setBounds( 0, 0, dp32, dp32 );
+		img.setBounds(0, 0, dp32, dp32);
 		temptertitleTextView.setCompoundDrawables(img, null, null, null);
-		
+
 		tempter.setText(outlevel + "");
 	}
 
