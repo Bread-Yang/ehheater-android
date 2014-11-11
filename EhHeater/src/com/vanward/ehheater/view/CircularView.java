@@ -109,23 +109,23 @@ public class CircularView extends View {
 		this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
 //		bgBmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao3);
-//		dianbmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao_dian);
-		bgBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao3);
-		dianbmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao_dian);
+		dianbmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao_dian);
+//		bgBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao3);
+//		dianbmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao_dian);
 		
 		outBmp = dianbmp;
 
-//		redoutBmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao);
-//		blueoutBmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao_lan);
-		redoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao);
-		blueoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao_lan);
+		redoutBmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao);
+		blueoutBmp = BitmapFactory.decodeResource(getResources(), R.drawable.home_yuan_tiao_lan);
+//		redoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao);
+//		blueoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), R.drawable.home_yuan_tiao_lan);
 		
 		// Shader shader = new BitmapShader(bgBmp, Shader.TileMode.CLAMP,
 		// Shader.TileMode.CLAMP);
 		needleW = outBmp.getWidth();
 		bmSize = Math.sqrt(2) * needleW;
 		mPaint.setStrokeWidth(needleW / 4);
-		// mPaint.setShader(shader);
+		// mPaint.setShader(shader); 
 		this.view = view;
 		this.type = Type;
 		r = view.getHeight() > view.getWidth() ? view.getWidth() / 2 : view
@@ -507,4 +507,14 @@ public class CircularView extends View {
 			mPath.close();
 		}
 	}
+
+	public int getBeginangle() {
+		return beginangle;
+	}
+
+	public void setBeginangle(int beginangle) {
+		this.beginangle = beginangle;
+	}
+	
+	
 }

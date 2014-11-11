@@ -109,7 +109,10 @@ public class HeaterInfoService {
 			return HeaterType.Eh;
 		} else if (Consts.ST_P_KEY.equals(hinfo.getProductKey())) {
 			return HeaterType.ST;
-		} else {
+		} else if (Consts.EH_FURNACE_PRODUCT_KEY.equals(hinfo.getProductKey())) {
+			return HeaterType.EH_FURNACE;
+		}
+		else {
 			return HeaterType.Unknown;
 		}
 

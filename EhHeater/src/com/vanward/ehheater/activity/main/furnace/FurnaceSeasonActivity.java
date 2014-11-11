@@ -11,7 +11,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 
 public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
-	
+
 	public static int SET_SUMMER_MODE = 0;
 	public static int SET_WINNER_MODE = 1;
 
@@ -25,8 +25,8 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 		setLeftButtonBackground(R.drawable.icon_back);
 		setRightButton(View.GONE);
 		findViewById();
-		setListener();
 		init();
+		setListener();
 	}
 
 	private void findViewById() {
@@ -44,13 +44,11 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 					FurnaceSendMsgModel.setToSummerMode();
 					intent.putExtra("seasonMode", SET_SUMMER_MODE);
 					setResult(RESULT_OK, intent);
-					finish();
 					break;
 				case R.id.rb_mode_winner:
 					FurnaceSendMsgModel.setToWinnerMode();
 					intent.putExtra("seasonMode", SET_WINNER_MODE);
 					setResult(RESULT_OK, intent);
-					finish();
 					break;
 				}
 			}
@@ -59,6 +57,14 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
-
+		if (getIntent() != null) {
+			if (FurnaceSeasonActivity.SET_SUMMER_MODE == getIntent()
+					.getIntExtra("seasonMode",
+							FurnaceSeasonActivity.SET_SUMMER_MODE)) {
+				rg_mode.check(R.id.rb_mode_summer);
+			} else {
+				rg_mode.check(R.id.rb_mode_winner);
+			}
+		}
 	}
 }

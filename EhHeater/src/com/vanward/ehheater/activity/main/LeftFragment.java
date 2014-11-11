@@ -69,6 +69,11 @@ public class LeftFragment extends LinearLayout implements
 		deviceSwitchLayout = findViewById(R.id.device_switch_layout);
 		deviceSwitchBtn = findViewById(R.id.device_switch_btn);
 
+		if (getContext() instanceof FurnaceMainActivity) {
+			((FurnaceMainActivity) getContext())
+					.setTv_sliding_menu_season_mode(tv_season_mode);
+		}
+
 		DeviceAdapter deviceAdapter = new DeviceAdapter(getContext(),
 				R.layout.main_left_device_item,
 				new HeaterInfoDao(getContext()).getAll());
@@ -77,7 +82,8 @@ public class LeftFragment extends LinearLayout implements
 		((ListView) findViewById(R.id.device_listview))
 				.setOnItemClickListener(this);
 		UIUtil.setOnClick(this, btn_about, btn_device_manager, btn_help,
-				btn_tip, btn_user_manager, deviceSwitchLayout, deviceSwitchBtn, btn_season_mode);
+				btn_tip, btn_user_manager, deviceSwitchLayout, deviceSwitchBtn,
+				btn_season_mode);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -101,12 +107,15 @@ public class LeftFragment extends LinearLayout implements
 		}
 		if (view == btn_season_mode) {
 			clazz = FurnaceSeasonActivity.class;
-			((FurnaceMainActivity)getContext()).setTv_sliding_menu_season_mode(tv_season_mode);
+			tv_season_mode.performClick();
 		}
 
 		if (clazz != null) {
 			Intent intent = new Intent();
 			intent.setClass(getContext(), clazz);
+			if (tv_season_mode.getTag() != null) {
+				intent.putExtra("seasonMode", (Integer) tv_season_mode.getTag());
+			}
 			if (clazz == FurnaceSeasonActivity.class) {
 				((Activity) getContext()).startActivityForResult(intent, 0);
 			} else {

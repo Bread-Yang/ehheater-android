@@ -349,7 +349,9 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
+		Log.e("打印productKey前", "打印productKey前");
 		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
+		Log.e("productKey是 : ", hinfo.getProductKey());
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		hser.addNewHeater(hinfo);
 		

@@ -18,14 +18,14 @@
         <RelativeLayout
             android:id="@+id/rlt_mode"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp" >
 
             <RadioGroup
                 android:id="@+id/rg_winner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
                 android:background="@drawable/home_xuan_bg1"
                 android:orientation="horizontal"
                 android:visibility="gone" >
@@ -63,7 +63,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/home_xuan_bg3"
                 android:button="@null"
@@ -71,7 +70,7 @@
                 android:drawablePadding="-14dp"
                 android:drawableTop="@drawable/selector_bg_furnace_main_bath"
                 android:gravity="center"
-                android:text="设置45℃"
+                android:text="设置--°"
                 android:textColor="@drawable/selector_text_color_furnace_main"
                 android:textSize="12sp" />
         </RelativeLayout>
@@ -99,14 +98,15 @@
                 android:layout_marginBottom="4dp"
                 android:scaleType="center"
                 android:src="@drawable/main_fire"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/iv_rotate_animation"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="2dp"
-                android:src="@drawable/anim_furmace_main_heating" />
+                android:src="@drawable/anim_furmace_main_heating"
+                android:visibility="invisible" />
 
             <LinearLayout
                 android:id="@+id/llt_circle"
@@ -126,6 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:visibility="invisible"
                     android:drawableLeft="@drawable/mode_icon_bath"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
@@ -150,7 +151,7 @@
                         android:id="@+id/tv_temperature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="35"
+                        android:text="--"
                         android:textColor="@color/title_color"
                         android:textSize="65dp" />
 
@@ -197,6 +198,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/llt_function"
+            android:visibility="invisible"
             android:layout_alignLeft="@+id/llt_function"
             android:layout_alignTop="@+id/llt_function" >
 
@@ -261,6 +263,7 @@
                 android:gravity="center"
                 android:onClick="onClick"
                 android:padding="0dp"
+                android:enabled="false"
                 android:text="@string/setting"
                 android:textColor="@color/an_hui" />
 
@@ -311,7 +314,7 @@
                     android:layout_marginLeft="10dp"
                     android:background="@color/transparent"
                     android:minHeight="20dp"
-                    android:text="@string/standby"
+                    android:text="@string/offline"
                     android:textColor="@color/appointment_text_color"
                     android:textSize="15dp" />
             </LinearLayout>
@@ -353,8 +356,8 @@
                         android:shadowColor="#87420d"
                         android:shadowDx="2"
                         android:shadowDy="2"
+                        android:text="--"
                         android:shadowRadius="2"
-                        android:text="23"
                         android:textColor="#FFf46310"
                         android:textSize="20dp" />
 

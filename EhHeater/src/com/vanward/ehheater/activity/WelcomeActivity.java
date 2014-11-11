@@ -12,14 +12,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.DummySendBindingReqActivity;
 import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
@@ -338,13 +341,13 @@ public class WelcomeActivity extends GeneratedActivity {
 		// 已登录且有当前设备且当前设备有did和passcode, 最健康的状态
 		// return STATE_NORMAL;
 
-		if (getCurrentDevice().getBinded() == 0
-				&& !TextUtils.isEmpty(getCurrentDevice().getPasscode()) 
-				&& !TextUtils.isEmpty(getCurrentDevice().getDid()) ) {
-			// 发现当前设备没有被绑定至用户账号, 执行绑定
-			flowHandler.sendEmptyMessage(STATE_INVOKE_BINDING_ACTIVITY);
-			return;
-		}
+//		if (getCurrentDevice().getBinded() == 0
+//				&& !TextUtils.isEmpty(getCurrentDevice().getPasscode()) 
+//				&& !TextUtils.isEmpty(getCurrentDevice().getDid()) ) {
+//			// 发现当前设备没有被绑定至用户账号, 执行绑定
+//			flowHandler.sendEmptyMessage(STATE_INVOKE_BINDING_ACTIVITY);
+//			return;
+//		}
 
 		flowHandler.sendEmptyMessage(STATE_NORMAL);
 		return;
@@ -474,9 +477,15 @@ public class WelcomeActivity extends GeneratedActivity {
 					startActivity(new Intent(getBaseContext(), GasMainActivity.class));
 					finish();
 					break;
+				case EH_FURNACE:
+					startActivity(new Intent(getBaseContext(), FurnaceMainActivity.class));
+					finish();
+					break;
 					
 				default:
 					// 无法识别当前选择的设备, 请进入app删除此设备并选择其他设备
+					startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
+					Toast.makeText(WelcomeActivity.this, "无法识别设备", Toast.LENGTH_LONG).show();
 					break;
 				}
 				break;
