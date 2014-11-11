@@ -14,7 +14,7 @@ public class ChangeStuteView {
 		View view = LinearLayout.inflate(parent.getContext(),
 				R.layout.comment_statue_layout, null);
 		TextView textView = (TextView) view.findViewById(R.id.min);
-		textView.setText(min + "min");
+		textView.setText(min + "mins");
 		parent.addView(view);
 	}
 
@@ -25,7 +25,7 @@ public class ChangeStuteView {
 		TextView text = (TextView) view.findViewById(R.id.text);
 		TextView min = (TextView) view.findViewById(R.id.min);
 		text.setText("加热时间");
-		min.setText("00:00-06:00");
+		min.setText("00:00-06:00am");
 		parent.addView(view);
 	}
 
@@ -35,8 +35,8 @@ public class ChangeStuteView {
 				R.layout.comment_statue_layout, null);
 		TextView text = (TextView) view.findViewById(R.id.text);
 		TextView min = (TextView) view.findViewById(R.id.min);
-		text.setText("加热时间");
-		min.setText("06:00-09:00");
+		text.setText("加热时段");
+		min.setText("06:00-09:00am");
 		parent.addView(view);
 	}
 
@@ -90,7 +90,7 @@ public class ChangeStuteView {
 		View view = LinearLayout.inflate(parent.getContext(),
 				R.layout.morning_wash_statue_layout, parent);
 		TextView time = (TextView) view.findViewById(R.id.time);
-		time.setText("06:00-09:00");
+		time.setText("06:00-09:00am");
 	}
 
 }

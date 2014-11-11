@@ -83,6 +83,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		findViewById();
 		setListener();
 		init();
+		AppointmentModel.getInstance(this).setDays(null);
+		setData();
 	}
 
 	private void findViewById() {
@@ -115,6 +117,27 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		});
 		switch1.setOnClickListener(this);
 		switch1.setTag(1);
+	}
+
+	int id = -1;
+
+	public void setData() {
+		int hour = getIntent().getIntExtra("hour", 0);
+		String weekstring = getIntent().getStringExtra("week");
+		int min = getIntent().getIntExtra("min", 0);
+		int power = getIntent().getIntExtra("power", 0);
+		int tem = getIntent().getIntExtra("tem", 0);
+		id = getIntent().getIntExtra("id", -1);
+		select_week.setText(weekstring);
+
+		if (id == -1) {
+			return;
+		}
+		wheelView1.setCurrentItem(hour);
+		wheelView2.setCurrentItem(min);
+		seekBar1.setProgress(tem - 35);
+		((RadioButton) radioGroup.getChildAt(power - 1)).setChecked(true);
+
 	}
 
 	private void init() {
@@ -296,8 +319,13 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	protected void onResume() {
+		super.onResume();
 		weektext = "";
 		boolean isallcheck = true;
+		if (id!=-1) {
+			id=-1;
+			return;
+		}
 		if (AppointmentModel.getInstance(this).getDays() != null) {
 			for (int i = 0; i < AppointmentModel.getInstance(this).getDays().length; i++) {
 				if (AppointmentModel.getInstance(this).getDays()[i] == 1) {
@@ -314,8 +342,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		} else {
 			select_week.setText("永不");
 		}
-
-		super.onResume();
+	
+	
 	}
 
 	@Override
@@ -329,10 +357,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 		case R.id.RelativeLayout04:
 			System.out.println("dasdas");
-			// Intent intent = new Intent();
-			// intent.setClass(AppointmentTimeActivity.this,
-			// AppointmentDaysActivity.class);
-			// startActivity(intent);
+			Intent intent = new Intent();
+			intent.setClass(AppointmentTimeActivity.this,
+					AppointmentDaysActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.switch1:
 
@@ -352,6 +380,13 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			break;
 
 		case R.id.ivTitleBtnRigh:
+
+			if (id != -1) {
+				Appointment appointMent = new Appointment();
+				appointMent.setId(id);
+				new BaseDao(this).getDb().delete(appointMent);
+			}
+
 			String hour = ((AbstractWheelTextAdapter) wheelView1
 					.getViewAdapter()).getItemText(wheelView1.getCurrentItem())
 					.toString();
@@ -371,9 +406,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			if (date.getHours() > Integer.parseInt(hour)) {
 				Toast.makeText(this, "预约时间不能早于当前时间", Toast.LENGTH_SHORT).show();
 				return;
-			}else if (date.getHours() == Integer.parseInt(hour)&&date.getMinutes() > Integer.parseInt(minute))  {
+			} else if (date.getHours() == Integer.parseInt(hour)
+					&& date.getMinutes() > Integer.parseInt(minute)) {
 				Toast.makeText(this, "预约时间不能早于当前时间", Toast.LENGTH_SHORT).show();
-		       return;
+				return;
 			}
 			SendMsgModel.sentAppolitionment(Integer.parseInt(hour),
 					Integer.parseInt(minute), peoplenum);

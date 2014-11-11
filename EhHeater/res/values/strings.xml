@@ -12,7 +12,7 @@
     <string name="setting_new_device">配置热水器</string>
     <string name="msg_empty_account">账号还没填写</string>
     <string name="msg_empty_password">密码还没填写</string>
-    <string name="hint_input_phone_number">请输入您的手机号</string>
+    <string name="hint_input_phone_number">用户名</string>
     <string name="show_password">显示密码</string>
     <string name="intelligence">智能</string>
     <string name="morning_wash">用水时段</string>
@@ -20,9 +20,9 @@
     <string name="information">信息</string>
     <string name="last_step">上一步</string>
     <string name="next_step">下一步</string>
-    <string name="one_person">1个</string>
-    <string name="two_person">2个</string>
-    <string name="three_person">3个</string>
+    <string name="one_person">1人</string>
+    <string name="two_person">2人</string>
+    <string name="three_person">3人</string>
     <string name="msg_fill_all">请填写完整</string>
     <string name="remind_setting">提醒设置</string>
     <string name="silence_remind">静默提醒</string>
@@ -41,7 +41,7 @@
     <string name="number">分人洗</string>
     <string name="power">功率</string>
     <string name="current_power">当前功率</string>
-    <string name="confirm">确定</string>
+    <string name="confirm">确认</string>
     <string name="cancel">取消</string>
     <string name="morning_wash_time">晨浴时间</string>
     <string name="morning_wash_number">晨浴人数</string>
@@ -79,7 +79,7 @@
     <string name="regist">注册用户</string>
     <string name="new_device_tip">如果您购买了新设备，请进行设备配置</string>
     <string name="set_new_device">配置新设备</string>
-    <string name="input_phone">请输入您的手机号</string>
+    <string name="input_phone">用户名</string>
     <string name="regist_tip">注册账号将于设备绑定，绑定后即可远程操控设备</string>
     <string name="set_device_tip2">请站着热水器旁，保证热水器的<font color="#ff0000">电源</font>已经连接</string>
     <string name="set_device_tip3">请确保热水器与智能移动终端在同一无线局域网下进行连接</string>
@@ -90,10 +90,10 @@
     <string name="set_fail_tip2">1.热水器是否正常运行;\n2.无线局域网名称和密码是否修改过,如是,则需删除热水器重新添加。</string>
     <string name="retry">重试</string>
     <string name="manually_connect">手动连接</string>
-    <string name="account_manager">账户管理</string>
+    <string name="account_manager">账号管理</string>
     <string name="change_device">切换热水器</string>
-    <string name="device_manager">热水器管理</string>
-    <string name="add_heater">添加热水器</string>
+    <string name="device_manager">设备管理</string>
+    <string name="add_heater">添加设备</string>
     <string name="tip_setting">提醒设置</string>
     <string name="use_help">使用帮助</string>
     <string name="help">帮助</string>

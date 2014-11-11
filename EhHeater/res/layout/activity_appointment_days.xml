@@ -4,7 +4,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/home_bg"
     android:orientation="vertical" >
-
+ <include
+        android:id="@+id/top_layout"
+        layout="@layout/main_title"
+        android:focusable="true" />
     <CheckBox
         android:id="@+id/cb_Sunday"
         android:layout_width="fill_parent"

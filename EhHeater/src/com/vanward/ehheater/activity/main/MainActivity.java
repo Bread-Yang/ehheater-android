@@ -178,27 +178,27 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		canupdateView = true;
-		String tempname = modeTv.getText().toString();
-
-		if (tempname.equals("夜电模式") || tempname.equals("晨浴模式")
-				|| tempname.equals("智能模式") || tempname.equals("自定义模式")) {
-			return;
-		}
-		boolean flag = false;
-		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
-				CustomSetVo.class);
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
-				if (tempname.equals(list.get(i).getName())) {
-					flag = true;
-				}
-			}
-			if (!flag) {
-				modeTv.setText("智能模式");
-			}
-		} else {
-			modeTv.setText("智能模式");
-		}
+//		String tempname = modeTv.getText().toString();
+//
+//		if (tempname.equals("夜电模式") || tempname.equals("晨浴模式")
+//				|| tempname.equals("智能模式") || tempname.equals("自定义模式")) {
+//			return;
+//		}
+//		boolean flag = false;
+//		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
+//				CustomSetVo.class);
+//		if (list != null && list.size() > 0) {
+//			for (int i = 0; i < list.size(); i++) {
+//				if (tempname.equals(list.get(i).getName())) {
+//					flag = true;
+//				}
+//			}
+//			if (!flag) {
+//				modeTv.setText("智能模式");
+//			}
+//		} else {
+//			modeTv.setText("智能模式");
+//		}
 		// 自动切换到智能模式
 		// modeTv.post(new Runnable() {
 		// @Override
@@ -340,6 +340,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
 
 			if (ison) {
+				
 				DeviceOffUtil.instance(this)
 						.nextButtonCall(new NextButtonCall() {
 							@Override
@@ -395,7 +396,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		circularView.setOn(true);
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
-		powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
 		if (i == 0 || i == -1) {
@@ -411,7 +411,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		circularView.setOn(false);
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
-		powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
 		btn_power.setSelected(true);
 		int i = new EhState(data).getRemainingHeatingTime();
@@ -429,7 +428,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		circularView.setOn(false);
 		setAppointmentButtonAble(false);
 		ChangeStuteView.swichNight(stuteParent);
-		powerTv.setText(3 + "kw");
 		int i = new EhState(data).getRemainingHeatingTime();
 		if (i == 0 || i == -1) {
 			ChangeStuteView.swichNight(stuteParent);
@@ -501,7 +499,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 								MainActivity.this).getPower();
 						System.out.println("0x00: " + (short) (0x00 + i));
 						SendMsgModel.setPower(i);
-						powerTv.setText(i + "kw");
 						PowerSettingDialogUtil.instance(MainActivity.this)
 								.dissmiss();
 					}
@@ -521,7 +518,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		setAppointmentButtonAble(false);
 		modeTv.setText("晨浴模式");
 		ChangeStuteView.swichMorningWash(stuteParent);
-		powerTv.setText(3 + "kw");
 		int i = new EhState(data).getRemainingHeatingTime();
 		System.out.println("测试晨浴i: " + i);
 		if (i == 0) {
@@ -585,19 +581,21 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
-				// circularView.setOn(false);
+			    circularView.setOn(false);
 				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
+				rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 				findViewById(R.id.pattern).setEnabled(false);
 				findViewById(R.id.power).setEnabled(false);
 				ChangeStuteView.swichDeviceOff(stuteParent);
 				ison = false;
 			} else {
-				// rightButton.setVisibility(View.VISIBLE);
+				// rightButton.setVisibility(View.VISIBLE);F
 				// openView.setVisibility(View.GONE);
 				findViewById(R.id.pattern).setEnabled(true);
 				findViewById(R.id.power).setEnabled(true);
+				rightButton.setBackgroundResource(R.drawable.icon_shut_able);
 
 				// circularView.setOn(true);
 				ison = true;
@@ -649,7 +647,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	public void setLeaveWater(byte[] b) {
 		System.out.println("当前水量："
 				+ new EhState(b).getRemainingHotWaterAmount());
-		leavewater.setText(new EhState(b).getRemainingHotWaterAmount() + "L");
+		leavewater.setText(new EhState(b).getRemainingHotWaterAmount() + "%");
 	}
 
 	public void setPower(byte[] b) {
@@ -690,11 +688,20 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			ChangeStuteView.swichdisconnect(stuteParent);
+			dealDisConnect();
 			isConnect = false;
 			DialogUtil.instance().showReconnectDialog(this);
 		}
 	}
 
+	public void dealDisConnect(){
+		tempter.setText("--");
+		modeTv.setText("----");
+		leavewater.setText("--");
+		powerTv.setText("--");
+		target_tem.setText("--");
+	}
+	
 	boolean Insetting = false;
 
 	@Override

@@ -82,7 +82,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 				return;
 			}
 			if (isInputValid()) {
-				DialogUtil.instance().showLoadingDialog(this, "");
+				DialogUtil.instance().showLoadingDialog(this, "正在验证，请稍后...");
 				new Timer().schedule(new TimerTask() {
 					@Override
 					public void run() {
@@ -123,6 +123,9 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
 			finish();
 		} else {
+			if (!isChangingConfigurations()) {
+				
+			}
 			Toast.makeText(getBaseContext(), "该号码已注册", 1000).show();
 		}
 
@@ -133,21 +136,22 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 		boolean phoneNotEmpty = !TextUtils.isEmpty(mEtPhone.getText()
 				.toString());
 		boolean lengthGt6 = mEtPsw.getText().toString().length() >= 6;
+		boolean lengthGt18 = mEtPsw.getText().toString().length() <= 18;
 		boolean pswMatch = mEtPsw.getText().toString()
 				.equals(mEtPsw2.getText().toString());
 
 		if (!phoneNotEmpty) {
-			Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
+			Toast.makeText(getBaseContext(), "请输入账号和密码", 1000).show();
 			return false;
 		}
 
-		if (!lengthGt6) {
-			Toast.makeText(getBaseContext(), "密码最少6个字符", 1000).show();
+		if (!lengthGt6||!lengthGt18) {
+			Toast.makeText(getBaseContext(), "密码长度需为6-18位", 1000).show();
 			return false;
 		}
 
 		if (!pswMatch) {
-			Toast.makeText(getBaseContext(), "密码不匹配", 1000).show();
+			Toast.makeText(getBaseContext(), "请输入确认密码", 1000).show();
 			return false;
 		}
 

@@ -1,15 +1,20 @@
 package com.vanward.ehheater.activity.appointment;
 
+import net.tsz.afinal.FinalActivity;
+import net.tsz.afinal.annotation.view.ViewInject;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 
-public class AppointmentDaysActivity extends EhHeaterBaseActivity implements
+public class AppointmentDaysActivity extends Activity implements
 		OnClickListener {
 
 	private int[] days;
@@ -17,14 +22,19 @@ public class AppointmentDaysActivity extends EhHeaterBaseActivity implements
 	private CheckBox cb_Monday, cb_Tuesday, cb_Wednesday, cb_Thursday,
 			cb_Friday, cb_Saturday, cb_Sunday;
 
+	@ViewInject(id = R.id.ivTitleName, click = "onClick")
+	TextView ivTitleName;
+	@ViewInject(id = R.id.ivTitleBtnLeft, click = "onClick")
+	Button ivTitleBtnLeft;
+	@ViewInject(id = R.id.ivTitleBtnRigh, click = "onClick")
+	Button ivTitleBtnRigh;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setCenterView(R.layout.activity_appointment_days);
-		setTopText(R.string.repeate);
-		setRightButton(View.INVISIBLE);
+		setContentView(R.layout.activity_appointment_days);
+		FinalActivity.initInjectedView(this);
 		findViewById();
-		setListener();
 		init();
 	}
 
@@ -36,19 +46,21 @@ public class AppointmentDaysActivity extends EhHeaterBaseActivity implements
 		cb_Friday = (CheckBox) findViewById(R.id.cb_Friday);
 		cb_Saturday = (CheckBox) findViewById(R.id.cb_Saturday);
 		cb_Sunday = (CheckBox) findViewById(R.id.cb_Sunday);
-	}
-
-	private void setListener() {
-		btn_left.setOnClickListener(new OnClickListener() {
-
+		ivTitleName.setText("重复");
+		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
+		ivTitleBtnLeft.setOnClickListener(new  OnClickListener() {
+			
 			@Override
-			public void onClick(View v) {
-				AppointmentModel.getInstance(AppointmentDaysActivity.this)
-						.setDays(days);
-				finish();
+			public void onClick(View arg0) {
+				AppointmentModel.getInstance(AppointmentDaysActivity.this).setDays(
+						days);
+				finish();				
 			}
 		});
+		ivTitleBtnRigh.setBackgroundResource(R.drawable.icon_add);
+		ivTitleBtnRigh.setVisibility(View.GONE);
 	}
+
 
 	private void init() {
 		days = AppointmentModel.getInstance(this).getDays();
@@ -104,6 +116,10 @@ public class AppointmentDaysActivity extends EhHeaterBaseActivity implements
 		case R.id.cb_Sunday:
 			days[6] = isCheck;
 			break;
+		case R.id.ivTitleBtnLeft:
+			
+			break;
+
 		}
 	}
 

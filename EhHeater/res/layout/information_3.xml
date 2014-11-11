@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="0%"
+            android:text="0"
             android:textColor="#FFf86e00"
             android:textSize="30sp" />
     </RelativeLayout>

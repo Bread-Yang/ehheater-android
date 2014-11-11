@@ -31,7 +31,8 @@
         <RadioGroup
             android:id="@+id/readiogroup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content" 
+            android:layout_marginLeft="10dp">
 
             <RadioButton
                 android:layout_width="wrap_content"
@@ -85,7 +86,8 @@
             android:background="@null"
             android:text="取消"
             android:textColor="@color/white"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_confirm"

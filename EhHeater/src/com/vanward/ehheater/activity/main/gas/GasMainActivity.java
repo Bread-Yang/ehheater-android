@@ -179,7 +179,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 			} else {
 				// TODO 设备不在线
-				stute.setText("设备不在线");
+				dealDisConnect();
+				stute.setText("未连接");
 			}
 
 			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
@@ -187,6 +188,16 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 		}
 
+	}
+
+	public void dealDisConnect() {
+		tempter.setText("--");
+		modeTv.setText("----");
+		leavewater.setText("--");
+		// powerTv.setText("--");
+		target_tem.setText("--");
+		settemper.setText("--");
+		sumwater.setText(" ");
 	}
 
 	@Override
@@ -242,7 +253,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
-
 		initopenView();
 		updateTitle();
 		mode.setOnLongClickListener(this);
@@ -712,8 +722,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("错误码：" + pResp.getErrorCode());
 		if (pResp.getErrorCode() != 0) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.icon_tip);
-
+			tipsimg.setImageResource(R.drawable.main_error);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override

@@ -29,7 +29,8 @@
             android:drawableLeft="@drawable/menu_icon_reshui"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:text="@string/change_device" />
+            android:text="@string/change_device"
+            android:textSize="18sp" />
 
         <CheckBox
             android:id="@+id/device_switch_btn"
@@ -47,8 +48,8 @@
         android:id="@+id/device_switch_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" 
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <ImageView
             android:layout_width="fill_parent"
@@ -58,8 +59,8 @@
         <ListView
             android:id="@+id/device_listview"
             android:layout_width="match_parent"
-            android:layout_height="100dp" 
-            android:dividerHeight="1dp">
+            android:layout_height="100dp"
+            android:dividerHeight="1dp" >
         </ListView>
     </LinearLayout>
 
@@ -85,7 +86,8 @@
             android:drawableLeft="@drawable/menu_icon_user"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:text="@string/account_manager" />
+            android:text="@string/account_manager"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/menu_user_manager_btn"
@@ -120,7 +122,8 @@
             android:drawableLeft="@drawable/menu_icon_setting"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:text="@string/device_manager" />
+            android:text="@string/device_manager"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/menu_device_manager_btn"
@@ -157,7 +160,8 @@
             android:drawableLeft="@drawable/menu_icon_teminging"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:text="@string/tip_setting" />
+            android:text="@string/tip_setting"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/menu_tip_btn"
@@ -194,7 +198,8 @@
             android:drawableLeft="@drawable/men_icon_help"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:text="@string/help" />
+            android:text="@string/help"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/menu_help_btn"
@@ -229,7 +234,8 @@
             android:drawableLeft="@drawable/menu_icon_about"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-            android:text="@string/about" />
+            android:text="@string/about"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/menu_about_btn"

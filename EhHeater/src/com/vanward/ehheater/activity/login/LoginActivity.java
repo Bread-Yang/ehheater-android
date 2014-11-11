@@ -26,6 +26,7 @@ import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.XPGConnShortCuts;
@@ -59,7 +60,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		btn_new_device = (Button) findViewById(R.id.new_device_btn);
 		btn_login = (Button) findViewById(R.id.login_btn);
 		et_user = (EditText) findViewById(R.id.login_user_et);
-
+		et_user.setText(AccountService.getUserId(this));
 		et_pwd = (EditText) findViewById(R.id.login_pwd_et);
 
 		mTvReg = (TextView) findViewById(R.id.ll_tv_register);
@@ -95,12 +96,17 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			break;
 		case R.id.login_btn:
 
+			if (!NetworkStatusUtil.isConnected(this)) {
+				Toast.makeText(this, "无网络连接", Toast.LENGTH_LONG).show();
+				return;
+			}
+			
 			if (et_user.getText().length() <= 0
 					|| et_pwd.getText().length() <= 0) {
 				Toast.makeText(this, "请输入手机号/密码", Toast.LENGTH_LONG).show();
 				return;
 			}
-			DialogUtil.instance().showLoadingDialog(this, "");
+			DialogUtil.instance().showLoadingDialog(this, "正在登录，请稍后...");
 			loginCloudResponseTriggered = false;
 			mLoginTimeoutTimer = new Timer();
 			mLoginTimeoutTimer.schedule(new TimerTask() {
@@ -139,7 +145,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.d("emmm", "login resumed");
-		et_user.setText(AccountService.getUserId(this));
+		
 
 		XPGConnectClient.AddActivity(this);
 	}

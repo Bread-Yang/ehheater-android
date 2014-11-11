@@ -95,7 +95,7 @@ public class WashNumDialogUtil {
 						.setChecked(true);
 			} catch (Exception e) {
 				// TODO: handle exception
-				
+
 			}
 		}
 

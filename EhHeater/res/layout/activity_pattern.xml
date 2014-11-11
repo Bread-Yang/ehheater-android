@@ -102,14 +102,6 @@
             android:visibility="gone"
             android:textSize="18sp" />
 
-        <View
-            android:id="@+id/view2"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_alignBottom="@+id/textView2"
-            android:layout_alignParentLeft="true"
-            android:background="#d4d4d4" />
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >

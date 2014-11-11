@@ -214,7 +214,7 @@ public class SwipeListView extends ListView {
 					mCurrentItemView.scrollTo((int) (-dx), 0);
 				}
 
-				return true;
+				return false;
 			} else {
 				if (mIsShown) {
 					/**
@@ -256,13 +256,13 @@ public class SwipeListView extends ListView {
 					hiddenRight(mCurrentItemView);
 				}
 
-				return true;
+				return false;
 			}
 
 			break;
 		}
 
-		return super.onTouchEvent(ev);
+		return false;
 	}
 
 	private void clearPressedState() {

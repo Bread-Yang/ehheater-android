@@ -39,7 +39,7 @@
                 android:background="@null"
                 android:gravity="center_vertical"
                 android:inputType="phone" 
-                android:hint="手机号码"
+                android:hint="请输入用户名"
                 android:textSize="16dp"
                 />
 

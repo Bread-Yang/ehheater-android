@@ -12,10 +12,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -59,13 +62,13 @@ public class AppointmentListActivity extends Activity implements
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(AppointmentListActivity.this, AppointmentTimeActivity.class);
+				Intent intent = new Intent(AppointmentListActivity.this,
+						AppointmentTimeActivity.class);
 				startActivityForResult(intent, 1);
 			}
 		});
 		lv_listview = (SwipeListView) findViewById(R.id.lv_listview);
 		adapter = new AppointmentListAdapter();
-
 		lv_listview.setAdapter(adapter);
 		ivTitleName.setText("预约");
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
@@ -182,11 +185,11 @@ public class AppointmentListActivity extends Activity implements
 						.findViewById(R.id.tv_temperature);
 				holder.tv_days = (TextView) convertView
 						.findViewById(R.id.tv_days);
-				holder.tb_switch = (ImageButton) convertView
+				holder.tb_switch = (ImageView) convertView
 						.findViewById(R.id.switch1);
 				holder.btn_delete = (Button) convertView
 						.findViewById(R.id.btn_delete);
-
+				holder.parent = convertView.findViewById(R.id.parent);
 				holder.tv_power = (TextView) convertView
 						.findViewById(R.id.tv_number);
 
@@ -197,10 +200,12 @@ public class AppointmentListActivity extends Activity implements
 				holder = (ViewHolder) convertView.getTag();
 			}
 			final Appointment appointment = adapter_date.get(position);
-//			holder.tv_time.setText(appointment.getHour() + ":" + appointment.getMinute());
-			
-			holder.tv_time.setText(String.format("%02d:%02d", appointment.getHour(), appointment.getMinute()));
-			
+			// holder.tv_time.setText(appointment.getHour() + ":" +
+			// appointment.getMinute());
+
+			holder.tv_time.setText(String.format("%02d:%02d",
+					appointment.getHour(), appointment.getMinute()));
+
 			holder.tv_temperature.setText(appointment.getTemper() + "℃");
 			holder.tv_power.setText(appointment.getPower() + "kw");
 			holder.tv_days.setText(appointment.getDates());
@@ -240,6 +245,26 @@ public class AppointmentListActivity extends Activity implements
 					reflashList();
 				}
 			});
+			holder.parent.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					System.out.println("onclick");
+					Intent intent = new Intent();
+					intent.putExtra("hour", adapter_date.get(position)
+							.getHour());
+					intent.putExtra("min", adapter_date.get(position)
+							.getMinute());
+					intent.putExtra("tem", adapter_date.get(position)
+							.getTemper());
+					intent.putExtra("power", adapter_date.get(position)
+							.getPower());
+					intent.putExtra("id", adapter_date.get(position).getId());
+					intent.putExtra("week", appointment.getDates());
+					intent.setClass(AppointmentListActivity.this,
+							AppointmentTimeActivity.class);
+					AppointmentListActivity.this.startActivity(intent);
+				}
+			});
 
 			return convertView;
 		}
@@ -250,9 +275,11 @@ public class AppointmentListActivity extends Activity implements
 			TextView tv_days;
 			TextView tv_power;
 			TextView name;
-			ImageButton tb_switch;
+			ImageView tb_switch;
 			Button btn_delete;
 			View rltfont, rltback;
+
+			View parent;
 
 		}
 	}
@@ -268,4 +295,5 @@ public class AppointmentListActivity extends Activity implements
 			break;
 		}
 	}
+
 }

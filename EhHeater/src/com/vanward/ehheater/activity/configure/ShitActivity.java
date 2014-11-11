@@ -1,6 +1,7 @@
 package com.vanward.ehheater.activity.configure;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.app.Dialog;
@@ -33,6 +34,7 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
@@ -55,9 +57,9 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	private Map<Integer, View> mMapStepViews = new HashMap<Integer, View>();
 	static int curindex = 0;
-	
+
 	HeaterType mType = HeaterType.Eh;
-	
+
 	private void initHeaterType() {
 		String typeStr = getIntent().getStringExtra("type");
 		if (typeStr.equals("gas")) {
@@ -115,7 +117,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		super.onResume();
 		applyCurWifiSsid();
 
-		if (curindex==3) {
+		if (curindex == 3 && !dialog_easylink.isShowing()) {
 			mRlStepContainer.removeAllViews();
 			mRlStepContainer.addView(getStepView(1));
 		}
@@ -177,54 +179,59 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		switch (whichStep) {
 
 		case 1:
-			v = getLayoutInflater().inflate(R.layout.activity_configure_step1, mRlStepContainer, false);
+			v = getLayoutInflater().inflate(R.layout.activity_configure_step1,
+					mRlStepContainer, false);
 			TextView s1tip = (TextView) v.findViewById(R.id.acs1_tv_tip);
 			ImageView img = (ImageView) v.findViewById(R.id.img);
-			
+
 			switch (mType) {
 			case Eh:
 				img.setImageResource(R.drawable.setting_img1);
 				break;
 			case ST:
-				img.setImageResource(R.drawable.setting_img5);
+				img.setImageResource(R.drawable.device_img1_1);
 				break;
 			default:
 				break;
 			}
-			
+
 			TextStyleUtil.setColorStringInTextView(s1tip,
 					Color.parseColor("#ff5f00"), new String[] { "电源" });
-			
+
 			break;
 
 		case 2:
-			v = getLayoutInflater().inflate(R.layout.activity_configure_step2, mRlStepContainer, false);
+			v = getLayoutInflater().inflate(R.layout.activity_configure_step2,
+					mRlStepContainer, false);
 			mTvWifiSsid = (TextView) v.findViewById(R.id.acs2_tv_ssid);
 			mEtWifiPsw = (EditText) v.findViewById(R.id.acs2_et_psw);
 
 			applyCurWifiSsid();
 			break;
 		case 3:
-			v = getLayoutInflater().inflate(R.layout.activity_configure_step3, mRlStepContainer, false);
+			v = getLayoutInflater().inflate(R.layout.activity_configure_step3,
+					mRlStepContainer, false);
 			TextView s3tip = (TextView) v.findViewById(R.id.acs3_tv_tip);
 			ImageView img3 = (ImageView) v.findViewById(R.id.img);
 
-			
 			switch (mType) {
 			case Eh:
 				img3.setImageResource(R.drawable.setting_img4);
 				s3tip.setText(R.string.setup_step3_eh);
-				TextStyleUtil.setColorStringInTextView(s3tip, Color.parseColor("#ff5f00"), new String[] { "3秒", "响一声" });
+				TextStyleUtil.setColorStringInTextView(s3tip,
+						Color.parseColor("#ff5f00"),
+						new String[] { "3秒", "响一声" });
 				break;
 			case ST:
 				img3.setImageResource(R.drawable.setting_img5);
 				s3tip.setText(R.string.setup_step3_st);
-				TextStyleUtil.setColorStringInTextView(s3tip, Color.parseColor("#ff5f00"), new String[] { "一下", "听到蜂鸣" });
+				TextStyleUtil.setColorStringInTextView(s3tip,
+						Color.parseColor("#ff5f00"), new String[] { "一下",
+								"听到蜂鸣" });
 				break;
 			default:
 				break;
 			}
-			
 
 			break;
 
@@ -348,8 +355,20 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-		hser.addNewHeater(hinfo);
-		
+
+		HeaterInfoDao hdao = new HeaterInfoDao(this);
+		List<HeaterInfo> list = hdao.getAll();
+		boolean flag = false;
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getMac().equals(hinfo.getMac())) {
+				flag = true;
+			}
+		}
+		if (flag) {
+			Toast.makeText(this, "此设备已存在", 1000).show();
+		} else {
+			hser.addNewHeater(hinfo);
+		}
 		Log.d("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
 				+ "-" + hinfo.getPasscode());
 
@@ -366,43 +385,44 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
 				killerIntent);
 
-//		Intent intent = new Intent();
-//		intent.setClass(getBaseContext(), WelcomeActivity.class);
-//		intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
-//		startActivity(intent);
-		
+		// Intent intent = new Intent();
+		// intent.setClass(getBaseContext(), WelcomeActivity.class);
+		// intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
+		// startActivity(intent);
+
 		Intent intent = null;
 
 		switch (hser.getHeaterType(hinfo)) {
-		
+
 		case Eh:
-			
+
 			intent = new Intent(getBaseContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			
+
 			XPGConnectClient.RemoveActivity(this);
 			finish();
-			
+
 			startActivity(intent);
 			break;
-			
+
 		case ST:
-			
+
 			intent = new Intent(getBaseContext(), GasMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			
+
 			XPGConnectClient.RemoveActivity(this);
 			finish();
-			
+
 			startActivity(intent);
 			break;
-			
+
 		default:
-			Toast.makeText(getBaseContext(), "无法识别该设备", Toast.LENGTH_LONG).show();
+			Toast.makeText(getBaseContext(), "无法识别该设备", Toast.LENGTH_LONG)
+					.show();
 			break;
-			
+
 		}
 
 	}

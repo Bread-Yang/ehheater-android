@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/device_error_title"
-            android:textColor="@color/white"
+            android:textColor="#FFfa8701"
             android:textSize="19sp" />
 
         <ImageView

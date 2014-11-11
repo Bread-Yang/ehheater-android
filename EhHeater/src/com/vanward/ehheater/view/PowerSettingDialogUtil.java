@@ -85,6 +85,15 @@ public class PowerSettingDialogUtil {
 					}
 				});
 
+		dialog_power_setting.findViewById(R.id.diss).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						dissmiss();
+
+					}
+				});
+
 		dialog_power_setting.show();
 	}
 }
