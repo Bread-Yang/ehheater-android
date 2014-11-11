@@ -83,7 +83,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/mode_icon_summer"
+            android:drawableLeft="@drawable/setting_icon_xiatian"
+            android:paddingLeft="10dp"
             android:drawablePadding="13dp"
             android:gravity="center_vertical"
             android:text="@string/summer_mode" />

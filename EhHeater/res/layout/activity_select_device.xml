@@ -112,7 +112,7 @@
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/device_line_img2" />
+            android:src="@drawable/device_line_img3" />
 
         <TextView
             android:id="@+id/tv_furnace"
