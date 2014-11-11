@@ -701,6 +701,24 @@ public class XpgGeneratedContext {
     return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_GasWaterHeaterStatusResp_t_int__void(cPtr, false);
   }
 
+  public void setOnDERYStatusResp(SWIGTYPE_p_f_size_t_p_DERYStatusResp_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYStatusResp_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYStatusResp_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYStatusResp_t_int__void getOnDERYStatusResp() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYStatusResp_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYStatusResp_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYStatusResp(SWIGTYPE_p_f_size_t_p_DERYStatusResp_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYStatusResp_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYStatusResp_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYStatusResp_t_int__void getOnInternalDERYStatusResp() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYStatusResp_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYStatusResp_t_int__void(cPtr, false);
+  }
+
   public void setOnHeartbeatResp(SWIGTYPE_p_f_size_t_p_HeartbeatResp_t_int__void value) {
     generatedJNI.XpgGeneratedContext_onHeartbeatResp_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_HeartbeatResp_t_int__void.getCPtr(value));
   }
@@ -807,6 +825,24 @@ public class XpgGeneratedContext {
   public SWIGTYPE_p_f_size_t_p_SettingOrderReq_t_int__void getOnInternalSettingOrderReq() {
     long cPtr = generatedJNI.XpgGeneratedContext_onInternalSettingOrderReq_get(swigCPtr, this);
     return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_SettingOrderReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnCancelBookReq(SWIGTYPE_p_f_size_t_p_CancelBookReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onCancelBookReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_CancelBookReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_CancelBookReq_t_int__void getOnCancelBookReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onCancelBookReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_CancelBookReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalCancelBookReq(SWIGTYPE_p_f_size_t_p_CancelBookReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalCancelBookReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_CancelBookReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_CancelBookReq_t_int__void getOnInternalCancelBookReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalCancelBookReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_CancelBookReq_t_int__void(cPtr, false);
   }
 
   public void setOnStateReq(SWIGTYPE_p_f_size_t_p_StateReq_t_int__void value) {
@@ -987,6 +1023,186 @@ public class XpgGeneratedContext {
   public SWIGTYPE_p_f_size_t_p_GasWaterHeaterMobileRefreshReq_t_int__void getOnInternalGasWaterHeaterMobileRefreshReq() {
     long cPtr = generatedJNI.XpgGeneratedContext_onInternalGasWaterHeaterMobileRefreshReq_get(swigCPtr, this);
     return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_GasWaterHeaterMobileRefreshReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYOnOrOffReq(SWIGTYPE_p_f_size_t_p_DERYOnOrOffReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYOnOrOffReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYOnOrOffReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYOnOrOffReq_t_int__void getOnDERYOnOrOffReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYOnOrOffReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYOnOrOffReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYOnOrOffReq(SWIGTYPE_p_f_size_t_p_DERYOnOrOffReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYOnOrOffReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYOnOrOffReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYOnOrOffReq_t_int__void getOnInternalDERYOnOrOffReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYOnOrOffReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYOnOrOffReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYSafeLightReq(SWIGTYPE_p_f_size_t_p_DERYSafeLightReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYSafeLightReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYSafeLightReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYSafeLightReq_t_int__void getOnDERYSafeLightReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYSafeLightReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYSafeLightReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYSafeLightReq(SWIGTYPE_p_f_size_t_p_DERYSafeLightReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYSafeLightReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYSafeLightReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYSafeLightReq_t_int__void getOnInternalDERYSafeLightReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYSafeLightReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYSafeLightReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYBathTemReq(SWIGTYPE_p_f_size_t_p_DERYBathTemReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYBathTemReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYBathTemReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYBathTemReq_t_int__void getOnDERYBathTemReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYBathTemReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYBathTemReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYBathTemReq(SWIGTYPE_p_f_size_t_p_DERYBathTemReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYBathTemReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYBathTemReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYBathTemReq_t_int__void getOnInternalDERYBathTemReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYBathTemReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYBathTemReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYHeatingTemReq(SWIGTYPE_p_f_size_t_p_DERYHeatingTemReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYHeatingTemReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYHeatingTemReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYHeatingTemReq_t_int__void getOnDERYHeatingTemReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYHeatingTemReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYHeatingTemReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYHeatingTemReq(SWIGTYPE_p_f_size_t_p_DERYHeatingTemReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYHeatingTemReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYHeatingTemReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYHeatingTemReq_t_int__void getOnInternalDERYHeatingTemReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYHeatingTemReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYHeatingTemReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYResetErrorReq(SWIGTYPE_p_f_size_t_p_DERYResetErrorReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYResetErrorReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYResetErrorReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYResetErrorReq_t_int__void getOnDERYResetErrorReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYResetErrorReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYResetErrorReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYResetErrorReq(SWIGTYPE_p_f_size_t_p_DERYResetErrorReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYResetErrorReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYResetErrorReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYResetErrorReq_t_int__void getOnInternalDERYResetErrorReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYResetErrorReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYResetErrorReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYHeatingModeReq(SWIGTYPE_p_f_size_t_p_DERYHeatingModeReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYHeatingModeReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYHeatingModeReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYHeatingModeReq_t_int__void getOnDERYHeatingModeReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYHeatingModeReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYHeatingModeReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYHeatingModeReq(SWIGTYPE_p_f_size_t_p_DERYHeatingModeReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYHeatingModeReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYHeatingModeReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYHeatingModeReq_t_int__void getOnInternalDERYHeatingModeReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYHeatingModeReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYHeatingModeReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYBathModeReq(SWIGTYPE_p_f_size_t_p_DERYBathModeReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYBathModeReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYBathModeReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYBathModeReq_t_int__void getOnDERYBathModeReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYBathModeReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYBathModeReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYBathModeReq(SWIGTYPE_p_f_size_t_p_DERYBathModeReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYBathModeReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYBathModeReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYBathModeReq_t_int__void getOnInternalDERYBathModeReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYBathModeReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYBathModeReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYSeasonStateReq(SWIGTYPE_p_f_size_t_p_DERYSeasonStateReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYSeasonStateReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYSeasonStateReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYSeasonStateReq_t_int__void getOnDERYSeasonStateReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYSeasonStateReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYSeasonStateReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYSeasonStateReq(SWIGTYPE_p_f_size_t_p_DERYSeasonStateReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYSeasonStateReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYSeasonStateReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYSeasonStateReq_t_int__void getOnInternalDERYSeasonStateReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYSeasonStateReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYSeasonStateReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYHeatingStateReq(SWIGTYPE_p_f_size_t_p_DERYHeatingStateReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYHeatingStateReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYHeatingStateReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYHeatingStateReq_t_int__void getOnDERYHeatingStateReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYHeatingStateReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYHeatingStateReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYHeatingStateReq(SWIGTYPE_p_f_size_t_p_DERYHeatingStateReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYHeatingStateReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYHeatingStateReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYHeatingStateReq_t_int__void getOnInternalDERYHeatingStateReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYHeatingStateReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYHeatingStateReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnDERYRefreshReq(SWIGTYPE_p_f_size_t_p_DERYRefreshReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onDERYRefreshReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYRefreshReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYRefreshReq_t_int__void getOnDERYRefreshReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onDERYRefreshReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYRefreshReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalDERYRefreshReq(SWIGTYPE_p_f_size_t_p_DERYRefreshReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalDERYRefreshReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_DERYRefreshReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_DERYRefreshReq_t_int__void getOnInternalDERYRefreshReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalDERYRefreshReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_DERYRefreshReq_t_int__void(cPtr, false);
   }
 
   public XpgGeneratedContext() {

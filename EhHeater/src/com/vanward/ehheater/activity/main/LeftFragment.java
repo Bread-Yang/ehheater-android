@@ -23,6 +23,8 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
+import com.vanward.ehheater.activity.main.furnace.FurnaceSeasonActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.activity.more.AboutActivity;
 import com.vanward.ehheater.activity.more.AccountManagementActivity;
@@ -40,8 +42,10 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 public class LeftFragment extends LinearLayout implements
 		android.view.View.OnClickListener, OnItemClickListener {
 
-	Button btn_user_manager, btn_device_manager, btn_tip, btn_help, btn_about;
+	Button btn_user_manager, btn_device_manager, btn_tip, btn_help, btn_about,
+			btn_season_mode;
 	View deviceSwitchLayout, deviceSwitchBtn;
+	public TextView tv_season_mode;
 
 	public LeftFragment(Context context) {
 		super(context);
@@ -60,8 +64,15 @@ public class LeftFragment extends LinearLayout implements
 		btn_help = (Button) findViewById(R.id.menu_help_btn);
 		btn_tip = (Button) findViewById(R.id.menu_tip_btn);
 		btn_user_manager = (Button) findViewById(R.id.menu_user_manager_btn);
+		btn_season_mode = (Button) findViewById(R.id.btn_season_mode);
+		tv_season_mode = (TextView) findViewById(R.id.tv_season_mode);
 		deviceSwitchLayout = findViewById(R.id.device_switch_layout);
 		deviceSwitchBtn = findViewById(R.id.device_switch_btn);
+
+		if (getContext() instanceof FurnaceMainActivity) {
+			((FurnaceMainActivity) getContext())
+					.setTv_sliding_menu_season_mode(tv_season_mode);
+		}
 
 		DeviceAdapter deviceAdapter = new DeviceAdapter(getContext(),
 				R.layout.main_left_device_item,
@@ -71,7 +82,8 @@ public class LeftFragment extends LinearLayout implements
 		((ListView) findViewById(R.id.device_listview))
 				.setOnItemClickListener(this);
 		UIUtil.setOnClick(this, btn_about, btn_device_manager, btn_help,
-				btn_tip, btn_user_manager, deviceSwitchLayout, deviceSwitchBtn);
+				btn_tip, btn_user_manager, deviceSwitchLayout, deviceSwitchBtn,
+				btn_season_mode);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -93,11 +105,22 @@ public class LeftFragment extends LinearLayout implements
 		if (view == btn_user_manager) {
 			clazz = AccountManagementActivity.class;
 		}
+		if (view == btn_season_mode) {
+			clazz = FurnaceSeasonActivity.class;
+			tv_season_mode.performClick();
+		}
 
 		if (clazz != null) {
 			Intent intent = new Intent();
 			intent.setClass(getContext(), clazz);
-			getContext().startActivity(intent);
+			if (tv_season_mode.getTag() != null) {
+				intent.putExtra("seasonMode", (Integer) tv_season_mode.getTag());
+			}
+			if (clazz == FurnaceSeasonActivity.class) {
+				((Activity) getContext()).startActivityForResult(intent, 0);
+			} else {
+				getContext().startActivity(intent);
+			}
 		}
 
 		if (view == deviceSwitchBtn) {
@@ -141,7 +164,8 @@ public class LeftFragment extends LinearLayout implements
 			} else {
 				holder1 = (ViewHolder) convertView.getTag();
 			}
-			holder1.devicename.setText(Consts.getHeaterName(objects.get(position)));
+			holder1.devicename.setText(Consts.getHeaterName(objects
+					.get(position)));
 			HeaterInfo heaterInfo = new HeaterInfoService(getContext())
 					.getCurrentSelectedHeater();
 			if (heaterInfo.getMac().equals(objects.get(position).getMac())) {
@@ -180,42 +204,49 @@ public class LeftFragment extends LinearLayout implements
 			System.out.println("heaterInfo.getMac(): " + heaterInfo.getMac());
 			return;
 		} else {
-			
-			
+
 			Activity hostActivity = (Activity) getContext();
 			String userId = AccountService.getUserId(getContext());
 			String userPsw = AccountService.getUserPsw(getContext());
-			
+
 			HeaterInfoService hser = new HeaterInfoService(getContext());
 			HeaterType oriHeaterType = hser.getCurHeaterType();
 			HeaterType newHeaterType = hser.getHeaterType(heaterInfo);
-			
-			hser.setCurrentSelectedHeater(heaterInfo.getMac());	// TODO 这里不应该写这里, 应该卸载连接成功的回调里
-			
-			XPGConnectClient.xpgcDisconnectAsync(Global.connectId); // 连接另一个设备之前, 断开现连接
-			
+
+			hser.setCurrentSelectedHeater(heaterInfo.getMac()); // TODO
+																// 这里不应该写这里,
+																// 应该卸载连接成功的回调里
+
+			XPGConnectClient.xpgcDisconnectAsync(Global.connectId); // 连接另一个设备之前,
+																	// 断开现连接
+
 			if (newHeaterType.equals(oriHeaterType)) {
-				
-				ConnectActivity.connectToDevice(hostActivity, heaterInfo.getMac(), heaterInfo.getPasscode(), userId, userPsw);
-				
+
+				ConnectActivity.connectToDevice(hostActivity,
+						heaterInfo.getMac(), heaterInfo.getPasscode(), userId,
+						userPsw);
+
 			} else {
-				
+
 				switch (newHeaterType) {
 				case Eh:
-					hostActivity.startActivity(new Intent(hostActivity, MainActivity.class));
+					hostActivity.startActivity(new Intent(hostActivity,
+							MainActivity.class));
 					hostActivity.finish();
 					break;
 				case ST:
-					hostActivity.startActivity(new Intent(hostActivity, GasMainActivity.class));
+					hostActivity.startActivity(new Intent(hostActivity,
+							GasMainActivity.class));
 					hostActivity.finish();
 					break;
 				default:
-					Toast.makeText(hostActivity, "无法识别该设备", Toast.LENGTH_LONG).show();
+					Toast.makeText(hostActivity, "无法识别该设备", Toast.LENGTH_LONG)
+							.show();
 					break;
 				}
-				
+
 			}
-			
+
 		}
 
 	}

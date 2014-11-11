@@ -21,6 +21,7 @@ import com.xtremeprog.xpgconnect.generated.ReadWifiConfigResp_t;
 import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
+import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.HeartbeatResp_t;
 
 public interface GeneratedJniListener {
@@ -45,5 +46,6 @@ public interface GeneratedJniListener {
     public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t resp, int nConnId);
     public void OnStateResp(StateResp_t resp, int nConnId);
     public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t resp, int nConnId);
+    public void OnDERYStatusResp(DERYStatusResp_t resp, int nConnId);
     public void OnHeartbeatResp(HeartbeatResp_t resp, int nConnId);
 }

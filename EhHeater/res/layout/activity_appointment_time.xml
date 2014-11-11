@@ -11,7 +11,7 @@
         layout="@layout/main_title"
         android:focusable="true" />
 
-    <LinearLayout
+    <LinearLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"

@@ -41,6 +41,8 @@ public class XPGConnectClient {
 
 	public static native int xpgcInit(byte[] clientId);
 	public static native int xpgcFindDevice();
+	public static native void xpgcStartDiscovery();
+	public static native void xpgcStopDiscovery();
 	public static native int xpgcRegister(String uid, String pwd);
 	public static native int xpgcConnectDevice(String addr, int tcpPort);
 	public static native int xpgcConnectDeviceAsync(String addr, int tcpPort);
@@ -72,10 +74,12 @@ public class XPGConnectClient {
 	public static native int xpgcEnableCtrl(int connId, String szDid, String szPass);
 	public static native int xpgcDisconnectAsync(int connId);
 	public static native void xpgcIoctl(int key, int value);
+	public static native String xpgcIoctlString(int key, String value);
 	public static native int xpgcBroadcast(byte[] data, int port);
 	public static native int xpgcWrite(byte[] data, int connId);
 	public static native int xpgcWriteAsync(byte[] data, int connId);
 	public static native int xpgcReset();
+	public static native int xpgcHTTPpost(String addr);
 
 	private static native long GetEndpointPtr(int connId);
 	public static XpgEndpoint GetEndpoint(int connId)
@@ -94,9 +98,10 @@ public class XPGConnectClient {
 	public static void AddDelegate(ClientListener listener)
 	{
 		if (null == listener)
-			return;
+			return ;
 		if (!lstClientListeners.contains(listener))
 			lstClientListeners.add(listener);
+		
 	}
 	
 	public static void RemoveDelegate(ClientListener listener)
@@ -108,9 +113,10 @@ public class XPGConnectClient {
 	public static void AddActivity(GeneratedActivity activity)
 	{
 		if (null == activity)
-			return;
+			return ;
 		if (!lstActivities.contains(activity))
 			lstActivities.add(activity);
+			
 	}
 	
 	public static void RemoveActivity(GeneratedActivity activity)
@@ -133,6 +139,7 @@ public class XPGConnectClient {
 
 		AddDelegate(listener);
 
+
 		byte[] clientId = Coding.EncodeUUID(UUID.randomUUID());
 		return xpgcInit(clientId);
 	}
@@ -141,6 +148,7 @@ public class XPGConnectClient {
 		if (activity == null) return -1;
 
 		AddActivity(activity);
+			
 
 		byte[] clientId = Coding.EncodeUUID(UUID.randomUUID());
 		return xpgcInit(clientId);

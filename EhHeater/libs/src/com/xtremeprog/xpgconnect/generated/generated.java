@@ -604,12 +604,12 @@ public class generated implements generatedConstants {
     return generatedJNI.DefaultStateResp();
   }
 
-  public static int BuildStateResp(short on_off, short system_running_state, short function_state, short order_state, short inner1_temp, short inner2_temp, short inner3_temp, short setting_temp, short setting_power, short remaining_heating_time, short remaining_hot_water, short error, int power_consumption, int heating_tube_time, int machine_not_heating_time) {
-    return generatedJNI.BuildStateResp(on_off, system_running_state, function_state, order_state, inner1_temp, inner2_temp, inner3_temp, setting_temp, setting_power, remaining_heating_time, remaining_hot_water, error, power_consumption, heating_tube_time, machine_not_heating_time);
+  public static int BuildStateResp(short on_off, short system_running_state, short function_state, short order_state, short inner1_temp, short book_time_hour, short book_time_min, short setting_temp, short setting_power, short remaining_heating_time, short remaining_hot_water, short error, int power_consumption, int heating_tube_time, int machine_not_heating_time) {
+    return generatedJNI.BuildStateResp(on_off, system_running_state, function_state, order_state, inner1_temp, book_time_hour, book_time_min, setting_temp, setting_power, remaining_heating_time, remaining_hot_water, error, power_consumption, heating_tube_time, machine_not_heating_time);
   }
 
-  public static int SendStateResp(int nConnId, short on_off, short system_running_state, short function_state, short order_state, short inner1_temp, short inner2_temp, short inner3_temp, short setting_temp, short setting_power, short remaining_heating_time, short remaining_hot_water, short error, int power_consumption, int heating_tube_time, int machine_not_heating_time) {
-    return generatedJNI.SendStateResp(nConnId, on_off, system_running_state, function_state, order_state, inner1_temp, inner2_temp, inner3_temp, setting_temp, setting_power, remaining_heating_time, remaining_hot_water, error, power_consumption, heating_tube_time, machine_not_heating_time);
+  public static int SendStateResp(int nConnId, short on_off, short system_running_state, short function_state, short order_state, short inner1_temp, short book_time_hour, short book_time_min, short setting_temp, short setting_power, short remaining_heating_time, short remaining_hot_water, short error, int power_consumption, int heating_tube_time, int machine_not_heating_time) {
+    return generatedJNI.SendStateResp(nConnId, on_off, system_running_state, function_state, order_state, inner1_temp, book_time_hour, book_time_min, setting_temp, setting_power, remaining_heating_time, remaining_hot_water, error, power_consumption, heating_tube_time, machine_not_heating_time);
   }
 
   public static void DumpStateResp(StateResp_t pStateResp) {
@@ -630,6 +630,22 @@ public class generated implements generatedConstants {
 
   public static void DumpGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pGasWaterHeaterStatusResp) {
     generatedJNI.DumpGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t.getCPtr(pGasWaterHeaterStatusResp), pGasWaterHeaterStatusResp);
+  }
+
+  public static int DefaultDERYStatusResp() {
+    return generatedJNI.DefaultDERYStatusResp();
+  }
+
+  public static int BuildDERYStatusResp(short onOff, short safeLight, short error, short seasonState, short fireState, short bathWater, short heatingSend, short bathMode, short machineType, short draughtState, short waterPumpState, short teeValState, short CDIState, short autifreezeState, short autifreezeState_rp, short openHeating, short pressureVal, short bathTemTarget, short bathTemNow, short heatingTemTarget, short bothTemTarget, short outDoorTem, short heatingMode, long gasCount, short gasCountNow, String serial, short reservation_one, short reservation_two, short reservation_three, short reservation_four, short reservation_five, short reservation_six) {
+    return generatedJNI.BuildDERYStatusResp(onOff, safeLight, error, seasonState, fireState, bathWater, heatingSend, bathMode, machineType, draughtState, waterPumpState, teeValState, CDIState, autifreezeState, autifreezeState_rp, openHeating, pressureVal, bathTemTarget, bathTemNow, heatingTemTarget, bothTemTarget, outDoorTem, heatingMode, gasCount, gasCountNow, serial, reservation_one, reservation_two, reservation_three, reservation_four, reservation_five, reservation_six);
+  }
+
+  public static int SendDERYStatusResp(int nConnId, short onOff, short safeLight, short error, short seasonState, short fireState, short bathWater, short heatingSend, short bathMode, short machineType, short draughtState, short waterPumpState, short teeValState, short CDIState, short autifreezeState, short autifreezeState_rp, short openHeating, short pressureVal, short bathTemTarget, short bathTemNow, short heatingTemTarget, short bothTemTarget, short outDoorTem, short heatingMode, long gasCount, short gasCountNow, String serial, short reservation_one, short reservation_two, short reservation_three, short reservation_four, short reservation_five, short reservation_six) {
+    return generatedJNI.SendDERYStatusResp(nConnId, onOff, safeLight, error, seasonState, fireState, bathWater, heatingSend, bathMode, machineType, draughtState, waterPumpState, teeValState, CDIState, autifreezeState, autifreezeState_rp, openHeating, pressureVal, bathTemTarget, bathTemNow, heatingTemTarget, bothTemTarget, outDoorTem, heatingMode, gasCount, gasCountNow, serial, reservation_one, reservation_two, reservation_three, reservation_four, reservation_five, reservation_six);
+  }
+
+  public static void DumpDERYStatusResp(DERYStatusResp_t pDERYStatusResp) {
+    generatedJNI.DumpDERYStatusResp(DERYStatusResp_t.getCPtr(pDERYStatusResp), pDERYStatusResp);
   }
 
   public static int DefaultHeartbeatResp() {
@@ -726,6 +742,22 @@ public class generated implements generatedConstants {
 
   public static void DumpSettingOrderReq(SettingOrderReq_t pSettingOrderReq) {
     generatedJNI.DumpSettingOrderReq(SettingOrderReq_t.getCPtr(pSettingOrderReq), pSettingOrderReq);
+  }
+
+  public static int DefaultCancelBookReq() {
+    return generatedJNI.DefaultCancelBookReq();
+  }
+
+  public static int BuildCancelBookReq() {
+    return generatedJNI.BuildCancelBookReq();
+  }
+
+  public static int SendCancelBookReq(int nConnId) {
+    return generatedJNI.SendCancelBookReq(nConnId);
+  }
+
+  public static void DumpCancelBookReq(CancelBookReq_t pCancelBookReq) {
+    generatedJNI.DumpCancelBookReq(CancelBookReq_t.getCPtr(pCancelBookReq), pCancelBookReq);
   }
 
   public static int DefaultStateReq() {
@@ -886,6 +918,166 @@ public class generated implements generatedConstants {
 
   public static void DumpGasWaterHeaterMobileRefreshReq(GasWaterHeaterMobileRefreshReq_t pGasWaterHeaterMobileRefreshReq) {
     generatedJNI.DumpGasWaterHeaterMobileRefreshReq(GasWaterHeaterMobileRefreshReq_t.getCPtr(pGasWaterHeaterMobileRefreshReq), pGasWaterHeaterMobileRefreshReq);
+  }
+
+  public static int DefaultDERYOnOrOffReq() {
+    return generatedJNI.DefaultDERYOnOrOffReq();
+  }
+
+  public static int BuildDERYOnOrOffReq(short OnOff) {
+    return generatedJNI.BuildDERYOnOrOffReq(OnOff);
+  }
+
+  public static int SendDERYOnOrOffReq(int nConnId, short OnOff) {
+    return generatedJNI.SendDERYOnOrOffReq(nConnId, OnOff);
+  }
+
+  public static void DumpDERYOnOrOffReq(DERYOnOrOffReq_t pDERYOnOrOffReq) {
+    generatedJNI.DumpDERYOnOrOffReq(DERYOnOrOffReq_t.getCPtr(pDERYOnOrOffReq), pDERYOnOrOffReq);
+  }
+
+  public static int DefaultDERYSafeLightReq() {
+    return generatedJNI.DefaultDERYSafeLightReq();
+  }
+
+  public static int BuildDERYSafeLightReq(short OnOff) {
+    return generatedJNI.BuildDERYSafeLightReq(OnOff);
+  }
+
+  public static int SendDERYSafeLightReq(int nConnId, short OnOff) {
+    return generatedJNI.SendDERYSafeLightReq(nConnId, OnOff);
+  }
+
+  public static void DumpDERYSafeLightReq(DERYSafeLightReq_t pDERYSafeLightReq) {
+    generatedJNI.DumpDERYSafeLightReq(DERYSafeLightReq_t.getCPtr(pDERYSafeLightReq), pDERYSafeLightReq);
+  }
+
+  public static int DefaultDERYBathTemReq() {
+    return generatedJNI.DefaultDERYBathTemReq();
+  }
+
+  public static int BuildDERYBathTemReq(short WarmTem) {
+    return generatedJNI.BuildDERYBathTemReq(WarmTem);
+  }
+
+  public static int SendDERYBathTemReq(int nConnId, short WarmTem) {
+    return generatedJNI.SendDERYBathTemReq(nConnId, WarmTem);
+  }
+
+  public static void DumpDERYBathTemReq(DERYBathTemReq_t pDERYBathTemReq) {
+    generatedJNI.DumpDERYBathTemReq(DERYBathTemReq_t.getCPtr(pDERYBathTemReq), pDERYBathTemReq);
+  }
+
+  public static int DefaultDERYHeatingTemReq() {
+    return generatedJNI.DefaultDERYHeatingTemReq();
+  }
+
+  public static int BuildDERYHeatingTemReq(short WarmTem) {
+    return generatedJNI.BuildDERYHeatingTemReq(WarmTem);
+  }
+
+  public static int SendDERYHeatingTemReq(int nConnId, short WarmTem) {
+    return generatedJNI.SendDERYHeatingTemReq(nConnId, WarmTem);
+  }
+
+  public static void DumpDERYHeatingTemReq(DERYHeatingTemReq_t pDERYHeatingTemReq) {
+    generatedJNI.DumpDERYHeatingTemReq(DERYHeatingTemReq_t.getCPtr(pDERYHeatingTemReq), pDERYHeatingTemReq);
+  }
+
+  public static int DefaultDERYResetErrorReq() {
+    return generatedJNI.DefaultDERYResetErrorReq();
+  }
+
+  public static int BuildDERYResetErrorReq() {
+    return generatedJNI.BuildDERYResetErrorReq();
+  }
+
+  public static int SendDERYResetErrorReq(int nConnId) {
+    return generatedJNI.SendDERYResetErrorReq(nConnId);
+  }
+
+  public static void DumpDERYResetErrorReq(DERYResetErrorReq_t pDERYResetErrorReq) {
+    generatedJNI.DumpDERYResetErrorReq(DERYResetErrorReq_t.getCPtr(pDERYResetErrorReq), pDERYResetErrorReq);
+  }
+
+  public static int DefaultDERYHeatingModeReq() {
+    return generatedJNI.DefaultDERYHeatingModeReq();
+  }
+
+  public static int BuildDERYHeatingModeReq(short mode) {
+    return generatedJNI.BuildDERYHeatingModeReq(mode);
+  }
+
+  public static int SendDERYHeatingModeReq(int nConnId, short mode) {
+    return generatedJNI.SendDERYHeatingModeReq(nConnId, mode);
+  }
+
+  public static void DumpDERYHeatingModeReq(DERYHeatingModeReq_t pDERYHeatingModeReq) {
+    generatedJNI.DumpDERYHeatingModeReq(DERYHeatingModeReq_t.getCPtr(pDERYHeatingModeReq), pDERYHeatingModeReq);
+  }
+
+  public static int DefaultDERYBathModeReq() {
+    return generatedJNI.DefaultDERYBathModeReq();
+  }
+
+  public static int BuildDERYBathModeReq(short OnOff) {
+    return generatedJNI.BuildDERYBathModeReq(OnOff);
+  }
+
+  public static int SendDERYBathModeReq(int nConnId, short OnOff) {
+    return generatedJNI.SendDERYBathModeReq(nConnId, OnOff);
+  }
+
+  public static void DumpDERYBathModeReq(DERYBathModeReq_t pDERYBathModeReq) {
+    generatedJNI.DumpDERYBathModeReq(DERYBathModeReq_t.getCPtr(pDERYBathModeReq), pDERYBathModeReq);
+  }
+
+  public static int DefaultDERYSeasonStateReq() {
+    return generatedJNI.DefaultDERYSeasonStateReq();
+  }
+
+  public static int BuildDERYSeasonStateReq(short OnOff) {
+    return generatedJNI.BuildDERYSeasonStateReq(OnOff);
+  }
+
+  public static int SendDERYSeasonStateReq(int nConnId, short OnOff) {
+    return generatedJNI.SendDERYSeasonStateReq(nConnId, OnOff);
+  }
+
+  public static void DumpDERYSeasonStateReq(DERYSeasonStateReq_t pDERYSeasonStateReq) {
+    generatedJNI.DumpDERYSeasonStateReq(DERYSeasonStateReq_t.getCPtr(pDERYSeasonStateReq), pDERYSeasonStateReq);
+  }
+
+  public static int DefaultDERYHeatingStateReq() {
+    return generatedJNI.DefaultDERYHeatingStateReq();
+  }
+
+  public static int BuildDERYHeatingStateReq(short OnOff) {
+    return generatedJNI.BuildDERYHeatingStateReq(OnOff);
+  }
+
+  public static int SendDERYHeatingStateReq(int nConnId, short OnOff) {
+    return generatedJNI.SendDERYHeatingStateReq(nConnId, OnOff);
+  }
+
+  public static void DumpDERYHeatingStateReq(DERYHeatingStateReq_t pDERYHeatingStateReq) {
+    generatedJNI.DumpDERYHeatingStateReq(DERYHeatingStateReq_t.getCPtr(pDERYHeatingStateReq), pDERYHeatingStateReq);
+  }
+
+  public static int DefaultDERYRefreshReq() {
+    return generatedJNI.DefaultDERYRefreshReq();
+  }
+
+  public static int BuildDERYRefreshReq() {
+    return generatedJNI.BuildDERYRefreshReq();
+  }
+
+  public static int SendDERYRefreshReq(int nConnId) {
+    return generatedJNI.SendDERYRefreshReq(nConnId);
+  }
+
+  public static void DumpDERYRefreshReq(DERYRefreshReq_t pDERYRefreshReq) {
+    generatedJNI.DumpDERYRefreshReq(DERYRefreshReq_t.getCPtr(pDERYRefreshReq), pDERYRefreshReq);
   }
 
 }

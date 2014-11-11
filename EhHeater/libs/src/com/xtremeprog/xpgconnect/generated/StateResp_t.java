@@ -107,20 +107,20 @@ public class StateResp_t {
     return generatedJNI.StateResp_t_inner1_temp_get(swigCPtr, this);
   }
 
-  public void setInner2_temp(short value) {
-    generatedJNI.StateResp_t_inner2_temp_set(swigCPtr, this, value);
+  public void setBook_time_hour(short value) {
+    generatedJNI.StateResp_t_book_time_hour_set(swigCPtr, this, value);
   }
 
-  public short getInner2_temp() {
-    return generatedJNI.StateResp_t_inner2_temp_get(swigCPtr, this);
+  public short getBook_time_hour() {
+    return generatedJNI.StateResp_t_book_time_hour_get(swigCPtr, this);
   }
 
-  public void setInner3_temp(short value) {
-    generatedJNI.StateResp_t_inner3_temp_set(swigCPtr, this, value);
+  public void setBook_time_min(short value) {
+    generatedJNI.StateResp_t_book_time_min_set(swigCPtr, this, value);
   }
 
-  public short getInner3_temp() {
-    return generatedJNI.StateResp_t_inner3_temp_get(swigCPtr, this);
+  public short getBook_time_min() {
+    return generatedJNI.StateResp_t_book_time_min_get(swigCPtr, this);
   }
 
   public void setSetting_temp(short value) {

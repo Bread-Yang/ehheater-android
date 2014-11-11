@@ -125,6 +125,10 @@ import com.xtremeprog.xpgconnect.generated.*;
                          (GasWaterHeaterStatusResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
                 case 21:
+                     myActivity.OnDERYStatusResp(
+                         (DERYStatusResp_t) msg.obj, msg.arg1); // arg1 = nConnId
+                     break;
+                case 22:
                      myActivity.OnHeartbeatResp(
                          (HeartbeatResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;

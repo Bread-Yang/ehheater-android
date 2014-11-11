@@ -102,7 +102,9 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		dialog_easylink.dismiss();
 		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
+		Log.e("打印productKey前", "打印productKey前");
 		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
+		Log.e("productKey是 : ", hinfo.getProductKey());
 //		hinfo.setPasscode(generated.XpgData2String(pResp.getPasscode()));
 		new HeaterInfoService(getBaseContext()).addNewHeater(hinfo);
 		Log.d("emmm", "finishingConfig:new heater saved!" + hinfo.getMac() + "-" + hinfo.getPasscode());
@@ -180,6 +182,6 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			((TextView)dialog_easylink.findViewById(R.id.easylink_time_tv)).setText(millisUntilFinished / 1000 + "");
 		}
 	}
-	
+	 
 	
 }

@@ -35,6 +35,7 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 
 		findViewById(R.id.elect).setOnClickListener(this);
 		findViewById(R.id.gas).setOnClickListener(this);
+		findViewById(R.id.rlt_furnace).setOnClickListener(this);
 	}
 
 	@Override
@@ -51,8 +52,12 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 			intent.putExtra("type", "gas");
 			startActivity(intent);
 			finish();
+		} else if (arg0.getId() == R.id.rlt_furnace) {
+			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
+			intent.putExtra("type", "furnace");
+			startActivity(intent);
+			finish();
 		}
 
 	}
-
 }

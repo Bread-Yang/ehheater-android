@@ -32,6 +32,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -64,6 +65,8 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		String typeStr = getIntent().getStringExtra("type");
 		if (typeStr.equals("gas")) {
 			mType = HeaterType.ST;
+		} else if (typeStr.equals("furnace")) {
+			mType = HeaterType.EH_FURNACE;
 		}
 	}
 
@@ -191,6 +194,10 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			case ST:
 				img.setImageResource(R.drawable.device_img1_1);
 				break;
+			case EH_FURNACE:
+				img.setImageResource(R.drawable.device_img3);
+				s1tip.setText(R.string.set_device_tip2_eh_furnace);
+				break;
 			default:
 				break;
 			}
@@ -201,11 +208,16 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			break;
 
 		case 2:
-			v = getLayoutInflater().inflate(R.layout.activity_configure_step2,
-					mRlStepContainer, false);
+
+			v = getLayoutInflater().inflate(R.layout.activity_configure_step2, mRlStepContainer, false);
+			TextView tv_tips = (TextView) v.findViewById(R.id.tv_tips);
 			mTvWifiSsid = (TextView) v.findViewById(R.id.acs2_tv_ssid);
 			mEtWifiPsw = (EditText) v.findViewById(R.id.acs2_et_psw);
-
+			
+			if (mType == HeaterType.EH_FURNACE) {
+				tv_tips.setText(R.string.set_device_tip3_eh_furnace);
+			}
+			
 			applyCurWifiSsid();
 			break;
 		case 3:
@@ -229,6 +241,10 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 						Color.parseColor("#ff5f00"), new String[] { "一下",
 								"听到蜂鸣" });
 				break;
+			case EH_FURNACE:
+				img3.setImageResource(R.drawable.device_img3);
+				s3tip.setText(R.string.setup_step3_eh_furnace);
+				TextStyleUtil.setColorStringInTextView(s3tip, Color.parseColor("#ff5f00"), new String[] { "一下", "听到蜂鸣" });
 			default:
 				break;
 			}
@@ -353,7 +369,9 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
+		Log.e("打印productKey前", "打印productKey前");
 		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
+		Log.e("productKey是 : ", hinfo.getProductKey());
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 
 		HeaterInfoDao hdao = new HeaterInfoDao(this);
@@ -409,6 +427,18 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		case ST:
 
 			intent = new Intent(getBaseContext(), GasMainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+			XPGConnectClient.RemoveActivity(this);
+			finish();
+
+			startActivity(intent);
+			break;
+
+		case EH_FURNACE:
+
+			intent = new Intent(getBaseContext(), FurnaceMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
