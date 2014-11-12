@@ -75,6 +75,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	private DERYStatusResp_t statusResp = null;
 
+	private boolean Insetting = false;
+
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -171,7 +173,11 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 					rg_winner.setBackgroundResource(R.drawable.home_xuan_bg1);
 
 					OnDERYStatusResp(statusResp, Global.connectId);
-					
+
+					circularView.setAngle(statusResp.getHeatingTemTarget());
+					circularView.setTargerdegree(statusResp
+							.getHeatingTemTarget());
+
 					break;
 				case R.id.rb_bath:
 
@@ -179,6 +185,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 					OnDERYStatusResp(statusResp, Global.connectId);
 
+					circularView.setAngle(statusResp.getBathTemTarget());
+					circularView.setTargerdegree(statusResp.getBathTemTarget());
 					break;
 				}
 			}
@@ -302,10 +310,13 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			rb_summer.setText(getResources().getString(R.string.setting)
 					+ pResp.getBathTemTarget() + "°");
 
-			if (!circularView.isIsclick()) {
+			if (!Insetting) {
 				circularView.setAngle(pResp.getBathTemTarget());
 			}
-			circularView.setTargerdegree(pResp.getBathTemTarget());
+			if (!Insetting) {
+				circularView.setTargerdegree(pResp.getBathTemTarget());
+			}
+
 			tv_temperature.setText(pResp.getBathTemNow() + "");
 
 			if (pResp.getBathMode() == 0) { // 0 - normal bath(temp : 30 - 60)
@@ -396,16 +407,19 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			if (rg_winner.getVisibility() == View.VISIBLE) {
 				if (rb_supply_heating.isChecked()) {
-					if (!circularView.isIsclick()) {
+					if (!Insetting) {
 						circularView.setAngle(pResp.getHeatingTemTarget());
+						circularView.setTargerdegree(pResp
+								.getHeatingTemTarget());
 					}
-					circularView.setTargerdegree(pResp.getHeatingTemTarget());
+
 					tv_temperature.setText(pResp.getBothTemTarget() + "");
 				} else {
-					if (!circularView.isIsclick()) {
+					if (!Insetting) {
 						circularView.setAngle(pResp.getBathTemTarget());
+						circularView.setTargerdegree(pResp.getBathTemTarget());
 					}
-					circularView.setTargerdegree(pResp.getBathTemTarget());
+
 					if (statusResp.getBathWater() == 0) {
 						tv_temperature.setText(pResp.getBathTemNow() + "");
 					} else {
@@ -505,6 +519,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				} else {
 					FurnaceSendMsgModel.setHeatingTemperature(value);
 				}
+				Insetting = false;
 			}
 		};
 		mCountDownTimer.start();
@@ -601,6 +616,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			// circularView.setTargerdegree(outlevel + 1);
 		}
+		Insetting = true;
 	}
 
 	// 第一次setListener的时候执行
