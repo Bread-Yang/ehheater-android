@@ -336,6 +336,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 										Intent intent = new Intent();
 										intent.setClass(PatternActivity.this, AddPattenActivity.class);
 										intent.putExtra("gasCusVoId", customSetVo.getId());
+										intent.putExtra("ischeck", isCheck);
 										startActivity(intent);
 										
 										

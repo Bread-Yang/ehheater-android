@@ -178,27 +178,27 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		canupdateView = true;
-//		String tempname = modeTv.getText().toString();
-//
-//		if (tempname.equals("夜电模式") || tempname.equals("晨浴模式")
-//				|| tempname.equals("智能模式") || tempname.equals("自定义模式")) {
-//			return;
-//		}
-//		boolean flag = false;
-//		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
-//				CustomSetVo.class);
-//		if (list != null && list.size() > 0) {
-//			for (int i = 0; i < list.size(); i++) {
-//				if (tempname.equals(list.get(i).getName())) {
-//					flag = true;
-//				}
-//			}
-//			if (!flag) {
-//				modeTv.setText("智能模式");
-//			}
-//		} else {
-//			modeTv.setText("智能模式");
-//		}
+		// String tempname = modeTv.getText().toString();
+		//
+		// if (tempname.equals("夜电模式") || tempname.equals("晨浴模式")
+		// || tempname.equals("智能模式") || tempname.equals("自定义模式")) {
+		// return;
+		// }
+		// boolean flag = false;
+		// List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
+		// CustomSetVo.class);
+		// if (list != null && list.size() > 0) {
+		// for (int i = 0; i < list.size(); i++) {
+		// if (tempname.equals(list.get(i).getName())) {
+		// flag = true;
+		// }
+		// }
+		// if (!flag) {
+		// modeTv.setText("智能模式");
+		// }
+		// } else {
+		// modeTv.setText("智能模式");
+		// }
 		// 自动切换到智能模式
 		// modeTv.post(new Runnable() {
 		// @Override
@@ -340,7 +340,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
 
 			if (ison) {
-				
+
 				DeviceOffUtil.instance(this)
 						.nextButtonCall(new NextButtonCall() {
 							@Override
@@ -446,29 +446,35 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		modeTv.setText("自定义模式");
 		EhState ehState = new EhState(data);
 		setAppointmentButtonAble(true);
-		int targetTemperature = ehState.getTargetTemperature();
-		int power = ehState.getPower();
-		List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
-				CustomSetVo.class);
+		final int targetTemperature = ehState.getTargetTemperature();
+		final int power = ehState.getPower();
+		modeTv.post(new  Runnable() {
+			
+			@Override
+			public void run() {
+				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb().findAll(
+						CustomSetVo.class);
 
-		for (int i = 0; i < list.size(); i++) {
+				for (int i = 0; i < list.size(); i++) {
+					CustomSetVo customSetVo = list.get(i);
 
-			CustomSetVo customSetVo = list.get(i);
+					if (customSetVo.getPower() == power
+							&& customSetVo.getTempter() == targetTemperature) {
 
-			if (customSetVo.getPower() == power
-					&& customSetVo.getTempter() == targetTemperature) {
+						if (customSetVo.getName().length() > 6) {
+							modeTv.setText(customSetVo.getName().substring(0, 6)
+									+ "...");
+						} else {
+							modeTv.setText(customSetVo.getName());
+						}
 
-				if (customSetVo.getName().length() > 6) {
-					modeTv.setText(customSetVo.getName().substring(0, 6)
-							+ "...");
-				} else {
-					modeTv.setText(customSetVo.getName());
+						break;
+					}
+
 				}
-
-				break;
 			}
-
-		}
+		});
+	
 		circularView.setOn(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		// powerTv.setText(3 + "kw");
@@ -581,7 +587,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
-			    circularView.setOn(false);
+				circularView.setOn(false);
 				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
@@ -694,14 +700,14 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		}
 	}
 
-	public void dealDisConnect(){
+	public void dealDisConnect() {
 		tempter.setText("--");
 		modeTv.setText("----");
 		leavewater.setText("--");
 		powerTv.setText("--");
 		target_tem.setText("--");
 	}
-	
+
 	boolean Insetting = false;
 
 	@Override
