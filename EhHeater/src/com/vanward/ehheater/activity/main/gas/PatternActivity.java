@@ -340,9 +340,13 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 										startActivity(intent);
 										
 										
+										
 										AddPatternButtonDialogUtil.instance(
 												PatternActivity.this)
 												.dissmiss();
+										if (isCheck) {
+											finish();
+										}
 
 									}
 								})
