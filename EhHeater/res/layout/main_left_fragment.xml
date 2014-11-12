@@ -70,6 +70,7 @@
         android:background="@drawable/menu_line" />
 
     <RelativeLayout
+        android:id="@+id/rlt_season_mode"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -85,9 +86,9 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:drawableLeft="@drawable/setting_icon_xiatian"
-            android:paddingLeft="10dp"
             android:drawablePadding="13dp"
             android:gravity="center_vertical"
+            android:paddingLeft="10dp"
             android:text="@string/summer_mode" />
 
         <Button
@@ -102,6 +103,7 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/iv_season_mode"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/menu_line" />

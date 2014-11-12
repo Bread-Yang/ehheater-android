@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.CloudBaseActivity;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.vanward.ehheater.activity.WelcomeActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -55,7 +56,6 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 		if (view == btn_logout) {
 			LogoutUtil.instance(AccountManagementActivity.this)
 					.nextButtonCall(new NextButtonCall() {
-
 						@Override
 						public void oncall(View v) {
 							new SharedPreferUtils(getBaseContext()).clear();
@@ -70,6 +70,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 					}).showDialog();
 
 		}
+	
 	}
 
 	private void init() {

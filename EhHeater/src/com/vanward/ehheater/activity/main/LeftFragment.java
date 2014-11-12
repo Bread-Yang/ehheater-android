@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class LeftFragment extends LinearLayout implements
 	Button btn_user_manager, btn_device_manager, btn_tip, btn_help, btn_about,
 			btn_season_mode;
 	View deviceSwitchLayout, deviceSwitchBtn;
+	private RelativeLayout rlt_season_mode;
+	private ImageView iv_season_mode;
 	public TextView tv_season_mode;
 
 	public LeftFragment(Context context) {
@@ -68,10 +71,15 @@ public class LeftFragment extends LinearLayout implements
 		tv_season_mode = (TextView) findViewById(R.id.tv_season_mode);
 		deviceSwitchLayout = findViewById(R.id.device_switch_layout);
 		deviceSwitchBtn = findViewById(R.id.device_switch_btn);
+		iv_season_mode = (ImageView) findViewById(R.id.iv_season_mode);
+		rlt_season_mode = (RelativeLayout) findViewById(R.id.rlt_season_mode);
 
 		if (getContext() instanceof FurnaceMainActivity) {
 			((FurnaceMainActivity) getContext())
 					.setTv_sliding_menu_season_mode(tv_season_mode);
+		} else {
+			rlt_season_mode.setVisibility(View.GONE);
+			iv_season_mode.setVisibility(View.GONE);
 		}
 
 		DeviceAdapter deviceAdapter = new DeviceAdapter(getContext(),
