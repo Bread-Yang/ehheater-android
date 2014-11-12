@@ -153,10 +153,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 
-			if (Global.connectId != -1) {
-				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-			}
-
 			Global.connectId = connId;
 
 			if (isOnline) {
