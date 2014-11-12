@@ -43,12 +43,12 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 				case R.id.rb_mode_summer:
 					FurnaceSendMsgModel.setToSummerMode();
 					intent.putExtra("seasonMode", SET_SUMMER_MODE);
-					setResult(RESULT_OK, intent);
+//					setResult(RESULT_OK, intent);
 					break;
 				case R.id.rb_mode_winner:
 					FurnaceSendMsgModel.setToWinnerMode();
 					intent.putExtra("seasonMode", SET_WINNER_MODE);
-					setResult(RESULT_OK, intent);
+//					setResult(RESULT_OK, intent);
 					break;
 				}
 			}

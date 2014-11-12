@@ -81,11 +81,12 @@
     <string name="input_phone">用户名</string>
     <string name="regist_tip">注册账号将于设备绑定，绑定后即可远程操控设备</string>
     <string name="set_device_tip2">请站着热水器旁，保证热水器的<font color="#ff0000">电源</font>已经连接</string>
-    <string name="set_device_tip2_eh_furnace">请站着壁挂炉旁，保证壁挂炉的<font color="#ff0000">电源</font>已经连接</string>
+    <string name="set_device_tip2_eh_furnace">请站在壁挂炉旁，保证壁挂炉的<font color="#ff0000">电源</font>已经连接</string>
     <string name="set_device_tip3">请确保热水器与智能移动终端在同一无线局域网下进行连接</string>
     <string name="set_device_tip3_eh_furnace">请确保壁挂炉与智能移动终端在同一无线局域网下进行连接</string>
     <string name="set_device_tip4">(无线局域网默认为智能移动终端当前正在使用的无线局域网，如需更改，请先更改智能移动终端使用的网络配置。)</string>
     <string name="set_device_tip5">请长按电源键<font color="#ff0000">3秒</font>，听到<font color="#ff0000">三声</font>蜂鸣后松手，点击下一步</string>
+    <string name="setup_step3_eh_furnace">长按壁挂炉冬夏季键<font color="#ff0000">3秒</font>，蜂鸣器<font color="#ff0000">响一声</font>之后松手，并点击下一步</string>
     <string name="wifi_name">网络名称</string>
     <string name="set_fail_tip1">无法连接热水器，请检查</string>
     <string name="set_fail_tip2">1.热水器是否正常运行;\n2.无线局域网名称和密码是否修改过,如是,则需删除热水器重新添加。</string>
@@ -117,7 +118,6 @@
     <string name="heater_wifi_ssid">XPG-GAgent</string>
     <string name="setup_step3_eh">在关机状态下, 长按热水器节能键3秒, 蜂鸣器响一声之后松手, 并点击下一步</string>
     <string name="setup_step3_st">在关机状态下, 按热水器预设键一下, 听到蜂鸣之后, 点击下一步</string>
-    <string name="setup_step3_eh_furnace">按壁挂炉预设键一下, 听到蜂鸣之后, 点击下一步</string>
 
     <!-- 壁挂炉用到的字段 -->
 
