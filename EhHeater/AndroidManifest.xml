@@ -33,6 +33,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+         
         </activity>
         <activity
             android:name=".activity.configure.ConnectActivity"
@@ -75,6 +76,7 @@
         <activity
             android:name=".activity.main.furnace.FurnaceMainActivity"
             android:screenOrientation="portrait" >
+             
         </activity>
         <activity
             android:name=".activity.main.furnace.FurnacePatternActivity"
@@ -87,6 +89,7 @@
         <activity
             android:name=".activity.main.furnace.FurnaceSeasonActivity"
             android:screenOrientation="portrait" >
+              
         </activity>
         <activity
             android:name=".activity.main.gas.AddPattenActivity"

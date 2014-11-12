@@ -200,6 +200,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		settemper.setText("--");
 		sumwater.setText(" ");
 		mode.setEnabled(false);
+		
 	}
 
 	@Override
@@ -389,7 +390,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		modeimg.setImageResource(R.drawable.gas_home_icon_energy);
 		if (circularView != null) {
 			circularView.setVisibility(View.GONE);
-
 		}
 
 	}

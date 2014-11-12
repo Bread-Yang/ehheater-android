@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import u.aly.w;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -64,7 +66,25 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		webView = (WebView) layout.findViewById(R.id.webView1);
 		webView.addJavascriptInterface(new Initobject(), "init");
 		webView.getSettings().setJavaScriptEnabled(true);
+		webView.setVisibility(View.GONE);
 		webView.loadUrl("file:///android_asset/chart.html");
+		webView.setWebViewClient(new WebViewClient() {
+
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				// TODO Auto-generated method stub
+				super.onPageFinished(view, url);
+				webView.setVisibility(view.VISIBLE);
+			}
+
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				// TODO Auto-generated method stub
+				super.onPageStarted(view, url, favicon);
+				webView.setVisibility(view.GONE);
+			}
+
+		});
 		webView.setClickable(false);
 		webView.setOnTouchListener(new OnTouchListener() {
 
@@ -214,8 +234,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 
 		@Override
 		protected String doInBackground(Void... params) {
-//			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType,
-//					expendType);
+			// return HttpConnectUtil.getGasDatas(did, dateTime2query,
+			// resultType,
+			// expendType);
 			return "";
 		}
 
@@ -226,27 +247,27 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 
 			Log.d("emmm", "theString: " + result);
 
-//			try {
-//				dododo(resultType, result);
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
+			// try {
+			// dododo(resultType, result);
+			// } catch (JSONException e) {
+			// e.printStackTrace();
+			// }
 
 			if (resultType.equals("1")) {
-				namelistjson="[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
-				datalistjson="[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5},{data:5},] ";
+				namelistjson = "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
+				datalistjson = "[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5},{data:5},] ";
 				chart4week();
 			}
 
 			if (resultType.equals("2")) {
-				namelistjson="[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
-				datalistjson="[{data:25},{data:30},{data:24},{data:26},{data:25}] ";
+				namelistjson = "[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
+				datalistjson = "[{data:25},{data:30},{data:24},{data:26},{data:25}] ";
 				chart4Month();
 			}
 
 			if (resultType.equals("3")) {
-				namelistjson="[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'may'},{name:'jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}] ";
-				datalistjson="[{data:130},{data:140},{data:120},{data:110},{data:100},{data:150},{data:115},{data:125},{data:114},{data:115},{data:126},{data:118}] ";
+				namelistjson = "[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'May'},{name:'Jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}]";
+				datalistjson = "[{data:130},{data:140},{data:120},{data:110},{data:100},{data:150},{data:115},{data:125},{data:114},{data:115},{data:126},{data:118}] ";
 				chart4Year();
 			}
 

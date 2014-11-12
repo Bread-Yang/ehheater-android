@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import u.aly.w;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -66,6 +68,23 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.loadUrl("file:///android_asset/chart.html");
 		webView.setClickable(false);
+		webView.setWebViewClient(new WebViewClient() {
+
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				// TODO Auto-generated method stub
+				super.onPageFinished(view, url);
+				webView.setVisibility(view.VISIBLE);
+			}
+
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				// TODO Auto-generated method stub
+				super.onPageStarted(view, url, favicon);
+				webView.setVisibility(view.GONE);
+			}
+
+		});
 		webView.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -245,7 +264,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 			}
 
 			if (resultType.equals("3")) {
-				namelistjson="[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'may'},{name:'jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}] ";
+				namelistjson="[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'May'},{name:'Jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}]";
 				datalistjson="[{data:2100},{data:2100},{data:2130},{data:2345},{data:2367},{data:2354},{data:2456},{data:2309},{data:2357},{data:2451},{data:2362},{data:2373}] ";
 				chart4Year();
 			}
