@@ -76,11 +76,11 @@ public class WelcomeActivity extends GeneratedActivity {
 		
 
 
-		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
-			// 无任何网络连接
-			mTvInfo.setText("无网络连接");
-			return;
-		}
+//		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
+//			// 无任何网络连接
+//			mTvInfo.setText("无网络连接");
+//			return;
+//		}
 
 		new Handler().postDelayed(new Runnable() {
 			@Override
