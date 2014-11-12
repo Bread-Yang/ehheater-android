@@ -373,6 +373,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.btn_information:
 			Intent intent3 = new Intent();
+			intent3.putExtra("isgas", false);
 			intent3.setClass(this, InformationActivity.class);
 			startActivity(intent3);
 

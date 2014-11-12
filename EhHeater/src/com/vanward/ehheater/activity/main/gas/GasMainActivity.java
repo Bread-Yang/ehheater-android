@@ -181,7 +181,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				// TODO 设备不在线
 				dealDisConnect();
 				rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
-				stute.setText("未连接");
+				stute.setText("不在线");
 			}
 
 			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
@@ -199,6 +199,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		target_tem.setText("--");
 		settemper.setText("--");
 		sumwater.setText(" ");
+		mode.setEnabled(false);
 	}
 
 	@Override
@@ -339,6 +340,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.btn_information:
 			Intent intent3 = new Intent();
+			intent3.putExtra("isgas", true);
 			intent3.setClass(this, InformationActivity.class);
 			startActivity(intent3);
 			break;

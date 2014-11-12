@@ -1,10 +1,8 @@
 package com.vanward.ehheater.activity.info;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -12,9 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import u.aly.x;
+import u.aly.w;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -23,65 +20,69 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
-import com.vanward.ehheater.activity.info.InforChartView.Initobject;
-import com.vanward.ehheater.activity.info.InforChartView.LoadDataTask;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
 
-public class InforElChartView extends LinearLayout implements OnClickListener,
+public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		OnCheckedChangeListener {
 
 	private ViewGroup layout;
 	Context context;
 	LinearLayout.LayoutParams lParams;
 	private SimpleDateFormat simpleDateFormat;
-	private WebView webView;
+	WebView webView;
 	ArrayList<Datavo> datalist = new ArrayList<Datavo>();
 	ArrayList<Xvo> namelist = new ArrayList<Xvo>();
 
 	String datalistjson = "";
 	String namelistjson = "";
+	private TextView last;
+	private TextView next;
 
-	TextView last, next;
-
-	public InforElChartView(Context context) {
+	public InfoElcChartView(Context context) {
 		super(context);
 		this.context = context;
-		layout = (ViewGroup) inflate(context, R.layout.infor_el_chart, null);
+		layout = (ViewGroup) inflate(context, R.layout.infor_elc_chart, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
 		radioGroup.setOnCheckedChangeListener(this);
+		last = (TextView) layout.findViewById(R.id.last);
+		next = (TextView) layout.findViewById(R.id.next);
+		((View) last.getParent()).setOnClickListener(this);
+		((View) next.getParent()).setOnClickListener(this);
 		webView = (WebView) layout.findViewById(R.id.webView1);
 		webView.addJavascriptInterface(new Initobject(), "init");
-		last = (TextView) layout.findViewById(R.id.last);
-		((View) last.getParent()).setOnClickListener(this);
-		next = (TextView) layout.findViewById(R.id.next);
-		((View) next.getParent()).setOnClickListener(this);
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.loadUrl("file:///android_asset/chart.html");
+		webView.setClickable(false);
 		webView.setOnTouchListener(new OnTouchListener() {
+
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 
 				return true;
 			}
 		});
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.loadUrl("file:///android_asset/chart.html");
+		// chart4week();
+		// webView.reload();
 		lParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);
 		addView(layout, lParams);
-		// chart4week();
-		// webView.reload();
+		// initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
+		// initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
+
+		radioGroup.check(R.id.radio0);
 	}
 
 	@Override
@@ -151,89 +152,20 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 	public void chart4week() {
 		last.setText("上一周");
 		next.setText("下一周");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 7; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 7; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
+
 	}
 
 	public void chart4Month() {
 		last.setText("上一月");
 		next.setText("下一月");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 4; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 4; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
+
 	}
 
 	public void chart4Year() {
 		last.setText("上一年");
 		next.setText("下一年");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 12; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 12; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
-	}
 
-	// @Override
-	// public void onCheckedChanged(RadioGroup arg0, int arg1) {
-	// if (arg1 == R.id.radio0) {
-	// chart4week();
-	// } else if (arg1 == R.id.radio1) {
-	// chart4Month();
-	// } else if (arg1 == R.id.radio2) {
-	// chart4Year();
-	// }
-	// webView.reload();
-	// }
+	}
 
 	@Override
 	public void onCheckedChanged(RadioGroup arg0, final int arg1) {
@@ -248,7 +180,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 			currentShowingPeriodType = "3";
 		}
 
-		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "3")
+		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
 				.execute();
 
 		// webView.reload();
@@ -257,12 +189,6 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 	long currentShowingTime;
 	String currentShowingPeriodType = "1";
-
-	public void selectDefault() {
-		currentShowingTime = Calendar.getInstance().getTimeInMillis();
-		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "3")
-				.execute();
-	}
 
 	class LoadDataTask extends AsyncTask<Void, Void, String> {
 
@@ -273,6 +199,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 		public LoadDataTask(long dateTime2query, String resultType,
 				String expendType) {
+			// this.did = "EohJ73eV37ABqVPm4jZcNT";
 			this.did = new HeaterInfoService(context)
 					.getCurrentSelectedHeater().getDid();
 			this.dateTime2query = dateTime2query;
@@ -287,8 +214,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 		@Override
 		protected String doInBackground(Void... params) {
-			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType,
-					expendType);
+//			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType,
+//					expendType);
+			return "";
 		}
 
 		@Override
@@ -306,30 +234,31 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 			if (resultType.equals("1")) {
 				namelistjson="[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
-				datalistjson="[{data:2},{data:5},{data:5},{data:3},{data:7},{data:4},{data:4},] ";
+				datalistjson="[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5},{data:5},] ";
 				chart4week();
 			}
 
 			if (resultType.equals("2")) {
 				namelistjson="[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
-				datalistjson="[{data:30},{data:70},{data:50},{data:30},{data:20}] ";
+				datalistjson="[{data:25},{data:30},{data:24},{data:26},{data:25}] ";
 				chart4Month();
 			}
 
 			if (resultType.equals("3")) {
 				namelistjson="[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'may'},{name:'jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}] ";
-				datalistjson="[{data:214.9},{data:310.5},{data:406.4},{data:506.4},{data:206.4},{data:106.4},{data:246.4},{data:266.4},{data:276.4},{data:166.4},{data:200},{data:196.4}] ";
+				datalistjson="[{data:130},{data:140},{data:120},{data:110},{data:100},{data:150},{data:115},{data:125},{data:114},{data:115},{data:126},{data:118}] ";
 				chart4Year();
 			}
 
-
 			webView.reload();
+
 			DialogUtil.dismissDialog();
 
 		}
 
 		private void dododo(String resultType, String input)
 				throws JSONException {
+
 			JSONObject jsonObject = new JSONObject(input);
 			JSONArray jr = jsonObject.getJSONArray("result");
 			List<Xvo> nameLi = new ArrayList<Xvo>();
@@ -372,4 +301,5 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		}
 
 	}
+
 }

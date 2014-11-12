@@ -61,17 +61,31 @@ public class InformationActivity extends Activity implements
 		title.setText("信息");
 		InforChartView inforChartView = new InforChartView(this);
 		InforElChartView inforElChartView = new InforElChartView(this);
-		pageViews.add(inforChartView);
-		pageViews.add(inforElChartView);
+		InfoElcChartView inforElcChartView = new InfoElcChartView(this);
+		boolean isgas = getIntent().getBooleanExtra("isgas", false);
+		if (isgas) {
+			pageViews.add(inforChartView);
+			pageViews.add(inforElChartView);
+		} else {
+			pageViews.add(inforElcChartView);
+		}
+
 		pageViews.add(view3);
 		pageViews.add(new InforHistoryView(this));
-
 		heattv = (TextView) view3.findViewById(R.id.heattv);
+	
 
 		sumwater = (TextView) inforChartView.findViewById(R.id.sumwater);
 		sumgas = (TextView) inforElChartView.findViewById(R.id.sumgas);
 		taptv = (TextView) view3.findViewById(R.id.taptv);
 		heatxiaolv = (TextView) view3.findViewById(R.id.heatxiaolv);
+		
+		if (isgas) {
+			((View) heatxiaolv.getParent()).setVisibility(View.VISIBLE);
+		} else {
+			((View) heatxiaolv.getParent()).setVisibility(View.GONE);
+		}
+		
 		// 创建imageviews数组，大小是要显示的图片的数量
 		imageViews = new ImageView[pageViews.size()];
 		// 实例化小圆点的linearLayout和viewpager
@@ -102,7 +116,8 @@ public class InformationActivity extends Activity implements
 		mViewPager.setAdapter(new NavigationPageAdapter());
 		mViewPager.setOnPageChangeListener(InformationActivity.this);
 
-		getdata();
+		// getdata();
+
 	}
 
 	// 设置要显示的pageradapter类
@@ -175,7 +190,15 @@ public class InformationActivity extends Activity implements
 
 		if (position == 1 && tempToken++ == 0) {
 			// load
-			((InforElChartView) pageViews.get(1)).selectDefault();
+			try {
+				((InforElChartView) pageViews.get(1)).selectDefault();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+		}
+		if (position == 2) {
+			setViewData();
 		}
 
 	}
@@ -245,17 +268,22 @@ public class InformationActivity extends Activity implements
 	}
 
 	public void setViewData() {
-		System.out.println(mcuVo.getCumulativeGas());
-		// heatxiaolv.setText(mcuVo.get);
-		taptv.setText(mcuVo.getCumulativeOpenValveTimes() + "");
-		if (mcuVo != null && mcuVo.getCumulatUseTime() != null) {
-			heattv.setText(mcuVo.getCumulatUseTime() + "mins");
-		}
-		if (mcuVo!=null&&mcuVo.getCumulativeVolume()!=null) {
-			sumwater.setText(mcuVo.getCumulativeVolume() + "L");
-		}
-		if (mcuVo!=null&&mcuVo.getCumulativeGas()!=null) {
-			sumgas.setText(mcuVo.getCumulativeGas() + "L");
-		}
+		// System.out.println(mcuVo.getCumulativeGas());
+		// // heatxiaolv.setText(mcuVo.get);
+		// taptv.setText(mcuVo.getCumulativeOpenValveTimes() + "");
+		// if (mcuVo != null && mcuVo.getCumulatUseTime() != null) {
+		// heattv.setText(mcuVo.getCumulatUseTime() + "mins");
+		// }
+		// if (mcuVo!=null&&mcuVo.getCumulativeVolume()!=null) {
+		// sumwater.setText(mcuVo.getCumulativeVolume() + "L");
+		// }
+		// if (mcuVo!=null&&mcuVo.getCumulativeGas()!=null) {
+		// sumgas.setText(mcuVo.getCumulativeGas() + "L");
+		// }
+
+		heattv.setText("1000mins");
+		sumwater.setText("120000L");
+		sumgas.setText("140000L");
+
 	}
 }

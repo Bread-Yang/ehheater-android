@@ -67,7 +67,7 @@ public class ChangeStuteView {
 				R.layout.comment_statue_layout, null);
 		TextView min = (TextView) view.findViewById(R.id.min);
 		TextView textView = (TextView) view.findViewById(R.id.text);
-		textView.setText("未连接");
+		textView.setText("不在线");
 		min.setVisibility(View.GONE);
 		parent.addView(view);
 	}
