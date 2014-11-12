@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.CloudBaseActivity;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.vanward.ehheater.activity.WelcomeActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -53,7 +54,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements O
 		if ( view == btn_logout ){
 			new SharedPreferUtils(getBaseContext()).clear();
 			new HeaterInfoService(getBaseContext()).deleteAllHeaters();
-			intent.setClass(getBaseContext(), LoginActivity.class);
+			intent.setClass(getBaseContext(), WelcomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
