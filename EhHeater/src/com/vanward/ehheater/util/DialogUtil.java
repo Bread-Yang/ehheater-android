@@ -83,9 +83,9 @@ public class DialogUtil {
 		
 		dialog = reconnectDialog;
 		try {
-		if (!((Activity)dialog.getContext()).isFinishing()&&!((Activity)dialog.getContext()).isDestroyed()) {
+//		if (!((Activity)dialog.getContext()).isFinishing()&&!((Activity)dialog.getContext()).isDestroyed()) {
 			dialog.show();
-		}	
+//		}	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
