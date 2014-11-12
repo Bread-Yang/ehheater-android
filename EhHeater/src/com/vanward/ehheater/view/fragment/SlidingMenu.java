@@ -2,17 +2,12 @@ package com.vanward.ehheater.view.fragment;
 
 import java.lang.reflect.Method;
 
-import com.vanward.ehheater.R;
-import com.vanward.ehheater.view.fragment.CustomViewAbove.OnPageChangeListener;
-
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -30,6 +25,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+
+import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.BitmapDecodeCacheUtil;
+import com.vanward.ehheater.view.fragment.CustomViewAbove.OnPageChangeListener;
 
 
 
@@ -819,7 +818,8 @@ public class SlidingMenu extends RelativeLayout {
 	 * @param res a resource ID for the selector drawable
 	 */
 	public void setSelectorDrawable(int res) {
-		mViewBehind.setSelectorBitmap(BitmapFactory.decodeResource(getResources(), res));
+//		mViewBehind.setSelectorBitmap(BitmapFactory.decodeResource(getResources(), res));
+		mViewBehind.setSelectorBitmap(BitmapDecodeCacheUtil.getBitmapFromRes(getResources(), res));
 	}
 
 	/**
