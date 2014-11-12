@@ -78,7 +78,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 		switch (v.getId()) {
 		case R.id.ar_btn_confirm:
 			if (!NetworkStatusUtil.isConnected(this)) {
-				Toast.makeText(getBaseContext(), "请连接至wifi网络", 500).show();
+				Toast.makeText(getBaseContext(), "无网络连接", 500).show();
 				return;
 			}
 			if (isInputValid()) {

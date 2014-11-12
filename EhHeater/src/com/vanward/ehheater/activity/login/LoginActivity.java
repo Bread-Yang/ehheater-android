@@ -103,7 +103,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			
 			if (et_user.getText().length() <= 0
 					|| et_pwd.getText().length() <= 0) {
-				Toast.makeText(this, "请输入手机号/密码", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "请输入账号和密码", Toast.LENGTH_LONG).show();
 				return;
 			}
 			DialogUtil.instance().showLoadingDialog(this, "正在登录，请稍后...");
