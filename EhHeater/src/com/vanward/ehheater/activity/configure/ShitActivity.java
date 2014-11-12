@@ -63,6 +63,9 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	private void initHeaterType() {
 		String typeStr = getIntent().getStringExtra("type");
+		if (typeStr==null) {
+			return;
+		}
 		if (typeStr.equals("gas")) {
 			mType = HeaterType.ST;
 		} else if (typeStr.equals("furnace")) {

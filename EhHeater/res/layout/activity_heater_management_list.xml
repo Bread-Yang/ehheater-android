@@ -20,6 +20,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="20dp"
         android:layout_toEndOf="@+id/device_img"
+        android:textSize="18sp"
         android:gravity="center_vertical" />
 
     <ImageView

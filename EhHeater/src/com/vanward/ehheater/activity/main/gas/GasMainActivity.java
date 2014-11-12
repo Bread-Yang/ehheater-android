@@ -180,7 +180,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			} else {
 				// TODO 设备不在线
 				dealDisConnect();
-				stute.setText("未连接");
+				rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+				stute.setText("不在线");
 			}
 
 			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
@@ -198,6 +199,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		target_tem.setText("--");
 		settemper.setText("--");
 		sumwater.setText(" ");
+		mode.setEnabled(false);
 	}
 
 	@Override
@@ -338,6 +340,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.btn_information:
 			Intent intent3 = new Intent();
+			intent3.putExtra("isgas", true);
 			intent3.setClass(this, InformationActivity.class);
 			startActivity(intent3);
 			break;
@@ -503,6 +506,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
+
 			DialogUtil.instance().showReconnectDialog(this);
 		}
 	}
@@ -576,7 +580,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	public void closeDevice() {
 		openView.setVisibility(View.VISIBLE);
-		rightButton.setVisibility(View.GONE);
+		//rightButton.setVisibility(View.GONE);
 		ChangeStuteView.swichDeviceOff(stuteParent);
 	}
 
@@ -593,6 +597,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		if (pResp.getOn_off() == 0) {
 			setViewsAble(false, pResp);
 			stute.setText("关机中");
+			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 			ison = false;
 		} else {
 			// rightButton.setVisibility(View.VISIBLE);
@@ -602,6 +607,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				setViewsAble(true, pResp);
 				ison = true;
 				stute.setText("待机中");
+				rightButton.setBackgroundResource(R.drawable.icon_shut);
 			}
 
 		}

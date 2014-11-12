@@ -67,6 +67,9 @@ public class DialogUtil {
 			public void onClick(View v) {
 				
 				HeaterInfo curHeater = new HeaterInfoService(act.getBaseContext()).getCurrentSelectedHeater();
+						if (curHeater == null) {
+							return;
+						}
 				String mac = curHeater.getMac();
 				String passcode = curHeater.getPasscode();
 				
@@ -83,7 +86,9 @@ public class DialogUtil {
 		
 		dialog = reconnectDialog;
 		try {
-			dialog.show();
+			if (!act.isFinishing() && !act.isDestroyed()) {
+				dialog.show();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

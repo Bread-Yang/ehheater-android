@@ -10,6 +10,8 @@
         android:id="@+id/top_layout"
         layout="@layout/main_title"
         android:focusable="true" />
+        
+        
 
     <RelativeLayout
         android:id="@+id/RelativeLayout03"
@@ -165,7 +167,7 @@
                 android:layout_below="@+id/TextView01"
                 android:gravity="center_horizontal"
                 android:padding="5dp"
-                android:text="50℃"
+                android:text="35℃"
                 android:textColor="#e9670e"
                 android:textSize="20sp" />
 

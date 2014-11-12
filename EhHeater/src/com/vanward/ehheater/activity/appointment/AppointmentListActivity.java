@@ -87,7 +87,8 @@ public class AppointmentListActivity extends Activity implements
 
 	public void reflashList() {
 		adapter_date = AppointmentModel.getInstance(this).getAdapter_date();
-		adapter.notifyDataSetChanged();
+		//adapter.notifyDataSetChanged();
+		lv_listview.setAdapter(adapter);
 	}
 
 	@Override

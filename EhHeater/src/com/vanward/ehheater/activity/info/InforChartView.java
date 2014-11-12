@@ -214,8 +214,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 		@Override
 		protected String doInBackground(Void... params) {
-			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType,
-					expendType);
+//			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType,
+//					expendType);
+			return "";
 		}
 
 		@Override
@@ -225,21 +226,27 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 			Log.d("emmm", "theString: " + result);
 
-			try {
-				dododo(resultType, result);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				dododo(resultType, result);
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
 
 			if (resultType.equals("1")) {
+				namelistjson="[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
+				datalistjson="[{data:55},{data:55},{data:65},{data:60},{data:70},{data:55},{data:55},] ";
 				chart4week();
 			}
 
 			if (resultType.equals("2")) {
+				namelistjson="[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
+				datalistjson="[{data:415},{data:440},{data:380},{data:330},{data:110}] ";
 				chart4Month();
 			}
 
 			if (resultType.equals("3")) {
+				namelistjson="[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'may'},{name:'jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}] ";
+				datalistjson="[{data:2100},{data:2100},{data:2130},{data:2345},{data:2367},{data:2354},{data:2456},{data:2309},{data:2357},{data:2451},{data:2362},{data:2373}] ";
 				chart4Year();
 			}
 

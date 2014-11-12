@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageView2"
-            android:text="万和电热"
+            android:text="万和电热水器"
             android:textColor="#FF838181"
             android:textSize="22sp" />
 
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageView3"
-            android:text="万和燃热"
+            android:text="万和燃气热水器"
             android:textColor="#FF838181"
             android:textSize="22sp" />
     </RelativeLayout>

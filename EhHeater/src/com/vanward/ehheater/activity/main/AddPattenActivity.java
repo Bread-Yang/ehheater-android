@@ -197,7 +197,6 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			customSetVo.setTempter(tempMap.get(customSetVo.getPeoplenum()));
 			customSetVo.setPower(3);
 		}else{
-			
 			customSetVo.setTempter(seekBar.getProgress() + 35);
 			List list = new BaseDao(this).getDb().findAll(CustomSetVo.class);
 			View view = null;
@@ -223,12 +222,41 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 		case R.id.ivTitleBtnRigh:
-			CustomSetVo customSetVo = getData();
+			final CustomSetVo customSetVo = getData();
 			if (customSetVo != null) {
 				if (oldcustomSetVo != null) {
 					new BaseDao(this).getDb().delete(oldcustomSetVo);
 				}
 				new BaseDao(this).getDb().replace(customSetVo);
+			if (getIntent().getBooleanExtra("ischeck",false)) {
+				new  Thread(new  Runnable() {
+					
+					@Override
+					public void run() {
+
+						System.out.println("自定义");
+						SendMsgModel.changeToZidingyiMode();
+						try {
+							Thread.sleep(700);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						System.out.println("自定义 pow: " + customSetVo.getPower());
+						SendMsgModel.setPower(customSetVo.getPower());
+						try {
+							Thread.sleep(700);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						System.out.println("自定义 Tem: " + customSetVo.getTempter());
+						SendMsgModel.setTempter(customSetVo.getTempter());
+											
+					}
+				}).start();
+				
+			}
 				finish();
 			}
 
