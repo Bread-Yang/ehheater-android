@@ -152,6 +152,9 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			case ST:
 				deviceImage.setImageResource(R.drawable.device_line_img2);
 				break;
+			case EH_FURNACE:
+				deviceImage.setImageResource(R.drawable.device_line_img3);
+				break;
 			default:
 				deviceImage.setImageResource(R.drawable.setting_img3);
 				break;

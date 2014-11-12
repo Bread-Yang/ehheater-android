@@ -62,7 +62,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 							new HeaterInfoService(getBaseContext())
 									.deleteAllHeaters();
 							intent.setClass(getBaseContext(),
-									LoginActivity.class);
+									WelcomeActivity.class);
 							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 							startActivity(intent);

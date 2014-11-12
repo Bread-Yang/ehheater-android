@@ -306,6 +306,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			rb_supply_heating.setText(R.string.no_set);
 			rb_bath.setText(R.string.no_set);
 			tv_temperature.setText(R.string.no_set);
+			tv_gas_consumption.setText(R.string.no_set);
 			circularView.setVisibility(View.GONE);
 			btn_setting.setEnabled(false);
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_1);
@@ -485,8 +486,10 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				}
 			} else { // 1 : no bath current
 				iv_rotate_animation.setVisibility(View.INVISIBLE);
-				tv_current_or_setting_temperature_tips
-						.setText(R.string.setting_temperature);
+				if (rb_bath.isChecked()) {
+					tv_current_or_setting_temperature_tips
+							.setText(R.string.setting_temperature);
+				}
 				if (rg_winner.getCheckedRadioButtonId() == R.id.rb_bath) {
 					circularView.setVisibility(View.VISIBLE);
 				}

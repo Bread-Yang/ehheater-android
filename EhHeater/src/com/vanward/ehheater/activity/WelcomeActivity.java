@@ -76,11 +76,11 @@ public class WelcomeActivity extends GeneratedActivity {
 		
 
 
-		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
-			// 无任何网络连接
-			mTvInfo.setText("无网络连接");
-			return;
-		}
+//		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
+//			// 无任何网络连接
+//			mTvInfo.setText("无网络连接");
+//			return;
+//		}
 
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -485,7 +485,7 @@ public class WelcomeActivity extends GeneratedActivity {
 				default:
 					// 无法识别当前选择的设备, 请进入app删除此设备并选择其他设备
 					startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
-					Toast.makeText(WelcomeActivity.this, "无法识别设备", Toast.LENGTH_LONG).show();
+//					Toast.makeText(WelcomeActivity.this, "无法识别设备", Toast.LENGTH_LONG).show();
 					break;
 				}
 				break;
