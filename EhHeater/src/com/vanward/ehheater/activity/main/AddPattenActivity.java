@@ -197,7 +197,6 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			customSetVo.setTempter(tempMap.get(customSetVo.getPeoplenum()));
 			customSetVo.setPower(3);
 		}else{
-			
 			customSetVo.setTempter(seekBar.getProgress() + 35);
 			List list = new BaseDao(this).getDb().findAll(CustomSetVo.class);
 			View view = null;

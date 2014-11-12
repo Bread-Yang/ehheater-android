@@ -128,8 +128,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		int power = getIntent().getIntExtra("power", 0);
 		int tem = getIntent().getIntExtra("tem", 0);
 		id = getIntent().getIntExtra("id", -1);
-		if (weekstring!=null) {
-			weekstring= weekstring.substring(0, weekstring.length()-1);
+		if (weekstring != null && weekstring.length() > 1) {
+			weekstring = weekstring.substring(0, weekstring.length() - 1);
 			select_week.setText(weekstring);
 		}
 
@@ -325,22 +325,22 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		super.onResume();
 		weektext = "";
 		boolean isallcheck = true;
-		if (id!=-1) {
-			id=-1;
+		if (id != -1) {
+			id = -1;
 			return;
 		}
 		if (AppointmentModel.getInstance(this).getDays() != null) {
 			for (int i = 0; i < AppointmentModel.getInstance(this).getDays().length; i++) {
 				if (AppointmentModel.getInstance(this).getDays()[i] == 1) {
-					weektext = weektext + "星期" + dateString[i] + ",";
+					weektext = weektext + "周" + dateString[i] + ",";
 				} else {
 					isallcheck = false;
 				}
 			}
-			if (weektext.length()>=0) {
-				weektext= weektext.substring(0, weektext.length()-1);
+			if (weektext.length() >= 0) {
+				weektext = weektext.substring(0, weektext.length() - 1);
 			}
-		
+
 			select_week.setText(weektext);
 			if (isallcheck) {
 				select_week.setText("每天");
@@ -349,8 +349,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		} else {
 			select_week.setText("永不");
 		}
-	
-	
+
 	}
 
 	@Override
@@ -418,8 +417,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				Toast.makeText(this, "预约时间不能早于当前时间", Toast.LENGTH_SHORT).show();
 				return;
 			}
-//			SendMsgModel.sentAppolitionment(Integer.parseInt(hour),
-//					Integer.parseInt(minute), peoplenum);
+			// SendMsgModel.sentAppolitionment(Integer.parseInt(hour),
+			// Integer.parseInt(minute), peoplenum);
 			// int hour, int minute, int looper, int[] days, int power,int
 			// peopleNum, int temper
 			System.out.println("weektext: " + weektext);

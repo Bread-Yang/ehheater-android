@@ -55,5 +55,10 @@
         <item name="android:backgroundDimEnabled">true</item>
         <!-- 屏幕背景不变暗 -->
     </style>
+    
+    
+    <style name="custom_checkbox" parent="@android:style/Widget.CompoundButton.CheckBox"> 
+        <item name="android:button">@drawable/my_checkbox</item> 
+    </style>
 
 </resources>
