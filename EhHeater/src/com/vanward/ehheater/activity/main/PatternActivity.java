@@ -353,6 +353,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		final RadioButton radioButton = (RadioButton) view
 				.findViewById(R.id.radioButton1);
 		Button button = (Button) view.findViewById(R.id.textradio1);
+		final RadioButton	tempradioButton=	(RadioButton) view.findViewById(R.id.radioButton1);
 		view.findViewById(R.id.setting).setOnClickListener(
 				new OnClickListener() {
 					@Override
@@ -374,8 +375,12 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 									public void oncall(View v) {
 										intent= new  Intent(PatternActivity.this,AddPattenActivity.class);
 										intent.putExtra("index", customSetVo.getName());
+										intent.putExtra("ischeck", tempradioButton.isChecked());
 										startActivity(intent);
 										AddPatternButtonDialogUtil.instance(PatternActivity.this).dissmiss();
+										if (tempradioButton.isChecked()) {
+											finish();
+										}
 									}
 								})
 

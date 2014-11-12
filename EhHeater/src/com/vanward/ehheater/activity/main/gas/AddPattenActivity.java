@@ -54,23 +54,24 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 		seekBar.setOnSeekBarChangeListener(this);
 		degree.setText("35℃");
-		textView= (TextView)findViewById(R.id.textView2);
-		
-		
+		textView = (TextView) findViewById(R.id.textView2);
+
 		int voId = getIntent().getIntExtra("gasCusVoId", -1);
 		if (voId != -1) {
-			gasVo = new BaseDao(this).getDb().findById(voId, GasCustomSetVo.class);
+			gasVo = new BaseDao(this).getDb().findById(voId,
+					GasCustomSetVo.class);
 			setData(gasVo);
 		}
 	}
+
 	GasCustomSetVo gasVo;
-	
+
 	private void setData(GasCustomSetVo gasVo) {
 		nameedittext.setText(gasVo.getName());
-		seekBar.setProgress(gasVo.getTempter()-35);
-		
+		seekBar.setProgress(gasVo.getTempter() - 35);
+
 		int water = gasVo.getWaterval();
-		
+
 		switch (water) {
 		case 40:
 			waterGroup.check(R.id.RadioButton02);
@@ -82,7 +83,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			waterGroup.check(R.id.RadioButton03);
 			break;
 		}
-		
+
 	}
 
 	public GasCustomSetVo getData() {
@@ -101,10 +102,10 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
 				GasCustomSetVo.class);
 
-
 		if (gasVo == null) {
 			for (int i = 0; i < list.size(); i++) {
-				if (nameedittext.getText().toString().equals(list.get(i).getName())) {
+				if (nameedittext.getText().toString()
+						.equals(list.get(i).getName())) {
 					Toast.makeText(this, "请输出有效名字此名字已用！", Toast.LENGTH_SHORT)
 							.show();
 					return null;
@@ -112,7 +113,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			}
 			customSetVo.setId(list.size() + 1);
 		}
-		
+
 		View view = null;
 		for (int i = 0; i < waterGroup.getChildCount(); i++) {
 			if (waterGroup.getCheckedRadioButtonId() == waterGroup
@@ -132,13 +133,29 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 		case R.id.ivTitleBtnRigh:
-			GasCustomSetVo customSetVo = getData();
+			final GasCustomSetVo customSetVo = getData();
 			if (customSetVo != null) {
 				if (gasVo != null) {
 					new BaseDao(this).getDb().delete(gasVo);
 				}
 				new BaseDao(this).getDb().replace(customSetVo);
-				finish();
+
+				if (getIntent().getBooleanExtra("ischeck", false)) {
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+
+							SendMsgModel
+							.setDIYModel(
+									customSetVo
+											.getId(),
+											customSetVo);
+
+						}
+					}).start();
+					finish();
+				}
 			}
 			break;
 
@@ -168,38 +185,35 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onProgressChanged(SeekBar seekbar1, int arg1, boolean arg2) {
-		
-		
-		int position=seekbar1.getProgress();
-		int temp= position + 35;
-		
-		
-		if (48>=temp) 
+
+		int position = seekbar1.getProgress();
+		int temp = position + 35;
+
+		if (48 >= temp)
 			;
-		else if(49 ==temp)
+		else if (49 == temp)
 			temp = 48;
-		else if(50 <=temp&& 53>temp)
-			temp  = 50;
-		else if(53<=temp&&58>temp)
-			temp  = 55;
-		else if(58<=temp&&63>temp)
-			temp  = 60;
-		else if(63<=temp&&65>=temp)
-			temp  = 65;
-		
-		
-		float x=  seekbar1.getWidth();
-		float seekbarWidth=seekbar1.getX();
-		float y=seekbar1.getY();
-		float width=(position * x)/100 +seekbarWidth;
-		System.out.println("width: "+ width);
-		System.out.println("x: "+ x);
-		System.out.println("position: "+ position);
-		
-		textView.setText(temp+"");
-//		textView.setX(width);
-//		textView.setY(y);
-//		textView.invalidate();
+		else if (50 <= temp && 53 > temp)
+			temp = 50;
+		else if (53 <= temp && 58 > temp)
+			temp = 55;
+		else if (58 <= temp && 63 > temp)
+			temp = 60;
+		else if (63 <= temp && 65 >= temp)
+			temp = 65;
+
+		float x = seekbar1.getWidth();
+		float seekbarWidth = seekbar1.getX();
+		float y = seekbar1.getY();
+		float width = (position * x) / 100 + seekbarWidth;
+		System.out.println("width: " + width);
+		System.out.println("x: " + x);
+		System.out.println("position: " + position);
+
+		textView.setText(temp + "");
+		// textView.setX(width);
+		// textView.setY(y);
+		// textView.invalidate();
 		degree.setText(heatmakeRange(arg1 + 35) + "℃");
 	}
 
