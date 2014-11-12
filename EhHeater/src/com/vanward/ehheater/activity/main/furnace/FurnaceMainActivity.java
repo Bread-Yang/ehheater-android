@@ -171,7 +171,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 					rg_winner.setBackgroundResource(R.drawable.home_xuan_bg1);
 
 					OnDERYStatusResp(statusResp, Global.connectId);
-
+					
 					break;
 				case R.id.rb_bath:
 
@@ -217,7 +217,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			public void run() {
 				circularView = new CircularView(FurnaceMainActivity.this,
 						llt_circle, CircularView.CIRCULAR_SINGLE, 0);
-				circularView.setHeat(true);
+				// circularView.setHeat(true);
 				circularView.setEndangle(65);
 				circularView.setOn(true);
 				circularView.setCircularListener(FurnaceMainActivity.this);
@@ -303,9 +303,10 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 					+ pResp.getBathTemTarget() + "°");
 
 			if (!circularView.isIsclick()) {
-				circularView.setTargerdegree(pResp.getBathTemNow());
-				tv_temperature.setText(pResp.getBathTemNow() + "");
+				circularView.setAngle(pResp.getBathTemTarget());
 			}
+			circularView.setTargerdegree(pResp.getBathTemTarget());
+			tv_temperature.setText(pResp.getBathTemNow() + "");
 
 			if (pResp.getBathMode() == 0) { // 0 - normal bath(temp : 30 - 60)
 				tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
@@ -349,11 +350,11 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		} else if (pResp.getSeasonState() == 1) { // winner
 
 			if (rb_supply_heating.isChecked()) {
-				circularView.setEndangle(80); // demo版: 30° - 80°
-				circularView.setBeginangle(30);
+				circularView.setBeginangle(30); // demo版: 30° - 80°
+				circularView.setEndangle(80);
 			} else {
-				circularView.setEndangle(35); // demo版: 35° - 45°
-				circularView.setBeginangle(45);
+				circularView.setBeginangle(35);
+				circularView.setEndangle(45); // demo版: 35° - 45°
 			}
 
 			if (pResp.getOnOff() == 1) {
@@ -394,21 +395,21 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 
 			if (rg_winner.getVisibility() == View.VISIBLE) {
-				if (!circularView.isIsclick()) {
-					if (rb_supply_heating.isChecked()) {
-						circularView.setTargerdegree(pResp.getBothTemTarget());
-						tv_temperature.setText(pResp.getBothTemTarget() + "");
+				if (rb_supply_heating.isChecked()) {
+					if (!circularView.isIsclick()) {
+						circularView.setAngle(pResp.getHeatingTemTarget());
+					}
+					circularView.setTargerdegree(pResp.getHeatingTemTarget());
+					tv_temperature.setText(pResp.getBothTemTarget() + "");
+				} else {
+					if (!circularView.isIsclick()) {
+						circularView.setAngle(pResp.getBathTemTarget());
+					}
+					circularView.setTargerdegree(pResp.getBathTemTarget());
+					if (statusResp.getBathWater() == 0) {
+						tv_temperature.setText(pResp.getBathTemNow() + "");
 					} else {
-						if (statusResp.getBathWater() == 0) {
-							circularView.setTargerdegree(pResp.getBathTemNow());
-							tv_temperature.setText(pResp.getBathTemNow() + "");
-						} else {
-							circularView.setAngle(pResp.getBathTemTarget());
-							circularView.setTargerdegree(pResp
-									.getBathTemTarget());
-							tv_temperature.setText(pResp.getBathTemTarget()
-									+ "");
-						}
+						tv_temperature.setText(pResp.getBathTemTarget() + "");
 					}
 				}
 			}
@@ -591,14 +592,14 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		tv_temperature.setText(outlevel + "");
 		tv_current_or_setting_temperature_tips
 				.setText(R.string.setting_temperature);
-		 circularView.setTargerdegree(outlevel);
+		circularView.setTargerdegree(outlevel);
 
 		// 变小了
 		if (circularView.getTargerdegree() > outlevel) {
-//			circularView.setTargerdegree(outlevel - 1);
+			// circularView.setTargerdegree(outlevel - 1);
 
 		} else {
-//			circularView.setTargerdegree(outlevel + 1);
+			// circularView.setTargerdegree(outlevel + 1);
 		}
 	}
 
@@ -610,7 +611,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void updateLocalUIdifferent(int outlevel) {
-//		Log.e("updateLocalUIdifferent执行了", "outlevel : " + outlevel);
+		// Log.e("updateLocalUIdifferent执行了", "outlevel : " + outlevel);
 	}
 
 	private void changeSlidingSeasonModeItem(int seasonMode) {
