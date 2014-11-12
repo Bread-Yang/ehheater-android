@@ -117,7 +117,7 @@
     <string name="heater_wifi_ssid">XPG-GAgent</string>
     <string name="setup_step3_eh">在关机状态下, 长按热水器节能键3秒, 蜂鸣器响一声之后松手, 并点击下一步</string>
     <string name="setup_step3_st">在关机状态下, 按热水器预设键一下, 听到蜂鸣之后, 点击下一步</string>
-    <string name="setup_step3_eh_furnace">在关机状态下, 按壁挂炉预设键一下, 听到蜂鸣之后, 点击下一步</string>
+    <string name="setup_step3_eh_furnace">按壁挂炉预设键一下, 听到蜂鸣之后, 点击下一步</string>
 
     <!-- 壁挂炉用到的字段 -->
 
