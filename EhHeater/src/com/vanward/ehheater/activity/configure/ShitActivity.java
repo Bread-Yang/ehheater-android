@@ -247,7 +247,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			case EH_FURNACE:
 				img3.setImageResource(R.drawable.device_img3);
 				s3tip.setText(R.string.setup_step3_eh_furnace);
-				TextStyleUtil.setColorStringInTextView(s3tip, Color.parseColor("#ff5f00"), new String[] { "一下", "听到蜂鸣" });
+				TextStyleUtil.setColorStringInTextView(s3tip, Color.parseColor("#ff5f00"), new String[] { "3秒", "响一声" });
 			default:
 				break;
 			}
