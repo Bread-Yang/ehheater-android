@@ -61,7 +61,6 @@ public class LeftFragment extends LinearLayout implements
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-
 		btn_about = (Button) findViewById(R.id.menu_about_btn);
 		btn_device_manager = (Button) findViewById(R.id.menu_device_manager_btn);
 		btn_help = (Button) findViewById(R.id.menu_help_btn);
@@ -222,7 +221,6 @@ public class LeftFragment extends LinearLayout implements
 			HeaterInfoService hser = new HeaterInfoService(getContext());
 			HeaterType oriHeaterType = hser.getCurHeaterType();
 			HeaterType newHeaterType = hser.getHeaterType(heaterInfo);
-
 			hser.setCurrentSelectedHeater(heaterInfo.getMac()); // TODO
 																// 这里不应该写这里,
 																// 应该卸载连接成功的回调里
@@ -231,13 +229,10 @@ public class LeftFragment extends LinearLayout implements
 																	// 断开现连接
 
 			if (newHeaterType.equals(oriHeaterType)) {
-
 				ConnectActivity.connectToDevice(hostActivity,
 						heaterInfo.getMac(), heaterInfo.getPasscode(), userId,
 						userPsw);
-
 			} else {
-
 				switch (newHeaterType) {
 				case Eh:
 					hostActivity.startActivity(new Intent(hostActivity,

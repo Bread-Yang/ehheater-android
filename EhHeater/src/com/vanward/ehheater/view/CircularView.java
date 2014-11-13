@@ -326,16 +326,15 @@ public class CircularView extends View {
 						// degree = tempdegree;
 					}
 				}
+				olddegree = degree;
 				System.out.println("test;"+ degree);
 				heatmakeRange(degreeToAngle(degree));
 				if (degree >= angleToDegree(endangle)) {
 					degree = angleToDegree(endangle);
 				} else if (degree <= angleToDegree(beginangle)) {
-					
-					
 					degree = angleToDegree(beginangle);
 				}
-				olddegree = degree;
+			
 				if (isclick) {
 					handler.sendEmptyMessage(UpdateUIToSet);
 				}
@@ -462,7 +461,7 @@ public class CircularView extends View {
 				degree = angleToDegree(50);
 			}
 			if (value > 49) {
-				int[] rangs = { 50, 55, 60, 65 };
+				int[] rangs = { 50, 55, 60, 65};
 				for (int i = 0; i < rangs.length; i++) {
 					if (Math.abs(value - rangs[i]) <= 3) {
 						degree = angleToDegree(rangs[i]);
