@@ -10,13 +10,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.configure.DummySendBindingReqActivity;
 import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
@@ -185,7 +184,7 @@ public class WelcomeActivity extends GeneratedActivity {
 				XPGConnectClient.RemoveActivity(WelcomeActivity.this);
 				break;
 
-			case STATE_JUMPED_OUT_TO_CONFIGURE:
+			case STATE_JUMPED_OUT_TO_CONFIGURE:	// 这种情况其实是不存在的, 可以删除  -- yimin 11.13
 				Intent intent = new Intent(getBaseContext(), ShitActivity.class);
 				intent.putExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, true);
 				startActivity(intent);
@@ -193,10 +192,6 @@ public class WelcomeActivity extends GeneratedActivity {
 				finish();
 				break;
 
-
-//			case STATE_INVOKE_BINDING_ACTIVITY:
-//				setBinding();
-//				break;
 				
 			case STATE_NORMAL:
 				// 直接进入MainActivity
@@ -217,8 +212,9 @@ public class WelcomeActivity extends GeneratedActivity {
 					
 				default:
 					// 无法识别当前选择的设备, 请进入app删除此设备并选择其他设备
-					startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
-//					Toast.makeText(WelcomeActivity.this, "无法识别设备", Toast.LENGTH_LONG).show();
+					Toast.makeText(WelcomeActivity.this, "下载到了无法识别的设备, 请进入app切换至别的设备", Toast.LENGTH_LONG).show();
+					startActivity(new Intent(getBaseContext(), MainActivity.class));
+					finish();
 					break;
 				}
 				break;

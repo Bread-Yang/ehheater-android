@@ -209,8 +209,16 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
 
-		onDeviceFoundTriggered = true;
+		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
+		Log.d("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);
+		
+		if ( !(hser.isValidDevice(hi)) ) {
+			// 非有效设备, 不予保存
+			return; 
+		}
+		
+		onDeviceFoundTriggered = true;
 
 		if (count++ == 0) {
 			AccountService.setUser(getBaseContext(), et_user.getText().toString(), et_pwd.getText().toString());
@@ -234,8 +242,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			
 		}
 
-		Log.d("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);
-		new HeaterInfoService(getBaseContext()).saveDownloadedHeater(hi);
+		hser.saveDownloadedHeater(hi);
 	};
 
 	int count;
