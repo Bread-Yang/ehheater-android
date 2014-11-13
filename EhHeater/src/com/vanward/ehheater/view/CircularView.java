@@ -288,7 +288,7 @@ public class CircularView extends View {
 							}
 							
 							if (degree >= angleToDegree(beginangle)
-									&& degree <= angleToDegree(endangle)) {
+									|| degree <= angleToDegree(endangle)) {
 								heatmakeRange(degreeToAngle(degree));
 								if (degree >= angleToDegree(endangle)) {
 									degree = angleToDegree(endangle);

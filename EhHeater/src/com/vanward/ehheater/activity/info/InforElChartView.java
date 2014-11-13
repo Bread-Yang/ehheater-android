@@ -55,7 +55,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 	String datalistjson = "";
 	String namelistjson = "";
 
-	TextView last, next;
+	TextView last, next, sumgas;
 
 	public InforElChartView(Context context) {
 		super(context);
@@ -69,6 +69,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		last = (TextView) layout.findViewById(R.id.last);
 		((View) last.getParent()).setOnClickListener(this);
 		next = (TextView) layout.findViewById(R.id.next);
+		sumgas = (TextView) layout.findViewById(R.id.sumgas);
 		((View) next.getParent()).setOnClickListener(this);
 		webView.setWebViewClient(new WebViewClient() {
 
@@ -87,7 +88,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 			}
 
 		});
-		
+
 		webView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -318,30 +319,32 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 			Log.d("emmm", "theString: " + result);
 
-//			try {
-//				dododo(resultType, result);
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
+			// try {
+			// dododo(resultType, result);
+			// } catch (JSONException e) {
+			// e.printStackTrace();
+			// }
 
 			if (resultType.equals("1")) {
-				namelistjson="[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
-				datalistjson="[{data:2},{data:5},{data:5},{data:3},{data:7},{data:4},{data:4},] ";
+				namelistjson = "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
+				datalistjson = "[{data:2},{data:5},{data:5},{data:3},{data:7},{data:4},{data:4},] ";
 				chart4week();
+				sumgas.setText("50L");
 			}
 
 			if (resultType.equals("2")) {
-				namelistjson="[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
-				datalistjson="[{data:30},{data:70},{data:50},{data:30},{data:20}] ";
+				namelistjson = "[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
+				datalistjson = "[{data:30},{data:70},{data:50},{data:30},{data:20}] ";
 				chart4Month();
+				sumgas.setText("200L");
 			}
 
 			if (resultType.equals("3")) {
-				namelistjson="[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'May'},{name:'Jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}]";
-				datalistjson="[{data:214.9},{data:310.5},{data:406.4},{data:506.4},{data:206.4},{data:106.4},{data:246.4},{data:266.4},{data:276.4},{data:166.4},{data:200},{data:196.4}] ";
+				namelistjson = "[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
+				datalistjson = "[{data:214.9},{data:310.5},{data:406.4},{data:506.4},{data:206.4},{data:106.4},{data:246.4},{data:266.4},{data:276.4},{data:166.4},{data:200},{data:196.4}] ";
 				chart4Year();
+				sumgas.setText("2400L");
 			}
-
 
 			webView.reload();
 			DialogUtil.dismissDialog();

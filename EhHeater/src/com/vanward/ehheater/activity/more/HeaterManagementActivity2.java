@@ -59,7 +59,6 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		setTopText(R.string.device_manager);
 		setRightButtonBackground(R.drawable.icon_edit);
 		setLeftButtonBackground(R.drawable.icon_back);
-
 		findViewById();
 		setListener();
 		init();
