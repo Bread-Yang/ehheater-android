@@ -30,7 +30,7 @@
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:scaleType="fitCenter"

@@ -688,7 +688,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		leavewater.setText(pResp.getNowVolume() + "L");
 		sumwater.setText(pResp.getSetWater_cumulative() + "L");
 
-		if (pResp.getSetWater_cumulative() == (pResp.getSetWater_power() * 10)) {
+		if (pResp.getSetWater_cumulative() == (pResp.getSetWater_power() * 10)&&!FullWaterWarnDialogUtil.instance(this).getDialog().isShowing()) {
 			FullWaterWarnDialogUtil.instance(this).showDialog();
 		}
 
