@@ -475,7 +475,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			stute.setText("加热中");
 
 			hotImgeImageView.setVisibility(View.VISIBLE);
-
 			operatingAnim = AnimationUtils.loadAnimation(GasMainActivity.this,
 					R.anim.tip_4500);
 			LinearInterpolator lin = new LinearInterpolator();
@@ -530,6 +529,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			// 连接断开
 
 			DialogUtil.instance().showReconnectDialog(this);
+			dealDisConnect();
 		}
 	}
 
