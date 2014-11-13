@@ -2,14 +2,12 @@ package com.vanward.ehheater.activity.main.gas;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -45,7 +43,6 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
-import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
@@ -157,25 +154,14 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			Global.connectId = connId;
 
 			if (isOnline) {
-				DialogUtil.instance().showQueryingDialog(this);
-				generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						for (int i = 0; i < 10; i++) {
-							if (DialogUtil.instance().getIsShowing()) {
-								generated
-										.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-								try {
-									Thread.sleep(5 * 1000);
-								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						}
-					}
-				}).start();
+				
+				boolean shouldExecuteBinding = HeaterInfoService.shouldExecuteBinding(curHeater);
+				
+				if (shouldExecuteBinding) {
+					HeaterInfoService.setBinding(this, did, passcode);
+				} else {
+					queryState();
+				}
 
 			} else {
 				// TODO 设备不在线
@@ -189,6 +175,42 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 		}
 
+		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
+			
+			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			
+			if (resultCode == RESULT_OK) {
+				// binded
+				new HeaterInfoService(getBaseContext()).updateBinded(curHeater.getMac(), true);
+			}
+			
+			queryState();
+			
+		}
+
+	}
+	
+	private void queryState() {
+
+		DialogUtil.instance().showQueryingDialog(this);
+		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for (int i = 0; i < 10; i++) {
+					if (DialogUtil.getIsShowing()) {
+						generated
+								.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
+						try {
+							Thread.sleep(5 * 1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}).start();
 	}
 
 	public void dealDisConnect() {

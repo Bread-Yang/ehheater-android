@@ -305,7 +305,7 @@ public class ConnectActivity extends GeneratedActivity {
 	
 	private void initTargetDeviceInfo() {
 		mac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
-		passcode = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+		passcode = passcodeRetrieved = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
 	}
 
 	public static String testTime() {
@@ -322,22 +322,6 @@ public class ConnectActivity extends GeneratedActivity {
 	 * 返回STATE_NORMAL
 	 */
 	private void checkLoginAndCurrentDeviceStatus(Context context, Handler flowHandler) {
-
-/*
-		// 已登录且有当前设备
-
-		if (TextUtils.isEmpty(did) || TextUtils.isEmpty(passcode)) {
-
-			// 当前设备没有did或者没有passcode, 此时只能通过小循环控制
-			// return STATE_LAN_ONLY;
-			flowHandler.sendEmptyMessage(STATE_LAN_ONLY);
-			return;
-		}
-		
-*/
-
-		// 已登录且有当前设备且当前设备有did和passcode
-		// return STATE_NORMAL;
 
 		flowHandler.sendEmptyMessage(STATE_NORMAL);
 		return;

@@ -678,15 +678,22 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			Global.connectId = connId;
 
 			if (isOnline) {
-				// DialogUtil.instance().showQueryingDialog(this);
-				// generated.SendStateReq(Global.connectId);
-				mSlidingMenu.post(new Runnable() {
-
-					@Override
-					public void run() {
-						generated.SendDERYRefreshReq(Global.connectId);
-					}
-				});
+				
+				boolean shouldExecuteBinding = HeaterInfoService.shouldExecuteBinding(curHeater);
+				
+				if (shouldExecuteBinding) {
+					HeaterInfoService.setBinding(this, did, passcode);
+				} else {
+					queryState();
+				}
+				
+//				mSlidingMenu.post(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						generated.SendDERYRefreshReq(Global.connectId);
+//					}
+//				});
 
 			} else {
 				// TODO 设备不在线
@@ -711,6 +718,33 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				iv_season_mode.setImageResource(R.drawable.mode_icon_winner);
 			}
 		}
+		
+
+
+		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
+			
+			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			
+			if (resultCode == RESULT_OK) {
+				// binded
+				new HeaterInfoService(getBaseContext()).updateBinded(curHeater.getMac(), true);
+			}
+			
+			queryState();
+			
+		}
+	}
+	
+	private void queryState() {
+
+		mSlidingMenu.post(new Runnable() {
+
+			@Override
+			public void run() {
+				generated.SendDERYRefreshReq(Global.connectId);
+			}
+		});
 	}
 
 }
