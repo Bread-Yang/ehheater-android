@@ -4,11 +4,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.util.PxUtil;
@@ -37,14 +39,15 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	
 	private View initContentView() {
 		
-		TextView t = new TextView(this);
-		t.setGravity(Gravity.CENTER);
-		t.setText("正在上传绑定关系...");
-		t.setMinHeight(PxUtil.dip2px(this, 40));
-		t.setMinWidth(PxUtil.dip2px(this, 200));
+		mTvInfo = new TextView(this);
+		mTvInfo.setGravity(Gravity.CENTER);
+		mTvInfo.setText("正在上传绑定关系...");
+		mTvInfo.setMinHeight(PxUtil.dip2px(this, 40));
+		mTvInfo.setMinWidth(PxUtil.dip2px(this, 200));
 		
-		return t;
+		return mTvInfo;
 	}
+	TextView mTvInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 				XPGConnectClient.RemoveActivity(DummySendBindingReqActivity.this);
 				finish();
 			}
-		}, 4000);
+		}, 5000);
 	}
 	
 	public void onConnectEvent(int connId, int event) {
@@ -94,16 +97,29 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 		
 		generated.SendBindingSetReq(tempConnId, generated.String2XpgData(did2bind), 
 				generated.String2XpgData(passcode2bind));
-		Log.d("emmm", "sendingBinding@DummySendBinding: " + did2bind + "-" + passcode2bind);
+		Log.d("emmm", "sendingBinding@DummySendBinding: " + username + "-" + did2bind + "-" + passcode2bind);
 	}
 	
 	public void OnBindingSetResp(BindingSetResp_t pResp, int nConnId) {
 		super.OnBindingSetResp(pResp, nConnId);
 		Log.d("emmm", "OnBindingSetResp@DummySendBinding:" + pResp.getResult());
 		
-		setResult(RESULT_OK);
-		XPGConnectClient.RemoveActivity(this);
-		finish();
+		if (pResp.getResult() == 0) {
+			setResult(RESULT_OK);
+			mTvInfo.setText("绑定成功");
+		} else {
+			setResult(RESULT_CANCELED);
+			mTvInfo.setText("绑定失败");
+		}
+		
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				XPGConnectClient.RemoveActivity(DummySendBindingReqActivity.this);
+				finish();
+			}
+		}, 300);
+		
 	};
 	
 	

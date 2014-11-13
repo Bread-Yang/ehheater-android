@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:gravity="center_horizontal"
-                android:text="10L"
+                android:text="990L"
                 android:textColor="#ffffffff"
                 android:textSize="18dp" />
 
@@ -108,7 +108,7 @@
                 android:maxHeight="10dip"
                 android:minHeight="10dip"
                 android:padding="10dp"
-                android:progress="1"
+                android:progress="99"
                 android:progressDrawable="@drawable/seekbar_style"
                 android:thumb="@drawable/seekbar_thumb"
                 android:thumbOffset="0dip" >

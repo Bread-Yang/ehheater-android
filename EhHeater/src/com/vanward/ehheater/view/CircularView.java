@@ -110,7 +110,7 @@ public class CircularView extends View {
 
 		// bgBmp = BitmapFactory.decodeResource(getResources(),
 		// R.drawable.home_yuan_tiao3);
-		dianbmp = BitmapFactory.decodeResource(getResources(),
+		dianbmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(),
 				R.drawable.home_yuan_tiao_dian);
 		// bgBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(),
 		// R.drawable.home_yuan_tiao3);
@@ -119,14 +119,14 @@ public class CircularView extends View {
 
 		outBmp = dianbmp;
 
-		redoutBmp = BitmapFactory.decodeResource(getResources(),
-				R.drawable.home_yuan_tiao);
-		blueoutBmp = BitmapFactory.decodeResource(getResources(),
-				R.drawable.home_yuan_tiao_lan);
-		// redoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(),
-		// R.drawable.home_yuan_tiao);
-		// blueoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(),
-		// R.drawable.home_yuan_tiao_lan);
+//		redoutBmp = BitmapFactory.decodeResource(getResources(),
+//				R.drawable.home_yuan_tiao);
+//		blueoutBmp = BitmapFactory.decodeResource(getResources(),
+//				R.drawable.home_yuan_tiao_lan);
+		 redoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(),
+		 R.drawable.home_yuan_tiao);
+		 blueoutBmp = BitmapDecodeCacheUtil.getBitmapFromRes(getResources(),
+		 R.drawable.home_yuan_tiao_lan);
 
 		// Shader shader = new BitmapShader(bgBmp, Shader.TileMode.CLAMP,
 		// Shader.TileMode.CLAMP);
@@ -315,12 +315,18 @@ public class CircularView extends View {
 						degree = angleToDegree(targerdegree) + perangle;
 						// degree = degree + 6;
 					} else if (tempdegree < olddegree && degree > 0) {
-						degree = angleToDegree(targerdegree) - perangle;
+						if (isHeat&& targerdegree==65) {
+							degree=angleToDegree(targerdegree) - 3*perangle;
+						}else {
+							degree = angleToDegree(targerdegree) - perangle;
+						}
+						
 						// degree = degree - 6;
 					} else {
 						// degree = tempdegree;
 					}
 				}
+				olddegree = degree;
 				System.out.println("test;"+ degree);
 				heatmakeRange(degreeToAngle(degree));
 				if (degree >= angleToDegree(endangle)) {
@@ -328,7 +334,7 @@ public class CircularView extends View {
 				} else if (degree <= angleToDegree(beginangle)) {
 					degree = angleToDegree(beginangle);
 				}
-				olddegree = degree;
+			
 				if (isclick) {
 					handler.sendEmptyMessage(UpdateUIToSet);
 				}
@@ -455,7 +461,7 @@ public class CircularView extends View {
 				degree = angleToDegree(50);
 			}
 			if (value > 49) {
-				int[] rangs = { 50, 55, 60, 65 };
+				int[] rangs = { 50, 55, 60, 65};
 				for (int i = 0; i < rangs.length; i++) {
 					if (Math.abs(value - rangs[i]) <= 3) {
 						degree = angleToDegree(rangs[i]);

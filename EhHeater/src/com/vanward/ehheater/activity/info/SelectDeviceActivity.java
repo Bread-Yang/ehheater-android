@@ -46,17 +46,17 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
 			intent.putExtra("type", "elect");
 			startActivity(intent);
-			finish();
+		
 		} else if (arg0.getId() == R.id.gas) {
 			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
 			intent.putExtra("type", "gas");
 			startActivity(intent);
-			finish();
+			
 		} else if (arg0.getId() == R.id.rlt_furnace) {
 			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
 			intent.putExtra("type", "furnace");
 			startActivity(intent);
-			finish();
+		
 		}
 
 	}

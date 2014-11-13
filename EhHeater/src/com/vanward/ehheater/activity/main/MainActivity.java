@@ -303,8 +303,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 						R.anim.tip_4500);
 				LinearInterpolator lin = new LinearInterpolator();
 				operatingAnim.setInterpolator(lin);
-				hotImgeImageView.startAnimation(operatingAnim);
-
+				//hotImgeImageView.startAnimation(operatingAnim);
+				hotImgeImageView.setVisibility(View.GONE);
 				animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 				animationDrawable.start();
 				circularView.setCircularListener(MainActivity.this);
@@ -568,7 +568,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		System.out.println("测试晨浴i: " + i);
 		if (i == 0) {
 			ChangeStuteView.swichMorningWash(stuteParent);
-
 		} else if (new EhState(data).getSystemRunningState() == 1) {
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
 		}
