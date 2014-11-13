@@ -239,7 +239,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 						new String[] { "3秒", "响一声" });
 				break;
 			case ST:
-				img3.setImageResource(R.drawable.setting_img5);
+				img3.setImageResource(R.drawable.device_img1);
 				s3tip.setText(R.string.setup_step3_st);
 				TextStyleUtil.setColorStringInTextView(s3tip,
 						Color.parseColor("#ff5f00"), new String[] { "一下",

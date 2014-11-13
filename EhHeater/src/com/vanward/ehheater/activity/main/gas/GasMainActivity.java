@@ -687,7 +687,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		settemper.setText("/" + (pResp.getSetWater_power() * 10) + "L");
 		leavewater.setText(pResp.getNowVolume() + "L");
 		sumwater.setText(pResp.getSetWater_cumulative() + "L");
-		if (pResp.getSetWater_cumulative() == (pResp.getSetWater_power() * 10)&&!FullWaterWarnDialogUtil.instance(this).getDialog().isShowing()) {
+
+		if (pResp.getSetWater_cumulative() == (pResp.getSetWater_power() * 10)) {
 			FullWaterWarnDialogUtil.instance(this).showDialog();
 		}
 
@@ -750,9 +751,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		if (pResp.getErrorCode() != 0) {
 			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.main_error);
-			animationDrawable = (AnimationDrawable) tipsimg.getDrawable();
-			animationDrawable.start();
-			
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
