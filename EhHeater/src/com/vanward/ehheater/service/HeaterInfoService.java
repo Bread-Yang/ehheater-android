@@ -185,5 +185,14 @@ public class HeaterInfoService {
 		act.startActivityForResult(intent, Consts.REQUESTCODE_UPLOAD_BINDING);
 		
 	}
+	
+	/**
+	 * 设备是否有效, 即检查productkey是否为电热, 燃热, 壁挂炉等
+	 * @param hinfo
+	 * @return
+	 */
+	public boolean isValidDevice(HeaterInfo hinfo) {
+		return !(getHeaterType(hinfo).equals(HeaterType.Unknown));
+	}
 
 }
