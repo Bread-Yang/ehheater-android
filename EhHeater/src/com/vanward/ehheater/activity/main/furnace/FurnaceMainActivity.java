@@ -282,6 +282,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			btn_setting.setEnabled(false);
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 			isOn = false;
+			
+			DialogUtil.instance().showReconnectDialog(this);
 		} else if (connId == Global.connectId && event == 0) {
 			generated.SendDERYRefreshReq(Global.connectId);
 		}
@@ -323,8 +325,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setTargerdegree(pResp.getBathTemTarget());
 			}
 
-			tv_temperature.setText(pResp.getBathTemNow() + "");
-
 			if (pResp.getBathMode() == 0) { // 0 - normal bath(temp : 30 - 60)
 				tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
 						getResources().getDrawable(R.drawable.mode_icon_bath),
@@ -349,11 +349,13 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				// tv_temperature.setText(pResp.getBathTemNow() + "");
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.outlet_temperature);
+				tv_temperature.setText(pResp.getBathTemNow() + "");
 			} else {
 				tv_status.setText(R.string.standby);
 				circularView.setVisibility(View.VISIBLE);
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.setting_temperature);
+				tv_temperature.setText(pResp.getBathTemTarget() + "");
 			}
 
 			if (pResp.getFireState() == 0) { // 0 : no flame
@@ -361,7 +363,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				// tv_temperature.setText(pResp.getBathTemTarget() + "");
 				// tv_current_or_setting_temperature_tips
 				// .setText(R.string.setting_temperature);
-			} else if (pResp.getFireState() == 1) { // 1 : have flame
+			} else if (pResp.getFireState() == 1 && pResp.getOnOff() == 1) { // 1 : have flame
 				iv_fire_wave_animation.setVisibility(View.VISIBLE);
 			}
 		} else if (pResp.getSeasonState() == 1) { // winner
@@ -438,7 +440,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				iv_rotate_animation.setVisibility(View.INVISIBLE);
 				iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 				tv_status.setText(R.string.standby);
-			} else if (pResp.getFireState() == 1) { // 1 : have flame
+			} else if (pResp.getFireState() == 1 && pResp.getOnOff() == 1) { // 1 : have flame
 				if ((rb_bath.isChecked() && pResp.getBathWater() == 0)
 						|| rb_supply_heating.isChecked()) {
 					iv_fire_wave_animation.setVisibility(View.VISIBLE);
@@ -614,7 +616,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	// 转圈拖动的时候执行
 	@Override
 	public void updateUIListener(int outlevel) {
-		Log.e("updateUIListener执行了", "outlevel : " + outlevel);
+//		Log.e("updateUIListener执行了", "outlevel : " + outlevel);
 
 		tv_temperature.setText(outlevel + "");
 		tv_current_or_setting_temperature_tips
