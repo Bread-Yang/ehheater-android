@@ -270,17 +270,23 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) { // -7:offline, 0 :
 															// online
-			tv_status.setText(R.string.offline);
-			rb_summer.setText(R.string.no_set);
-			rb_supply_heating.setText(R.string.no_set);
-			rb_bath.setText(R.string.no_set);
-			tv_temperature.setText(R.string.no_set);
-			tv_gas_consumption.setText(R.string.no_set);
-			circularView.setVisibility(View.GONE);
-			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
-			iv_rotate_animation.setVisibility(View.INVISIBLE);
-			btn_setting.setEnabled(false);
-			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
+			try {
+				tv_status.setText(R.string.offline);
+				rb_summer.setText(R.string.no_set);
+				rb_supply_heating.setText(R.string.no_set);
+				rb_bath.setText(R.string.no_set);
+				tv_temperature.setText(R.string.no_set);
+				tv_gas_consumption.setText(R.string.no_set);
+				circularView.setVisibility(View.GONE);
+				iv_fire_wave_animation.setVisibility(View.INVISIBLE);
+				iv_rotate_animation.setVisibility(View.INVISIBLE);
+				btn_setting.setEnabled(false);
+				btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			isOn = false;
 			
 			DialogUtil.instance().showReconnectDialog(this);
