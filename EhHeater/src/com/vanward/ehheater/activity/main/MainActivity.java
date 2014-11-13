@@ -748,7 +748,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		target_tem.setText("--");
 		btn_power.setEnabled(false);
 		findViewById(R.id.pattern).setEnabled(false);
-		rightButton.setBackgroundResource(R.drawable.icon_shut_1);
+		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 		hotImgeImageView.setVisibility(View.GONE);
 	}
 

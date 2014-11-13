@@ -52,7 +52,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			btn_intellectual;
 
 	private TextView mTitleName, tv_mode_tips, tv_status, tv_temperature,
-			tv_current_or_setting_temperature_tips, tv_gas_consumption;
+			tv_current_or_setting_temperature_tips, tv_gas_consumption,
+			tv_gas_unit;
 
 	private LinearLayout llt_circle;
 
@@ -105,6 +106,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			@Override
 			public void run() {
+				btn_top_right.setWidth(btn_top_right.getWidth());
+				btn_top_right.setHeight(btn_top_right.getHeight());
 				generated.SendDERYRefreshReq(Global.connectId);
 			}
 		});
@@ -151,6 +154,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		tv_temperature = (TextView) findViewById(R.id.tv_temperature);
 		tv_current_or_setting_temperature_tips = (TextView) findViewById(R.id.tv_current_or_setting_temperature_tips);
 		tv_gas_consumption = (TextView) findViewById(R.id.tv_gas_consumption);
+		tv_gas_unit = (TextView) findViewById(R.id.tv_gas_unit);
 		rlt_content = (RelativeLayout) findViewById(R.id.rlt_content);
 		llt_circle = (LinearLayout) findViewById(R.id.llt_circle);
 		iv_fire_wave_animation = (ImageView) findViewById(R.id.iv_fire_wave_animation);
@@ -217,7 +221,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	private void init() {
-		btn_top_right.setBackgroundResource(R.drawable.icon_shut_1);
+		btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 
 		llt_circle.post(new Runnable() {
 
@@ -274,7 +278,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
 			btn_setting.setEnabled(false);
-			btn_top_right.setBackgroundResource(R.drawable.icon_shut_1);
+			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 			isOn = false;
 		} else if (connId == Global.connectId && event == 0) {
 			generated.SendDERYRefreshReq(Global.connectId);
@@ -286,7 +290,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			setCircularViewEnable(false, pResp);
 			tv_status.setText(R.string.shutdown);
 			btn_setting.setEnabled(false);
-			btn_top_right.setBackgroundResource(R.drawable.icon_shut_1);
+			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
 			isOn = false;
@@ -490,7 +494,13 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	private void gasConsumptionDeal(DERYStatusResp_t pResp) {
-		tv_gas_consumption.setText(String.valueOf(pResp.getGasCountNow()));
+		if (pResp.getOnOff() == 1) {
+			tv_gas_unit.setVisibility(View.VISIBLE);
+			tv_gas_consumption.setText(String.valueOf(pResp.getGasCountNow()));
+		} else {
+			tv_gas_unit.setVisibility(View.GONE);
+			tv_gas_consumption.setText(R.string.no_set);
+		}
 	}
 
 	private void setCircularViewEnable(boolean enable, DERYStatusResp_t pResp) {
@@ -678,22 +688,23 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			Global.connectId = connId;
 
 			if (isOnline) {
-				
-				boolean shouldExecuteBinding = HeaterInfoService.shouldExecuteBinding(curHeater);
-				
+
+				boolean shouldExecuteBinding = HeaterInfoService
+						.shouldExecuteBinding(curHeater);
+
 				if (shouldExecuteBinding) {
 					HeaterInfoService.setBinding(this, did, passcode);
 				} else {
 					queryState();
 				}
-				
-//				mSlidingMenu.post(new Runnable() {
-//
-//					@Override
-//					public void run() {
-//						generated.SendDERYRefreshReq(Global.connectId);
-//					}
-//				});
+
+				// mSlidingMenu.post(new Runnable() {
+				//
+				// @Override
+				// public void run() {
+				// generated.SendDERYRefreshReq(Global.connectId);
+				// }
+				// });
 
 			} else {
 				// TODO 设备不在线
@@ -718,24 +729,23 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				iv_season_mode.setImageResource(R.drawable.mode_icon_winner);
 			}
 		}
-		
-
 
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
-			
+
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			if (resultCode == RESULT_OK) {
 				// binded
-				new HeaterInfoService(getBaseContext()).updateBinded(curHeater.getMac(), true);
+				new HeaterInfoService(getBaseContext()).updateBinded(
+						curHeater.getMac(), true);
 			}
-			
+
 			queryState();
-			
+
 		}
 	}
-	
+
 	private void queryState() {
 
 		mSlidingMenu.post(new Runnable() {

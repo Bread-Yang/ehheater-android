@@ -126,13 +126,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:visibility="invisible"
                     android:drawableLeft="@drawable/mode_icon_bath"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
                     android:text="@string/mode_bath"
                     android:textColor="@color/an_hui"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:visibility="invisible" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -198,9 +198,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/llt_function"
-            android:visibility="invisible"
             android:layout_alignLeft="@+id/llt_function"
-            android:layout_alignTop="@+id/llt_function" >
+            android:layout_alignTop="@+id/llt_function"
+            android:visibility="invisible" >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -260,10 +260,10 @@
                 android:background="@null"
                 android:drawablePadding="5dp"
                 android:drawableTop="@drawable/selector_bg_furnace_main_setting"
+                android:enabled="false"
                 android:gravity="center"
                 android:onClick="onClick"
                 android:padding="0dp"
-                android:enabled="false"
                 android:text="@string/setting"
                 android:textColor="@color/an_hui" />
 
@@ -353,19 +353,16 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginLeft="5dp"
-                        android:shadowColor="#87420d"
-                        android:shadowDx="2"
-                        android:shadowDy="2"
                         android:text="--"
-                        android:shadowRadius="2"
                         android:textColor="#FFf46310"
                         android:textSize="20dp" />
 
                     <TextView
+                        android:id="@+id/tv_gas_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
-                        android:text="m³/h"
+                        android:text="@string/gas_unit"
                         android:textColor="#FFf46310" />
                 </LinearLayout>
             </LinearLayout>

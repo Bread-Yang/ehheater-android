@@ -55,7 +55,6 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		seekBar.setOnSeekBarChangeListener(this);
 		degree.setText("35℃");
 		textView = (TextView) findViewById(R.id.textView2);
-
 		int voId = getIntent().getIntExtra("gasCusVoId", -1);
 		if (voId != -1) {
 			gasVo = new BaseDao(this).getDb().findById(voId,
@@ -106,7 +105,7 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			for (int i = 0; i < list.size(); i++) {
 				if (nameedittext.getText().toString()
 						.equals(list.get(i).getName())) {
-					Toast.makeText(this, "请输出有效名字此名字已用！", Toast.LENGTH_SHORT)
+					Toast.makeText(this, "请输入有效名字！", Toast.LENGTH_SHORT)
 							.show();
 					return null;
 				}
@@ -154,9 +153,11 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 
 						}
 					}).start();
-					finish();
+				
 				}
+				finish();
 			}
+			
 			break;
 
 		default:
