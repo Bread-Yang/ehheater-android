@@ -326,7 +326,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		weektext = "";
 		boolean isallcheck = true;
 		if (id != -1) {
-			id = -1;
+//			id = -1;
 			return;
 		}
 		if (AppointmentModel.getInstance(this).getDays() != null) {
