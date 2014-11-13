@@ -50,7 +50,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	String datalistjson = "";
 	String namelistjson = "";
 	private TextView last;
-	private TextView next;
+	private TextView next,sumwater;
 
 	public InforChartView(Context context) {
 		super(context);
@@ -61,6 +61,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		radioGroup.setOnCheckedChangeListener(this);
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
+		sumwater= (TextView)layout.findViewById(R.id.sumwater);
 		((View) last.getParent()).setOnClickListener(this);
 		((View) next.getParent()).setOnClickListener(this);
 		webView = (WebView) layout.findViewById(R.id.webView1);
@@ -254,18 +255,21 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 			if (resultType.equals("1")) {
 				namelistjson="[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
 				datalistjson="[{data:55},{data:55},{data:65},{data:60},{data:70},{data:55},{data:55},] ";
+				sumwater.setText("300L");
 				chart4week();
 			}
 
 			if (resultType.equals("2")) {
 				namelistjson="[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
 				datalistjson="[{data:415},{data:440},{data:380},{data:330},{data:110}] ";
+				sumwater.setText("2230L");
 				chart4Month();
 			}
 
 			if (resultType.equals("3")) {
-				namelistjson="[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'May'},{name:'Jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}]";
+				namelistjson="[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
 				datalistjson="[{data:2100},{data:2100},{data:2130},{data:2345},{data:2367},{data:2354},{data:2456},{data:2309},{data:2357},{data:2451},{data:2362},{data:2373}] ";
+				sumwater.setText("24330L");
 				chart4Year();
 			}
 

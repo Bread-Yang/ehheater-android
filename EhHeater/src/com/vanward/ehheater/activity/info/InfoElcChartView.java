@@ -50,7 +50,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	String datalistjson = "";
 	String namelistjson = "";
 	private TextView last;
-	private TextView next;
+	private TextView next,sumwater;
 
 	public InfoElcChartView(Context context) {
 		super(context);
@@ -61,6 +61,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		radioGroup.setOnCheckedChangeListener(this);
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
+		sumwater= (TextView)layout.findViewById(R.id.sumwater);
 		((View) last.getParent()).setOnClickListener(this);
 		((View) next.getParent()).setOnClickListener(this);
 		webView = (WebView) layout.findViewById(R.id.webView1);
@@ -257,18 +258,21 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 				namelistjson = "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
 				datalistjson = "[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5},{data:5},] ";
 				chart4week();
+				sumwater.setText("20L");
 			}
 
 			if (resultType.equals("2")) {
 				namelistjson = "[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
 				datalistjson = "[{data:25},{data:30},{data:24},{data:26},{data:25}] ";
 				chart4Month();
+				sumwater.setText("80L");
 			}
 
 			if (resultType.equals("3")) {
-				namelistjson = "[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'May'},{name:'Jun'},{name:'Jul'},{name:'Aug'},{name:'Sep'},{name:'Oct'},{name:'Nov'},{name:'Dec'}]";
+				namelistjson = "[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
 				datalistjson = "[{data:130},{data:140},{data:120},{data:110},{data:100},{data:150},{data:115},{data:125},{data:114},{data:115},{data:126},{data:118}] ";
 				chart4Year();
+				sumwater.setText("960L");
 			}
 
 			webView.reload();

@@ -271,7 +271,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				hotImgeImageView.setVisibility(View.GONE);
 				circularView.setCircularListener(GasMainActivity.this);
 				llt_circle.addView(circularView);
-				circularView.setVisibility(View.GONE);
+				circularView.setVisibility(View.VISIBLE);
 			}
 		}, 50);
 	}
