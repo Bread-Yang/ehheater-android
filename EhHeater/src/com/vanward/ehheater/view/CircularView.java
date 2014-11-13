@@ -286,8 +286,7 @@ public class CircularView extends View {
 							} else if (degree < olddegree) {
 								outBmp = blueoutBmp;
 							}
-							olddegree = degree;
-
+							
 							if (degree >= angleToDegree(beginangle)
 									&& degree <= angleToDegree(endangle)) {
 								heatmakeRange(degreeToAngle(degree));
@@ -295,6 +294,7 @@ public class CircularView extends View {
 									degree = angleToDegree(endangle);
 								}
 								handler.sendEmptyMessage(UpdateUIToSet);
+								olddegree = degree;
 							}
 
 						}
