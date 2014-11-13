@@ -37,6 +37,7 @@ import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InformationActivity;
+import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -118,6 +119,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
+		registerSuicideReceiver();
 		canupdateView = false;
 
 		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
@@ -204,35 +206,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+        XPGConnectClient.AddActivity(this);
 		canupdateView = true;
-		// String tempname = modeTv.getText().toString();
-		//
-		// if (tempname.equals("夜电模式") || tempname.equals("晨浴模式")
-		// || tempname.equals("智能模式") || tempname.equals("自定义模式")) {
-		// return;
-		// }
-		// boolean flag = false;
-		// List<CustomSetVo> list = new BaseDao(this).getDb().findAll(
-		// CustomSetVo.class);
-		// if (list != null && list.size() > 0) {
-		// for (int i = 0; i < list.size(); i++) {
-		// if (tempname.equals(list.get(i).getName())) {
-		// flag = true;
-		// }
-		// }
-		// if (!flag) {
-		// modeTv.setText("智能模式");
-		// }
-		// } else {
-		// modeTv.setText("智能模式");
-		// }
-		// 自动切换到智能模式
-		// modeTv.post(new Runnable() {
-		// @Override
-		// public void run() {
-		// SendMsgModel.changeToIntelligenceModeWash();
-		// }
-		// });
 
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
 			// 无任何网络连接
@@ -245,6 +220,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+        XPGConnectClient.RemoveActivity(this);
 	}
 
 	@Override
@@ -800,6 +776,18 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	private void registerSuicideReceiver() {
+
+		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
+		BroadcastReceiver receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				finish();
+			}
+		};
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
 	}
 
 }

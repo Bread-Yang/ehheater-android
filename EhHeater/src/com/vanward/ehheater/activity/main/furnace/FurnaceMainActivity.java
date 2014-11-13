@@ -40,6 +40,7 @@ import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
+import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -101,6 +102,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
+		registerSuicideReceiver();
 
 		btn_top_right.post(new Runnable() {
 
@@ -755,6 +757,30 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendDERYRefreshReq(Global.connectId);
 			}
 		});
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+        XPGConnectClient.RemoveActivity(this);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+        XPGConnectClient.AddActivity(this);
+	}
+	
+	private void registerSuicideReceiver() {
+
+		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
+		BroadcastReceiver receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				finish();
+			}
+		};
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
 	}
 
 }

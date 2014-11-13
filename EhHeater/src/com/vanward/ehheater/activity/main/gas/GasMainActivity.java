@@ -109,6 +109,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
+		registerSuicideReceiver();
 
 		// rightButton.post(new Runnable() {
 		// @Override
@@ -242,11 +243,13 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		// resp_t.setOxygenWarning((short) 1);
 		// dealErrorWarnIcon(resp_t);
 		super.onResume();
+        XPGConnectClient.AddActivity(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+        XPGConnectClient.RemoveActivity(this);
 	}
 
 	@Override
@@ -990,6 +993,18 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		}
 		mode.setEnabled(isAble);
 		// rightButton.setEnabled(isAble);
+	}
+	
+	private void registerSuicideReceiver() {
+
+		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
+		BroadcastReceiver receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				finish();
+			}
+		};
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
 	}
 
 }
