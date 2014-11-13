@@ -222,6 +222,16 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		settemper.setText("--");
 		sumwater.setText(" ");
 		mode.setEnabled(false);
+		stute.setText("不在线");
+		if (hotImgeImageView != null) {
+			hotImgeImageView.setVisibility(View.GONE);
+			hotImgeImageView.clearAnimation();
+			iv_wave.setVisibility(View.GONE);
+			if (animationDrawable!=null) {
+				animationDrawable.stop();
+			}
+		
+		}
 		
 	}
 
@@ -334,6 +344,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			mSlidingMenu.showMenu(true);
 			break;
 		case R.id.ivTitleBtnRigh:
+			
+			if (!isconnect) {
+				DialogUtil.instance().showReconnectDialog(this);
+				return;
+			}
+			
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
 			if (ison) {
 				DeviceOffUtil.instance(this)
@@ -480,7 +496,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			LinearInterpolator lin = new LinearInterpolator();
 			operatingAnim.setInterpolator(lin);
 			hotImgeImageView.startAnimation(operatingAnim);
-
 			animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 			animationDrawable.start();
 			setViewsAble(false, pResp);
@@ -522,14 +537,17 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		});
 	}
 
+	boolean isconnect=true;
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-
+			isconnect=false;
 			DialogUtil.instance().showReconnectDialog(this);
 			dealDisConnect();
+		}else {
+			isconnect=true;
 		}
 	}
 
