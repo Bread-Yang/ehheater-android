@@ -92,7 +92,7 @@ public class CircularView extends View {
 		if (f - temp > 0) {
 			temp = temp + 1;
 		}
-		System.out.println("degreeToAngle : " + (degree * angledegree / 360)
+		System.out.println("---degreeToAngle : " + (degree * angledegree / 360)
 				+ "temp： " + temp);
 		temp = temp + 25;
 		return temp;
@@ -208,8 +208,9 @@ public class CircularView extends View {
 	};
 
 	public boolean isCanUpadateAndSetMinMax(int degree) {
+		System.out.println("执行");
 		if (degreeToAngle(degree) <= beginangle) {
-			System.out.println("执行");
+		
 
 			// degree = angleToDegree(beginangle);
 			setAngleInsetting(beginangle);
@@ -315,7 +316,13 @@ public class CircularView extends View {
 						degree = angleToDegree(targerdegree) + perangle;
 						// degree = degree + 6;
 					} else if (tempdegree < olddegree && degree > 0) {
-						degree = angleToDegree(targerdegree) - perangle;
+						if (isHeat&&targerdegree ==65) {
+							degree = angleToDegree(targerdegree) - 3*perangle;
+						}else {
+							degree = angleToDegree(targerdegree) - perangle;
+						}
+					
+						
 						// degree = degree - 6;
 					} else {
 						// degree = tempdegree;
@@ -323,9 +330,9 @@ public class CircularView extends View {
 				}
 				System.out.println("test;"+ degree);
 				heatmakeRange(degreeToAngle(degree));
-				if (degree >= angleToDegree(endangle)) {
+				if (degree >angleToDegree(endangle)) {
 					degree = angleToDegree(endangle);
-				} else if (degree <= angleToDegree(beginangle)) {
+				} else if (degree < angleToDegree(beginangle)) {
 					degree = angleToDegree(beginangle);
 				}
 				olddegree = degree;
@@ -450,14 +457,16 @@ public class CircularView extends View {
 	boolean isHeat = false;
 
 	public synchronized void heatmakeRange(float value) {
+		System.out.println("heatmakeRange");
 		if (isHeat) {
 			if (value == 49) {
 				degree = angleToDegree(50);
 			}
 			if (value > 49) {
-				int[] rangs = { 50, 55, 60, 65 };
+				int[] rangs = { 50, 55, 60, 65,70};
 				for (int i = 0; i < rangs.length; i++) {
 					if (Math.abs(value - rangs[i]) <= 3) {
+						System.out.println("前："+degree+ "i : "+ i);
 						degree = angleToDegree(rangs[i]);
 						if (degree > angleToDegree(endangle)) {
 							degree = angleToDegree(endangle);

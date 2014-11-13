@@ -4,15 +4,15 @@
 
     <item
         android:drawable="@drawable/icon_tip"
-        android:duration="100">
+        android:duration="500">
     </item>
     <item
-        android:drawable="@null"
-        android:duration="100">
+        android:drawable="@drawable/touming"
+        android:duration="500">
     </item>
       <item
         android:drawable="@drawable/icon_tip"
-        android:duration="100">
+        android:duration="500">
     </item>
 
 </animation-list>

@@ -332,7 +332,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		if (AppointmentModel.getInstance(this).getDays() != null) {
 			for (int i = 0; i < AppointmentModel.getInstance(this).getDays().length; i++) {
 				if (AppointmentModel.getInstance(this).getDays()[i] == 1) {
-					weektext = weektext + "周" + dateString[i] + ",";
+					weektext = weektext + "周" + dateString[i] + " ";
 				} else {
 					isallcheck = false;
 				}

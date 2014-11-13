@@ -41,6 +41,10 @@ public class FullWaterWarnDialogUtil {
 
 	private static Context context;
 	private Dialog dialog_morning_wash_number_setting;
+	public Dialog getDialog() {
+		return dialog_morning_wash_number_setting;
+	}
+
 	private static FullWaterWarnDialogUtil model;
 	SeekBar seekBarwater, seekBartem;
 	TextView waterttv, temtv;
