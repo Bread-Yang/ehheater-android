@@ -22,6 +22,8 @@ public class BitmapDecodeCacheUtil {
 	public static Bitmap getBitmapFromRes(Resources res, int resId) {
 		
 		if (cacheMap.get(resId) == null) {
+			BitmapFactory.Options options=new BitmapFactory.Options();
+			options.inSampleSize = 8;
 			Bitmap bm = BitmapFactory.decodeResource(res, resId);
 			cacheMap.put(resId, bm);
 		}
