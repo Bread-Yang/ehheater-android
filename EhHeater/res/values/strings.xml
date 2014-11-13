@@ -10,6 +10,7 @@
     <string name="login">登录</string>
     <string name="login_tips">如果您购买了新设备,请进行设备配置</string>
     <string name="setting_new_device">配置热水器</string>
+    <string name="setting_new_furnace">配置壁挂炉</string>
     <string name="msg_empty_account">账号还没填写</string>
     <string name="msg_empty_password">密码还没填写</string>
     <string name="hint_input_phone_number">用户名</string>
@@ -131,6 +132,7 @@
     <string name="outlet_temperature">出水温度</string>
     <string name="temperature_no_set">设置--°</string>
     <string name="no_set">--</string>
+    <string name="gas_unit">m³/h</string>
     <string name="shutdown">关机中</string>
     <string name="standby">待机中</string>
     <string name="gas_consumption">燃气耗量</string>

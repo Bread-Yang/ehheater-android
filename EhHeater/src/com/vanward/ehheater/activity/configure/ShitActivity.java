@@ -68,8 +68,10 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		}
 		if (typeStr.equals("gas")) {
 			mType = HeaterType.ST;
+			setTopText(R.string.setting_new_device);
 		} else if (typeStr.equals("furnace")) {
 			mType = HeaterType.EH_FURNACE;
+			setTopText(R.string.setting_new_furnace);
 		}
 	}
 
@@ -81,7 +83,6 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		setCenterView(R.layout.activity_configure);
 		setRightButton(View.INVISIBLE);
 		setLeftButtonBackground(R.drawable.icon_back);
-		setTopText(R.string.setting_new_device);
 
 		mBtnNextStep = (Button) findViewById(R.id.ac_btn_next_step);
 		mBtnNextStep.setOnClickListener(this);
@@ -198,7 +199,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 				img.setImageResource(R.drawable.device_img1_1);
 				break;
 			case EH_FURNACE:
-				img.setImageResource(R.drawable.device_img3);
+				img.setImageResource(R.drawable.device_img3_1); 
 				s1tip.setText(R.string.set_device_tip2_eh_furnace);
 				break;
 			default:
