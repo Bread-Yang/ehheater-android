@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ShitActivity;
+import com.vanward.ehheater.activity.global.Consts;
 
 public class SelectDeviceActivity extends Activity implements OnClickListener {
 	TextView name, time, detail;
@@ -41,7 +42,7 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		if (arg0.getId() == R.id.ivTitleBtnLeft) {
-			finish();
+			onBackPressed();
 		} else if (arg0.getId() == R.id.elect) {
 			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
 			intent.putExtra("type", "elect");
@@ -59,5 +60,15 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 		
 		}
 
+	}
+	
+	@Override
+	public void onBackPressed() {
+		boolean shouldKill = getIntent().getBooleanExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, false);
+		if (shouldKill) {
+			android.os.Process.killProcess(android.os.Process.myPid());
+		} else {
+			super.onBackPressed();
+		}
 	}
 }

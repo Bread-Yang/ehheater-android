@@ -16,6 +16,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
@@ -142,17 +143,17 @@ public class WelcomeActivity extends GeneratedActivity {
 		Log.d("emmm", "onActivityResult(RESULT_OK = -1):" + requestCode + "~"
 				+ resultCode);
 
-		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
-			
-			if (resultCode == RESULT_OK) {
-				// binded
-				new HeaterInfoService(getBaseContext()).updateBinded(
-						getCurrentDevice().getMac(), true);
-			}
-			
-			flowHandler.sendEmptyMessage(STATE_NORMAL);
-			
-		}
+//		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
+//			
+//			if (resultCode == RESULT_OK) {
+//				// binded
+//				new HeaterInfoService(getBaseContext()).updateBinded(
+//						getCurrentDevice().getMac(), true);
+//			}
+//			
+//			flowHandler.sendEmptyMessage(STATE_NORMAL);
+//			
+//		}
 		
 		if (requestCode == Consts.REQUESTCODE_LOGIN) {
 			
@@ -184,10 +185,8 @@ public class WelcomeActivity extends GeneratedActivity {
 				XPGConnectClient.RemoveActivity(WelcomeActivity.this);
 				break;
 
-			case STATE_JUMPED_OUT_TO_CONFIGURE:	// 这种情况其实是不存在的, 可以删除  -- yimin 11.13
-				Intent intent = new Intent(getBaseContext(), ShitActivity.class);
-				intent.putExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, true);
-				startActivity(intent);
+			case STATE_JUMPED_OUT_TO_CONFIGURE:
+				startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
 				XPGConnectClient.RemoveActivity(WelcomeActivity.this);
 				finish();
 				break;
