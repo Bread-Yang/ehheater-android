@@ -337,7 +337,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					isallcheck = false;
 				}
 			}
-			if (weektext.length() >= 0) {
+			if (weektext.length() > 0) {
 				weektext = weektext.substring(0, weektext.length() - 1);
 			}
 

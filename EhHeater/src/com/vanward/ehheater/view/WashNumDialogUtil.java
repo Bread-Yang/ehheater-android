@@ -84,6 +84,7 @@ public class WashNumDialogUtil {
 				.setContentView(R.layout.dialog_morning_wash_number_setting);
 		final RadioGroup radioGroup = (RadioGroup) dialog_morning_wash_number_setting
 				.findViewById(R.id.readiogroup);
+		((RadioButton)radioGroup.getChildAt(defaultCheck)).setChecked(true);
 		MoringSeVo moringSeVo = new BaseDao(context).getDb().findById("1",
 				MoringSeVo.class);
 

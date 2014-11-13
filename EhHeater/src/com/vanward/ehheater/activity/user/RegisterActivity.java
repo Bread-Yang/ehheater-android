@@ -141,7 +141,12 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 				.equals(mEtPsw2.getText().toString());
 
 		if (!phoneNotEmpty) {
-			Toast.makeText(getBaseContext(), "请输入账号和密码", 1000).show();
+			Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
+			return false;
+		}
+		if (mEtPhone.getText()
+				.toString().length()!=11) {
+			Toast.makeText(getBaseContext(), "请输入11位手机号码", 1000).show();
 			return false;
 		}
 

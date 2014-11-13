@@ -130,6 +130,7 @@
         android:layout_above="@+id/buttonrela"
         android:layout_below="@+id/radioGroup1"
         android:layout_centerHorizontal="true"
+        android:background="#ffe6e6e6"
         android:focusable="false"
         android:focusableInTouchMode="false" />
 

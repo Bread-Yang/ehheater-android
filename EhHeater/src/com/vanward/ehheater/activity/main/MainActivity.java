@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
@@ -43,6 +44,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
@@ -231,6 +233,13 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		// SendMsgModel.changeToIntelligenceModeWash();
 		// }
 		// });
+
+		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
+			// 无任何网络连接
+			dealDisConnect();
+			return;
+		}
+
 	}
 
 	@Override
@@ -363,7 +372,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
-
+			if (!NetworkStatusUtil.isConnected(getBaseContext())) {
+				Toast.makeText(this,"无网络连接", Toast.LENGTH_SHORT).show();
+				return;
+			}
 			if (ison) {
 
 				DeviceOffUtil.instance(this)
@@ -409,6 +421,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			break;
 
 		case R.id.power_tv:
+			
+		
 			if (currentModeCode == 7 || currentModeCode == 4) {
 				setPower();
 			}
@@ -474,12 +488,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		setAppointmentButtonAble(true);
 		final int targetTemperature = ehState.getTargetTemperature();
 		final int power = ehState.getPower();
-		modeTv.post(new  Runnable() {
-			
+		modeTv.post(new Runnable() {
+
 			@Override
 			public void run() {
-				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb().findAll(
-						CustomSetVo.class);
+				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb()
+						.findAll(CustomSetVo.class);
 
 				for (int i = 0; i < list.size(); i++) {
 					CustomSetVo customSetVo = list.get(i);
@@ -488,8 +502,8 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 							&& customSetVo.getTempter() == targetTemperature) {
 
 						if (customSetVo.getName().length() > 6) {
-							modeTv.setText(customSetVo.getName().substring(0, 6)
-									+ "...");
+							modeTv.setText(customSetVo.getName()
+									.substring(0, 6) + "...");
 						} else {
 							modeTv.setText(customSetVo.getName());
 						}
@@ -500,7 +514,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				}
 			}
 		});
-	
+
 		circularView.setOn(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		// powerTv.setText(3 + "kw");
@@ -728,10 +742,14 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	public void dealDisConnect() {
 		tempter.setText("--");
-		modeTv.setText("----");
-		leavewater.setText("--");
+		modeTv.setText("--模式");
+		leavewater.setText("--%");
 		powerTv.setText("--");
 		target_tem.setText("--");
+		btn_power.setEnabled(false);
+		findViewById(R.id.pattern).setEnabled(false);
+		rightButton.setBackgroundResource(R.drawable.icon_shut_1);
+		hotImgeImageView.setVisibility(View.GONE);
 	}
 
 	boolean Insetting = false;
