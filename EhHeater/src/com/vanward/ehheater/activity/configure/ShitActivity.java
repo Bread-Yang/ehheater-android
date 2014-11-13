@@ -72,6 +72,9 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		} else if (typeStr.equals("furnace")) {
 			mType = HeaterType.EH_FURNACE;
 			setTopText(R.string.setting_new_furnace);
+		} else if (typeStr.equals("elect")) {
+			mType = HeaterType.Eh;
+			setTopText(R.string.setting_new_device);
 		}
 	}
 
@@ -377,7 +380,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		Log.e("productKey是 : ", hinfo.getProductKey());
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		
-		if (hser.getHeaterType(hinfo).equals(HeaterType.Unknown)) {
+		if (!hser.isValidDevice(hinfo)) {
 			Toast.makeText(getBaseContext(), "无法识别该设备", Toast.LENGTH_LONG).show();
 			return;
 		}
