@@ -108,54 +108,54 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 
 	@Override
 	public void onClick(View arg0) {
-		switch (arg0.getId()) {
-		case R.id.lastparent:
-			if (currentShowingPeriodType.equals("1")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.DATE, -7);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			if (currentShowingPeriodType.equals("2")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.MONTH, -1);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			if (currentShowingPeriodType.equals("3")) {
-
-			}
-
-			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
-					.execute();
-
-			break;
-		case R.id.nextparent:
-
-			if (currentShowingPeriodType.equals("1")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.DATE, 7);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			if (currentShowingPeriodType.equals("2")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.MONTH, 1);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			if (currentShowingPeriodType.equals("3")) {
-
-			}
-
-			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
-					.execute();
-			break;
-		}
+//		switch (arg0.getId()) {
+//		case R.id.lastparent:
+//			if (currentShowingPeriodType.equals("1")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.DATE, -7);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			if (currentShowingPeriodType.equals("2")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.MONTH, -1);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			if (currentShowingPeriodType.equals("3")) {
+//
+//			}
+//
+//			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
+//					.execute();
+//
+//			break;
+//		case R.id.nextparent:
+//
+//			if (currentShowingPeriodType.equals("1")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.DATE, 7);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			if (currentShowingPeriodType.equals("2")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.MONTH, 1);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			if (currentShowingPeriodType.equals("3")) {
+//
+//			}
+//
+//			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
+//					.execute();
+//			break;
+//		}
 	}
 
 	class Initobject {
@@ -270,7 +270,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 
 			if (resultType.equals("3")) {
 				namelistjson = "[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
-				datalistjson = "[{data:130},{data:140},{data:120},{data:110},{data:100},{data:150},{data:115},{data:125},{data:114},{data:115},{data:126},{data:118}] ";
+				datalistjson = "[{data:130},{data:140},{data:120},{data:110},{data:100},{data:150},{data:115},{data:125},{data:114},{data:115},{data:0},{data:0}] ";
 				chart4Year();
 				sumwater.setText("960L");
 			}
