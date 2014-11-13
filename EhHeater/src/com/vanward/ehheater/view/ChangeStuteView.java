@@ -24,7 +24,7 @@ public class ChangeStuteView {
 				R.layout.comment_statue_layout, null);
 		TextView text = (TextView) view.findViewById(R.id.text);
 		TextView min = (TextView) view.findViewById(R.id.min);
-		text.setText("加热时间");
+		text.setText("加热时段");
 		min.setText("00:00-06:00am");
 		parent.addView(view);
 	}
