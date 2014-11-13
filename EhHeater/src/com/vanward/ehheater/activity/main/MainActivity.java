@@ -136,6 +136,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
 				&& resultCode == RESULT_OK) {
+			
 
 			int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
 			boolean isOnline = data.getBooleanExtra(
@@ -158,8 +159,15 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			Global.connectId = connId;
 
 			if (isOnline) {
-				DialogUtil.instance().showQueryingDialog(this);
-				generated.SendStateReq(Global.connectId);
+				
+				boolean shouldExecuteBinding = HeaterInfoService.shouldExecuteBinding(curHeater);
+				
+				if (shouldExecuteBinding) {
+					HeaterInfoService.setBinding(this, did, passcode);
+				} else {
+					queryState();
+				}
+				
 			} else {
 				// TODO 设备不在线
 
@@ -169,7 +177,28 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			mSlidingMenu.showContent();
 
 		}
+		
 
+
+		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
+			
+			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			
+			if (resultCode == RESULT_OK) {
+				// binded
+				new HeaterInfoService(getBaseContext()).updateBinded(curHeater.getMac(), true);
+			}
+			
+			queryState();
+			
+		}
+
+	}
+	
+	private void queryState() {
+		DialogUtil.instance().showQueryingDialog(this);
+		generated.SendStateReq(Global.connectId);
 	}
 
 	@Override

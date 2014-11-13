@@ -370,26 +370,34 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	private void finishingConfig() {
 
-		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
 		Log.e("打印productKey前", "打印productKey前");
 		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
 		Log.e("productKey是 : ", hinfo.getProductKey());
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+		
+		if (hser.getHeaterType(hinfo).equals(HeaterType.Unknown)) {
+			Toast.makeText(getBaseContext(), "无法识别该设备", Toast.LENGTH_LONG).show();
+			return;
+		}
+		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
 		HeaterInfoDao hdao = new HeaterInfoDao(this);
 		List<HeaterInfo> list = hdao.getAll();
 		boolean flag = false;
+		
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getMac().equals(hinfo.getMac())) {
 				flag = true;
 			}
 		}
+		
 		if (flag) {
 			Toast.makeText(this, "此设备已存在", 1000).show();
 		} else {
 			hser.addNewHeater(hinfo);
 		}
+		
 		Log.d("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
 				+ "-" + hinfo.getPasscode());
 
@@ -405,11 +413,6 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 				Consts.INTENT_FILTER_KILL_LOGIN_ACTIVITY);
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
 				killerIntent);
-
-		// Intent intent = new Intent();
-		// intent.setClass(getBaseContext(), WelcomeActivity.class);
-		// intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
-		// startActivity(intent);
 
 		Intent intent = null;
 

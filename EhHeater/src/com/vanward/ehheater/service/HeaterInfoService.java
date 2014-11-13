@@ -1,7 +1,11 @@
 package com.vanward.ehheater.service;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
 
+import com.vanward.ehheater.activity.configure.DummySendBindingReqActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -162,5 +166,24 @@ public class HeaterInfoService {
 
 	int duplicates;
 	String origName;
+	
+	
+	public static boolean shouldExecuteBinding(HeaterInfo hinfo) {
+		return hinfo.getBinded() == 0 && !TextUtils.isEmpty(hinfo.getPasscode()) && !TextUtils.isEmpty(hinfo.getDid());
+	}
+	
+	public static void setBinding(Activity act, String did, String passcode) {
+		
+		Intent intent = new Intent();
+		intent.setClass(act.getBaseContext(), DummySendBindingReqActivity.class);
+		
+		intent.putExtra(Consts.INTENT_EXTRA_USERNAME, AccountService.getUserId(act.getBaseContext()));
+		intent.putExtra(Consts.INTENT_EXTRA_USERPSW, AccountService.getUserPsw(act.getBaseContext()));
+		intent.putExtra(Consts.INTENT_EXTRA_DID2BIND, did);
+		intent.putExtra(Consts.INTENT_EXTRA_PASSCODE2BIND, passcode);
+		
+		act.startActivityForResult(intent, Consts.REQUESTCODE_UPLOAD_BINDING);
+		
+	}
 
 }

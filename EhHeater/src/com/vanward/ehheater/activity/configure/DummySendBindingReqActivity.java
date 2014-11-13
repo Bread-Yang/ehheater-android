@@ -49,6 +49,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(initContentView());
 		
 		username = getIntent().getStringExtra(Consts.INTENT_EXTRA_USERNAME);
