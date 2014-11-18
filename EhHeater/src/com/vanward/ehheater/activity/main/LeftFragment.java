@@ -235,13 +235,15 @@ public class LeftFragment extends LinearLayout implements
 			} else {
 				switch (newHeaterType) {
 				case Eh:
-					hostActivity.startActivity(new Intent(hostActivity,
-							MainActivity.class));
+					hostActivity.startActivity(new Intent(hostActivity, MainActivity.class));
 					hostActivity.finish();
 					break;
 				case ST:
-					hostActivity.startActivity(new Intent(hostActivity,
-							GasMainActivity.class));
+					hostActivity.startActivity(new Intent(hostActivity, GasMainActivity.class));
+					hostActivity.finish();
+					break;
+				case EH_FURNACE:
+					hostActivity.startActivity(new Intent(hostActivity, FurnaceMainActivity.class));
 					hostActivity.finish();
 					break;
 				default:

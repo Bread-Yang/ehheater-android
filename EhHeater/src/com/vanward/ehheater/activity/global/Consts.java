@@ -4,6 +4,7 @@ import com.vanward.ehheater.bean.HeaterInfo;
 
 public class Consts {
 
+	public static final String INTENT_FILTER_KILL_MAIN_ACTIVITY = "kill_main_activity";
 	public static final String INTENT_FILTER_KILL_LOGIN_ACTIVITY = "kill_login_activity";
 	public static final String INTENT_FILTER_KILL_CONFIGURE_ACTIVITY = "kill_configure_activity";
 	public static final String INTENT_FILTER_KILL_AUTO_CONFIGURE_FAIL_ACTIVITY = "kill_auto_conf_fail";

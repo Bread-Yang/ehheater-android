@@ -42,12 +42,14 @@ import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
+import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
-		OnClickListener, OnLongClickListener, CircleListener , BaoCircleSliderListener{
-	
+		OnClickListener, OnLongClickListener, CircleListener,
+		BaoCircleSliderListener {
+
 	private static final String TAG = "FurnaceMainActivity";
 
 	protected SlidingMenu mSlidingMenu;
@@ -81,7 +83,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private DERYStatusResp_t statusResp = null;
 
 	private boolean Insetting = false;
-	
+
 	private BaoCircleSlider circle_slider;
 
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
@@ -107,6 +109,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, filter);
+		registerSuicideReceiver();
 
 		btn_top_right.post(new Runnable() {
 
@@ -187,7 +190,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 					OnDERYStatusResp(statusResp, Global.connectId);
 
 					circle_slider.setValue(statusResp.getHeatingTemTarget());
-					
+
 					circularView.setAngle(statusResp.getHeatingTemTarget());
 					circularView.setTargerdegree(statusResp
 							.getHeatingTemTarget());
@@ -200,7 +203,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 					OnDERYStatusResp(statusResp, Global.connectId);
 
 					circle_slider.setValue(statusResp.getBathTemTarget());
-					
+
 					circularView.setAngle(statusResp.getBathTemTarget());
 					circularView.setTargerdegree(statusResp.getBathTemTarget());
 					break;
@@ -233,9 +236,9 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	private void init() {
-		
+
 		btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
-		
+
 		circle_slider.setVisibility(View.GONE);
 
 		llt_circle.post(new Runnable() {
@@ -250,7 +253,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				circularView.setCircularListener(FurnaceMainActivity.this);
 
 				// iv_rotate_animation.setVisibility(View.GONE);
-//				llt_circle.addView(circularView);
+				// llt_circle.addView(circularView);
 				// circularView.setVisibility(View.GONE);
 			}
 		});
@@ -296,7 +299,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			btn_setting.setEnabled(false);
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 			isOn = false;
-			
+
 			DialogUtil.instance().showReconnectDialog(this);
 		} else if (connId == Global.connectId && event == 0) {
 			generated.SendDERYRefreshReq(Global.connectId);
@@ -334,7 +337,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			if (!Insetting) {
 				circle_slider.setValue(pResp.getBathTemTarget());
-				
+
 				circularView.setAngle(pResp.getBathTemTarget());
 			}
 			if (!Insetting) {
@@ -381,7 +384,10 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				// tv_temperature.setText(pResp.getBathTemTarget() + "");
 				// tv_current_or_setting_temperature_tips
 				// .setText(R.string.setting_temperature);
-			} else if (pResp.getFireState() == 1 && pResp.getOnOff() == 1) { // 1 : have flame
+			} else if (pResp.getFireState() == 1 && pResp.getOnOff() == 1) { // 1
+																				// :
+																				// have
+																				// flame
 				iv_fire_wave_animation.setVisibility(View.VISIBLE);
 			}
 		} else if (pResp.getSeasonState() == 1) { // winner
@@ -396,7 +402,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			if (pResp.getOnOff() == 1) {
 				circle_slider.setVisibility(View.VISIBLE);
-				
+
 				circularView.setVisibility(View.VISIBLE);
 			}
 
@@ -437,7 +443,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				if (rb_supply_heating.isChecked()) {
 					if (!Insetting) {
 						circle_slider.setValue(pResp.getHeatingTemTarget());
-						
+
 						circularView.setAngle(pResp.getHeatingTemTarget());
 						circularView.setTargerdegree(pResp
 								.getHeatingTemTarget());
@@ -447,7 +453,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				} else {
 					if (!Insetting) {
 						circle_slider.setValue(pResp.getBathTemTarget());
-						
+
 						circularView.setAngle(pResp.getBathTemTarget());
 						circularView.setTargerdegree(pResp.getBathTemTarget());
 					}
@@ -464,7 +470,10 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				iv_rotate_animation.setVisibility(View.INVISIBLE);
 				iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 				tv_status.setText(R.string.standby);
-			} else if (pResp.getFireState() == 1 && pResp.getOnOff() == 1) { // 1 : have flame
+			} else if (pResp.getFireState() == 1 && pResp.getOnOff() == 1) { // 1
+																				// :
+																				// have
+																				// flame
 				if ((rb_bath.isChecked() && pResp.getBathWater() == 0)
 						|| rb_supply_heating.isChecked()) {
 					iv_fire_wave_animation.setVisibility(View.VISIBLE);
@@ -486,7 +495,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				// when bathing, furnace bathing temperature can't be set.
 				if (rg_winner.getCheckedRadioButtonId() == R.id.rb_bath) {
 					circle_slider.setVisibility(View.GONE);
-					
+
 					circularView.setVisibility(View.GONE);
 				}
 				tv_status.setText(R.string.bathing);
@@ -518,7 +527,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				}
 				if (rg_winner.getCheckedRadioButtonId() == R.id.rb_bath) {
 					circle_slider.setVisibility(View.VISIBLE);
-					
+
 					circularView.setVisibility(View.VISIBLE);
 				}
 			}
@@ -646,7 +655,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	// 转圈拖动的时候执行
 	@Override
 	public void updateUIListener(int outlevel) {
-//		Log.e("updateUIListener执行了", "outlevel : " + outlevel);
+		// Log.e("updateUIListener执行了", "outlevel : " + outlevel);
 
 		tv_temperature.setText(outlevel + "");
 		tv_current_or_setting_temperature_tips
@@ -792,28 +801,57 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+		XPGConnectClient.RemoveActivity(this);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		XPGConnectClient.AddActivity(this);
+	}
+
+	private void registerSuicideReceiver() {
+
+		IntentFilter filter = new IntentFilter(
+				Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
+		BroadcastReceiver receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				finish();
+			}
+		};
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				receiver, filter);
+	}
+
+	@Override
 	public void didBeginTouchCircleSlider() {
 		Log.e(TAG, "didBeginTouchCircleSlider");
 	}
 
 	@Override
 	public void needChangeValue(int value, boolean isAdd) {
-		if (rg_winner.getVisibility() == View.VISIBLE && rb_supply_heating.isChecked()) {
+		if (rg_winner.getVisibility() == View.VISIBLE
+				&& rb_supply_heating.isChecked()) {
 			if (80 >= value && value >= 30) {
 				tv_temperature.setText(value + "");
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.setting_temperature);
 				circle_slider.setValue(value);
-//				Log.e(TAG, "needChangeValue开始, value : " + value + " ,isAdd : " + isAdd);
+				// Log.e(TAG, "needChangeValue开始, value : " + value +
+				// " ,isAdd : " + isAdd);
 			}
-			
+
 		} else {
 			if (45 >= value && value >= 25) {
 				tv_temperature.setText(value + "");
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.setting_temperature);
 				circle_slider.setValue(value);
-//				Log.e(TAG, "needChangeValue开始, value : " + value + " ,isAdd : " + isAdd);
+				// Log.e(TAG, "needChangeValue开始, value : " + value +
+				// " ,isAdd : " + isAdd);
 			}
 		}
 	}

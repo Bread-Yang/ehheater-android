@@ -2,6 +2,7 @@ package com.vanward.ehheater.activity.more;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.CloudBaseActivity;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.WelcomeActivity;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -58,14 +60,17 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 					.nextButtonCall(new NextButtonCall() {
 						@Override
 						public void oncall(View v) {
+
+							// send a broad cast to finish main activity
+							Intent killerIntent = new Intent(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
+							LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(killerIntent);
+							
 							new SharedPreferUtils(getBaseContext()).clear();
-							new HeaterInfoService(getBaseContext())
-									.deleteAllHeaters();
-							intent.setClass(getBaseContext(),
-									WelcomeActivity.class);
-							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-							intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							new HeaterInfoService(getBaseContext()).deleteAllHeaters();
+							
+							intent.setClass(getBaseContext(),WelcomeActivity.class);
 							startActivity(intent);
+							finish();
 						}
 					}).showDialog();
 

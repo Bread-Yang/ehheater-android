@@ -94,7 +94,7 @@
     <string name="retry">重试</string>
     <string name="manually_connect">手动连接</string>
     <string name="account_manager">账号管理</string>
-    <string name="change_device">切换热水器</string>
+    <string name="change_device">切换设备</string>
     <string name="device_manager">设备管理</string>
     <string name="add_heater">添加设备</string>
     <string name="tip_setting">提醒设置</string>
