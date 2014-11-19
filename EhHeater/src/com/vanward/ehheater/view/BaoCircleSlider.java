@@ -31,7 +31,7 @@ public class BaoCircleSlider extends View {
 	/** 用于在Graphical Layout中显示 */
 	private boolean isFirstDisplay = true;
 
-	private Point circleCenter;
+	private Point circleCenter = new Point();
 
 	/** 用于记录拖动时，手指位置代表的值，值域为minValue~maxValue */
 	private int currentValue;
@@ -89,10 +89,6 @@ public class BaoCircleSlider extends View {
 
 		ctrlIconViewWidth = widthSpecSize / 6;
 
-		if (ctrlIconView == null) {
-			ctrlIconView = new ImageView(getContext());
-			ctrlIconView.setImageResource(R.drawable.home_yuan_tiao_intact);
-		}
 		ctrlIconView.setLayoutParams(new LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		
@@ -103,7 +99,6 @@ public class BaoCircleSlider extends View {
 					heightSpecSize - ctrlIconViewWidth,
 					widthSpecSize / 2 + ctrlIconViewWidth / 2,
 					heightSpecSize);
-//			isFirstDisplay = false;
 		} else {
 			ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
 					ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
@@ -111,18 +106,10 @@ public class BaoCircleSlider extends View {
 					ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 2);
 		}
 
-		if (addImageView == null) {
-			addImageView = new ImageView(getContext());
-			addImageView.setImageResource(R.drawable.home_yuan_add);
-		}
 		addImageView.setLayoutParams(new LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addImageView.layout(0, 0, widthSpecSize, widthSpecSize);
 
-		if (minusImageView == null) {
-			minusImageView = new ImageView(getContext());
-			minusImageView.setImageResource(R.drawable.home_yuan_reduction);
-		}
 		minusImageView.setLayoutParams(new LayoutParams(100, 100));
 		minusImageView.layout(0, 0, widthSpecSize, heightSpecSize);
 
@@ -134,6 +121,18 @@ public class BaoCircleSlider extends View {
 		preAngle = 0;
 		minValue = 20;
 		maxValue = 90;
+		if (ctrlIconView == null) {
+			ctrlIconView = new ImageView(getContext());
+			ctrlIconView.setImageResource(R.drawable.home_yuan_tiao_intact);
+		}
+		if (addImageView == null) {
+			addImageView = new ImageView(getContext());
+			addImageView.setImageResource(R.drawable.home_yuan_add);
+		}
+		if (minusImageView == null) {
+			minusImageView = new ImageView(getContext());
+			minusImageView.setImageResource(R.drawable.home_yuan_reduction);
+		}
 	}
 
 	public float getMinValue() {

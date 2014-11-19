@@ -148,5 +148,16 @@
     <string name="mode_bath">沐浴</string>
     <string name="bathing">沐浴中</string>
     <string name="supplying_heat">供暖中</string>
+    <string name="enable">启用</string>
+    <string name="circle">循环</string>
+    <string name="one">一</string>
+    <string name="two">二</string>
+    <string name="three">三</string>
+    <string name="four">四</string>
+    <string name="five">五</string>
+    <string name="six">六</string>
+    <string name="day">日</string>
+    <string name="intelligent_control">智能温控</string>
+    <string name="furnace_switch">壁挂炉开关</string>
 
 </resources>

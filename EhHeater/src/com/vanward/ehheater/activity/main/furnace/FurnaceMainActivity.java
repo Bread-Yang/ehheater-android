@@ -61,8 +61,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			tv_current_or_setting_temperature_tips, tv_gas_consumption,
 			tv_gas_unit;
 
-	private LinearLayout llt_circle;
-
 	private ImageView iv_fire_wave_animation, iv_rotate_animation,
 			iv_season_mode;
 
@@ -71,8 +69,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private RadioGroup rg_winner;
 
 	private RadioButton rb_summer, rb_supply_heating, rb_bath;
-
-	private CircularView circularView;
 
 	private boolean isOn = false;
 
@@ -121,14 +117,14 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 		});
 
-		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
-				.getCurrentSelectedHeater();
-		String mac = curHeater.getMac();
-		String passcode = curHeater.getPasscode();
-		String userId = AccountService.getUserId(getBaseContext());
-		String userPsw = AccountService.getUserPsw(getBaseContext());
-
-		ConnectActivity.connectToDevice(this, mac, userId, userPsw);
+//		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
+//				.getCurrentSelectedHeater();
+//		String mac = curHeater.getMac();
+//		String passcode = curHeater.getPasscode();
+//		String userId = AccountService.getUserId(getBaseContext());
+//		String userPsw = AccountService.getUserPsw(getBaseContext());
+//
+//		ConnectActivity.connectToDevice(this, mac, userId, userPsw);
 	}
 
 	private void initSlidingMenu() {
@@ -165,7 +161,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		tv_gas_consumption = (TextView) findViewById(R.id.tv_gas_consumption);
 		tv_gas_unit = (TextView) findViewById(R.id.tv_gas_unit);
 		rlt_content = (RelativeLayout) findViewById(R.id.rlt_content);
-		llt_circle = (LinearLayout) findViewById(R.id.llt_circle);
 		iv_fire_wave_animation = (ImageView) findViewById(R.id.iv_fire_wave_animation);
 		iv_rotate_animation = (ImageView) findViewById(R.id.iv_rotate_animation);
 		iv_season_mode = (ImageView) findViewById(R.id.iv_season_mode);
@@ -175,6 +170,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private void setListener() {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
 		btn_top_right.setOnClickListener(this);
+		btn_appointment.setOnClickListener(this);
 		btn_setting.setOnClickListener(this);
 		circle_slider.setCircleSliderListener(this);
 
@@ -191,10 +187,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 					circle_slider.setValue(statusResp.getHeatingTemTarget());
 
-					circularView.setAngle(statusResp.getHeatingTemTarget());
-					circularView.setTargerdegree(statusResp
-							.getHeatingTemTarget());
-
 					break;
 				case R.id.rb_bath:
 
@@ -204,8 +196,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 					circle_slider.setValue(statusResp.getBathTemTarget());
 
-					circularView.setAngle(statusResp.getBathTemTarget());
-					circularView.setTargerdegree(statusResp.getBathTemTarget());
 					break;
 				}
 			}
@@ -240,23 +230,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 
 		circle_slider.setVisibility(View.GONE);
-
-		llt_circle.post(new Runnable() {
-
-			@Override
-			public void run() {
-				circularView = new CircularView(FurnaceMainActivity.this,
-						llt_circle, CircularView.CIRCULAR_SINGLE, 0);
-				// circularView.setHeat(true);
-				circularView.setEndangle(65);
-				circularView.setOn(true);
-				circularView.setCircularListener(FurnaceMainActivity.this);
-
-				// iv_rotate_animation.setVisibility(View.GONE);
-				// llt_circle.addView(circularView);
-				// circularView.setVisibility(View.GONE);
-			}
-		});
 
 		((AnimationDrawable) iv_rotate_animation.getDrawable()).start();
 		((AnimationDrawable) iv_fire_wave_animation.getDrawable()).start();
@@ -293,7 +266,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			tv_temperature.setText(R.string.no_set);
 			tv_gas_consumption.setText(R.string.no_set);
 			circle_slider.setVisibility(View.GONE);
-			circularView.setVisibility(View.GONE);
 			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
 			btn_setting.setEnabled(false);
@@ -325,9 +297,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private void seasonAndModeDeal(DERYStatusResp_t pResp) {
 		if (pResp.getSeasonState() == 0) { // summer
 
-			circularView.setEndangle(45); // demo版: 35° - 45°
-			circularView.setBeginangle(35);
-
 			rg_winner.setVisibility(View.GONE);
 			rb_summer.setVisibility(View.VISIBLE);
 			iv_season_mode.setImageResource(R.drawable.mode_icon_summer);
@@ -337,11 +306,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			if (!Insetting) {
 				circle_slider.setValue(pResp.getBathTemTarget());
-
-				circularView.setAngle(pResp.getBathTemTarget());
-			}
-			if (!Insetting) {
-				circularView.setTargerdegree(pResp.getBathTemTarget());
 			}
 
 			if (pResp.getBathMode() == 0) { // 0 - normal bath(temp : 30 - 60)
@@ -363,7 +327,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 																		// bath
 																		// current
 				circle_slider.setVisibility(View.GONE);
-				circularView.setVisibility(View.GONE);
 				iv_rotate_animation.setVisibility(View.VISIBLE);
 				tv_status.setText(R.string.bathing);
 				// tv_temperature.setText(pResp.getBathTemNow() + "");
@@ -373,7 +336,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			} else {
 				tv_status.setText(R.string.standby);
 				circle_slider.setVisibility(View.VISIBLE);
-				circularView.setVisibility(View.VISIBLE);
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.setting_temperature);
 				tv_temperature.setText(pResp.getBathTemTarget() + "");
@@ -392,18 +354,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 		} else if (pResp.getSeasonState() == 1) { // winner
 
-			if (rb_supply_heating.isChecked()) {
-				circularView.setBeginangle(30); // demo版: 30° - 80°
-				circularView.setEndangle(80);
-			} else {
-				circularView.setBeginangle(35);
-				circularView.setEndangle(45); // demo版: 35° - 45°
-			}
-
 			if (pResp.getOnOff() == 1) {
 				circle_slider.setVisibility(View.VISIBLE);
-
-				circularView.setVisibility(View.VISIBLE);
 			}
 
 			if (rb_supply_heating.isChecked()) {
@@ -421,47 +373,60 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			rb_bath.setText(getResources().getString(R.string.setting)
 					+ pResp.getBathTemTarget() + "°");
 
-			if (pResp.getHeatingMode() == 0xA0) { // 0xA0 - normal mode
-				tv_mode_tips
-						.setCompoundDrawablesWithIntrinsicBounds(getResources()
-								.getDrawable(R.drawable.mode_icon_normal),
-								null, null, null);
-				tv_mode_tips.setText(R.string.mode_default);
-			} else if (pResp.getHeatingMode() == 0xA1) { // 0xA1 - night mode
-				// tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(
-				// R.drawable.mode_icon_comfort), null, null, null);
-				tv_mode_tips.setText(R.string.mode_night);
-			} else if (pResp.getHeatingMode() == 0xA2) { // 0xA2 - outdoor mode
-				tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
-						getResources()
-								.getDrawable(R.drawable.mode_icon_outdoor),
-						null, null, null);
-				tv_mode_tips.setText(R.string.mode_outdoor);
-			}
-
 			if (rg_winner.getVisibility() == View.VISIBLE) {
 				if (rb_supply_heating.isChecked()) {
 					if (!Insetting) {
 						circle_slider.setValue(pResp.getHeatingTemTarget());
-
-						circularView.setAngle(pResp.getHeatingTemTarget());
-						circularView.setTargerdegree(pResp
-								.getHeatingTemTarget());
 					}
 
 					tv_temperature.setText(pResp.getBothTemTarget() + "");
+
+					if (pResp.getHeatingMode() == 0xA0) { // 0xA0 - normal mode
+						tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+								getResources().getDrawable(
+										R.drawable.mode_icon_normal), null,
+								null, null);
+						tv_mode_tips.setText(R.string.mode_default);
+					} else if (pResp.getHeatingMode() == 0xA1) { // 0xA1 - night
+																	// mode
+						// tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(
+						// R.drawable.mode_icon_comfort), null, null, null);
+						tv_mode_tips.setText(R.string.mode_night);
+					} else if (pResp.getHeatingMode() == 0xA2) { // 0xA2 -
+																	// outdoor
+																	// mode
+						tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+								getResources().getDrawable(
+										R.drawable.mode_icon_outdoor), null,
+								null, null);
+						tv_mode_tips.setText(R.string.mode_outdoor);
+					}
 				} else {
 					if (!Insetting) {
 						circle_slider.setValue(pResp.getBathTemTarget());
-
-						circularView.setAngle(pResp.getBathTemTarget());
-						circularView.setTargerdegree(pResp.getBathTemTarget());
 					}
 
 					if (statusResp.getBathWater() == 0) {
 						tv_temperature.setText(pResp.getBathTemNow() + "");
 					} else {
 						tv_temperature.setText(pResp.getBathTemTarget() + "");
+					}
+
+					if (pResp.getBathMode() == 0) { // 0 - normal bath(temp : 30
+						// - 60)
+						tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+								getResources().getDrawable(
+										R.drawable.mode_icon_bath), null, null,
+								null);
+						tv_mode_tips.setText(R.string.mode_bath);
+					} else if (pResp.getBathMode() == 1) { // 1 - comfort
+						// bath(temp : 35 -
+						// 45)
+						tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
+								getResources().getDrawable(
+										R.drawable.mode_icon_comfort), null,
+								null, null);
+						tv_mode_tips.setText(R.string.mode_comfort);
 					}
 				}
 			}
@@ -495,27 +460,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				// when bathing, furnace bathing temperature can't be set.
 				if (rg_winner.getCheckedRadioButtonId() == R.id.rb_bath) {
 					circle_slider.setVisibility(View.GONE);
-
-					circularView.setVisibility(View.GONE);
 				}
 				tv_status.setText(R.string.bathing);
-
-				if (pResp.getBathMode() == 0) { // 0 - normal bath(temp : 30
-												// - 60)
-					tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
-							getResources().getDrawable(
-									R.drawable.mode_icon_bath), null, null,
-							null);
-					tv_mode_tips.setText(R.string.mode_bath);
-				} else if (pResp.getBathMode() == 1) { // 1 - comfort
-														// bath(temp : 35 -
-														// 45)
-					tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
-							getResources().getDrawable(
-									R.drawable.mode_icon_comfort), null, null,
-							null);
-					tv_mode_tips.setText(R.string.mode_comfort);
-				}
 			} else { // 1 : no bath current
 				iv_rotate_animation.setVisibility(View.INVISIBLE);
 				if (rb_bath.isChecked()) {
@@ -527,8 +473,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				}
 				if (rg_winner.getCheckedRadioButtonId() == R.id.rb_bath) {
 					circle_slider.setVisibility(View.VISIBLE);
-
-					circularView.setVisibility(View.VISIBLE);
 				}
 			}
 		}
@@ -547,10 +491,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private void setCircularViewEnable(boolean enable, DERYStatusResp_t pResp) {
 		if (enable) {
 			circle_slider.setVisibility(View.VISIBLE);
-			circularView.setVisibility(View.VISIBLE);
 		} else {
 			circle_slider.setVisibility(View.GONE);
-			circularView.setVisibility(View.GONE);
 		}
 	}
 
@@ -581,7 +523,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void onClick(View view) {
 		super.onClick(view);
-
+		Intent intent;
 		switch (view.getId()) {
 		case R.id.ivTitleBtnLeft:
 			mSlidingMenu.showMenu(true);
@@ -604,10 +546,40 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 			break;
 
+		case R.id.btn_appointment:
+			intent = new Intent(FurnaceMainActivity.this,
+					FurnaceAppointmentListActivity.class);
+			startActivity(intent);
+			break;
+
 		case R.id.btn_setting:
-			// Intent intent = new Intent(FurnaceMainActivity.this,
-			// FurnacePatternActivity.class);
-			// startActivity(intent);
+			intent = new Intent(FurnaceMainActivity.this,
+					FurnacePatternActivity.class);
+			if (statusResp.getBathMode() == 0) { // 0 - normal bath
+				intent.putExtra("bathMode", "normal");
+			} else {
+				intent.putExtra("bathMode", "comfort");
+			}
+			if (statusResp.getHeatingMode() == 0xA0) { // 0xA0 - normal mode
+				intent.putExtra("heatingMode", "normal");
+			} else if (statusResp.getHeatingMode() == 0xA1) { // 0xA1 - night
+																// mode
+				intent.putExtra("heatingMode", "night");
+			} else if (statusResp.getHeatingMode() == 0xA2) { // 0xA2 - outdoor
+																// mode
+				intent.putExtra("heatingMode", "outdoor");
+			}
+			intent.putExtra(
+					"seasonMode",
+					statusResp.getSeasonState() == 0 ? FurnaceSeasonActivity.SET_SUMMER_MODE
+							: FurnaceSeasonActivity.SET_WINNER_MODE);
+			startActivity(intent);
+			break;
+
+		case R.id.btn_intellectual:
+			intent = new Intent(FurnaceMainActivity.this,
+					FurnaceIntelligentControlActivity.class);
+			startActivity(intent);
 			break;
 		}
 	}
@@ -660,15 +632,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		tv_temperature.setText(outlevel + "");
 		tv_current_or_setting_temperature_tips
 				.setText(R.string.setting_temperature);
-		circularView.setTargerdegree(outlevel);
 
-		// 变小了
-		if (circularView.getTargerdegree() > outlevel) {
-			// circularView.setTargerdegree(outlevel - 1);
-
-		} else {
-			// circularView.setTargerdegree(outlevel + 1);
-		}
 		Insetting = true;
 	}
 
@@ -840,19 +804,22 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.setting_temperature);
 				circle_slider.setValue(value);
-				// Log.e(TAG, "needChangeValue开始, value : " + value +
-				// " ,isAdd : " + isAdd);
 			}
 
 		} else {
-			if (45 >= value && value >= 25) {
-				tv_temperature.setText(value + "");
-				tv_current_or_setting_temperature_tips
-						.setText(R.string.setting_temperature);
-				circle_slider.setValue(value);
-				// Log.e(TAG, "needChangeValue开始, value : " + value +
-				// " ,isAdd : " + isAdd);
+			if (statusResp.getBathMode() == 0) { // 0 - normal bath
+				if (60 < value || value < 30) {
+					return;
+				}
+			} else {
+				if (35 > value || value > 45) {
+					return;
+				}
 			}
+			tv_temperature.setText(value + "");
+			tv_current_or_setting_temperature_tips
+					.setText(R.string.setting_temperature);
+			circle_slider.setValue(value);
 		}
 	}
 

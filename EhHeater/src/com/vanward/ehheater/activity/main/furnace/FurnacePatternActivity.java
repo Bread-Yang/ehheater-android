@@ -23,8 +23,8 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 		setLeftButtonBackground(R.drawable.icon_back);
 		setRightButton(View.GONE);
 		findViewById();
-		setListener();
 		init();
+		setListener();
 	}
 
 	private void findViewById() {
@@ -51,7 +51,6 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 							FurnaceSendMsgModel.setToNightHeating();
 							break;
 						}
-						finish();
 					}
 				});
 
@@ -60,19 +59,38 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int checkedId) {
 				switch (checkedId) {
-				case R.id.rb_model_comfort:
+				case R.id.rb_mode_comfort:
 					FurnaceSendMsgModel.setToComfortBath();
 					break;
-				case R.id.rb_mode_bath:
+				case R.id.rb_mode_normal:
 					FurnaceSendMsgModel.setToNormalBath();
 					break;
 				}
-				finish();
 			}
 		});
 	}
 
 	private void init() {
+		int seasonTag = getIntent().getIntExtra("seasonMode",
+				FurnaceSeasonActivity.SET_SUMMER_MODE);
+		if (seasonTag == FurnaceSeasonActivity.SET_SUMMER_MODE) {
+			llt_heating_mode.setVisibility(View.GONE);
+		}
 
+		String bathMode = getIntent().getStringExtra("bathMode");
+		if ("normal".equals(bathMode)) {
+			rg_bath_mode.check(R.id.rb_mode_normal);
+		} else {
+			rg_bath_mode.check(R.id.rb_mode_comfort);
+		}
+
+		String heatingMode = getIntent().getStringExtra("heatingMode");
+		if ("normal".equals(heatingMode)) {
+			rg_heating_mode.check(R.id.rb_model_default);
+		} else if ("night".equals(heatingMode)) {
+			rg_heating_mode.check(R.id.rb_mode_night);
+		} else if ("outdoor".equals(heatingMode)) {
+			rg_heating_mode.check(R.id.rb_mode_outdoor);
+		}
 	}
 }

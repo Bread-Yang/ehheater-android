@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.vanward.ehheater"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_bg"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <com.vanward.ehheater.view.wheelview.WheelView
+            android:id="@+id/wheelView1"
+            android:layout_width="wrap_content"
+            android:layout_height="210dp"
+            android:layout_marginLeft="25dp"
+            android:layout_weight="1"
+            app:centerLabelPosition="30"
+            app:hasLeftBorder="false"
+            app:hasRightBorder="false"
+            app:textHighlightColor="@color/appointment_text_color"
+            app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+            app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="3dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="4dp"
+            android:text="时"
+            android:textSize="25sp" />
+
+        <com.vanward.ehheater.view.wheelview.WheelView
+            android:id="@+id/wheelView2"
+            android:layout_width="wrap_content"
+            android:layout_height="210dp"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            app:centerLabelPosition="30"
+            app:hasLeftBorder="false"
+            app:hasRightBorder="false"
+            app:textHighlightColor="@color/appointment_text_color"
+            app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+            app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="3dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="15dp"
+            android:paddingTop="4dp"
+            android:text="分"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="25dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="25dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/furnace_switch"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/ib_switch"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/off" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="25dp"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/mode"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/rg_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/rb_mode_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_left_bg"
+                android:button="@null"
+                android:checked="false"
+                android:text="@string/mode_default"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_mode_outdoor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:text="@string/mode_outdoor"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_mode_night"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:text="@string/mode_night"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_mode_comfort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:text="@string/mode_comfort"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_mode_bath"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_right_bg"
+                android:button="@null"
+                android:text="@string/mode_bath"
+                android:textColor="@drawable/radoo_select1" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="25dp"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/circle"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/rg_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/rb_Monday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_left_bg"
+                android:button="@null"
+                android:checked="false"
+                android:text="@string/one"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_Thuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:text="@string/two"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_Wednesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:text="@string/three"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_Thursday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:text="@string/four"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_Friday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:text="@string/five"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_Saturday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:text="@string/six"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#e6e6e6" />
+
+            <RadioButton
+                android:id="@+id/rb_Sunday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_right_bg"
+                android:button="@null"
+                android:text="@string/day"
+                android:textColor="@drawable/radoo_select1" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B" />
+
+</LinearLayout>

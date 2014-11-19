@@ -121,7 +121,7 @@
             android:orientation="vertical" >
 
             <RadioButton
-                android:id="@+id/rb_model_comfort"
+                android:id="@+id/rb_mode_comfort"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -138,7 +138,7 @@
                 android:background="#d4d4d4" />
 
             <RadioButton
-                android:id="@+id/rb_mode_bath"
+                android:id="@+id/rb_mode_normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
