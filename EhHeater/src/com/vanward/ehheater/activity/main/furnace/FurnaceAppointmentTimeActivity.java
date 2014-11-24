@@ -18,7 +18,7 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 		setCenterView(R.layout.activity_furnace_appointment_time);
 		setTopText(R.string.appointment);
 		setLeftButtonBackground(R.drawable.icon_back);
-		setRightButtonBackground(R.drawable.icon_add);
+		setRightButtonBackground(R.drawable.menu_icon_ye);
 		findViewById();
 		init();
 	}

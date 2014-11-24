@@ -37,7 +37,6 @@ import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
 import com.vanward.ehheater.view.CircleListener;
-import com.vanward.ehheater.view.CircularView;
 import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
@@ -69,6 +68,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private RadioGroup rg_winner;
 
 	private RadioButton rb_summer, rb_supply_heating, rb_bath;
+	
+	private LinearLayout llt_gas_consumption;
 
 	private boolean isOn = false;
 
@@ -117,14 +118,14 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 		});
 
-//		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
-//				.getCurrentSelectedHeater();
-//		String mac = curHeater.getMac();
-//		String passcode = curHeater.getPasscode();
-//		String userId = AccountService.getUserId(getBaseContext());
-//		String userPsw = AccountService.getUserPsw(getBaseContext());
-//
-//		ConnectActivity.connectToDevice(this, mac, userId, userPsw);
+		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
+				.getCurrentSelectedHeater();
+		String mac = curHeater.getMac();
+		String passcode = curHeater.getPasscode();
+		String userId = AccountService.getUserId(getBaseContext());
+		String userPsw = AccountService.getUserPsw(getBaseContext());
+
+		ConnectActivity.connectToDevice(this, mac, userId, userPsw);
 	}
 
 	private void initSlidingMenu() {
@@ -165,12 +166,14 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		iv_rotate_animation = (ImageView) findViewById(R.id.iv_rotate_animation);
 		iv_season_mode = (ImageView) findViewById(R.id.iv_season_mode);
 		circle_slider = (BaoCircleSlider) findViewById(R.id.circle_slider);
+		llt_gas_consumption = (LinearLayout) findViewById(R.id.llt_gas_consumption);
 	}
 
 	private void setListener() {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
 		btn_top_right.setOnClickListener(this);
 		btn_appointment.setOnClickListener(this);
+		llt_gas_consumption.setOnClickListener(this);
 		btn_setting.setOnClickListener(this);
 		circle_slider.setCircleSliderListener(this);
 
@@ -549,6 +552,12 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		case R.id.btn_appointment:
 			intent = new Intent(FurnaceMainActivity.this,
 					FurnaceAppointmentListActivity.class);
+			startActivity(intent);
+			break;
+			
+		case R.id.llt_gas_consumption:
+			intent = new Intent(FurnaceMainActivity.this,
+					FurnaceGasConsumptionActivity.class);
 			startActivity(intent);
 			break;
 

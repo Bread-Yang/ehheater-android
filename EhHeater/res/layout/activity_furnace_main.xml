@@ -331,6 +331,7 @@
                     android:background="@drawable/icon_device_consumption" />
 
                 <LinearLayout
+                    android:id="@+id/llt_gas_consumption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

@@ -13,7 +13,7 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 
 public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
-	private WebView wb_chart;
+	private WebView wv_chart;
 
 	private ImageButton ib_switch;
 
@@ -30,7 +30,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 	}
 
 	private void findViewById() {
-		wb_chart = (WebView) findViewById(R.id.wb_chart);
+		wv_chart = (WebView) findViewById(R.id.wv_chart);
 		ib_switch = (ImageButton) findViewById(R.id.ib_switch);
 	}
 
@@ -45,11 +45,11 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
-		wb_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
+		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
 				"highChartsJavaScriptInterface");
-		wb_chart.getSettings().setJavaScriptEnabled(true);
-		wb_chart.loadUrl("file:///android_asset/furnace_chart/chart.html");
-
+		wv_chart.getSettings().setJavaScriptEnabled(true);
+		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control.html");
+		wv_chart.setBackgroundColor(0xF3F3F3);
 	}
 
 	class HighChartsJavaScriptInterface {
