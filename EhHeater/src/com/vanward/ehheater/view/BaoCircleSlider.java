@@ -135,6 +135,11 @@ public class BaoCircleSlider extends View {
 		}
 	}
 
+	/**是否在拖动*/
+	public boolean isDraging() {
+		return draging;
+	}
+
 	public float getMinValue() {
 		return minValue;
 	}

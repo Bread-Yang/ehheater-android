@@ -46,11 +46,23 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 							break;
 						case R.id.rb_mode_outdoor:
 							FurnaceSendMsgModel.setToOutdoorHeating();
+							// 供暖温度30℃（散热器与地暖一样）；可以设置温度，但不支持温度调节，不管设置多少温度，都是以默认30℃运行
+							FurnaceSendMsgModel.setHeatingTemperature(30);
 							break;
 						case R.id.rb_mode_night:
 							FurnaceSendMsgModel.setToNightHeating();
+							// 温度自动转为当前设置温度的80%；如当前设置60℃，当你按下夜间模式符号后，温度自动转为48℃；设置的温度可以调节。
+							// App直接发当前设置温度即可
+							int temp = (int) (FurnaceMainActivity.statusResp
+									.getHeatingTemTarget());
+							if (temp < 30) {
+								temp = 30;
+							}
+							FurnaceSendMsgModel
+							.setHeatingTemperature(temp);
 							break;
 						}
+						finish();
 					}
 				});
 
@@ -66,6 +78,7 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 					FurnaceSendMsgModel.setToNormalBath();
 					break;
 				}
+				finish();
 			}
 		});
 	}

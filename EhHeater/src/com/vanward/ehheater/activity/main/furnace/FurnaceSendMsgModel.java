@@ -56,4 +56,5 @@ public class FurnaceSendMsgModel {
 	public static void refreshStatus() {
 		generated.SendDERYRefreshReq(Global.connectId);
 	}
+	
 }

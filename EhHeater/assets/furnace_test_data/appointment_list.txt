@@ -1,0 +1,50 @@
+{
+    "responseCode": "200",
+    "responseMessage": "成功",
+    "result": [
+        {
+            "appointmentId": 2,
+            "appointmentName": "hmz1",
+            "dateTime": 22222222222,
+            "did": "1",
+            "loopflag": 2,
+            "week" : "0011101",   
+            "workMode" : 0,     
+            "isAppointmentOn" : 1,  
+            "isDeviceOn" : 1,      
+            "deviceType" : 0,  
+            "temperature" : 35,
+            "userId": "1"
+            
+        },
+        {
+            "appointmentId": 3,
+            "appointmentName": "hmz2",
+            "dateTime": 1414834440,
+            "did": "1",
+            "loopflag": 2,
+            "week" : "1011101",
+            "workMode" : 1,     
+            "isAppointmentOn" : 0,  
+            "isDeviceOn" : 0,      
+            "deviceType" : 0,  
+            "temperature" : 45,
+            "userId": "1"
+        },
+        {
+            "appointmentId": 4,
+            "appointmentName": "hmz3",
+            "dateTime": 1111111111,
+            "dateTime": 1,
+            "did": "1",
+            "week" : "1111101",
+            "workMode" : 2,     
+            "isAppointmentOn" : 1,  
+            "isDeviceOn" : 1,      
+            "deviceType" : 0,  
+            "loopflag": 2,
+            "temperature" : 37,
+            "userId": "1"
+        }
+    ]
+}

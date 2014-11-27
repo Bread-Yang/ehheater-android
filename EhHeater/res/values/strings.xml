@@ -131,8 +131,11 @@
     <string name="heating_temperature">供暖温度</string>
     <string name="outlet_temperature">出水温度</string>
     <string name="temperature_no_set">设置--°</string>
+    <string name="temperature">温度</string>
     <string name="no_set">--</string>
     <string name="gas_unit">m³/h</string>
+    <string name="turn_off">关机</string>
+    <string name="turn_on">开机</string>
     <string name="shutdown">关机中</string>
     <string name="standby">待机中</string>
     <string name="gas_consumption">燃气耗量</string>
@@ -143,7 +146,7 @@
     <string name="winner_mode">冬季模式</string>
     <string name="heating_mode">供暖模式</string>
     <string name="bath_mode">卫浴模式</string>
-    <string name="mode_default">默认</string>
+    <string name="mode_default">普通</string>
     <string name="mode_outdoor">外出</string>
     <string name="mode_night">夜间</string>
     <string name="mode_comfort">舒适</string>
@@ -161,5 +164,7 @@
     <string name="day">日</string>
     <string name="intelligent_control">智能温控</string>
     <string name="furnace_switch">壁挂炉开关</string>
+    <string name="requesting_http">正在请求,请稍后...</string>
+    <string name="edit_appointment">编辑预约</string>
 
 </resources>

@@ -245,7 +245,7 @@
                 android:gravity="center"
                 android:onClick="onClick"
                 android:padding="0dp"
-                android:text="@string/mode"
+                android:text="@string/appointment"
                 android:textColor="@color/an_hui"
                 android:textSize="15sp" />
 

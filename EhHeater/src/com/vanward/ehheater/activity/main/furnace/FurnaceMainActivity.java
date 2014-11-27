@@ -46,8 +46,7 @@ import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
-		OnClickListener, OnLongClickListener, CircleListener,
-		BaoCircleSliderListener {
+		OnClickListener, OnLongClickListener, BaoCircleSliderListener {
 
 	private static final String TAG = "FurnaceMainActivity";
 
@@ -68,7 +67,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private RadioGroup rg_winner;
 
 	private RadioButton rb_summer, rb_supply_heating, rb_bath;
-	
+
 	private LinearLayout llt_gas_consumption;
 
 	private boolean isOn = false;
@@ -77,9 +76,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	private TextView tv_sliding_menu_season_mode;
 
-	private DERYStatusResp_t statusResp = null;
-
-	private boolean Insetting = false;
+	public static DERYStatusResp_t statusResp = null;
 
 	private BaoCircleSlider circle_slider;
 
@@ -190,6 +187,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 					circle_slider.setValue(statusResp.getHeatingTemTarget());
 
+					btn_appointment.setEnabled(true);
+
 					break;
 				case R.id.rb_bath:
 
@@ -198,6 +197,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 					OnDERYStatusResp(statusResp, Global.connectId);
 
 					circle_slider.setValue(statusResp.getBathTemTarget());
+
+					btn_appointment.setEnabled(false);
 
 					break;
 				}
@@ -300,6 +301,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private void seasonAndModeDeal(DERYStatusResp_t pResp) {
 		if (pResp.getSeasonState() == 0) { // summer
 
+			btn_appointment.setEnabled(false);
+
 			rg_winner.setVisibility(View.GONE);
 			rb_summer.setVisibility(View.VISIBLE);
 			iv_season_mode.setImageResource(R.drawable.mode_icon_summer);
@@ -307,7 +310,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			rb_summer.setText(getResources().getString(R.string.setting)
 					+ pResp.getBathTemTarget() + "°");
 
-			if (!Insetting) {
+			if (!circle_slider.isDraging()) {
 				circle_slider.setValue(pResp.getBathTemTarget());
 			}
 
@@ -317,7 +320,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 						null, null, null);
 				tv_mode_tips.setText(R.string.mode_bath);
 			} else if (pResp.getBathMode() == 1) { // 1 - comfort bath(temp : 35
-													// - 45)
+													// - 48)
 				tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
 						getResources()
 								.getDrawable(R.drawable.mode_icon_comfort),
@@ -362,8 +365,11 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 
 			if (rb_supply_heating.isChecked()) {
+				btn_appointment.setEnabled(true);
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.heating_temperature);
+			} else {
+				btn_appointment.setEnabled(false);
 			}
 
 			rg_winner.setVisibility(View.VISIBLE);
@@ -378,7 +384,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			if (rg_winner.getVisibility() == View.VISIBLE) {
 				if (rb_supply_heating.isChecked()) {
-					if (!Insetting) {
+					if (!circle_slider.isDraging()) {
 						circle_slider.setValue(pResp.getHeatingTemTarget());
 					}
 
@@ -403,9 +409,10 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 										R.drawable.mode_icon_outdoor), null,
 								null, null);
 						tv_mode_tips.setText(R.string.mode_outdoor);
+						circle_slider.setVisibility(View.INVISIBLE);
 					}
 				} else {
-					if (!Insetting) {
+					if (!circle_slider.isDraging()) {
 						circle_slider.setValue(pResp.getBathTemTarget());
 					}
 
@@ -424,7 +431,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 						tv_mode_tips.setText(R.string.mode_bath);
 					} else if (pResp.getBathMode() == 1) { // 1 - comfort
 						// bath(temp : 35 -
-						// 45)
+						// 48)
 						tv_mode_tips.setCompoundDrawablesWithIntrinsicBounds(
 								getResources().getDrawable(
 										R.drawable.mode_icon_comfort), null,
@@ -517,7 +524,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				} else {
 					FurnaceSendMsgModel.setHeatingTemperature(value);
 				}
-				Insetting = false;
 			}
 		};
 		mCountDownTimer.start();
@@ -554,7 +560,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 					FurnaceAppointmentListActivity.class);
 			startActivity(intent);
 			break;
-			
+
 		case R.id.llt_gas_consumption:
 			intent = new Intent(FurnaceMainActivity.this,
 					FurnaceGasConsumptionActivity.class);
@@ -620,40 +626,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			}
 		});
-	}
-
-	// 转圈停止拖动的时候执行
-	@Override
-	public void levelListener(int outlevel) {
-		// Log.e("levelListener执行了", "outlevel : " + outlevel);
-		boolean isBathMode = true;
-		if (rg_winner.getCheckedRadioButtonId() == R.id.rb_supply_heating) {
-			isBathMode = false;
-		}
-		sendToMsgAfterThreeSeconds(outlevel, isBathMode);
-	}
-
-	// 转圈拖动的时候执行
-	@Override
-	public void updateUIListener(int outlevel) {
-		// Log.e("updateUIListener执行了", "outlevel : " + outlevel);
-
-		tv_temperature.setText(outlevel + "");
-		tv_current_or_setting_temperature_tips
-				.setText(R.string.setting_temperature);
-
-		Insetting = true;
-	}
-
-	// 第一次setListener的时候执行
-	@Override
-	public void updateUIWhenAferSetListener(int outlevel) {
-		// Log.e("updateUIWhenAferSetListener执行了", "outlevel : " + outlevel);
-	}
-
-	@Override
-	public void updateLocalUIdifferent(int outlevel) {
-		// Log.e("updateLocalUIdifferent执行了", "outlevel : " + outlevel);
 	}
 
 	private void changeSlidingSeasonModeItem(int seasonMode) {
@@ -808,20 +780,31 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	public void needChangeValue(int value, boolean isAdd) {
 		if (rg_winner.getVisibility() == View.VISIBLE
 				&& rb_supply_heating.isChecked()) {
-			if (80 >= value && value >= 30) {
-				tv_temperature.setText(value + "");
-				tv_current_or_setting_temperature_tips
-						.setText(R.string.setting_temperature);
-				circle_slider.setValue(value);
+			// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
+			// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
+			
+			if (statusResp.getMachineType() == 0) {  // 0 : 散热器
+				if (80 >= value && value >= 30) {
+					tv_temperature.setText(value + "");
+					tv_current_or_setting_temperature_tips
+							.setText(R.string.setting_temperature);
+					circle_slider.setValue(value);
+				}
+			} else {
+				if (55 >= value && value >= 30) {
+					tv_temperature.setText(value + "");
+					tv_current_or_setting_temperature_tips
+							.setText(R.string.setting_temperature);
+					circle_slider.setValue(value);
+				}
 			}
-
 		} else {
 			if (statusResp.getBathMode() == 0) { // 0 - normal bath
 				if (60 < value || value < 30) {
 					return;
 				}
 			} else {
-				if (35 > value || value > 45) {
+				if (35 > value || value > 48) {
 					return;
 				}
 			}

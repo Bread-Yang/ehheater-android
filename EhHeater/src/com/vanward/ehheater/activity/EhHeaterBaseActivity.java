@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.LoadingDialog;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
@@ -102,6 +103,15 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 
 	public void setTopDismiss() {
 		rlt_top.setVisibility(View.GONE);
+	}
+
+	public void showRequestDialog() {
+		DialogUtil.instance().showLoadingDialog(this,
+				getResources().getString(R.string.requesting_http));
+	}
+
+	public void dismissRequestDialog() {
+		DialogUtil.dismissDialog();
 	}
 
 	@Override

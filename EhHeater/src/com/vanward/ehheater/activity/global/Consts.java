@@ -3,6 +3,8 @@ package com.vanward.ehheater.activity.global;
 import com.vanward.ehheater.bean.HeaterInfo;
 
 public class Consts {
+	
+	public static final String REQUEST_BASE_URL = "http://122.10.94.216:8080/EhHeaterWeb/";
 
 	public static final String INTENT_FILTER_KILL_MAIN_ACTIVITY = "kill_main_activity";
 	public static final String INTENT_FILTER_KILL_LOGIN_ACTIVITY = "kill_login_activity";

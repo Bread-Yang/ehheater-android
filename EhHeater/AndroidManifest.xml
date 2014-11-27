@@ -91,7 +91,7 @@
         <activity
             android:name=".activity.main.furnace.FurnaceIntelligentControlActivity"
             android:screenOrientation="portrait" >
-        </activity>
+        </activity> 
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentListActivity"
             android:screenOrientation="portrait" >

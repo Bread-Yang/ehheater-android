@@ -60,5 +60,10 @@
     <style name="custom_checkbox" parent="@android:style/Widget.CompoundButton.CheckBox"> 
         <item name="android:button">@drawable/my_checkbox</item> 
     </style>
+    
+    <style name="fade_animation">
+        <item name="@android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="@android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
 
 </resources>
