@@ -6,7 +6,7 @@ import android.os.Parcelable;
 public class FurnaceAppointmentModel implements Parcelable {
 
 	private int appointmentId;
-	private String appointmentName;
+	private String name;
 	private int dateTime;
 	private int did;
 	private int userId;
@@ -26,12 +26,12 @@ public class FurnaceAppointmentModel implements Parcelable {
 		this.appointmentId = appointmentId;
 	}
 
-	public String getAppointmentName() {
-		return appointmentName;
+	public String getName() {
+		return name;
 	}
 
-	public void setAppointmentName(String appointmentName) {
-		this.appointmentName = appointmentName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public int getDateTime() {
@@ -121,7 +121,7 @@ public class FurnaceAppointmentModel implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(appointmentName);
+		dest.writeString(name);
 		dest.writeInt(appointmentId);
 		dest.writeInt(dateTime);
 		dest.writeInt(did);
@@ -140,7 +140,7 @@ public class FurnaceAppointmentModel implements Parcelable {
 		@Override
 		public FurnaceAppointmentModel createFromParcel(Parcel source) {
 			FurnaceAppointmentModel model = new FurnaceAppointmentModel();
-			model.setAppointmentName(source.readString());
+			model.setName(source.readString());
 			model.setAppointmentId(source.readInt());
 			model.setDateTime(source.readInt());
 			model.setDid(source.readInt());

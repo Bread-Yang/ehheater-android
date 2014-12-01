@@ -328,6 +328,21 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		Intent heaterNameIntent = new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(heaterNameIntent);
 		
+		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+		HeaterInfo hinfo = hser.getCurrentSelectedHeater();
+		
+		if (hinfo == null) {
+			// 删光了
+			
+			Intent intent = new Intent(getBaseContext(), SelectDeviceActivity.class);
+			intent.putExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, true);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+			finish();
+			
+		}
+		
 	}
 
 	private String getCurDeviceMac(Context context) {

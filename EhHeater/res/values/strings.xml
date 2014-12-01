@@ -31,6 +31,7 @@
     <string name="account_management">账号管理</string>
     <string name="change_password">修改密码</string>
     <string name="change_bind_phone">修改绑定手机号码</string>
+    <string name="phone_number">手机号码</string>
     <string name="msg_logining">登录中...</string>
     <string name="msg_logining_out">注销中...</string>
     <string name="logout">注销</string>
@@ -90,7 +91,9 @@
     <string name="setup_step3_eh_furnace">长按壁挂炉冬夏季键<font color="#ff0000">3秒</font>，蜂鸣器<font color="#ff0000">响一声</font>之后松手，并点击下一步</string>
     <string name="wifi_name">网络名称</string>
     <string name="set_fail_tip1">无法连接热水器，请检查</string>
+    <string name="setup_furnace_fail_title">无法连接壁挂炉，请检查</string>
     <string name="set_fail_tip2">1.热水器是否正常运行;\n2.无线局域网名称和密码是否修改过,如是,则需删除热水器重新添加。</string>
+    <string name="setup_furnace_fail_tips">1. 壁挂炉是否正常运行\n2. 无线局域网名称和密码是否修改过\n\n如是, 则需删除壁挂炉重新添加</string>
     <string name="retry">重试</string>
     <string name="manually_connect">手动连接</string>
     <string name="account_manager">账号管理</string>

@@ -20,16 +20,18 @@
             android:text="@string/enable"
             android:textColor="@color/appointment_text_color"
             android:textSize="18sp" />
-
-        <ImageButton
-            android:id="@+id/ib_switch"
-            android:layout_width="100dp"
+        
+        <ToggleButton
+            android:id="@+id/tb_switch"
+            android:layout_width="55dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:scaleType="fitCenter"
-            android:src="@drawable/off" />
+            android:layout_marginRight="20dp"
+            android:background="@drawable/selector_bg_furnace_on_or_off"
+            android:textOff=""
+            android:textOn="" />
+
     </RelativeLayout>
 
     <WebView
@@ -55,15 +57,14 @@
             android:textColor="@color/appointment_text_color"
             android:textSize="18sp" />
 
-        <RadioGroup
-            android:id="@+id/rg_day"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal" >
 
-            <RadioButton
-                android:id="@+id/rb_Monday"
+            <CheckBox
+                android:id="@+id/cb_Monday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_left_bg"
@@ -77,8 +78,8 @@
                 android:layout_height="fill_parent"
                 android:background="#e6e6e6" />
 
-            <RadioButton
-                android:id="@+id/rb_Thuesday"
+            <CheckBox
+                android:id="@+id/cb_Thuesday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
@@ -91,8 +92,8 @@
                 android:layout_height="fill_parent"
                 android:background="#e6e6e6" />
 
-            <RadioButton
-                android:id="@+id/rb_Wednesday"
+            <CheckBox
+                android:id="@+id/cb_Wednesday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
@@ -105,8 +106,8 @@
                 android:layout_height="fill_parent"
                 android:background="#e6e6e6" />
 
-            <RadioButton
-                android:id="@+id/rb_Thursday"
+            <CheckBox
+                android:id="@+id/cb_Thursday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
@@ -119,8 +120,8 @@
                 android:layout_height="fill_parent"
                 android:background="#e6e6e6" />
 
-            <RadioButton
-                android:id="@+id/rb_Friday"
+            <CheckBox
+                android:id="@+id/cb_Friday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
@@ -133,8 +134,8 @@
                 android:layout_height="fill_parent"
                 android:background="#e6e6e6" />
 
-            <RadioButton
-                android:id="@+id/rb_Saturday"
+            <CheckBox
+                android:id="@+id/cb_Saturday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
@@ -147,15 +148,15 @@
                 android:layout_height="fill_parent"
                 android:background="#e6e6e6" />
 
-            <RadioButton
-                android:id="@+id/rb_Sunday"
+            <CheckBox
+                android:id="@+id/cb_Sunday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_right_bg"
                 android:button="@null"
                 android:text="@string/day"
                 android:textColor="@drawable/radoo_select1" />
-        </RadioGroup>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

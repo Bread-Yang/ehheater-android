@@ -10,12 +10,45 @@
 
     <LinearLayout
         android:layout_width="288dp"
-        android:layout_height="132dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:background="@drawable/input_bg_san"
+        android:background="@drawable/shape_rectangle_with_corners_register"
         android:orientation="vertical"
         android:paddingLeft="12dp"
         android:paddingRight="12dp" >
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="用户名"
+                android:textColor="@color/text_grey"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/et_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="请输入用户名"
+                android:inputType="phone"
+                android:textSize="16dp" />
+        </LinearLayout>
+        
+        <View android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#E1E1E1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,6 +78,10 @@
                 android:inputType="phone"
                 android:textSize="16dp" />
         </LinearLayout>
+        
+        <View android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#E1E1E1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,6 +112,10 @@
                 android:text=""
                 android:textSize="16dp" />
         </LinearLayout>
+        
+        <View android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#E1E1E1"/>
 
         <LinearLayout
             android:layout_width="match_parent"

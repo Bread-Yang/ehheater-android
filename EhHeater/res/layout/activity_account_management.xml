@@ -6,18 +6,61 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/rlt_change_nickname"
         android:layout_width="fill_parent"
-        android:layout_height="50dp" 
+        android:layout_height="50dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginRight="20dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            
             android:text="@string/account"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/iv_right_arrow"
+            android:text="Tommy"
+            android:textColor="@color/appointment_text_color" />
+
+        <ImageView
+            android:id="@+id/iv_right_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/right_arrow" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/wheelview_grey_label" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/phone_number"
             android:textColor="@color/appointment_text_color"
             android:textSize="16sp" />
 
@@ -27,22 +70,22 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            
             android:textColor="@color/appointment_text_color" />
     </RelativeLayout>
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/wheelview_grey_label"
-         />
+        android:background="@color/wheelview_grey_label" />
 
     <RelativeLayout
         android:id="@+id/rlt_change_password"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" >
+        android:layout_marginRight="20dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,18 +104,13 @@
             android:src="@drawable/right_arrow" />
     </RelativeLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/wheelview_grey_label" />
-
     <RelativeLayout
         android:id="@+id/rlt_change_bind_phone"
         android:layout_width="fill_parent"
-        android:layout_height="50dp" 
+        android:layout_height="50dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:visibility="gone">
+        android:visibility="gone" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -101,12 +139,12 @@
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/selector_red_bg"
         android:gravity="center"
         android:text="@string/logout"
-        android:textColor="@color/white" 
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
+        android:textColor="@color/white" />
 
 </LinearLayout>

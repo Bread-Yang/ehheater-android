@@ -28,7 +28,7 @@ import com.xtremeprog.xpgconnect.generated.UserRegisterResp_t;
 
 public class RegisterActivity extends EhHeaterBaseActivity {
 
-	private EditText mEtPhone, mEtPsw, mEtPsw2;
+	private EditText et_nickname, mEtPhone, mEtPsw, mEtPsw2;
 	private Button mBtnConfirm;
 	private CheckBox mCbShowPsw;
 
@@ -40,6 +40,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 		setRightButton(View.INVISIBLE);
 		setLeftButtonBackground(R.drawable.icon_back);
 
+		et_nickname = (EditText) findViewById(R.id.et_nickname);
 		mEtPhone = (EditText) findViewById(R.id.ar_et_phone);
 		mEtPsw = (EditText) findViewById(R.id.ar_et_psw);
 		mEtPsw2 = (EditText) findViewById(R.id.ar_et_confirm_psw);
@@ -119,12 +120,14 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 
 		if (pResp.getResult() == 0) {
 			Toast.makeText(getBaseContext(), "注册成功", 1000).show();
-			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText().toString(), mEtPsw.getText().toString());
-			startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
+			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
+					.toString(), mEtPsw.getText().toString());
+			startActivity(new Intent(getBaseContext(),
+					SelectDeviceActivity.class));
 			finish();
 		} else {
 			if (!isChangingConfigurations()) {
-				
+
 			}
 			Toast.makeText(getBaseContext(), "该号码已注册", 1000).show();
 		}
@@ -144,13 +147,12 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
 			return false;
 		}
-		if (mEtPhone.getText()
-				.toString().length()!=11) {
+		if (mEtPhone.getText().toString().length() != 11) {
 			Toast.makeText(getBaseContext(), "请输入11位手机号码", 1000).show();
 			return false;
 		}
 
-		if (!lengthGt6||!lengthGt18) {
+		if (!lengthGt6 || !lengthGt18) {
 			Toast.makeText(getBaseContext(), "密码长度需为6-18位", 1000).show();
 			return false;
 		}

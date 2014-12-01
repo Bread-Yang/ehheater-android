@@ -63,7 +63,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	private void initHeaterType() {
 		String typeStr = getIntent().getStringExtra("type");
-		if (typeStr==null) {
+		if (typeStr == null) {
 			return;
 		}
 		if (typeStr.equals("gas")) {
@@ -202,7 +202,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 				img.setImageResource(R.drawable.device_img1_1);
 				break;
 			case EH_FURNACE:
-				img.setImageResource(R.drawable.device_img3_1); 
+				img.setImageResource(R.drawable.device_img3_1);
 				s1tip.setText(R.string.set_device_tip2_eh_furnace);
 				break;
 			default:
@@ -216,15 +216,16 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 		case 2:
 
-			v = getLayoutInflater().inflate(R.layout.activity_configure_step2, mRlStepContainer, false);
+			v = getLayoutInflater().inflate(R.layout.activity_configure_step2,
+					mRlStepContainer, false);
 			TextView tv_tips = (TextView) v.findViewById(R.id.tv_tips);
 			mTvWifiSsid = (TextView) v.findViewById(R.id.acs2_tv_ssid);
 			mEtWifiPsw = (EditText) v.findViewById(R.id.acs2_et_psw);
-			
+
 			if (mType == HeaterType.EH_FURNACE) {
 				tv_tips.setText(R.string.set_device_tip3_eh_furnace);
 			}
-			
+
 			applyCurWifiSsid();
 			break;
 		case 3:
@@ -251,7 +252,9 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			case EH_FURNACE:
 				img3.setImageResource(R.drawable.device_img3);
 				s3tip.setText(R.string.setup_step3_eh_furnace);
-				TextStyleUtil.setColorStringInTextView(s3tip, Color.parseColor("#ff5f00"), new String[] { "3秒", "响一声" });
+				TextStyleUtil.setColorStringInTextView(s3tip,
+						Color.parseColor("#ff5f00"),
+						new String[] { "3秒", "响一声" });
 			default:
 				break;
 			}
@@ -374,14 +377,14 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	private void finishingConfig() {
 
-
 		Log.e("打印productKey前", "打印productKey前");
 		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
 		Log.e("productKey是 : ", hinfo.getProductKey());
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-		
+
 		if (!hser.isValidDevice(hinfo)) {
-			Toast.makeText(getBaseContext(), "无法识别该设备", Toast.LENGTH_LONG).show();
+			Toast.makeText(getBaseContext(), "无法识别该设备", Toast.LENGTH_LONG)
+					.show();
 			return;
 		}
 		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
@@ -389,19 +392,19 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		HeaterInfoDao hdao = new HeaterInfoDao(this);
 		List<HeaterInfo> list = hdao.getAll();
 		boolean flag = false;
-		
+
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getMac().equals(hinfo.getMac())) {
 				flag = true;
 			}
 		}
-		
+
 		if (flag) {
 			Toast.makeText(this, "此设备已存在", 1000).show();
 		} else {
 			hser.addNewHeater(hinfo);
 		}
-		
+
 		Log.d("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
 				+ "-" + hinfo.getPasscode());
 
@@ -479,8 +482,12 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			dialog_easylink.dismiss();
 			stopEasyLink();
 			curindex = 3;
-			startActivity(new Intent(getBaseContext(),
-					AutoConfigureFailActivity.class));
+			Intent intent = new Intent(getBaseContext(),
+					AutoConfigureFailActivity.class);
+			if (mType == HeaterType.EH_FURNACE) {
+				intent.putExtra("isFurnace", true);
+			}
+			startActivity(intent);
 		}
 
 		@Override

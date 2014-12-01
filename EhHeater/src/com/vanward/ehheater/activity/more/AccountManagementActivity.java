@@ -25,9 +25,9 @@ import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 public class AccountManagementActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
 
-	private TextView tv_account;
-	private RelativeLayout rlt_change_password;
-	private RelativeLayout rlt_change_bind_phone;
+	private TextView tv_account, tv_nickname;
+	private RelativeLayout rlt_change_nickname, rlt_change_password,
+			rlt_change_bind_phone;
 	private Button btn_logout;
 
 	@Override
@@ -40,16 +40,26 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 
 	private void findViewById() {
 		tv_account = (TextView) findViewById(R.id.tv_account);
+		tv_nickname = (TextView) findViewById(R.id.tv_nickname);
+		rlt_change_nickname = (RelativeLayout) findViewById(R.id.rlt_change_nickname);
 		rlt_change_password = (RelativeLayout) findViewById(R.id.rlt_change_password);
 		rlt_change_bind_phone = (RelativeLayout) findViewById(R.id.rlt_change_bind_phone);
 		btn_logout = (Button) findViewById(R.id.btn_logout);
 
-		UIUtil.setOnClick(this, rlt_change_password, btn_logout);
+		UIUtil.setOnClick(this, rlt_change_nickname, rlt_change_password,
+				btn_logout);
 	}
 
 	@Override
 	public void onClick(View view) {
 		super.onClick(view);
+		
+		if (view == rlt_change_nickname) {
+			intent.setClass(getBaseContext(), ChangeNicknameActivity.class);
+			intent.putExtra("nickname", tv_nickname.getText().toString());
+			startActivity(intent);
+		}
+		
 		if (view == rlt_change_password) {
 			intent.setClass(getBaseContext(), ChangePasswordActivity2.class);
 			startActivity(intent);
@@ -62,20 +72,24 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 						public void oncall(View v) {
 
 							// send a broad cast to finish main activity
-							Intent killerIntent = new Intent(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
-							LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(killerIntent);
-							
+							Intent killerIntent = new Intent(
+									Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
+							LocalBroadcastManager.getInstance(getBaseContext())
+									.sendBroadcast(killerIntent);
+
 							new SharedPreferUtils(getBaseContext()).clear();
-							new HeaterInfoService(getBaseContext()).deleteAllHeaters();
-							
-							intent.setClass(getBaseContext(),WelcomeActivity.class);
+							new HeaterInfoService(getBaseContext())
+									.deleteAllHeaters();
+
+							intent.setClass(getBaseContext(),
+									WelcomeActivity.class);
 							startActivity(intent);
 							finish();
 						}
 					}).showDialog();
 
 		}
-	
+
 	}
 
 	private void init() {

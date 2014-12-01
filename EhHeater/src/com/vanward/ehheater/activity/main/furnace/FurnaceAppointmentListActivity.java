@@ -98,7 +98,9 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 	private void init() {
 		mHttpFriend = HttpFriend.create(this);
+		
 		extractDataFromJson(getTestData()); // for test
+		
 		// requestHttpData();
 		adapter = new AppointmentListAdapter();
 		lv_listview.setAdapter(adapter);
@@ -140,7 +142,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					JSONObject item = result.getJSONObject(i);
 					FurnaceAppointmentModel model = new FurnaceAppointmentModel();
 					model.setAppointmentId(item.getInt("appointmentId"));
-					model.setAppointmentName(item.getString("appointmentName"));
+					model.setName(item.getString("name"));
 					model.setDateTime(item.getInt("dateTime"));
 					model.setDid(item.getInt("did"));
 					model.setLoopflag(item.getInt("loopflag"));
@@ -211,7 +213,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 			// holder.tv_time.setText(appointment.getHour() + ":" +
 			// appointment.getMinute());
 
-			holder.tv_nickname.setText(model.getAppointmentName());
+			holder.tv_nickname.setText(model.getName());
 			holder.tv_time.setText(dateFormat.format(new Date(model
 					.getDateTime() * 1000)));
 

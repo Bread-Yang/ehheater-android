@@ -9,6 +9,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 
 public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 
@@ -43,12 +44,12 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 				case R.id.rb_mode_summer:
 					FurnaceSendMsgModel.setToSummerMode();
 					intent.putExtra("seasonMode", SET_SUMMER_MODE);
-//					setResult(RESULT_OK, intent);
+					// setResult(RESULT_OK, intent);
 					break;
 				case R.id.rb_mode_winner:
 					FurnaceSendMsgModel.setToWinnerMode();
 					intent.putExtra("seasonMode", SET_WINNER_MODE);
-//					setResult(RESULT_OK, intent);
+					// setResult(RESULT_OK, intent);
 					break;
 				}
 			}
@@ -65,6 +66,17 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 			} else {
 				rg_mode.check(R.id.rb_mode_winner);
 			}
+		}
+	}
+
+	@Override
+	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
+		super.OnDERYStatusResp(pResp, nConnId);
+		
+		if (pResp.getSeasonState() == 0) {
+			rg_mode.check(R.id.rb_mode_summer);
+		} else {
+			rg_mode.check(R.id.rb_mode_winner);
 		}
 	}
 }

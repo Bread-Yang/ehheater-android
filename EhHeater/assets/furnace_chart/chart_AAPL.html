@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="height=device-height, width=device-width" />
+		<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="highstock.js"></script>
+        <script type="text/javascript" src="draggable-points.js"></script>
+
+		<script>
+			function getx(xjson) {
+				//var t2 = "[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'}] ";
+				var t2 = init.getx();
+				var tarrat = eval(t2);
+				var result = new Array();
+				for (var i = 0; i < tarrat.length; i++) {
+					result.push(tarrat[i].name);
+
+				}
+				return result;
+
+			}
+
+			function getdata(djson) {
+				//var t2 = "[{data:49.9},{data:1.5},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4}] ";
+				var t2= init.getdata();
+				var tarrat = eval(t2);
+				var result = new Array();
+				for (var i = 0; i < tarrat.length; i++) {
+					result.push(tarrat[i].data);
+
+				}
+				return result;
+
+				//return [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4];
+			}
+
+			$(function () {
+
+    $.getJSON('http://www.highcharts.com/samples/data/jsonp.php?filename=aapl-c.json&callback=?', function (data) {
+        // Create the chart
+        $('#container').highcharts('StockChart', {
+
+
+            rangeSelector : {
+                selected : 1
+            },
+
+            title : {
+                text : 'AAPL Stock Price'
+            },
+
+            series : [{
+                name : 'AAPL',
+                data : data,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            }]
+        });
+    });
+
+});
+		</script>
+	</head>
+
+	<body style="background: #F3F3F3;margin: 0px;">
+        <div id="container" style="height: 300px"></div>
+        <div id="drag"></div>
+        <div id="drop"></div>
+	</body>
+
+
+
+</html>
