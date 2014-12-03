@@ -262,8 +262,8 @@ public class BaoCircleSlider extends View {
 	private boolean isOnLine(Point point) {
 		float radius = getWidth() / 2;
 		float length = lengthOfTwoPoint(point, circleCenter);
-		boolean isOnline = (length < (radius + ctrlIconViewWidth / 2))
-				&& (length > (radius - ctrlIconViewWidth / 2));
+		boolean isOnline = (length < (radius + ctrlIconViewWidth))
+				&& (length > (radius - ctrlIconViewWidth));
 		// Log.e("是否在圆环线上 : ", isOnline + "");
 		return isOnline;
 	}

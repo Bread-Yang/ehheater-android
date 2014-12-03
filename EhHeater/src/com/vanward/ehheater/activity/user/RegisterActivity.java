@@ -3,6 +3,12 @@ package com.vanward.ehheater.activity.user;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.InputType;
@@ -19,10 +25,14 @@ import android.widget.Toast;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.configure.ShitActivity;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.NetworkStatusUtil;
+import com.vanward.ehheater.util.SharedPreferUtils;
+import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.UserRegisterResp_t;
 
@@ -31,6 +41,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 	private EditText et_nickname, mEtPhone, mEtPsw, mEtPsw2;
 	private Button mBtnConfirm;
 	private CheckBox mCbShowPsw;
+	private HttpFriend mHttpFriend;
 
 	@Override
 	public void initUI() {
@@ -70,6 +81,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			}
 		});
 
+		mHttpFriend = HttpFriend.create(this);
 	}
 
 	@Override
@@ -103,8 +115,8 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 					}
 				}.execute();
 			}
-
 			break;
+
 		case R.id.btn_left:
 			onBackPressed();
 			break;
@@ -116,26 +128,56 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 	public void OnUserRegisterResp(UserRegisterResp_t pResp, int nConnId) {
 		super.OnUserRegisterResp(pResp, nConnId);
 		Log.d("emmm", "OnUserRegisterResp:" + pResp.getResult());
-		DialogUtil.dismissDialog();
 
 		if (pResp.getResult() == 0) {
 			Toast.makeText(getBaseContext(), "注册成功", 1000).show();
 			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
 					.toString(), mEtPsw.getText().toString());
-			startActivity(new Intent(getBaseContext(),
-					SelectDeviceActivity.class));
-			finish();
+
+			String requestURL = "userinfo/saveMemberInfo";
+
+			AjaxParams params = new AjaxParams();
+			params.put("uid", mEtPhone.getText().toString());
+			params.put("userName", et_nickname.getText().toString());
+
+			showRequestDialog();
+			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					params, new AjaxCallBack<String>() {
+						public void onSuccess(String jsonString) {
+							try {
+								JSONObject json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									startActivity(new Intent(getBaseContext(),
+											SelectDeviceActivity.class));
+									new SharedPreferUtils(getBaseContext())
+											.put(ShareKey.UserNickname,
+													et_nickname.getText()
+															.toString().trim());
+									finish();
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+
+							DialogUtil.dismissDialog();
+						};
+					});
 		} else {
 			if (!isChangingConfigurations()) {
 
 			}
 			Toast.makeText(getBaseContext(), "该号码已注册", 1000).show();
+			DialogUtil.dismissDialog();
 		}
 
 	}
 
 	private boolean isInputValid() {
 
+		boolean nicknameNotEmpty = !TextUtils.isEmpty(et_nickname.getText()
+				.toString());
 		boolean phoneNotEmpty = !TextUtils.isEmpty(mEtPhone.getText()
 				.toString());
 		boolean lengthGt6 = mEtPsw.getText().toString().length() >= 6;
@@ -143,6 +185,10 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 		boolean pswMatch = mEtPsw.getText().toString()
 				.equals(mEtPsw2.getText().toString());
 
+		if (!nicknameNotEmpty) {
+			Toast.makeText(getBaseContext(), "请输入用户名", 1000).show();
+			return false;
+		}
 		if (!phoneNotEmpty) {
 			Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
 			return false;

@@ -11,10 +11,18 @@
         android:layout_height="wrap_content"
         layout="@layout/base_activity_top_layout" />
 
-    <RelativeLayout
-        android:id="@+id/rlt_center"
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </RelativeLayout>
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none" >
+
+        <RelativeLayout
+            android:id="@+id/rlt_center"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </RelativeLayout>
+    </ScrollView>
 
 </LinearLayout>

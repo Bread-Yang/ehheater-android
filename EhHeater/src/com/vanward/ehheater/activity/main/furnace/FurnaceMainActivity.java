@@ -1,5 +1,6 @@
 package com.vanward.ehheater.activity.main.furnace;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,7 @@ import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
@@ -82,6 +84,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	/** 指令正在发送中,三秒内不能改变CircleSlider滑动圆圈的位置 */
 	private boolean isSendingCommand = false;
 
+	private Dialog turnOffDialog;
+
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -121,6 +125,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				.getCurrentSelectedHeater();
 		String mac = curHeater.getMac();
 		String passcode = curHeater.getPasscode();
+		String did = curHeater.getDid();
+
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());
 
@@ -191,8 +197,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 						circle_slider.setValue(statusResp.getHeatingTemTarget());
 					}
 
-					btn_appointment.setEnabled(true);
-
 					break;
 				case R.id.rb_bath:
 
@@ -203,8 +207,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 						circle_slider.setValue(statusResp.getBathTemTarget());
 					}
-
-					btn_appointment.setEnabled(false);
 
 					break;
 				}
@@ -236,6 +238,16 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	private void init() {
+		turnOffDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithTwoButton(R.string.turn_off_in_winter,
+						R.string.cancel, R.string.turn_off, null,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								FurnaceSendMsgModel.closeDevice();
+							}
+						});
 
 		btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 
@@ -281,7 +293,9 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			circle_slider.setVisibility(View.GONE);
 			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
+			btn_appointment.setEnabled(false);
 			btn_setting.setEnabled(false);
+			btn_intellectual.setEnabled(false);
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 			isOn = false;
 
@@ -302,7 +316,9 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			isOn = false;
 		} else if (pResp.getOnOff() == 1) { // standby
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut);
+			btn_appointment.setEnabled(true);
 			btn_setting.setEnabled(true);
+			btn_intellectual.setEnabled(true);
 			isOn = true;
 		}
 	}
@@ -337,11 +353,13 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				tv_mode_tips.setText(R.string.mode_comfort);
 			}
 
+			circle_slider.setVisibility(View.VISIBLE);
+
 			if (pResp.getBathWater() == 0 && pResp.getOnOff() == 1) { // 0 :
 																		// have
 																		// bath
 																		// current
-				circle_slider.setVisibility(View.GONE);
+																		// circle_slider.setVisibility(View.GONE);
 				iv_rotate_animation.setVisibility(View.VISIBLE);
 				tv_status.setText(R.string.bathing);
 				// tv_temperature.setText(pResp.getBathTemNow() + "");
@@ -350,7 +368,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				tv_temperature.setText(pResp.getBathTemNow() + "");
 			} else {
 				tv_status.setText(R.string.standby);
-				circle_slider.setVisibility(View.VISIBLE);
+				// circle_slider.setVisibility(View.VISIBLE);
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.setting_temperature);
 				tv_temperature.setText(pResp.getBathTemTarget() + "");
@@ -376,11 +394,9 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 
 			if (rb_supply_heating.isChecked()) {
-				btn_appointment.setEnabled(true);
 				tv_current_or_setting_temperature_tips
 						.setText(R.string.heating_temperature);
 			} else {
-				btn_appointment.setEnabled(false);
 			}
 
 			rg_winner.setVisibility(View.VISIBLE);
@@ -473,6 +489,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				}
 			}
 
+			circle_slider.setVisibility(View.VISIBLE);
+
 			if (pResp.getBathWater() == 0 && pResp.getOnOff() == 1) { // 0 :
 																		// have
 																		// bath
@@ -482,7 +500,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 						.setText(R.string.outlet_temperature);
 				// when bathing, furnace bathing temperature can't be set.
 				if (rg_winner.getCheckedRadioButtonId() == R.id.rb_bath) {
-					circle_slider.setVisibility(View.GONE);
+					// circle_slider.setVisibility(View.GONE);
 				}
 				tv_status.setText(R.string.bathing);
 			} else { // 1 : no bath current
@@ -575,8 +593,13 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			break;
 
 		case R.id.btn_appointment:
-			intent = new Intent(FurnaceMainActivity.this,
-					FurnaceAppointmentListActivity.class);
+			if (Global.isForExhibition) {
+				intent = new Intent(FurnaceMainActivity.this,
+						FurnaceAppointmentList4ExhibitionActivity.class);
+			} else {
+				intent = new Intent(FurnaceMainActivity.this,
+						FurnaceAppointmentListActivity.class);
+			}
 			startActivity(intent);
 			break;
 
@@ -818,13 +841,25 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				}
 			}
 		} else {
-			if (statusResp.getBathMode() == 0) { // 0 - normal bath
-				if (60 < value || value < 30) {
-					return;
+			if (statusResp.getBathWater() == 0 && statusResp.getOnOff() == 1) {
+				if (statusResp.getBathMode() == 0) { // 0 - normal bath
+					if (48 < value || value < 30) {
+						return;
+					}
+				} else {
+					if (35 > value || value > 45) {
+						return;
+					}
 				}
 			} else {
-				if (35 > value || value > 45) {
-					return;
+				if (statusResp.getBathMode() == 0) { // 0 - normal bath
+					if (60 < value || value < 30) {
+						return;
+					}
+				} else {
+					if (35 > value || value > 45) {
+						return;
+					}
 				}
 			}
 			tv_temperature.setText(value + "");

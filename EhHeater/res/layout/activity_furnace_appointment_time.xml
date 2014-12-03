@@ -6,62 +6,48 @@
     android:background="@drawable/home_bg"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content" >
 
-        <com.vanward.ehheater.view.wheelview.WheelView
-            android:id="@+id/wheelView1"
-            android:layout_width="wrap_content"
-            android:layout_height="210dp"
-            android:layout_marginLeft="25dp"
-            android:layout_weight="1"
-            app:centerLabelPosition="30"
-            app:hasLeftBorder="false"
-            app:hasRightBorder="false"
-            app:textHighlightColor="@color/appointment_text_color"
-            app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
-            app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="3dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="4dp"
-            android:text="时"
-            android:textSize="25sp" />
+            android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-        <com.vanward.ehheater.view.wheelview.WheelView
-            android:id="@+id/wheelView2"
-            android:layout_width="wrap_content"
-            android:layout_height="210dp"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="1"
-            app:centerLabelPosition="30"
-            app:hasLeftBorder="false"
-            app:hasRightBorder="false"
-            app:textHighlightColor="@color/appointment_text_color"
-            app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
-            app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
+            <com.vanward.ehheater.view.wheelview.WheelView
+                android:id="@+id/wheelView1"
+                android:layout_width="70dp"
+                android:layout_height="210dp"
+                android:layout_marginLeft="25dp"
+                app:centerLabelPosition="30"
+                app:hasLeftBorder="false"
+                app:hasRightBorder="false"
+                app:textHighlightColor="@color/appointment_text_color"
+                app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+                app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="3dp"
-            android:paddingBottom="5dp"
-            android:paddingRight="15dp"
-            android:paddingTop="4dp"
-            android:text="分"
-            android:textSize="25sp" />
-    </LinearLayout>
+            <com.vanward.ehheater.view.wheelview.WheelView
+                android:id="@+id/wheelView2"
+                android:layout_width="70dp"
+                android:layout_height="210dp"
+                android:layout_marginLeft="15dp"
+                app:centerLabelPosition="30"
+                app:hasLeftBorder="false"
+                app:hasRightBorder="false"
+                app:textHighlightColor="@color/appointment_text_color"
+                app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+                app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/layerlist_wheel_bg_without_left_right_border" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -103,7 +89,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="25dp"
-        android:paddingTop="5dp" >
+        android:paddingTop="10dp" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -119,7 +105,9 @@
             android:id="@+id/rg_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal" >
 
             <RadioButton
@@ -204,7 +192,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="25dp"
-        android:paddingTop="5dp" >
+        android:paddingTop="10dp" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -218,7 +206,9 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+            android:layout_marginLeft="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" >
 
             <TextView
                 android:id="@+id/tv_min_value"
@@ -229,7 +219,7 @@
                 android:layout_marginLeft="5dp"
                 android:text="30℃"
                 android:textColor="@color/appointment_text_color"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <com.vanward.ehheater.view.SeekBarHint
                 android:id="@+id/seekbar"
@@ -242,14 +232,14 @@
                 android:layout_toRightOf="@+id/tv_min_value"
                 android:max="50"
                 android:maxHeight="6dp"
-                android:thumbOffset="10dp"
                 android:minHeight="6dp"
                 android:progress="0"
                 android:progressDrawable="@drawable/seekbarhint_style"
                 android:thumb="@drawable/seekbarhint_thumb"
+                android:thumbOffset="10dp"
                 app:popupStyle="follow"
                 app:popupWidth="100dp"
-                app:yOffset="-25dp" />
+                app:yOffset="-15dp" />
 
             <TextView
                 android:id="@+id/tv_max_value"
@@ -260,7 +250,7 @@
                 android:layout_marginRight="5dp"
                 android:text="80℃"
                 android:textColor="@color/appointment_text_color"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -274,7 +264,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="25dp"
-        android:paddingTop="5dp" >
+        android:paddingTop="10dp" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -289,7 +279,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal" >
 
             <CheckBox

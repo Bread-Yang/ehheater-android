@@ -911,7 +911,7 @@ public class WheelView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		// Log.e(TAG, "onDraw被调用了");
-		drawCenterRect(canvas);
+//		drawCenterRect(canvas);
 
 		if (viewAdapter != null && viewAdapter.getItemsCount() > 0) {
 			updateView();

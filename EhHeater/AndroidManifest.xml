@@ -97,7 +97,15 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".activity.main.furnace.FurnaceAppointmentList4ExhibitionActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".activity.main.furnace.FurnaceAppointmentTimeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.main.furnace.FurnaceAppointmentTime4ExhibitionActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity

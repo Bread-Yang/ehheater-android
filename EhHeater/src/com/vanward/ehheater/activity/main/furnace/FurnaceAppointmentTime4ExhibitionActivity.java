@@ -4,13 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import net.tsz.afinal.http.AjaxCallBack;
-import net.tsz.afinal.http.AjaxParams;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,25 +15,20 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.bean.HeaterInfo;
-import com.vanward.ehheater.model.AppointmentVo;
-import com.vanward.ehheater.service.AccountService;
-import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.model.AppointmentVo4Exhibition;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 import com.vanward.ehheater.view.wheelview.WheelView;
 import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
 
-public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
+public class FurnaceAppointmentTime4ExhibitionActivity extends
+		EhHeaterBaseActivity {
 
 	private final String TAG = "FurnaceAppointmentTimeActivity";
 
@@ -55,17 +45,15 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
-	private AppointmentVo editModel;
-
-	private HttpFriend mHttpFriend;
-
-	private HeaterInfo heaterInfo;
+	private AppointmentVo4Exhibition editModel;
 
 	private Dialog appointmentConflictDialog, appointmentFullDialog;
 
 	private boolean isEdit, isOverride;
 
-	private String nickName = "";
+	private String nickName = "用户1";
+
+	private int position = -1;
 
 	private Handler tipsHandler = new Handler() {
 		public void dispatchMessage(android.os.Message msg) {
@@ -126,49 +114,7 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 		appointmentFullDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.furnace_appointment_full,
-						BaoDialogShowUtil.DEFAULT_RESID, new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								finish();
-							}
-						});
-
-		heaterInfo = new HeaterInfoService(getBaseContext())
-				.getCurrentSelectedHeater();
-
-		mHttpFriend = HttpFriend.create(this);
-
-		String requestURL = "userinfo/getUsageInformation?uid="
-				+ AccountService.getUserId(getBaseContext());
-
-		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-				null, new AjaxCallBack<String>() {
-					public void onSuccess(String jsonString) {
-						JSONObject json;
-						try {
-							json = new JSONObject(jsonString);
-							String responseCode = json
-									.getString("responseCode");
-							if ("200".equals(responseCode)) {
-								JSONObject result = json
-										.getJSONObject("result");
-								nickName = result.getString("userName");
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					};
-
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(FurnaceAppointmentTimeActivity.this,
-								"服务器错误", Toast.LENGTH_LONG).show();
-						dismissRequestDialog();
-					}
-				});
+						BaoDialogShowUtil.DEFAULT_RESID, null);
 
 		wheelView1.setCyclic(true);
 		wheelView2.setCyclic(true);
@@ -177,7 +123,9 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 		wheelView2.setViewAdapter(new NumericWheelAdapter(this, 0, 59, "%02d",
 				wheelView2));
 
-		editModel = getIntent().getParcelableExtra("editAppointment");
+		editModel = (AppointmentVo4Exhibition) getIntent()
+				.getSerializableExtra("editAppointment");
+		position = getIntent().getIntExtra("position", -1);
 		if (editModel != null) {
 			setTopText(R.string.edit_appointment);
 			isEdit = true;
@@ -254,13 +202,13 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 			}
 		} else {
 			setTopText(R.string.add);
-			editModel = new AppointmentVo();
+			editModel = new AppointmentVo4Exhibition();
 			editModel.setWeek("0000000");
-
+			
 			Calendar c = Calendar.getInstance();
 			int currentHour = c.get(Calendar.HOUR_OF_DAY);
 			int currentMinute = c.get(Calendar.MINUTE);
-
+			
 			wheelView1.setCurrentItem(currentHour);
 			wheelView2.setCurrentItem(currentMinute);
 		}
@@ -393,11 +341,11 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 				editModel.setName(nickName);
 
-				editModel.setDid(heaterInfo.getDid());
+				editModel.setDid("SkWEsvSxX68zd6s63jhw6i");
 
-				editModel.setUid(AccountService.getUserId(getBaseContext()));
+				editModel.setUid("13527718111");
 
-				editModel.setPasscode(heaterInfo.getPasscode());
+				editModel.setPasscode("SFKWDAWADS");
 
 				editModel.setDeviceType(1);
 
@@ -406,65 +354,11 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 				editModel.setPower("0");
 
-				// String url = "userinfo/updateAppointment";
-
-				String requestURL = null;
-				if (isEdit) {
-					requestURL = "userinfo/updateAppointment";
-				} else {
-					requestURL = "userinfo/saveAppointment";
-				}
-
-				showRequestDialog();
-
-				Gson gson = new Gson();
-				String json = gson.toJson(editModel);
-
-				Log.e("提交的json数据是 : ", json);
-
-				AjaxParams params = new AjaxParams();
-				params.put("data", json);
-				if (isOverride) {
-					params.put("ignoreConflict", "true");
-				}
-
-				mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-						.executePost(params, new AjaxCallBack<String>() {
-
-							@Override
-							public void onSuccess(String jsonString) {
-								super.onSuccess(jsonString);
-								isOverride = false;
-								try {
-									JSONObject json = new JSONObject(jsonString);
-									String responseCode = json
-											.getString("responseCode");
-									if ("200".equals(responseCode)) {
-										finish();
-									} else if ("501".equals(responseCode)) {
-										tipsHandler.sendEmptyMessage(0);
-									} else if ("403".equals(responseCode)) { // 预约满了
-										tipsHandler.sendEmptyMessage(1);
-									}
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-
-								dismissRequestDialog();
-
-							}
-
-							@Override
-							public void onFailure(Throwable t, int errorNo,
-									String strMsg) {
-								super.onFailure(t, errorNo, strMsg);
-								isOverride = false;
-								Toast.makeText(
-										FurnaceAppointmentTimeActivity.this,
-										"服务器错误", Toast.LENGTH_LONG).show();
-								dismissRequestDialog();
-							}
-						});
+				Intent intent = new Intent();
+				intent.putExtra("editAppointment", editModel);
+				intent.putExtra("position", position);
+				setResult(RESULT_OK, intent);
+				finish();
 			}
 		});
 	}

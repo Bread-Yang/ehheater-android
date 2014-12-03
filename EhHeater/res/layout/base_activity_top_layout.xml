@@ -3,9 +3,9 @@
     android:id="@+id/topBg"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/home_tab_bg"
     android:paddingLeft="4dp"
-    android:paddingRight="4dp"
-    android:background="@drawable/home_tab_bg" >
+    android:paddingRight="4dp" >
 
     <TextView
         android:id="@+id/tv_center_title"
@@ -25,12 +25,12 @@
         android:id="@+id/btn_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:minHeight="20dp"
-        android:minWidth="20dp"
         android:background="@null"
         android:gravity="center"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
         android:text="@string/back"
         android:visibility="visible" />
 
@@ -38,19 +38,11 @@
         android:id="@+id/btn_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:background="@null"
         android:minHeight="20dp"
         android:minWidth="20dp"
-        android:background="@null"
         android:text="@string/confirm" />
-
-    <!--
-         <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/btn_right"
-        android:background="@color/black" />
-    -->
 
 </RelativeLayout>

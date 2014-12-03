@@ -11,16 +11,10 @@
 
 		<script>
 		
-			var char;
-		
-			function getSeries() {
-				highChartsJavaScriptInterface.updateHighChar_data();
-			}
+$(function () {
+	//$('#container').highcharts('StockChart', {
 			
-			$(function () {
-			//$('#container').highcharts('StockChart', {
-			
-			chart = new Highcharts.StockChart({
+	var chart = new Highcharts.StockChart({
     
         credits: {
             enabled: false
@@ -98,7 +92,8 @@
 
         tooltip: {
             yDecimals: 2,
-            enabled: false
+            enabled: false,
+            crosshairs: false
         },
 
         plotOptions: {
@@ -156,7 +151,5 @@
         <div id="drag"></div>
         <div id="drop"></div>
 	</body>
-
-
 
 </html>

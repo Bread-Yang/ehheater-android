@@ -1,20 +1,24 @@
 package com.vanward.ehheater.activity.main.furnace;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import net.tsz.afinal.http.AjaxCallBack;
-import net.tsz.afinal.http.AjaxParams;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,32 +27,25 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.model.AppointmentVo;
-import com.vanward.ehheater.service.AccountService;
-import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.model.AppointmentVo4Exhibition;
 import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.view.swipelistview.SwipeListView;
 
-public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
+public class FurnaceAppointmentList4ExhibitionActivity extends
+		EhHeaterBaseActivity {
 
-	private static final String TAG = "FurnaceAppointmentListActivity";
+	private static final String TAG = "FurnaceAppointmentList4ExhibitionActivity";
 
 	private SwipeListView lv_listview;
 
 	private AppointmentListAdapter adapter;
 
-	private HttpFriend mHttpFriend;
-
-	private ArrayList<AppointmentVo> adapter_data = new ArrayList<AppointmentVo>();
+	private ArrayList<AppointmentVo4Exhibition> adapter_data = new ArrayList<AppointmentVo4Exhibition>();
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
@@ -62,15 +59,11 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		findViewById();
 		setListener();
 		init();
-
-		// Log.e("格式化前 : ", String.format("%-5s", 11));
-		// Log.e("格式化后的 : ", String.format("%-5s", 11).replace(' ', '0'));
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		requestHttpData();
 	}
 
 	private void findViewById() {
@@ -78,12 +71,22 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 	}
 
 	private void setListener() {
+		btn_left.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				saveTestData();
+				finish();
+			}
+		});
+
 		btn_right.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(FurnaceAppointmentListActivity.this,
-						FurnaceAppointmentTimeActivity.class);
+				Intent intent = new Intent(
+						FurnaceAppointmentList4ExhibitionActivity.this,
+						FurnaceAppointmentTime4ExhibitionActivity.class);
 				startActivityForResult(intent, 0);
 			}
 		});
@@ -105,51 +108,22 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
-		mHttpFriend = HttpFriend.create(this);
-
 		// extractDataFromJson(getTestData()); // for test
 
-		// requestHttpData();
+		ArrayList<AppointmentVo4Exhibition> data = readTestData();
+
+		if (data != null) {
+			adapter_data = data;
+		}
+
+		if (adapter_data.size() >= 3) {
+			btn_right.setVisibility(View.INVISIBLE); // 预约数>=3时,隐藏右上角按钮
+		} else {
+			btn_right.setVisibility(View.VISIBLE);
+		}
+
 		adapter = new AppointmentListAdapter();
 		lv_listview.setAdapter(adapter);
-	}
-
-	private void requestHttpData() {
-		String did = new HeaterInfoService(this).getCurrentSelectedHeater()
-				.getDid();
-		String uid = AccountService.getUserId(getBaseContext());
-
-		String requestURL = "userinfo/getAppointmentList?did=" + did + "&uid="
-				+ uid;
-
-		// String requestURL =
-		// "userinfo/getAppointmentList?did=LWFWwtEcFWJ5hSBPXrVXFS&uid=q1231";
-
-		showRequestDialog();
-		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-				null, new AjaxCallBack<String>() {
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
-						
-						Log.e("请求返回来的数据是 : ", jsonString);
-
-						extractDataFromJson(jsonString);
-
-						lv_listview.setAdapter(new AppointmentListAdapter());
-
-						dismissRequestDialog();
-					}
-
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(FurnaceAppointmentListActivity.this,
-								"服务器错误", Toast.LENGTH_LONG).show();
-						dismissRequestDialog();
-					}
-				});
 	}
 
 	private void extractDataFromJson(String jsonString) {
@@ -167,7 +141,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 				adapter_data.clear();
 				for (int i = 0; i < result.length(); i++) {
 					JSONObject item = result.getJSONObject(i);
-					AppointmentVo model = new AppointmentVo();
+					AppointmentVo4Exhibition model = new AppointmentVo4Exhibition();
 					model.setAppointmentId(item.getInt("appointmentId"));
 					model.setName(item.getString("name"));
 					model.setDateTime(item.getLong("dateTime"));
@@ -191,6 +165,61 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	public void saveTestData() {
+		SharedPreferences preferences = getSharedPreferences("appointmentList",
+				MODE_PRIVATE);
+		// 创建字节输出流
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			// 创建对象输出流，并封装字节流
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			// 将对象写入字节流
+			oos.writeObject(adapter_data);
+			// 将字节流编码成base64的字符窜
+			String data_Base64 = new String(Base64.encodeToString(
+					baos.toByteArray(), Base64.DEFAULT));
+			Log.e("data_base64是 : ", data_Base64);
+			Editor editor = preferences.edit();
+			editor.putString("data", data_Base64);
+
+			editor.commit();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ArrayList<AppointmentVo4Exhibition> readTestData() {
+		ArrayList<AppointmentVo4Exhibition> data = null;
+		SharedPreferences preferences = getSharedPreferences("appointmentList",
+				MODE_PRIVATE);
+		String productBase64 = preferences.getString("data", "");
+
+		// 读取字节
+		byte[] base64 = Base64.decode(productBase64, Base64.DEFAULT);
+
+		// 封装到字节流
+		ByteArrayInputStream bais = new ByteArrayInputStream(base64);
+		try {
+			// 再次封装
+			ObjectInputStream bis = new ObjectInputStream(bais);
+			try {
+				// 读取对象
+				data = (ArrayList<AppointmentVo4Exhibition>) bis.readObject();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (StreamCorruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return data;
 	}
 
 	private class AppointmentListAdapter extends BaseAdapter {
@@ -240,7 +269,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			final AppointmentVo model = adapter_data.get(position);
+			final AppointmentVo4Exhibition model = adapter_data.get(position);
 			// holder.tv_time.setText(appointment.getHour() + ":" +
 			// appointment.getMinute());
 
@@ -329,75 +358,13 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					if ((Integer) view.getTag() == 1) {
 						// model.set 关闭预约
 						model.setIsAppointmentOn(0);
+						((ImageButton) view).setImageResource(R.drawable.off);
 					} else {
 						// model.set 打开预约
 						model.setIsAppointmentOn(1);
+						((ImageButton) view).setImageResource(R.drawable.on);
 					}
-
-					// 热水器多余的数据
-					model.setPeopleNum("0");
-
-					model.setPower("0");
-
-					String requestURL = "userinfo/updateAppointment";
-
-					showRequestDialog();
-
-					Gson gson = new Gson();
-					String json = gson.toJson(model);
-
-					AjaxParams params = new AjaxParams();
-					params.put("data", json);
-					params.put("ignoreConflict", "true");
-
-					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-							.executePost(params, new AjaxCallBack<String>() {
-								@Override
-								public void onSuccess(String t) {
-									super.onSuccess(t);
-
-									Log.e("添加成功返回的json : ", t);
-
-									if ((Integer) view.getTag() == 1) {
-										((ImageButton) view)
-												.setImageResource(R.drawable.off);
-										model.setIsAppointmentOn(0);
-									} else {
-										((ImageButton) view)
-												.setImageResource(R.drawable.on);
-										model.setIsAppointmentOn(1);
-									}
-
-									dismissRequestDialog();
-								}
-
-								@Override
-								public void onFailure(Throwable t, int errorNo,
-										String strMsg) {
-									super.onFailure(t, errorNo, strMsg);
-									Toast.makeText(
-											FurnaceAppointmentListActivity.this,
-											"服务器错误", Toast.LENGTH_LONG).show();
-									dismissRequestDialog();
-								}
-							});
-
-					// mHttpFriend.clearParams().postBean(model)
-					// .toUrl(Consts.REQUEST_BASE_URL + requestURL)
-					// .executePost(new AjaxCallBack<String>() {
-					// @Override
-					// public void onSuccess(String jsonString) {
-					// super.onSuccess(jsonString);
-					//
-					// Log.e("添加成功返回的json : ", jsonString);
-					//
-					// ((ImageButton) view)
-					// .setImageResource(R.drawable.on);
-					// ((ImageButton) view)
-					// .setImageResource(R.drawable.off);
-					// dismissRequestDialog();
-					// }
-					// });
+					saveTestData();
 				}
 			});
 
@@ -413,42 +380,17 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 				@Override
 				public void onClick(View view) {
 
-					String requestURL = "userinfo/deleteAppointment?appointmentId="
-							+ model.getAppointmentId();
+					adapter_data.remove(position);
 
-					showRequestDialog();
-					mHttpFriend.clearParams()
-							.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-							.executeGet(null, new AjaxCallBack<String>() {
-								@Override
-								public void onSuccess(String jsonString) {
-									super.onSuccess(jsonString);
-									try {
-										JSONObject json;
-										json = new JSONObject(jsonString);
-										String responseCode = json
-												.getString("responseCode");
-										if ("200".equals(responseCode)) {
-											// adapter_data.remove(position);
-											// adapter.notifyDataSetChanged();
-											requestHttpData();
-										}
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
+					lv_listview.setAdapter(new AppointmentListAdapter());
+					
+					if (adapter_data.size() >= 3) {
+						btn_right.setVisibility(View.INVISIBLE); // 预约数>=3时,隐藏右上角按钮
+					} else {
+						btn_right.setVisibility(View.VISIBLE);
+					}
 
-								}
-
-								@Override
-								public void onFailure(Throwable t, int errorNo,
-										String strMsg) {
-									super.onFailure(t, errorNo, strMsg);
-									Toast.makeText(
-											FurnaceAppointmentListActivity.this,
-											"服务器错误", Toast.LENGTH_LONG).show();
-									dismissRequestDialog();
-								}
-							});
+					saveTestData();
 				}
 			});
 
@@ -460,9 +402,11 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					// adapter_date.get(position).getId());
 					// intent.putExtra("week", appointment.getDates());
 					intent.putExtra("editAppointment", model);
-					intent.setClass(FurnaceAppointmentListActivity.this,
-							FurnaceAppointmentTimeActivity.class);
-					startActivity(intent);
+					intent.putExtra("position", position);
+					intent.setClass(
+							FurnaceAppointmentList4ExhibitionActivity.this,
+							FurnaceAppointmentTime4ExhibitionActivity.class);
+					startActivityForResult(intent, 0);
 				}
 			});
 
@@ -480,6 +424,30 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 			View rltfont, rltback;
 
 			View parent;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			if (data != null) {
+				AppointmentVo4Exhibition editModel = (AppointmentVo4Exhibition) data
+						.getSerializableExtra("editAppointment");
+				int position = data.getIntExtra("position", -1);
+				if (position != -1) {
+					adapter_data.set(position, editModel);
+				} else {
+					adapter_data.add(editModel);
+				}
+				lv_listview.setAdapter(new AppointmentListAdapter());
+				if (adapter_data.size() >= 3) {
+					btn_right.setVisibility(View.INVISIBLE); // 预约数>=3时,隐藏右上角按钮
+				} else {
+					btn_right.setVisibility(View.VISIBLE);
+				}
+				saveTestData();
+			}
 		}
 	}
 }

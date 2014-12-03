@@ -19,6 +19,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.UIUtil;
+import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.view.LogoutUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 
@@ -53,13 +54,13 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onClick(View view) {
 		super.onClick(view);
-		
+
 		if (view == rlt_change_nickname) {
 			intent.setClass(getBaseContext(), ChangeNicknameActivity.class);
 			intent.putExtra("nickname", tv_nickname.getText().toString());
-			startActivity(intent);
+			startActivityForResult(intent, 0);
 		}
-		
+
 		if (view == rlt_change_password) {
 			intent.setClass(getBaseContext(), ChangePasswordActivity2.class);
 			startActivity(intent);
@@ -77,7 +78,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 							LocalBroadcastManager.getInstance(getBaseContext())
 									.sendBroadcast(killerIntent);
 
-							new SharedPreferUtils(getBaseContext()).clear();
+							new SharedPreferUtils(getBaseContext()).clear();  
 							new HeaterInfoService(getBaseContext())
 									.deleteAllHeaters();
 
@@ -97,7 +98,22 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 		setRightButton(View.GONE);
 		setLeftButtonBackground(R.drawable.icon_back);
 
+		String nickName = new SharedPreferUtils(getBaseContext()).get(
+				ShareKey.UserNickname, "");
+		tv_nickname.setText(nickName);
+
 		tv_account.setText(AccountService.getUserId(getBaseContext()));
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK && data != null) {
+			String newNickName = data.getStringExtra("newNickName");
+			if (newNickName != null) {
+				tv_nickname.setText(newNickName);
+			}
+		}
 	}
 
 }

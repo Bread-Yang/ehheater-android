@@ -8,9 +8,9 @@
         android:id="@+id/device_img"
         android:layout_width="80dp"
         android:layout_height="60dp"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
         android:src="@drawable/setting_img3" />
 
     <TextView
@@ -18,19 +18,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:layout_toEndOf="@+id/device_img"
-        android:textSize="18sp"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/action_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/menu_icon_ye"
-        android:clickable="true" />
+        android:layout_marginRight="20dp"
+        android:clickable="true"
+        android:src="@drawable/menu_icon_ye" />
 
 </RelativeLayout>

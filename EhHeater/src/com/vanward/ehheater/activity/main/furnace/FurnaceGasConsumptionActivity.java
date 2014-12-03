@@ -19,6 +19,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCenterView(R.layout.activity_furnace_gas_consumption);
+		setTopText(R.string.gas_consumption);
 		setLeftButtonBackground(R.drawable.icon_back);
 		setRightButton(View.GONE);
 		findViewById();

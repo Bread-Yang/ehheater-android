@@ -77,7 +77,7 @@ public class SeekBarHint extends SeekBar implements
 	}
 
 	private void initHintPopup() {
-		String popupText = null;
+		String popupText = "30℃";
 
 		if (mProgressChangeListener != null) {
 			popupText = mProgressChangeListener.onHintTextChanged(this,
@@ -95,15 +95,23 @@ public class SeekBarHint extends SeekBar implements
 				ViewGroup.LayoutParams.WRAP_CONTENT, false);
 
 		mPopup.setAnimationStyle(R.style.fade_animation);
-
+		
+		
+		this.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				showPopup();
+			}
+		});
 	}
 
 	private void showPopup() {
 
 		if (mPopupStyle == POPUP_FOLLOW) {
-			Log.e("this.getY()是 : ", this.getY() + "");
-			Log.e("this.getX()是 : ", this.getX() + "");
-			Log.e("getXPosition是 : ", getXPosition(this) + "");
+//			Log.e("this.getY()是 : ", this.getY() + "");
+//			Log.e("this.getX()是 : ", this.getX() + "");
+//			Log.e("getXPosition是 : ", getXPosition(this) + "");
 			int[] location = new int[2];
 			getLocationOnScreen(location);
 			Log.e("location[0]", location[0] + "");
@@ -114,7 +122,7 @@ public class SeekBarHint extends SeekBar implements
 		}
 		if (mPopupStyle == POPUP_FIXED) {
 			mPopup.showAtLocation(this, Gravity.CENTER | Gravity.BOTTOM, 0,
-					(int) (this.getY() + mYLocationOffset + this.getHeight()));
+					(int) (this.getY() + mYLocationOffset + this.getHeight())); 
 		}
 	}
 
@@ -184,7 +192,7 @@ public class SeekBarHint extends SeekBar implements
 			mExternalListener.onStopTrackingTouch(seekBar);
 		}
 
-		hidePopup();
+//		hidePopup();
 	}
 
 	private float getXPosition(SeekBar seekBar) {

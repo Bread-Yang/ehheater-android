@@ -10,8 +10,8 @@
         android:id="@+id/device_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="55dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="55dp"
         android:gravity="center_vertical"
         android:textSize="18sp" />
 
@@ -19,8 +19,8 @@
         android:id="@+id/device_check_btn"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
         android:gravity="center_vertical"
         android:src="@drawable/menu_icon_ye"
         android:visibility="gone" />

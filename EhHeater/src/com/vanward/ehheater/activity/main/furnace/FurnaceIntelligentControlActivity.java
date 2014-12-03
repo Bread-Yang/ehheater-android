@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +42,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 	private CheckBox cb_Monday, cb_Thuesday, cb_Wednesday, cb_Thursday,
 			cb_Friday, cb_Saturday, cb_Sunday;
 
-	private String highChar_data = "";
+	private ArrayList<int[]> highChar_data;
+
+	private Gson gson = new Gson();
 
 	private String loop = "";
 
@@ -75,70 +78,63 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 	private void setListener() {
 
-		btn_left.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				wv_chart.loadUrl("javascript:getSeries()");
-
-				String requestURL = "";
-
-				HashMap<String, String> map = new HashMap<String, String>();
-
-				map.put("data", highChar_data);
-
-				showRequestDialog();
-				mHttpFriend.clearParams()
-						.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-						.executePost(new AjaxCallBack<String>() {
-							@Override
-							public void onSuccess(String jsonString) {
-								super.onSuccess(jsonString);
-								Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
-
-								try {
-									JSONObject json = new JSONObject(jsonString);
-
-									String result = json.getString("result");
-
-									if ("success".equals("result")) {
-										finish();
-									} else {
-										// 弹出对话框,提示是否重新提交
-									}
-								} catch (JSONException e) {
-									e.printStackTrace();
-								}
-
-								dismissRequestDialog();
-							}
-						});
-			}
-		});
+//		btn_left.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//
+//				String requestURL = "";
+//
+//				AjaxParams params = new AjaxParams();
+//
+//				params.put("data", gson.toJson(highChar_data));
+//
+//				showRequestDialog();
+//				mHttpFriend.clearParams()
+//						.toUrl(Consts.REQUEST_BASE_URL + requestURL)
+//						.executePost(params, new AjaxCallBack<String>() {
+//							@Override
+//							public void onSuccess(String jsonString) {
+//								super.onSuccess(jsonString);
+//								Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+//
+//								try {
+//									JSONObject json = new JSONObject(jsonString);
+//
+//									String result = json.getString("result");
+//
+//									if ("success".equals("result")) {
+//										finish();
+//									} else {
+//										// 弹出对话框,提示是否重新提交
+//									}
+//								} catch (JSONException e) {
+//									e.printStackTrace();
+//								}
+//
+//								dismissRequestDialog();
+//							}
+//						});
+//			}
+//		});
 	}
 
 	private void extractDataFromJson(String jsonString) {
-		Log.e("hello", "hello");
 		try {
 			JSONObject json = new JSONObject(jsonString);
 
 			boolean enable = json.getBoolean("enable");
 			tb_switch.setChecked(enable);
 
-			highChar_data = json.getJSONArray("data").toString();
+			String data = json.getJSONArray("data").toString();
 
-			Log.e("转换前打印出来的字符串 : ", highChar_data);
+			Log.e("转换前打印出来的字符串 : ", data);
 
-			Gson gson = new Gson();
+			highChar_data = gson.fromJson(data,
+					new TypeToken<ArrayList<int[]>>() {
+					}.getType());
 
-			ArrayList<ArrayList<Integer>> map = gson.fromJson(highChar_data,
-					new TypeToken<ArrayList<ArrayList<Integer>>>() {
-					}.getType());  
-
-			Log.e("map是 : ", map + "");
-
-			Log.e("转换后打印出来的字符串 : ", gson.toJson(map));
+			Log.e("转换后打印出来的字符串 : ", gson.toJson(highChar_data));
 
 			loop = json.getString("loop");
 
@@ -219,7 +215,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 		showRequestDialog();
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-				new AjaxCallBack<String>() {
+				null, new AjaxCallBack<String>() {
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
@@ -235,21 +231,17 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 	class HighChartsJavaScriptInterface {
 
 		@JavascriptInterface
-		public void updateHighChar_data() {
-			// Log.e(TAG, "打印的data是 : " + data);
-			Log.e(TAG, "打印的highChar_data是 : " + highChar_data);
-			// highChar_data = data;
-		}
-
-		@JavascriptInterface
 		public String getHighChartData() {
-			return highChar_data;
+			return gson.toJson(highChar_data);
 		}
 
 		@JavascriptInterface
 		public void updateYValue(int x, int newY) {
-			Log.e("X值", "X的值是 : " + x);
-			Log.e("更新了Y值", "Y的最新值是 : " + newY);
+			// x是从1开始,1到24小时
+			highChar_data.set(x - 1, new int[] { x, newY });
+			// Log.e("X值", "X的值是 : " + x);
+			// Log.e("更新了Y值", "Y的最新值是 : " + newY);
+			// Log.e("转换后打印出来的字符串 : ", gson.toJson(highChar_data));
 		}
 	}
 }

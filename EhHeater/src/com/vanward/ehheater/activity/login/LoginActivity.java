@@ -3,6 +3,11 @@ package com.vanward.ehheater.activity.login;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.tsz.afinal.http.AjaxCallBack;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,11 +26,13 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
+import com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentTimeActivity;
 import com.vanward.ehheater.activity.user.RegisterActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
@@ -44,7 +51,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	public void onBackPressed() {
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -70,7 +77,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		BroadcastReceiver receiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				
+
 				LoginActivity.this.setResult(-256);
 				finish();
 			}
@@ -100,7 +107,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				Toast.makeText(this, "无网络连接", Toast.LENGTH_LONG).show();
 				return;
 			}
-			
+
 			if (et_user.getText().length() <= 0
 					|| et_pwd.getText().length() <= 0) {
 				Toast.makeText(this, "请输入账号和密码", Toast.LENGTH_LONG).show();
@@ -145,7 +152,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.d("emmm", "login resumed");
-		
 
 		XPGConnectClient.AddActivity(this);
 	}
@@ -157,8 +163,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) { // 建立连接成功
 
-			XPGConnectClient.xpgcLogin(tempConnId, et_user.getText()
-					.toString(), et_pwd.getText().toString());
+			XPGConnectClient.xpgcLogin(tempConnId,
+					et_user.getText().toString(), et_pwd.getText().toString());
 
 		} else if (event == XPG_RESULT.ERROR_CONNECTION_CLOSED.swigValue()) { // 连接断开
 
@@ -169,6 +175,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 	}
+
 	private int tempConnId = -1;
 
 	@Override
@@ -181,6 +188,47 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		if (result == 0 || result == 1) {
+			// 获取昵称
+			HttpFriend httpFriend = HttpFriend.create(this);
+
+			String requestURL = "userinfo/getUsageInformation?uid="
+					+ AccountService.getUserId(getBaseContext());
+
+			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					null, new AjaxCallBack<String>() {
+						public void onSuccess(String jsonString) {
+							JSONObject json;
+							try {
+								json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									JSONObject result = json
+											.getJSONObject("result");
+									String nickName = result
+											.getString("userName");
+									new SharedPreferUtils(getBaseContext())
+											.put(ShareKey.UserNickname,
+													nickName);
+								} else if ("402".equals(responseCode)) {
+									new SharedPreferUtils(getBaseContext())
+											.put(ShareKey.UserNickname, "");
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						};
+
+						@Override
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+							Toast.makeText(LoginActivity.this, "服务器错误",
+									Toast.LENGTH_LONG).show();
+							dismissRequestDialog();
+						}
+					});
+
 			// 0和1都是登录成功
 			SharedPreferUtils.saveUsername(this, et_user.getText().toString());
 			AccountService.setPendingUser(getBaseContext(), et_user.getText()
@@ -192,7 +240,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				public void run() {
 					if (!onDeviceFoundTriggered) {
 						DialogUtil.dismissDialog();
-						startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
+						startActivity(new Intent(getBaseContext(),
+								SelectDeviceActivity.class));
 					}
 				}
 			}, 6000);
@@ -212,34 +261,36 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
 		Log.d("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);
-		
-		if ( !(hser.isValidDevice(hi)) ) {
+
+		if (!(hser.isValidDevice(hi))) {
 			// 非有效设备, 不予保存
-			return; 
+			return;
 		}
-		
+
 		onDeviceFoundTriggered = true;
 
 		if (count++ == 0) {
-			AccountService.setUser(getBaseContext(), et_user.getText().toString(), et_pwd.getText().toString());
-			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac, hi.getMac());
-			
+			AccountService.setUser(getBaseContext(), et_user.getText()
+					.toString(), et_pwd.getText().toString());
+			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac,
+					hi.getMac());
+
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
 					// 接收设备列表结束, 这时候只要重新进入welcomeActivity, 就可以正常连接设备了
-					
-//					Intent intent = new Intent();
-//					intent.setClass(getBaseContext(), WelcomeActivity.class);
-//					intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
-//					startActivity(intent);
-//					finish();
-					
+
+					// Intent intent = new Intent();
+					// intent.setClass(getBaseContext(), WelcomeActivity.class);
+					// intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
+					// startActivity(intent);
+					// finish();
+
 					setResult(RESULT_OK);
 					finish();
 				}
 			}, 2000);
-			
+
 		}
 
 		hser.saveDownloadedHeater(hi);
