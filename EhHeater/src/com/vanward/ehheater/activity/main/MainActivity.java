@@ -1,10 +1,14 @@
 package com.vanward.ehheater.activity.main;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
@@ -36,8 +40,10 @@ import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
+import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -52,17 +58,21 @@ import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
 import com.vanward.ehheater.view.DeviceOffUtil;
+import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.vanward.ehheater.view.wheelview.WheelView;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
+import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class MainActivity extends BaseSlidingFragmentActivity implements
 		OnClickListener, CircleListener {
+
+	private static final byte E0 = 0;
 
 	protected SlidingMenu mSlidingMenu;
 
@@ -89,6 +99,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	RelativeLayout rlt_start_device, content;
 
 	private View openView;
+	
+	//主界面错误图标
+	Byte errors;
+	private ImageView tipsimg;
 
 	private Button rightButton;
 
@@ -245,7 +259,9 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
 
 		hotImgeImageView.clearAnimation();
-
+		
+		//主界面错误图标
+		tipsimg=(ImageView)findViewById(R.id.infor_tip);
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		rlt_start_device = (RelativeLayout) findViewById(R.id.start_device_rlt);
@@ -550,6 +566,62 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 	}
 
+	//错误图标
+	
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
+	
+	
+	public void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
+
+//		freezeProofing(pResp);
+//		oxygenWarning(pResp);
+		System.out.println("错误码：" + pResp.getErrorCode());
+		if (pResp.getErrorCode() != 0) {
+			tipsimg.setVisibility(View.VISIBLE);
+			tipsimg.setImageResource(R.drawable.main_error);
+			tipsimg.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					ErrorDialogUtil
+							.instance(MainActivity.this)
+							.initName(
+									Integer.toHexString(pResp.getErrorCode())
+											+ "")
+							.setNextButtonCall(new NextButtonCall() {
+								@Override
+								public void oncall(View v) {
+									Intent intent = new Intent();
+									intent.setClass(MainActivity.this,
+											InfoErrorActivity.class);
+									intent.putExtra(
+											"name",
+											"机器故障("
+													+ Integer.toHexString(pResp
+															.getErrorCode())
+													+ ")");
+									intent.putExtra("time",
+											simpleDateFormat.format(new Date()));
+									intent.putExtra(
+											//new EhState(data).getErrorCode()
+											//errors
+											"detail",
+											ErrorDialogUtil
+													.instance(
+															MainActivity.this)
+													.getMap()
+													.get(pResp.getErrorCode()
+															+ ""));
+									startActivity(intent);
+								}
+							}).showDialog();
+				}
+			});
+		} else {
+			tipsimg.setVisibility(View.GONE);
+		}
+	}
+	
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
 		System.out.println("回调");
@@ -563,10 +635,19 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		if (connId != Global.connectId) {
 			return;
 		}
+		/**
+		 * <!--警告代码：0xa0-0xaf（警告A0-AF）,故障代码：0xe0-0xef（故障E0-EF）-->
+           <field name="error" type="byte" value="{INPUT}" range="160-239" />
+			new EhState(data).getErrorCode()
+		 */
 
+		errors=new EhState(data).getErrorCode();
+		
 		System.out.println("回调onTcpPacket");
 		System.out.println("MainActivity.onTcpPacket()： "
 				+ new EhState(data).getRemainingHotWaterAmount());
+		
+		
 
 		if (!canupdateView) {
 			return;
@@ -622,6 +703,12 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				ison = true;
 			}
 		}
+	}
+
+	private android.content.DialogInterface.OnClickListener dismissDialog(
+			MainActivity mainActivity) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private int currentModeCode = -1;

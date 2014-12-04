@@ -350,6 +350,14 @@
             android:background="@color/white"
             android:visibility="gone" >
         </RelativeLayout>
+        
+        <ImageView
+            android:id="@+id/infor_tip"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignLeft="@+id/circle_bg"
+            android:layout_alignTop="@+id/mode_tv"
+          />
     </RelativeLayout>
 
 </RelativeLayout>
