@@ -253,6 +253,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 			// } catch (JSONException e) {
 			// e.printStackTrace();
 			// }
+			new InformationActivity().getmessage();
 
 			if (resultType.equals("1")) {
 				namelistjson = "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
@@ -274,7 +275,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 				chart4Year();
 				sumwater.setText("960度");
 			}
-
+			
 			webView.reload();
 
 			DialogUtil.dismissDialog();

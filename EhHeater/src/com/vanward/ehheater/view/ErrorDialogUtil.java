@@ -69,7 +69,10 @@ public class ErrorDialogUtil {
 		map.put("81", "进水超温保护");
 		map.put("96", "出水温度电路故障保护");
 		map.put("112", "拔码开关选择错误故障保护");
-
+		map.put("E2", "热水器未注满水直接通电，发生干烧");
+		map.put("E3", "中层发热管处传感器故障");
+		map.put("E4", "加热水温失控超过设定值");
+		map.put("E5", "下层发热管处传感器故障");
 	}
 
 	NextButtonCall nextButtonCall, lastButtonCall;

@@ -17,15 +17,17 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="#80808080" />
-
+    
+    
+<!-- android:textColor="#FF848484"
+     android:textSize="18sp" -->
+        
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:textColor="#FF848484"
-        android:textSize="18sp"
+        android:layout_margin="5dp"   
         android:text="暂无历史消息记录" />
 
 </LinearLayout>
