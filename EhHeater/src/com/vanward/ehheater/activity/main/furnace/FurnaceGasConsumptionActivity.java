@@ -46,9 +46,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				case R.id.rb_accumulated_consumption:
 					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 					break;
-
 				}
-				 wv_chart.reload();
 			}
 		});
 	}

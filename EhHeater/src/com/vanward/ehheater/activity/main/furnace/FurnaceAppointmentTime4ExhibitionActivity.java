@@ -17,11 +17,12 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 
-import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.model.AppointmentVo4Exhibition;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
+import com.vanward.ehheater.util.SharedPreferUtils;
+import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 import com.vanward.ehheater.view.wheelview.WheelView;
@@ -100,6 +101,12 @@ public class FurnaceAppointmentTime4ExhibitionActivity extends
 	}
 
 	private void init() {
+		String name = new SharedPreferUtils(this)
+				.get(ShareKey.UserNickname, "");
+		if (!"".equals(name)) {
+			nickName = name;
+		}
+
 		appointmentConflictDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.appointment_conflict,
 						BaoDialogShowUtil.DEFAULT_RESID, R.string.override,
@@ -204,11 +211,11 @@ public class FurnaceAppointmentTime4ExhibitionActivity extends
 			setTopText(R.string.add);
 			editModel = new AppointmentVo4Exhibition();
 			editModel.setWeek("0000000");
-			
+
 			Calendar c = Calendar.getInstance();
 			int currentHour = c.get(Calendar.HOUR_OF_DAY);
 			int currentMinute = c.get(Calendar.MINUTE);
-			
+
 			wheelView1.setCurrentItem(currentHour);
 			wheelView2.setCurrentItem(currentMinute);
 		}

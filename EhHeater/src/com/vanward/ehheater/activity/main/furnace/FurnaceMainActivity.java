@@ -84,7 +84,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	/** 指令正在发送中,三秒内不能改变CircleSlider滑动圆圈的位置 */
 	private boolean isSendingCommand = false;
 
-	private Dialog turnOffDialog;
+	private Dialog turnOffInWinnerDialog;
 
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -238,7 +238,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	}
 
 	private void init() {
-		turnOffDialog = BaoDialogShowUtil.getInstance(this)
+		turnOffInWinnerDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.turn_off_in_winter,
 						R.string.cancel, R.string.turn_off, null,
 						new OnClickListener() {
@@ -246,6 +246,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 							@Override
 							public void onClick(View v) {
 								FurnaceSendMsgModel.closeDevice();
+								turnOffInWinnerDialog.dismiss();
 							}
 						});
 
@@ -309,15 +310,20 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		if (pResp.getOnOff() == 0) { // shutdown
 			setCircularViewEnable(false, pResp);
 			tv_status.setText(R.string.shutdown);
+			btn_appointment.setEnabled(false);
 			btn_setting.setEnabled(false);
+			btn_intellectual.setEnabled(false);
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
 			isOn = false;
 		} else if (pResp.getOnOff() == 1) { // standby
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut);
-			btn_appointment.setEnabled(true);
+			if (pResp.getSeasonState() == 1) {
+				btn_appointment.setEnabled(true);
+			}
 			btn_setting.setEnabled(true);
+			btn_intellectual.setEnabled(true);
 			btn_intellectual.setEnabled(true);
 			isOn = true;
 		}
@@ -576,16 +582,21 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				DialogUtil.instance().showReconnectDialog(this);
 			} else {
 				if (isOn) {
-					DeviceOffUtil.instance(this)
-							.nextButtonCall(new NextButtonCall() {
-								@Override
-								public void oncall(View v) {
-									FurnaceSendMsgModel.closeDevice();
-									DeviceOffUtil.instance(
-											FurnaceMainActivity.this)
-											.dissmiss();
-								}
-							}).showDialog();
+					if (statusResp.getSeasonState() == 0) {
+						DeviceOffUtil.instance(this)
+						.nextButtonCall(new NextButtonCall() {
+							@Override
+							public void oncall(View v) {
+								FurnaceSendMsgModel.closeDevice();
+								DeviceOffUtil.instance(
+										FurnaceMainActivity.this)
+										.dissmiss();
+							}
+						}).showDialog();
+					} else {
+						turnOffInWinnerDialog.show();
+					}
+					
 				} else {
 					FurnaceSendMsgModel.openDevice();
 				}

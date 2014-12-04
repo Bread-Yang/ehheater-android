@@ -192,11 +192,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			HttpFriend httpFriend = HttpFriend.create(this);
 
 			String requestURL = "userinfo/getUsageInformation?uid="
-					+ AccountService.getUserId(getBaseContext());
+					+ et_user.getText().toString().trim();
 
 			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						public void onSuccess(String jsonString) {
+							Log.e("请求昵称返回的数据是 : ", jsonString);
 							JSONObject json;
 							try {
 								json = new JSONObject(jsonString);
@@ -223,8 +224,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
-							Toast.makeText(LoginActivity.this, "服务器错误",
-									Toast.LENGTH_LONG).show();
+//							Toast.makeText(LoginActivity.this, "服务器错误",
+//									Toast.LENGTH_LONG).show();
 							dismissRequestDialog();
 						}
 					});

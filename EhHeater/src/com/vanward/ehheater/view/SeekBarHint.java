@@ -2,6 +2,9 @@ package com.vanward.ehheater.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,6 +24,8 @@ public class SeekBarHint extends SeekBar implements
 	private int mPopupStyle;
 	public static final int POPUP_FIXED = 1;
 	public static final int POPUP_FOLLOW = 0;
+
+	private Paint label_paint;
 
 	private PopupWindow mPopup;
 	private TextView mPopupTextView;
@@ -64,6 +69,11 @@ public class SeekBarHint extends SeekBar implements
 		mPopupStyle = a
 				.getInt(R.styleable.SeekBarHint_popupStyle, POPUP_FOLLOW);
 
+		label_paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		label_paint.setColor(Color.parseColor("#fff76805"));
+		label_paint
+				.setTextSize(15 * getResources().getDisplayMetrics().density + 0.5f);
+
 		a.recycle();
 		initHintPopup();
 	}
@@ -95,13 +105,12 @@ public class SeekBarHint extends SeekBar implements
 				ViewGroup.LayoutParams.WRAP_CONTENT, false);
 
 		mPopup.setAnimationStyle(R.style.fade_animation);
-		
-		
+
 		this.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				showPopup();
+//				showPopup();
 			}
 		});
 	}
@@ -109,9 +118,9 @@ public class SeekBarHint extends SeekBar implements
 	private void showPopup() {
 
 		if (mPopupStyle == POPUP_FOLLOW) {
-//			Log.e("this.getY()是 : ", this.getY() + "");
-//			Log.e("this.getX()是 : ", this.getX() + "");
-//			Log.e("getXPosition是 : ", getXPosition(this) + "");
+			// Log.e("this.getY()是 : ", this.getY() + "");
+			// Log.e("this.getX()是 : ", this.getX() + "");
+			// Log.e("getXPosition是 : ", getXPosition(this) + "");
 			int[] location = new int[2];
 			getLocationOnScreen(location);
 			Log.e("location[0]", location[0] + "");
@@ -122,7 +131,7 @@ public class SeekBarHint extends SeekBar implements
 		}
 		if (mPopupStyle == POPUP_FIXED) {
 			mPopup.showAtLocation(this, Gravity.CENTER | Gravity.BOTTOM, 0,
-					(int) (this.getY() + mYLocationOffset + this.getHeight())); 
+					(int) (this.getY() + mYLocationOffset + this.getHeight()));
 		}
 	}
 
@@ -166,13 +175,12 @@ public class SeekBarHint extends SeekBar implements
 
 		mPopupTextView.setText(popupText != null ? popupText : String
 				.valueOf(progress));
-		
+
 		if (mPopupStyle == POPUP_FOLLOW) {
 			int[] location = new int[2];
 			getLocationOnScreen(location);
 			mPopup.update((int) (this.getX() + (int) getXPosition(seekBar)),
-					(int) (location[1] + mYLocationOffset ),
-					-1, -1);
+					(int) (location[1] + mYLocationOffset), -1, -1);
 		}
 
 	}
@@ -183,7 +191,34 @@ public class SeekBarHint extends SeekBar implements
 			mExternalListener.onStartTrackingTouch(seekBar);
 		}
 
-		showPopup();
+//		showPopup();
+	}
+
+	@Override
+	protected synchronized void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+		float baseX = getXPosition(this);
+		float baseY = mYLocationOffset;
+
+		Log.e("我被调用了", "我被调用了");
+		Log.e("getProgress() :", getProgress() + "");
+		Log.e("getMax() :", getMax() + "");
+
+		float val = (((float) getProgress() * (float) (getWidth() - 2 * getThumbOffset())) / getMax());
+
+		String popupText = "30℃";
+
+		if (mProgressChangeListener != null) {
+			popupText = mProgressChangeListener.onHintTextChanged(this,
+					getProgress());
+		}
+		
+		float textWidth = label_paint.measureText(popupText);
+		if (val + textWidth > getWidth()) {
+			val = getWidth() - textWidth;
+		}
+
+		canvas.drawText(popupText, val, getPaddingTop(), label_paint);
 	}
 
 	@Override
@@ -192,7 +227,7 @@ public class SeekBarHint extends SeekBar implements
 			mExternalListener.onStopTrackingTouch(seekBar);
 		}
 
-//		hidePopup();
+		// hidePopup();
 	}
 
 	private float getXPosition(SeekBar seekBar) {
