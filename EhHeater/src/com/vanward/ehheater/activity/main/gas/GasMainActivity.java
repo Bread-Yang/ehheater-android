@@ -37,6 +37,7 @@ import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InfoTipActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
+import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -177,7 +178,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		}
 
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
-			
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 			
@@ -196,22 +196,18 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 		DialogUtil.instance().showQueryingDialog(this);
 		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-		new Thread(new Runnable() {
+		rightButton.postDelayed(new  Runnable() {
+			
 			@Override
 			public void run() {
-				for (int i = 0; i < 10; i++) {
-					if (DialogUtil.getIsShowing()) {
-						generated
-								.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-						try {
-							Thread.sleep(5 * 1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
+				// TODO Auto-generated method stub
+				if (!isconnect) {
+					DialogUtil.instance().showReconnectDialog(GasMainActivity.this);
+					dealDisConnect();
 				}
 			}
-		}).start();
+		}, MainActivity.connectTime);
+		
 	}
 
 	public void dealDisConnect() {
@@ -560,6 +556,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		if (nConnId != Global.connectId) {
 			return;
 		}
+		isconnect=true;
 		DialogUtil.dismissDialog();
 
 		modeDeal(pResp);

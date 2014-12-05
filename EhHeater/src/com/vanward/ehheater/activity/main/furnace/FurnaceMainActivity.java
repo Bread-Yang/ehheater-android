@@ -30,6 +30,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
@@ -37,6 +38,7 @@ import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
+import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
 import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
@@ -271,7 +273,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			statusResp = pResp;
 		}
-
+        isConnect= true;
 		seasonAndModeDeal(pResp); // switch season and mode
 		onOffDeal(pResp);
 		gasConsumptionDeal(pResp);
@@ -809,7 +811,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 		}
 	}
-
+	boolean isConnect= true;
 	private void queryState() {
 
 		mSlidingMenu.post(new Runnable() {
@@ -819,6 +821,18 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendDERYRefreshReq(Global.connectId);
 			}
 		});
+		mSlidingMenu.postDelayed(new  Runnable() {
+			
+			@Override
+			public void run() {
+				if (!isConnect) {
+					DialogUtil.instance().showReconnectDialog(FurnaceMainActivity.this);
+				}
+				
+			}
+		}, MainActivity.connectTime);
+		
+		
 	}
 
 	@Override
