@@ -15,6 +15,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
@@ -32,6 +34,8 @@ import com.xtremeprog.xpgconnect.generated.generated;
 public class ConnectActivity extends GeneratedActivity {
 
 	private TextView mTvInfo;
+	
+	private Button mBtnRetry;
 
 	/** 建立的连接类型, LAN(小循环) / MQTT(大) */
 	private int connType = Integer.MAX_VALUE;
@@ -62,10 +66,26 @@ public class ConnectActivity extends GeneratedActivity {
 		
 		setContentView(R.layout.activity_connect_as_dialog);
 		mTvInfo = (TextView) findViewById(R.id.awad_tv);
+		mBtnRetry = (Button) findViewById(R.id.awad_btn_retry);
 
+		mBtnRetry.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				helper1();
+			}
+		});
+		
+		helper1();
+	}
+	
+	private void helper1() {
+
+		mBtnRetry.setVisibility(View.GONE);
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
 			// 无任何网络连接
 			mTvInfo.setText("无网络连接");
+			mBtnRetry.setVisibility(View.VISIBLE);
 			return;
 		}
 		
@@ -86,6 +106,17 @@ public class ConnectActivity extends GeneratedActivity {
 				mTvInfo.setText("通过机智云连接中...(大循环)");
 			};
 		});
+		
+		// 45秒后还未成功则连接失败
+		new Handler(new Handler.Callback() {
+			@Override
+			public boolean handleMessage(Message msg) {
+				if (!jobDone) {
+					setOfflineResult();
+				}
+				return false;
+			}
+		}).sendEmptyMessageDelayed(0, 45000);
 	}
 
 	/**
@@ -157,7 +188,7 @@ public class ConnectActivity extends GeneratedActivity {
 						// 接收绑定的设备列表完毕
 						doAfterBindingDevicesReceivedFromMQTT(tempEndpointList);
 					}
-				}, 1000);
+				}, 4000);
 				
 			}
 			
@@ -255,6 +286,7 @@ public class ConnectActivity extends GeneratedActivity {
 	
 	private void initTemporaryFields() {
 		onDeviceFoundCounter = 0;
+		jobDone = false;
 		tempEndpointList.clear();
 	}
 	
@@ -264,6 +296,7 @@ public class ConnectActivity extends GeneratedActivity {
 				
 				passcodeRetrieved = ep.getSzPasscode();
 				didRetrieved = ep.getSzDid();
+				Log.d("emmm", mac + " isOnline? " + ep.getIsOnline());
 				
 				if (ep.getIsOnline() == 1) {
 					// is online
@@ -279,7 +312,10 @@ public class ConnectActivity extends GeneratedActivity {
 		
 		// is offline
 		setOfflineResult();
+		jobDone = true;
+		Log.d("emmm", mac + " isOnline? " + "未绑定此设备");
 	}
+	private boolean jobDone = false;
 	
 	private void setOfflineResult() {
 		mTvInfo.setText("设备不在线");
