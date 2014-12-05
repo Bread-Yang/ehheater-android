@@ -236,10 +236,24 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		}
 
 	}
-	
+/**
+ * 多少秒后没有回调
+ */
+public static	long connectTime=10000;
 	private void queryState() {
 		DialogUtil.instance().showQueryingDialog(this);
 		generated.SendStateReq(Global.connectId);
+		rightButton.postDelayed(new  Runnable() {
+			
+			@Override
+			public void run() {
+				if (!isConnect) {
+					ChangeStuteView.swichdisconnect(stuteParent);
+					dealDisConnect();
+					DialogUtil.instance().showReconnectDialog(MainActivity.this);
+				}
+			}
+		}, connectTime);
 	}
 
 	@Override
@@ -319,7 +333,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		tempter = (TextView) findViewById(R.id.tempter);
 		leavewater = (TextView) findViewById(R.id.leavewater);
 		content = (RelativeLayout) findViewById(R.id.content);
-
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
@@ -676,7 +689,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
-
+		
 		if (connId != Global.connectId) {
 			return;
 		}
@@ -699,6 +712,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		}
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
+			isConnect=true;
 			DialogUtil.dismissDialog();
 			btn_power.setSelected(false);
 			setTempture(data);
