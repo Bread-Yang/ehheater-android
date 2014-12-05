@@ -4,11 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
@@ -42,8 +40,6 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
-import com.vanward.ehheater.activity.login.LoginActivity;
-import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -211,10 +207,24 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		}
 
 	}
-	
+/**
+ * 多少秒后没有回调
+ */
+public static	long connectTime=10000;
 	private void queryState() {
 		DialogUtil.instance().showQueryingDialog(this);
 		generated.SendStateReq(Global.connectId);
+		rightButton.postDelayed(new  Runnable() {
+			
+			@Override
+			public void run() {
+				if (!isConnect) {
+					ChangeStuteView.swichdisconnect(stuteParent);
+					dealDisConnect();
+					DialogUtil.instance().showReconnectDialog(MainActivity.this);
+				}
+			}
+		}, connectTime);
 	}
 
 	@Override
@@ -274,7 +284,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		tempter = (TextView) findViewById(R.id.tempter);
 		leavewater = (TextView) findViewById(R.id.leavewater);
 		content = (RelativeLayout) findViewById(R.id.content);
-
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
@@ -631,7 +640,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
-
+		
 		if (connId != Global.connectId) {
 			return;
 		}
@@ -654,6 +663,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		}
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
+			isConnect=true;
 			DialogUtil.dismissDialog();
 			btn_power.setSelected(false);
 			setTempture(data);
