@@ -1,5 +1,8 @@
 package com.vanward.ehheater.activity.main.furnace;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -14,6 +17,15 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 	private WebView wv_chart;
 	private RadioGroup rg_tab;
+
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+	/** 不在线或关机中实时耗量图表显示零数据。 */
+	private String offline_data = "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
+
+	private String online_data = "[1, 3.5, 4, 5, 4.5, 2, 2.5, 3, 3.4, 4.1, 4.2, 4.4, 3]";
+
+	private boolean isPowerOffOrOffline;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +64,9 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
+		isPowerOffOrOffline = getIntent().getBooleanExtra(
+				"isPowerOffOrOffline", false);
+
 		wv_chart.setBackgroundColor(0xF3F3F3);
 		wv_chart.getSettings().setJavaScriptEnabled(true);
 		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
@@ -63,12 +78,22 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 		@JavascriptInterface
 		public String getRealtimeConsumptionTitle() {
-			return "2014/10/31";
+			return dateFormat.format(new Date());
 		}
-		
+
 		@JavascriptInterface
-		public String getdata() {
+		public String getAccumulatedConsumptionTitle() {
 			return "";
+		}
+
+		@JavascriptInterface
+		public String getHighChartData() {
+			if (isPowerOffOrOffline) {
+				return offline_data;
+			} else {
+				return online_data;
+			}
+
 		}
 
 		@JavascriptInterface

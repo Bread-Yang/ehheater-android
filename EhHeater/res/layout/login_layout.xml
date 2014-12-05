@@ -11,42 +11,40 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingTop="40dp"
         android:gravity="center"
-        android:orientation="vertical" >
-        
-        <LinearLayout 
+        android:orientation="vertical"
+        android:paddingTop="40dp" >
+
+        <LinearLayout
             android:layout_width="288dp"
             android:layout_height="88dp"
             android:background="@drawable/login_input_bg"
-            android:orientation="vertical">
-            
-	        <EditText
-	            android:id="@+id/login_user_et"
-	            android:layout_width="match_parent"
-	            android:layout_height="0dp"
-	            android:layout_weight="1"
-	            android:background="@null"
-	            android:gravity="center_vertical"
-	            android:hint="@string/input_phone"
-	            android:inputType="phone"
-	            android:paddingLeft="12dp"
-	            android:textSize="16dp" />
-	
-	        <EditText
-	            android:id="@+id/login_pwd_et"
-	            android:layout_width="match_parent"
-	            android:layout_height="0dp"
-	            android:layout_weight="1"
-	            android:background="@null"
-	            android:gravity="center_vertical"
-	            android:hint="@string/pwd"
-	            android:inputType="textPassword"
-	            android:paddingLeft="12dp"
-	            android:textSize="16dp" />
-	        
-        </LinearLayout>
+            android:orientation="vertical" >
 
+            <EditText
+                android:id="@+id/login_user_et"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="@string/input_phone"
+                android:inputType="phone"
+                android:paddingLeft="12dp"
+                android:textSize="16dp" />
+
+            <EditText
+                android:id="@+id/login_pwd_et"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="@string/pwd"
+                android:inputType="textPassword"
+                android:paddingLeft="12dp"
+                android:textSize="16dp" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/login_btn"
@@ -54,41 +52,44 @@
             android:layout_height="44dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/button_zhu"
-            android:textColor="@color/white"
-            android:text="@string/login" />
-        
-        <LinearLayout 
+            android:text="@string/login"
+            android:textColor="@color/white" />
+
+        <LinearLayout
             android:layout_width="288dp"
-            android:layout_height="48dp">
-            <TextView android:visibility="gone"
+            android:layout_height="48dp" >
+
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingLeft="24dp"
-                android:gravity="center_vertical"
                 android:drawableLeft="@drawable/icon_suo"
                 android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="24dp"
+                android:text="@string/forget_password"
                 android:textColor="#a0917e"
-                android:text="@string/forget_password"/>
-            
-            <TextView 
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/ll_tv_register"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingLeft="100dp"
-                android:gravity="center_vertical"
                 android:drawableLeft="@drawable/icon_ren"
                 android:drawablePadding="4dp"
-                android:textColor="#a0917e"
-                android:text="@string/register_account"/>
+                android:gravity="center_vertical"
+                android:paddingLeft="100dp"
+                android:text="@string/register_account"
+                android:textColor="#a0917e" />
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout android:visibility="gone"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <TextView
             android:layout_width="match_parent"

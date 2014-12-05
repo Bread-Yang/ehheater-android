@@ -86,6 +86,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	private Dialog turnOffInWinnerDialog;
 
+	private boolean isPowerOffOrOffline;
+
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -282,6 +284,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) { // -7:offline, 0 :
 															// online
+			isPowerOffOrOffline = true;
 
 			statusResp = null;
 
@@ -308,6 +311,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	private void onOffDeal(DERYStatusResp_t pResp) {
 		if (pResp.getOnOff() == 0) { // shutdown
+			isPowerOffOrOffline = true;
 			setCircularViewEnable(false, pResp);
 			tv_status.setText(R.string.shutdown);
 			btn_appointment.setEnabled(false);
@@ -318,13 +322,13 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
 			isOn = false;
 		} else if (pResp.getOnOff() == 1) { // standby
+			isPowerOffOrOffline = false;
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut);
 			if (pResp.getSeasonState() == 1) {
 				btn_appointment.setEnabled(true);
+				btn_intellectual.setEnabled(true);
 			}
 			btn_setting.setEnabled(true);
-			btn_intellectual.setEnabled(true);
-			btn_intellectual.setEnabled(true);
 			isOn = true;
 		}
 	}
@@ -333,6 +337,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		if (pResp.getSeasonState() == 0) { // summer
 
 			btn_appointment.setEnabled(false);
+			btn_intellectual.setEnabled(false);
 
 			rg_winner.setVisibility(View.GONE);
 			rb_summer.setVisibility(View.VISIBLE);
@@ -394,6 +399,24 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		} else if (pResp.getSeasonState() == 1) { // winner
 
 			Log.e("冬季返回来的温度是 : ", pResp.getHeatingTemTarget() + "");
+
+			if (pResp.getHeatingSend() == 0) { // 0 : 散热器
+				rb_supply_heating
+						.setCompoundDrawablesWithIntrinsicBounds(
+								null,
+								getResources()
+										.getDrawable(
+												R.drawable.selector_bg_furnace_main_supply_heating_sanre),
+								null, null);
+			} else {
+				rb_supply_heating
+						.setCompoundDrawablesWithIntrinsicBounds(
+								null,
+								getResources()
+										.getDrawable(
+												R.drawable.selector_bg_furnace_main_supply_heating_dinuan),
+								null, null);
+			}
 
 			if (pResp.getOnOff() == 1) {
 				circle_slider.setVisibility(View.VISIBLE);
@@ -495,8 +518,6 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				}
 			}
 
-			circle_slider.setVisibility(View.VISIBLE);
-
 			if (pResp.getBathWater() == 0 && pResp.getOnOff() == 1) { // 0 :
 																		// have
 																		// bath
@@ -507,6 +528,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				// when bathing, furnace bathing temperature can't be set.
 				if (rg_winner.getCheckedRadioButtonId() == R.id.rb_bath) {
 					// circle_slider.setVisibility(View.GONE);
+					circle_slider.setVisibility(View.VISIBLE);
 				}
 				tv_status.setText(R.string.bathing);
 			} else { // 1 : no bath current
@@ -582,21 +604,21 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				DialogUtil.instance().showReconnectDialog(this);
 			} else {
 				if (isOn) {
-					if (statusResp.getSeasonState() == 0) {
-						DeviceOffUtil.instance(this)
-						.nextButtonCall(new NextButtonCall() {
-							@Override
-							public void oncall(View v) {
-								FurnaceSendMsgModel.closeDevice();
-								DeviceOffUtil.instance(
-										FurnaceMainActivity.this)
-										.dissmiss();
-							}
-						}).showDialog();
-					} else {
-						turnOffInWinnerDialog.show();
-					}
-					
+					// if (statusResp.getSeasonState() == 0) {
+					// DeviceOffUtil.instance(this)
+					// .nextButtonCall(new NextButtonCall() {
+					// @Override
+					// public void oncall(View v) {
+					// FurnaceSendMsgModel.closeDevice();
+					// DeviceOffUtil.instance(
+					// FurnaceMainActivity.this)
+					// .dissmiss();
+					// }
+					// }).showDialog();
+					// } else {
+					// turnOffInWinnerDialog.show();
+					// }
+					turnOffInWinnerDialog.show();
 				} else {
 					FurnaceSendMsgModel.openDevice();
 				}
@@ -617,6 +639,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		case R.id.llt_gas_consumption:
 			intent = new Intent(FurnaceMainActivity.this,
 					FurnaceGasConsumptionActivity.class);
+			intent.putExtra("isPowerOffOrOffline", isPowerOffOrOffline);
 			startActivity(intent);
 			break;
 

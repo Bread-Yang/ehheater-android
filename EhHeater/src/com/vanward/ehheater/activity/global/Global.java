@@ -12,5 +12,5 @@ public class Global {
 
 	public static final HeaterDevice device = new HeaterDevice();
 
-	public static final boolean isForExhibition = true;
+	public static final boolean isForExhibition = false;
 }

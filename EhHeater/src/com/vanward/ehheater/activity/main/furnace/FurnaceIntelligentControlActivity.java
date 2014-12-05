@@ -3,6 +3,7 @@ package com.vanward.ehheater.activity.main.furnace;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import net.tsz.afinal.http.AjaxCallBack;
@@ -78,45 +79,45 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 	private void setListener() {
 
-//		btn_left.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//				String requestURL = "";
-//
-//				AjaxParams params = new AjaxParams();
-//
-//				params.put("data", gson.toJson(highChar_data));
-//
-//				showRequestDialog();
-//				mHttpFriend.clearParams()
-//						.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-//						.executePost(params, new AjaxCallBack<String>() {
-//							@Override
-//							public void onSuccess(String jsonString) {
-//								super.onSuccess(jsonString);
-//								Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
-//
-//								try {
-//									JSONObject json = new JSONObject(jsonString);
-//
-//									String result = json.getString("result");
-//
-//									if ("success".equals("result")) {
-//										finish();
-//									} else {
-//										// 弹出对话框,提示是否重新提交
-//									}
-//								} catch (JSONException e) {
-//									e.printStackTrace();
-//								}
-//
-//								dismissRequestDialog();
-//							}
-//						});
-//			}
-//		});
+		// btn_left.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		//
+		// String requestURL = "";
+		//
+		// AjaxParams params = new AjaxParams();
+		//
+		// params.put("data", gson.toJson(highChar_data));
+		//
+		// showRequestDialog();
+		// mHttpFriend.clearParams()
+		// .toUrl(Consts.REQUEST_BASE_URL + requestURL)
+		// .executePost(params, new AjaxCallBack<String>() {
+		// @Override
+		// public void onSuccess(String jsonString) {
+		// super.onSuccess(jsonString);
+		// Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+		//
+		// try {
+		// JSONObject json = new JSONObject(jsonString);
+		//
+		// String result = json.getString("result");
+		//
+		// if ("success".equals("result")) {
+		// finish();
+		// } else {
+		// // 弹出对话框,提示是否重新提交
+		// }
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// }
+		//
+		// dismissRequestDialog();
+		// }
+		// });
+		// }
+		// });
 	}
 
 	private void extractDataFromJson(String jsonString) {
@@ -138,33 +139,63 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 			loop = json.getString("loop");
 
-			for (int i = 0; i < loop.length(); i++) {
-				int flag = loop.charAt(i);
-				if (flag == '1') {
-					switch (i) {
+			if (!"null".equals(loop)) {
+				for (int i = 0; i < loop.length(); i++) {
+					int flag = loop.charAt(i);
+					if (flag == '1') {
+						switch (i) {
 
-					case 0:
-						cb_Monday.setChecked(true);
-						break;
-					case 1:
-						cb_Thuesday.setChecked(true);
-						break;
-					case 2:
-						cb_Wednesday.setChecked(true);
-						break;
-					case 3:
-						cb_Thursday.setChecked(true);
-						break;
-					case 4:
-						cb_Friday.setChecked(true);
-						break;
-					case 5:
-						cb_Saturday.setChecked(true);
-						break;
-					case 6:
-						cb_Sunday.setChecked(true);
-						break;
+						case 0:
+							cb_Monday.setChecked(true);
+							break;
+						case 1:
+							cb_Thuesday.setChecked(true);
+							break;
+						case 2:
+							cb_Wednesday.setChecked(true);
+							break;
+						case 3:
+							cb_Thursday.setChecked(true);
+							break;
+						case 4:
+							cb_Friday.setChecked(true);
+							break;
+						case 5:
+							cb_Saturday.setChecked(true);
+							break;
+						case 6:
+							cb_Sunday.setChecked(true);
+							break;
+						}
 					}
+				}
+			} else {
+				Calendar c = Calendar.getInstance();
+				int currentDay = c.get(Calendar.DAY_OF_WEEK); // 1: 星期日, 7 : 星期六
+
+				switch (currentDay) {
+
+				case 1:
+					cb_Sunday.setChecked(true);
+					break;
+				case 2:
+					cb_Monday.setChecked(true);
+					break;
+				case 3:
+					cb_Thuesday.setChecked(true);
+					break;
+				case 4:
+					cb_Wednesday.setChecked(true);
+					break;
+				case 5:
+					cb_Thursday.setChecked(true);
+					break;
+				case 6:
+					cb_Friday.setChecked(true);
+					break;
+				case 7:
+					cb_Saturday.setChecked(true);
+					break;
 				}
 			}
 
@@ -239,9 +270,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 		public void updateYValue(int x, int newY) {
 			// x是从1开始,1到24小时
 			highChar_data.set(x - 1, new int[] { x, newY });
-			// Log.e("X值", "X的值是 : " + x);
-			// Log.e("更新了Y值", "Y的最新值是 : " + newY);
-			// Log.e("转换后打印出来的字符串 : ", gson.toJson(highChar_data));
+			 Log.e("X值", "X的值是 : " + x);
+			 Log.e("更新了Y值", "Y的最新值是 : " + newY);
+			 Log.e("转换后打印出来的字符串 : ", gson.toJson(highChar_data));
 		}
 	}
 }

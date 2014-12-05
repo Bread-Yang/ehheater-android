@@ -14,7 +14,9 @@
 $(function () {
 	//$('#container').highcharts('StockChart', {
 			
-	var chart = new Highcharts.StockChart({
+	//var chart = new Highcharts.StockChart({
+	
+	var chart = new Highcharts.Chart({
     
         credits: {
             enabled: false
@@ -23,6 +25,7 @@ $(function () {
         chart: {
             backgroundColor: '#F3F3F3',
             animation: false,
+            zoomType: 'x',
             renderTo: 'container',
             marginTop: 30,
             resetZoomButton: {
@@ -55,9 +58,10 @@ $(function () {
         yAxis: {
             gridLineWidth: 1,
             opposite: false,
-            lineWidth: 1,
+            lineWidth: 0,
             lineColor: '#C0C0C0',
             offset: -5,
+            max:80,
             title: {
                 style: {
                     color: '#00ACC2'
@@ -74,7 +78,7 @@ $(function () {
                 },
                 x: -20,
             },
-            tickPositions: [20, 30, 40, 50, 60, 70, 80, 90]
+            tickPositions: [20, 30, 40, 50, 60, 70, 80]
         },
 
         xAxis: {
@@ -86,6 +90,7 @@ $(function () {
             lineColor: '#6D8590',
             lineWidth: 2,
             tickWidth: 0,
+             tickInterval: 1,
             gridLineWidth: 1,
             minRange: 6.5,
             range: 6.5 // six months
@@ -117,18 +122,21 @@ $(function () {
 
                         drag: function (e) {
                             // Returning false stops the drag and drops. Example:
-
-                            if (e.newY >= 80.0) {
-                                this.y = 80;
-                                return false;
-                            } else if (e.newY <= 30.0) {
-                                this.y = 30;
-                                return false;
-                            } else {
-                            	highChartsJavaScriptInterface.updateYValue(this.x, this.y);
+                            
+                            if (Math.abs(e.newX - this.x) < 0.25) {
+                            	if (e.newY >= 80.0) {
+                               		 this.y = 80;
+                                	return false;
+                           		 } else if (e.newY <= 30.0) {
+                               		 this.y = 30;
+                                	return false;
+                          	   } else {
+                            		highChartsJavaScriptInterface.updateYValue(this.x, this.y);
+                               }
+                           		 $('#drag').html(
+                                	'Dragging <b>' + this.category + '</b> to <b>' + Highcharts.numberFormat(e.newY, 2) + '</b>');
                             }
-                            $('#drag').html(
-                                'Dragging <b>' + this.category + '</b> to <b>' + Highcharts.numberFormat(e.newY, 2) + '</b>');
+                            return true;
                         },
                         drop: function () {
                             //highChartsJavaScriptInterface.updateYValue(this.x, this.y);
@@ -143,6 +151,7 @@ $(function () {
             draggableY: true
         }],
     });
+    chart.xAxis[0].setExtremes(1, 7); 
 });
 		</script>
 	</head>
