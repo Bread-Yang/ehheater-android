@@ -4,11 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
@@ -42,14 +40,13 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
-import com.vanward.ehheater.activity.login.LoginActivity;
-import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
+import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.PxUtil;
@@ -65,8 +62,10 @@ import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.vanward.ehheater.view.wheelview.WheelView;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
+import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
+import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class MainActivity extends BaseSlidingFragmentActivity implements
@@ -111,15 +110,25 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("emmm", "onReceive@mainac");
+			Log.d("emmm", "heaterNameChangeReceiver:onReceive@MainActivity");
 			updateTitle();
 			initSlidingMenu();
+		}
+	};
+	
+	BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("emmm", "deviceOnlineReceiver:onReceive@MainActivity");
+			connectCurDevice();
 		}
 	};
 
 	private CountDownTimer mCountDownTimer;
 
-	boolean canupdateView = false;
+	private boolean canupdateView = false;
+	private boolean shouldReconnect = false;
+	private boolean paused = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -128,22 +137,28 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		setContentView(R.layout.main_center_layout);
 		initView();
 		initData();
-
-		IntentFilter filter = new IntentFilter(
-				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
+		
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				heaterNameChangeReceiver, filter);
+				heaterNameChangeReceiver, new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
+		
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				deviceOnlineReceiver, new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));
+		
 		registerSuicideReceiver();
 		canupdateView = false;
+		shouldReconnect = false;
+		paused = false;
 
-		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
-				.getCurrentSelectedHeater();
-		String mac = curHeater.getMac();
-		String passcode = curHeater.getPasscode();
-		String userId = AccountService.getUserId(getBaseContext());
-		String userPsw = AccountService.getUserPsw(getBaseContext());
-
-		ConnectActivity.connectToDevice(this, mac, passcode, userId, userPsw);
+//		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
+//				.getCurrentSelectedHeater();
+//		String mac = curHeater.getMac();
+//		String passcode = curHeater.getPasscode();
+//		String userId = AccountService.getUserId(getBaseContext());
+//		String userPsw = AccountService.getUserPsw(getBaseContext());
+//
+//		ConnectActivity.connectToDevice(this, mac, passcode, userId, userPsw);
+		connectCurDevice();
+		CheckOnlineUtil.ins().reset(getCurHeater().getMac());
 	}
 
 	@Override
@@ -172,10 +187,11 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 
-			Global.connectId = connId;
 
 			if (isOnline) {
-				
+
+				Global.connectId = connId;
+				Global.checkOnlineConnId = -1;
 				boolean shouldExecuteBinding = HeaterInfoService.shouldExecuteBinding(curHeater);
 				
 				if (shouldExecuteBinding) {
@@ -185,8 +201,17 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				}
 				
 			} else {
-				// TODO 设备不在线
+				// 设备不在线, 需检测上线
+				Global.connectId = -1;
+				Global.checkOnlineConnId = connId;
+				try {
+					ChangeStuteView.swichdisconnect(stuteParent);
+					dealDisConnect();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
+				CheckOnlineUtil.ins().start(getBaseContext());
 			}
 
 			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
@@ -220,13 +245,28 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-        XPGConnectClient.AddActivity(this);
+        // XPGConnectClient.AddActivity(this);
+		
+		paused = false;
 		canupdateView = true;
+		
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				heaterNameChangeReceiver, new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
+		
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				deviceOnlineReceiver, new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));
 
-		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
-			// 无任何网络连接
-			dealDisConnect();
-			return;
+//		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
+//			// 无任何网络连接
+//			dealDisConnect();
+//			return;
+//		}
+
+		CheckOnlineUtil.ins().resume();
+		
+		if (shouldReconnect) {
+			shouldReconnect = false;
+			connectCurDevice();
 		}
 
 	}
@@ -234,13 +274,18 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-        XPGConnectClient.RemoveActivity(this);
+		CheckOnlineUtil.ins().pause();
+        // XPGConnectClient.RemoveActivity(this);
+		paused = true;
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
+		CheckOnlineUtil.ins().stop();
 		DialogUtil.dismissDialog();
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(deviceOnlineReceiver);
 	};
 
 	@Override
@@ -705,12 +750,6 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		}
 	}
 
-	private android.content.DialogInterface.OnClickListener dismissDialog(
-			MainActivity mainActivity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	private int currentModeCode = -1;
 
 	public void setTempture(final byte[] b) {
@@ -795,12 +834,43 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-			ChangeStuteView.swichdisconnect(stuteParent);
-			dealDisConnect();
+			// ChangeStuteView.swichdisconnect(stuteParent);
+			// dealDisConnect();
 			isConnect = false;
-			DialogUtil.instance().showReconnectDialog(this);
+			// DialogUtil.instance().showReconnectDialog(this);
+			
+			if (paused) {
+				shouldReconnect = true;
+			} else {
+				connectCurDevice();
+			}
+			
+
 		}
+		
 	}
+	
+	private void connectCurDevice() {
+
+		if (curHeater == null) {
+			curHeater = getCurHeater();
+		}
+		
+		String mac = curHeater.getMac();
+		String userId = AccountService.getUserId(getBaseContext());
+		String userPsw = AccountService.getUserPsw(getBaseContext());
+
+		ConnectActivity.connectToDevice(this, mac, userId, userPsw);
+	}
+	
+	private HeaterInfo getCurHeater() {
+		if (curHeater == null) {
+			curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
+		}
+		
+		return curHeater;
+	}
+	private HeaterInfo curHeater;
 
 	public void dealDisConnect() {
 		tempter.setText("--");
@@ -875,6 +945,50 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			}
 		};
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
+	}
+	
+	@Override
+	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp, int nConnId) {
+		super.OnDeviceOnlineStateResp(pResp, nConnId);
+		Log.d("emmm", "OnDeviceOnlineStateResp");
+		
+		
+//		String targetMac = generated.XpgData2String(pResp.getMac());
+//		Log.d("emmm", targetMac + "-" + pResp.getIsOnline());
+//		
+//		// if current device went offline
+//			// offline
+//		// if current device went online 
+//			// auto reconnect
+//
+		if (/*getCurHeater().getMac().equals(targetMac) &&*/ pResp.getIsOnline() == 0) {
+			// offline ui
+			
+			try {
+				ChangeStuteView.swichdisconnect(stuteParent);
+				dealDisConnect();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		} 
+		
+		if (/*getCurHeater().getMac().equals(targetMac) &&*/ pResp.getIsOnline() == 1) {
+
+			if (paused) {
+				shouldReconnect = true;
+			} else {
+				connectCurDevice();
+			}
+		} 
+		
+		
+	}
+	
+	@Override
+	public void onDeviceFound(XpgEndpoint endpoint) {
+		super.onDeviceFound(endpoint);
+		CheckOnlineUtil.ins().receiveEndpoint(endpoint);
 	}
 
 }
