@@ -37,7 +37,7 @@ public class ConnectActivity extends GeneratedActivity {
 	
 	private Button mBtnRetry;
 
-	/** 建立的连接类型, LAN(小循环) / MQTT(大) */
+	/** 建立的连接类型, LAN / MQTT(大) */
 	private int connType = Integer.MAX_VALUE;
 
 	/** 小循环扫描设备周期,ms */
@@ -103,7 +103,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		runOnUiThread(new Runnable() {
 			public void run() {
-				mTvInfo.setText("通过机智云连接中...(大循环)");
+				mTvInfo.setText("通过云端连接中...");
 			};
 		});
 		
@@ -373,7 +373,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 				if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
 					// 先试小循环, 不行则大
-					mTvInfo.setText("通过局域网连接中...(小循环)");
+					mTvInfo.setText("通过局域网连接中...");
 					currentLanSearchingState = LAN_SEARCHING;
 					tryConnectBySmallCycle(defaultScanInterval, 8000,
 							new TimerTask() {
@@ -381,7 +381,7 @@ public class ConnectActivity extends GeneratedActivity {
 								public void run() {
 									runOnUiThread(new Runnable() {
 										public void run() {
-											mTvInfo.setText("通过局域网连接热水器失败(小循环连接失败)");
+											mTvInfo.setText("通过局域网连接热水器失败");
 										};
 									});
 									// 启动大循环
@@ -399,7 +399,7 @@ public class ConnectActivity extends GeneratedActivity {
 			case STATE_LAN_ONLY:
 				// 当前设备没有did, 仅能通过小循环控制
 				if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
-					mTvInfo.setText("通过局域网连接中...(小循环)");
+					mTvInfo.setText("通过局域网连接中...");
 					currentLanSearchingState = LAN_SEARCHING;
 					tryConnectBySmallCycle(defaultScanInterval, 10000,
 							new TimerTask() {
@@ -407,7 +407,7 @@ public class ConnectActivity extends GeneratedActivity {
 								public void run() {
 									runOnUiThread(new Runnable() {
 										public void run() {
-											mTvInfo.setText("通过局域网连接热水器失败(小循环连接失败)");
+											mTvInfo.setText("通过局域网连接热水器失败");
 										};
 									});
 								}
@@ -415,7 +415,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 				} else {
 					// 无法控制
-					mTvInfo.setText("无法连接设备(设备未上大循环)");
+					mTvInfo.setText("无法连接设备");
 				}
 
 				break;
