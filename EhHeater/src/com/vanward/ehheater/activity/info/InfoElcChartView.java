@@ -39,6 +39,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -139,69 +140,60 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 //	}
 	@Override
 	public void onClick(View arg0) {
-		switch (arg0.getId()) {
-		case R.id.lastparent:
-			if (currentShowingPeriodType.equals("1")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.DATE, -7);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			if (currentShowingPeriodType.equals("2")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.MONTH, -1);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			if (currentShowingPeriodType.equals("3")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.YEAR, -1);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
-					.execute();
-
-			break;
-		case R.id.nextparent:
-
-			if (currentShowingPeriodType.equals("1")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.DATE, 7);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			if (currentShowingPeriodType.equals("2")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.MONTH, 1);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			if (currentShowingPeriodType.equals("3")) {
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(currentShowingTime);
-				cal.add(Calendar.YEAR, -1);
-				currentShowingTime = cal.getTimeInMillis();
-			}
-
-			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
-					.execute();
-			break;
-		}
-//		switch (last.getText().toString().trim()) {
-//		case "上一周":
-//			dates=timechanged();
-//			break;
+//		switch (arg0.getId()) {
+//		case R.id.lastparent:
+//			if (currentShowingPeriodType.equals("1")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.DATE, -7);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
 //
-//		default:
+//			if (currentShowingPeriodType.equals("2")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.MONTH, -1);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			if (currentShowingPeriodType.equals("3")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.YEAR, -1);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
+//					.execute();
+//
+//			break;
+//		case R.id.nextparent:
+//
+//			if (currentShowingPeriodType.equals("1")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.DATE, 7);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			if (currentShowingPeriodType.equals("2")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.MONTH, 1);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			if (currentShowingPeriodType.equals("3")) {
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(currentShowingTime);
+//				cal.add(Calendar.YEAR, -1);
+//				currentShowingTime = cal.getTimeInMillis();
+//			}
+//
+//			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
+//					.execute();
 //			break;
 //		}
-		
 	}
 
 	class Initobject {
@@ -366,7 +358,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	
 	public void getmessageweek(){
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did=dVfu4XXcUCbE93Z2mu4PyZ&dateTime=currentShowingTime&resultType=1&expendType=3", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+System.currentTimeMillis()+"&resultType=1&expendType=3", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -394,6 +386,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								Electricity electricity=new Electricity();
 								electricity.setAmount(amount);
 								electricity.setTime(time);
+								System.out.println("diandiandiandian2"+electricity.getAmount());
 								li.add(electricity);  
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
@@ -407,7 +400,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							//赋值data
 							datalistjson = jsonArray2.toString();
 							//设置使用的总电数
-							sumwater.setText("200度");
+							getall();
 							//更换下方按钮
 							chart4week();
 							//刷新数据展示
@@ -426,15 +419,15 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 			public void onFailure(Throwable t, int errorNo,
 					String strMsg) {
 				// TODO Auto-generated method stub  请求失败
+				System.out.println("qingqiu");
 				super.onFailure(t, errorNo, strMsg);
 			}
 		});
 	}
 	
 	public void getmessagemonth(){
-		System.out.println("月份qwewqe");
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did=dVfu4XXcUCbE93Z2mu4PyZ&dateTime=1417503892000&resultType=2&expendType=3", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+System.currentTimeMillis()+"&resultType=2&expendType=3", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -444,61 +437,52 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 			}
 			
 			//请求成功
-			 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+			 SimpleDateFormat format = new SimpleDateFormat("MM/dd");
 					  
 			@Override
 					public void onSuccess(String t) {
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
-							System.err.println("month-----"+t);
 							JSONArray array = jsonObject.getJSONArray("result");
-							System.out.println("month1111"+array.length());
-//							JSONArray jsonArray = new JSONArray();
-//							JSONArray jsonArray2 = new JSONArray();
-//							List<Electricity> li=new ArrayList<Electricity>();
+							JSONArray jsonArray = new JSONArray();
+							JSONArray jsonArray2 = new JSONArray();
+							List<Electricity> li=new ArrayList<Electricity>();
 							for(int i=0;i<array.length();i++){
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount =jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj.getString("time")));
-								System.out.println("cccccccccc"+time);
-//								Long tt=new Long(jsonObj.getString("time"));
-//								 String d = format.format(tt);
-//								 System.out.println("timetimetime"+d);
 								 Date dat=new Date();
 								 dat=format.parse(time);
-								 System.out.println("6+7+8++++"+dat);
 								 Calendar calendar = Calendar.getInstance();
 								 calendar.setTime(dat);
-								 System.out.println("mmmmmmmm"+calendar.DATE);
-//							    if(calendar.DATE==1){
-//							    	System.out.println("mmmmmmmm"+calendar.DAY_OF_MONTH);
-//							    	calendar.add(calendar.DATE,5);
-//							    }
-//							    else{
-//							    	calendar.add(calendar.DATE,6);
-//							    }
-							    //SimpleDateFormat format2 = new SimpleDateFormat("-dd");
-//							    String time2=format2.format(calendar.getTime());
+							    if(calendar.get(calendar.DATE)==1){
+							    	calendar.add(calendar.DATE,5);
+							    }
+							    else{
+							    	calendar.add(calendar.DATE,6);
+							    }
+							    SimpleDateFormat format2 = new SimpleDateFormat("-dd");
+							    String time2=format2.format(calendar.getTime());
+							    String times=time+time2;
 								//格式化日期
-//								Electricity electricity=new Electricity();
-//								electricity.setAmount(amount);
-//								electricity.setTime(time);
-//								li.add(electricity);  
-//								JSONObject jsonOBJ = new JSONObject();
-								//JSONObject jsonOBJ2 = new JSONObject();
-//								jsonOBJ.put("name", li.get(i).getTime());
-								//jsonOBJ2.put("data", li.get(i).getAmount());
-//								jsonArray.put(jsonOBJ);
-								//jsonArray2.put(jsonOBJ2);
-//								datalistjson = "[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5},{data:5},] ";
+								Electricity electricity=new Electricity();
+								electricity.setAmount(amount);
+								electricity.setTime(times);
+								li.add(electricity);  
+								JSONObject jsonOBJ = new JSONObject();
+								JSONObject jsonOBJ2 = new JSONObject();
+								jsonOBJ.put("name", li.get(i).getTime());
+								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonArray.put(jsonOBJ);
+								jsonArray2.put(jsonOBJ2);
 							}
 							//赋值name
-//							namelistjson = jsonArray.toString();
+							namelistjson = jsonArray.toString();
 							//赋值data
-							//datalistjson = jsonArray2.toString();
-							datalistjson = "[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5}] ";
+							datalistjson = jsonArray2.toString();
+							//datalistjson = "[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5}] ";
 							//设置使用的总电数
-							sumwater.setText("200度");
+							getall();
 							//更换下方按钮
 							chart4Month();
 							//刷新数据展示
@@ -524,7 +508,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	
 	public void getmessageyear(){
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did=dVfu4XXcUCbE93Z2mu4PyZ&dateTime="+System.currentTimeMillis()+"&resultType=3&expendType=3", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+System.currentTimeMillis()+"&resultType=3&expendType=3", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -540,6 +524,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 					public void onSuccess(String t) {
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
+							System.out.println("yuuyuyu"+t);
 							JSONArray array = jsonObject.getJSONArray("result");
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
@@ -548,7 +533,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount =jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj.getString("time")));
-								//格式化日期
 								Electricity electricity=new Electricity();
 								electricity.setAmount(amount);
 								electricity.setTime(time);
@@ -566,7 +550,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							datalistjson = jsonArray2.toString();
 							
 							//设置使用的总电数
-							sumwater.setText("200度");
+							getall();
 							//更换下方按钮
 							chart4Year();
 							//刷新数据展示
@@ -588,8 +572,36 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 				super.onFailure(t, errorNo, strMsg);
 			}
 		});
-	};
+	}
 	
 	//上下
-	
+	public void getall(){
+		System.out.println("lail");
+		FinalHttp finalHttp = new FinalHttp();
+		finalHttp.get("http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="+Global.connectId+"", new AjaxCallBack<String>(){
+			@Override
+			public void onSuccess(String t) {
+				try {
+					JSONObject jsonObject = new JSONObject(t);
+					if(jsonObject.get("result").equals(null)){
+						sumwater.setText("0度");
+					}
+					else{
+						sumwater.setText(jsonObject.get("result")+"度");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				super.onSuccess(t);
+			}
+			
+			//请求失败  
+			@Override
+			public void onFailure(Throwable t, int errorNo,
+					String strMsg) {
+				// TODO Auto-generated method stub  请求失败
+				super.onFailure(t, errorNo, strMsg);
+			}
+		});
+	}
 }

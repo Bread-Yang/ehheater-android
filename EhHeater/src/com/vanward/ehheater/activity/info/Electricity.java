@@ -5,6 +5,7 @@ public class Electricity {
 	private String amount;
 	private String time;
 
+
 	public String getAmount() {
 		return amount;
 	}
