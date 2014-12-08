@@ -10,6 +10,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         layout="@layout/base_activity_top_layout" />
+    
+    <View android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#EBEBEB"/>
 
     <ScrollView
         android:layout_width="fill_parent"

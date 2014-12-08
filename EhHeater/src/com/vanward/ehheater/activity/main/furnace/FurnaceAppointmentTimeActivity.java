@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -72,6 +73,14 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 			switch (msg.what) {
 			case 0:
 				if (!isFinishing()) {
+					TextView tv_tips = (TextView) appointmentConflictDialog
+							.findViewById(R.id.tv_content);
+					tv_tips.setText(getResources().getString(
+							R.string.appointment_conflict)
+							+ String.format("%2d", wheelView1.getCurrentItem())
+							+ "："
+							+ String.format("%2d", wheelView2.getCurrentItem())
+							+ "？");
 					appointmentConflictDialog.show();
 				}
 				break;
@@ -115,7 +124,13 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 		appointmentConflictDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.appointment_conflict,
 						BaoDialogShowUtil.DEFAULT_RESID, R.string.override,
-						null, new OnClickListener() {
+						new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								finish();
+							}
+						}, new OnClickListener() {
 
 							@Override
 							public void onClick(View v) {
@@ -350,14 +365,14 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 				Log.e("second : ", second + "");
 				Log.e("timestamp: ", c.getTimeInMillis() + "");
 
-				c.set(year, month, day, setHour, setMinute);
+				c.set(year, month, day, setHour, setMinute, 0);
 
 				// Date date = new Date();
 				// date.setHours(setHour);
 				// date.setMinutes(setMinute);
 				// long timestamp = date.getTime();
 
-				long timestamp = c.getTimeInMillis();
+				long timestamp = c.getTimeInMillis() / 1000 * 1000; // 将毫秒统一设为000
 
 				editModel.setDateTime(timestamp);
 
@@ -424,6 +439,7 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 				AjaxParams params = new AjaxParams();
 				params.put("data", json);
+				Log.e("isOverride : ", isOverride + "");
 				if (isOverride) {
 					params.put("ignoreConflict", "true");
 				}

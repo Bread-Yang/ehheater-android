@@ -6,11 +6,6 @@
     android:background="@drawable/home_bg"
     android:orientation="vertical" >
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#80808080" />
-
     <com.vanward.ehheater.view.swipelistview.SwipeListView
         android:id="@+id/lv_listview"
         android:layout_width="fill_parent"

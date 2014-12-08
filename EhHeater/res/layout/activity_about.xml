@@ -29,10 +29,10 @@
         android:layout_alignRight="@+id/btn_check_update"
         android:layout_below="@+id/imageView1"
         android:layout_marginTop="10dp"
-        android:textSize="16sp"
         android:gravity="left"
         android:text="       广东万和新电气股份有限公司（成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。）"
-        android:textColor="#ff808080" />
+        android:textColor="#ff808080"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btn_check_update"
@@ -41,11 +41,11 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="70dp"
-        android:visibility="invisible"
         android:background="@drawable/selector_yellow_bg"
         android:gravity="center"
         android:text="@string/check_update"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/textView2"

@@ -38,6 +38,7 @@ import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.info.Comprehension;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -418,6 +419,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			break;
 		case R.id.btn_information:
+			
 			Intent intent3 = new Intent();
 			intent3.putExtra("isgas", false);
 			intent3.setClass(this, InformationActivity.class);
@@ -581,15 +583,15 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	//错误图标
 	
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
-	
-	
-	public void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
 
+	
+	SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+	public void dealErrorWarnIcon(byte[] date) {
+		final EhState en=new EhState(date);
 //		freezeProofing(pResp);
 //		oxygenWarning(pResp);
-		System.out.println("错误码：" + pResp.getErrorCode());
-		if (pResp.getErrorCode() != 0) {
+		System.out.println("错误码：" + en.getErrorCode());
+		if (en.getErrorCode() != 0) {
 			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.main_error);
 			tipsimg.setOnClickListener(new OnClickListener() {
@@ -599,7 +601,7 @@ public class MainActivity extends BaseBusinessActivity implements
 					ErrorDialogUtil
 							.instance(MainActivity.this)
 							.initName(
-									Integer.toHexString(pResp.getErrorCode())
+									Integer.toHexString(en.getErrorCode())
 											+ "")
 							.setNextButtonCall(new NextButtonCall() {
 								@Override
@@ -610,7 +612,7 @@ public class MainActivity extends BaseBusinessActivity implements
 									intent.putExtra(
 											"name",
 											"机器故障("
-													+ Integer.toHexString(pResp
+													+ Integer.toHexString(en
 															.getErrorCode())
 													+ ")");
 									intent.putExtra("time",
@@ -623,7 +625,7 @@ public class MainActivity extends BaseBusinessActivity implements
 													.instance(
 															MainActivity.this)
 													.getMap()
-													.get(pResp.getErrorCode()
+													.get(en.getErrorCode()
 															+ ""));
 									startActivity(intent);
 								}
@@ -640,7 +642,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		System.out.println("回调");
 		super.OnStateResp(pResp, nConnId);
 	}
-
+	
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
@@ -654,13 +656,11 @@ public class MainActivity extends BaseBusinessActivity implements
 			new EhState(data).getErrorCode()
 		 */
 
-		errors=new EhState(data).getErrorCode();
-		
 		System.out.println("回调onTcpPacket");
 		System.out.println("MainActivity.onTcpPacket()： "
 				+ new EhState(data).getRemainingHotWaterAmount());
 		
-		
+		dealErrorWarnIcon(data);
 
 		if (!canupdateView) {
 			return;
