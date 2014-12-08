@@ -28,7 +28,7 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/home_xuan_bg1"
                 android:orientation="horizontal"
-                android:visibility="gone" >
+                >
 
                 <RadioButton
                     android:id="@+id/rb_supply_heating"
@@ -37,8 +37,8 @@
                     android:layout_weight="1"
                     android:button="@null"
                     android:checked="true"
-                    android:drawablePadding="-5dp"
-                    android:drawableTop="@drawable/selector_bg_furnace_main_supply_heating"
+                    android:drawableTop="@drawable/selector_bg_furnace_main_supply_heating_sanre"
+                    android:background="@null"
                     android:gravity="center"
                     android:text="设置45℃"
                     android:textColor="@drawable/selector_text_color_furnace_main"
@@ -50,6 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:button="@null"
+                    android:background="@null"
                     android:drawablePadding="-5dp"
                     android:drawableTop="@drawable/selector_bg_furnace_main_bath"
                     android:gravity="center"
@@ -59,6 +60,7 @@
             </RadioGroup>
 
             <RadioButton
+                android:visibility="gone" 
                 android:id="@+id/rb_summer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

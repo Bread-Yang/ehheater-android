@@ -54,7 +54,7 @@
             enabled: false
         },
         title: {
-            text: '2014/10/31',
+            text: highChartsJavaScriptInterface.getRealtimeConsumptionTitle(),
             style: {
                 color: '#6D8590',
             }
@@ -66,7 +66,9 @@
             lineColor: '#6D8590',
             lineWidth: 2,
             tickWidth: 0,
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+             tickInterval: 2,
+            
+            categories: ['0', '5', '10', '15', '20','25', '30', '35','40','45', '50','55', '60'],
             labels: {
                 style: {
                     color: '#6D8590'
@@ -109,6 +111,8 @@
                 rotation: 0,
                 y: -20
             },
+            max : 5,
+            min : 0,
             labels: {
                 style: {
                     color: '#00ACC2',
@@ -116,7 +120,7 @@
             },
         },
         series: [{
-            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+            data: eval(highChartsJavaScriptInterface.getHighChartData()),
         }]
     });
 });

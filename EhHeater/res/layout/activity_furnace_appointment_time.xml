@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res/com.vanward.ehheater"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/home_bg"
+    android:background="#E6E6E6"
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -13,7 +13,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+            android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_top_right_border"
             android:gravity="center"
             android:orientation="horizontal" >
 
@@ -26,7 +26,7 @@
                 app:hasLeftBorder="false"
                 app:hasRightBorder="false"
                 app:textHighlightColor="@color/appointment_text_color"
-                app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+                app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_top_right_border"
                 app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
 
             <com.vanward.ehheater.view.wheelview.WheelView
@@ -38,7 +38,7 @@
                 app:hasLeftBorder="false"
                 app:hasRightBorder="false"
                 app:textHighlightColor="@color/appointment_text_color"
-                app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_right_border"
+                app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_top_right_border"
                 app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
         </LinearLayout>
 
@@ -191,7 +191,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="25dp"
         android:paddingTop="10dp" >
 
         <TextView
@@ -206,9 +205,8 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_marginLeft="20dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" >
+            android:layout_marginLeft="20dp" >
 
             <TextView
                 android:id="@+id/tv_min_value"
@@ -233,6 +231,8 @@
                 android:max="50"
                 android:maxHeight="6dp"
                 android:minHeight="6dp"
+                android:paddingBottom="30dp"
+                android:paddingTop="30dp"
                 android:progress="0"
                 android:progressDrawable="@drawable/seekbarhint_style"
                 android:thumb="@drawable/seekbarhint_thumb"

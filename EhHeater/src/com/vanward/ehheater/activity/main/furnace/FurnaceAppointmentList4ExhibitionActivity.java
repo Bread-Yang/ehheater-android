@@ -33,6 +33,8 @@ import android.widget.TextView;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.model.AppointmentVo4Exhibition;
+import com.vanward.ehheater.util.SharedPreferUtils;
+import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.view.swipelistview.SwipeListView;
 
@@ -273,7 +275,14 @@ public class FurnaceAppointmentList4ExhibitionActivity extends
 			// holder.tv_time.setText(appointment.getHour() + ":" +
 			// appointment.getMinute());
 
-			holder.tv_nickname.setText(model.getName());
+			String name = new SharedPreferUtils(
+					FurnaceAppointmentList4ExhibitionActivity.this).get(
+					ShareKey.UserNickname, "");
+			if (!"".equals(name)) {
+				holder.tv_nickname.setText(name);
+			} else {
+				holder.tv_nickname.setText(model.getName());
+			}
 			holder.tv_time.setText(dateFormat.format(new Date(model
 					.getDateTime())));
 
@@ -359,10 +368,12 @@ public class FurnaceAppointmentList4ExhibitionActivity extends
 						// model.set 关闭预约
 						model.setIsAppointmentOn(0);
 						((ImageButton) view).setImageResource(R.drawable.off);
+						((ImageButton) view).setTag(0);
 					} else {
 						// model.set 打开预约
 						model.setIsAppointmentOn(1);
 						((ImageButton) view).setImageResource(R.drawable.on);
+						((ImageButton) view).setTag(1);
 					}
 					saveTestData();
 				}
@@ -383,7 +394,7 @@ public class FurnaceAppointmentList4ExhibitionActivity extends
 					adapter_data.remove(position);
 
 					lv_listview.setAdapter(new AppointmentListAdapter());
-					
+
 					if (adapter_data.size() >= 3) {
 						btn_right.setVisibility(View.INVISIBLE); // 预约数>=3时,隐藏右上角按钮
 					} else {

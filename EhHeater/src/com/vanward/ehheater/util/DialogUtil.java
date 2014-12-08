@@ -21,9 +21,9 @@ import com.vanward.ehheater.service.HeaterInfoService;
 public class DialogUtil {
 	private static DialogUtil dialogUtil;
 	private static Dialog dialog;
-	
+
 	private DialogUtil() {
-		
+
 	}
 
 	public static DialogUtil instance() {// 实例化
@@ -32,10 +32,10 @@ public class DialogUtil {
 		}
 		return dialogUtil;
 	}
-	
+
 	public void showQueryingDialog(Activity act) {
 		dismissDialog();
-		
+
 		AlertDialog.Builder bder = new AlertDialog.Builder(act);
 		bder.setMessage("正在查询热水器状态...");
 		bder.setNegativeButton(android.R.string.cancel, new OnClickListener() {
@@ -44,7 +44,7 @@ public class DialogUtil {
 				// just do nothing
 			}
 		});
-		
+
 		dialog = bder.create();
 		try {
 			dialog.show();
@@ -52,41 +52,43 @@ public class DialogUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void showReconnectDialog(final Activity act) {
 		final Dialog reconnectDialog = new Dialog(act, R.style.custom_dialog);
 		reconnectDialog.setContentView(R.layout.dialog_reconnect);
-		reconnectDialog.findViewById(R.id.dr_btn_cancel).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				reconnectDialog.dismiss();
-			}
-		});
-		reconnectDialog.findViewById(R.id.dr_btn_reconnect).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				
-				HeaterInfo curHeater = new HeaterInfoService(act.getBaseContext()).getCurrentSelectedHeater();
+		reconnectDialog.findViewById(R.id.dr_btn_cancel).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						reconnectDialog.dismiss();
+					}
+				});
+		reconnectDialog.findViewById(R.id.dr_btn_reconnect).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+						HeaterInfo curHeater = new HeaterInfoService(act
+								.getBaseContext()).getCurrentSelectedHeater();
 						if (curHeater == null) {
 							return;
 						}
-				String mac = curHeater.getMac();
-				String passcode = curHeater.getPasscode();
-				
-				String userId = AccountService.getUserId(act);
-				String userPsw = AccountService.getUserPsw(act);
-				
+						String mac = curHeater.getMac();
+						String passcode = curHeater.getPasscode();
 
-				reconnectDialog.dismiss();
-				ConnectActivity.connectToDevice(act, mac, passcode, userId, userPsw);
-				
-			}
-		});
+						String userId = AccountService.getUserId(act);
+						String userPsw = AccountService.getUserPsw(act);
 
-		
+						reconnectDialog.dismiss();
+						ConnectActivity.connectToDevice(act, mac, passcode,
+								userId, userPsw);
+
+					}
+				});
+
 		dialog = reconnectDialog;
 		try {
-			if (!act.isFinishing() && !act.isDestroyed()) {
+			if (!act.isFinishing()) {
 				dialog.show();
 			}
 		} catch (Exception e) {
@@ -119,7 +121,7 @@ public class DialogUtil {
 		}
 
 	}
-	
+
 	public void showLoadingDialog(Context context, String content) {
 		dismissDialog();
 		LayoutInflater layoutInflater = LayoutInflater.from(context);

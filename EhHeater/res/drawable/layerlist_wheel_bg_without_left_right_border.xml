@@ -4,10 +4,13 @@
     <item
         android:left="-2dp"
         android:right="-2dp">
-        <shape>
+        <shape android:shape="rectangle">
+            
             <stroke
                 android:width="2dp"
                 android:color="#E8EDEE" />
+            
+            <solid android:color="#00000000"/>
         </shape>
     </item>
 

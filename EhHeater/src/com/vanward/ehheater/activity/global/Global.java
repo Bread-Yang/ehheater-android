@@ -8,6 +8,8 @@ public class Global {
 
 	public static int connectId = -1;
 
+	public static int checkOnlineConnId = -1;
+
 	public static int connType;
 
 	public static final HeaterDevice device = new HeaterDevice();
