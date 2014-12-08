@@ -34,8 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
-import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
@@ -43,7 +43,6 @@ import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
-import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.CheckOnlineUtil;
@@ -58,17 +57,13 @@ import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
-import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.vanward.ehheater.view.wheelview.WheelView;
-import com.xtremeprog.xpgconnect.XPGConnectClient;
-import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
-import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
 
-public class MainActivity extends BaseSlidingFragmentActivity implements
+public class MainActivity extends BaseBusinessActivity implements
 		OnClickListener, CircleListener {
 
 	private static final byte E0 = 0;
@@ -115,20 +110,10 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 			initSlidingMenu();
 		}
 	};
-	
-	BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d("emmm", "deviceOnlineReceiver:onReceive@MainActivity");
-			connectCurDevice();
-		}
-	};
 
 	private CountDownTimer mCountDownTimer;
 
 	private boolean canupdateView = false;
-	private boolean shouldReconnect = false;
-	private boolean paused = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -141,24 +126,19 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 		
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				deviceOnlineReceiver, new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));
-		
 		registerSuicideReceiver();
 		canupdateView = false;
-		shouldReconnect = false;
-		paused = false;
 
-//		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
-//				.getCurrentSelectedHeater();
-//		String mac = curHeater.getMac();
-//		String passcode = curHeater.getPasscode();
-//		String userId = AccountService.getUserId(getBaseContext());
-//		String userPsw = AccountService.getUserPsw(getBaseContext());
-//
-//		ConnectActivity.connectToDevice(this, mac, passcode, userId, userPsw);
 		connectCurDevice();
-		CheckOnlineUtil.ins().reset(getCurHeater().getMac());
+	}
+	
+	public void changeToOfflineUI() {
+		try {
+			ChangeStuteView.swichdisconnect(stuteParent);
+			dealDisConnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -205,13 +185,21 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 				Global.connectId = -1;
 				Global.checkOnlineConnId = connId;
 				try {
-					ChangeStuteView.swichdisconnect(stuteParent);
-					dealDisConnect();
+//					ChangeStuteView.swichdisconnect(stuteParent);
+//					dealDisConnect();
+					changeToOfflineUI();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				DialogUtil.instance().showReconnectDialog(new Runnable() {
+					@Override
+					public void run() {
+						CheckOnlineUtil.ins().start(getBaseContext());
+					}
+				}, MainActivity.this);
 
-				CheckOnlineUtil.ins().start(getBaseContext());
+				// CheckOnlineUtil.ins().start(getBaseContext());
 			}
 
 			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
@@ -236,10 +224,11 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 		}
 
 	}
-/**
- * 多少秒后没有回调
- */
-public static	long connectTime=10000;
+	
+	/**
+	 * 多少秒后没有回调
+	 */
+	public static long connectTime=10000;
 	private void queryState() {
 		DialogUtil.instance().showQueryingDialog(this);
 		generated.SendStateReq(Global.connectId);
@@ -248,8 +237,9 @@ public static	long connectTime=10000;
 			@Override
 			public void run() {
 				if (!isConnect) {
-					ChangeStuteView.swichdisconnect(stuteParent);
-					dealDisConnect();
+//					ChangeStuteView.swichdisconnect(stuteParent);
+//					dealDisConnect();
+					changeToOfflineUI();
 					DialogUtil.instance().showReconnectDialog(MainActivity.this);
 				}
 			}
@@ -259,54 +249,19 @@ public static	long connectTime=10000;
 	@Override
 	protected void onResume() {
 		super.onResume();
-        // XPGConnectClient.AddActivity(this);
-		
-		paused = false;
 		canupdateView = true;
-		
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				heaterNameChangeReceiver, new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
-		
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				deviceOnlineReceiver, new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));
-
-//		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
-//			// 无任何网络连接
-//			dealDisConnect();
-//			return;
-//		}
-
-		CheckOnlineUtil.ins().resume();
-		
-		if (shouldReconnect) {
-			shouldReconnect = false;
-			connectCurDevice();
-		}
-
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		CheckOnlineUtil.ins().pause();
-        // XPGConnectClient.RemoveActivity(this);
-		paused = true;
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		CheckOnlineUtil.ins().stop();
-		DialogUtil.dismissDialog();
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(deviceOnlineReceiver);
 	};
-
-	@Override
-	public void onBackPressed() {
-		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-		android.os.Process.killProcess(android.os.Process.myPid());
-	}
 
 	private void initView() {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
@@ -848,43 +803,11 @@ public static	long connectTime=10000;
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-			// ChangeStuteView.swichdisconnect(stuteParent);
-			// dealDisConnect();
 			isConnect = false;
-			// DialogUtil.instance().showReconnectDialog(this);
-			
-			if (paused) {
-				shouldReconnect = true;
-			} else {
-				connectCurDevice();
-			}
-			
-
 		}
 		
 	}
 	
-	private void connectCurDevice() {
-
-		if (curHeater == null) {
-			curHeater = getCurHeater();
-		}
-		
-		String mac = curHeater.getMac();
-		String userId = AccountService.getUserId(getBaseContext());
-		String userPsw = AccountService.getUserPsw(getBaseContext());
-
-		ConnectActivity.connectToDevice(this, mac, userId, userPsw);
-	}
-	
-	private HeaterInfo getCurHeater() {
-		if (curHeater == null) {
-			curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
-		}
-		
-		return curHeater;
-	}
-	private HeaterInfo curHeater;
 
 	public void dealDisConnect() {
 		tempter.setText("--");
@@ -961,48 +884,5 @@ public static	long connectTime=10000;
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
 	}
 	
-	@Override
-	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp, int nConnId) {
-		super.OnDeviceOnlineStateResp(pResp, nConnId);
-		Log.d("emmm", "OnDeviceOnlineStateResp");
-		
-		
-//		String targetMac = generated.XpgData2String(pResp.getMac());
-//		Log.d("emmm", targetMac + "-" + pResp.getIsOnline());
-//		
-//		// if current device went offline
-//			// offline
-//		// if current device went online 
-//			// auto reconnect
-//
-		if (/*getCurHeater().getMac().equals(targetMac) &&*/ pResp.getIsOnline() == 0) {
-			// offline ui
-			
-			try {
-				ChangeStuteView.swichdisconnect(stuteParent);
-				dealDisConnect();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		} 
-		
-		if (/*getCurHeater().getMac().equals(targetMac) &&*/ pResp.getIsOnline() == 1) {
-
-			if (paused) {
-				shouldReconnect = true;
-			} else {
-				connectCurDevice();
-			}
-		} 
-		
-		
-	}
-	
-	@Override
-	public void onDeviceFound(XpgEndpoint endpoint) {
-		super.onDeviceFound(endpoint);
-		CheckOnlineUtil.ins().receiveEndpoint(endpoint);
-	}
 
 }

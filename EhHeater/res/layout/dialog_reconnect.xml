@@ -12,7 +12,7 @@
         android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
         android:textSize="16dp"
-        android:text="连接断开, 是否重新连接?"/>
+        android:text="无法连接热水器"/>
     
     <View 
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:background="@null"
         	android:textColor="@color/white"
         	android:textSize="16dp"
-            android:text="取消"/>
+            android:text="我知道了"/>
     
 	    <View 
 	        android:layout_width="1dp"
@@ -45,7 +45,7 @@
             android:background="@null"
         	android:textColor="@color/white"
        		android:textSize="16dp"
-            android:text="重新连接"/>
+            android:text="重试"/>
     </LinearLayout>
 
 </LinearLayout>

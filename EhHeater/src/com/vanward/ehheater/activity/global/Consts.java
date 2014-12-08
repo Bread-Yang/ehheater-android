@@ -17,6 +17,7 @@ public class Consts {
 
 	public static final String INTENT_EXTRA_USERNAME = "username";
 	public static final String INTENT_EXTRA_USERPSW = "userpsw";
+	public static final String INTENT_EXTRA_CONNECT_TEXT = "connect_text";
 	public static final String INTENT_EXTRA_DID2BIND = "did2bind";
 	public static final String INTENT_EXTRA_PASSCODE2BIND = "passcode2bind";
 	public static final String INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH = "configure_activity_should_kill_process";
