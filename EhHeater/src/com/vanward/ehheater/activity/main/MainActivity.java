@@ -40,6 +40,7 @@ import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.info.Comprehension;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
@@ -405,6 +406,7 @@ public class MainActivity extends BaseSlidingFragmentActivity implements
 
 			break;
 		case R.id.btn_information:
+			
 			Intent intent3 = new Intent();
 			intent3.putExtra("isgas", false);
 			intent3.setClass(this, InformationActivity.class);
