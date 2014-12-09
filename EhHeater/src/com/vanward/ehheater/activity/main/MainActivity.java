@@ -46,6 +46,7 @@ import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
+import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.NetworkStatusUtil;
@@ -69,7 +70,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private static final byte E0 = 0;
 
-	protected SlidingMenu mSlidingMenu;
+	// protected SlidingMenu mSlidingMenu;
 
 	private LeftFragment mLeftFragment;
 
@@ -107,7 +108,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.d("emmm", "heaterNameChangeReceiver:onReceive@MainActivity");
-			updateTitle();
+			updateTitle(mTitleName);
 			initSlidingMenu();
 		}
 	};
@@ -127,7 +128,6 @@ public class MainActivity extends BaseBusinessActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver, new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 		
-		registerSuicideReceiver();
 		canupdateView = false;
 
 		connectCurDevice();
@@ -186,8 +186,6 @@ public class MainActivity extends BaseBusinessActivity implements
 				Global.connectId = -1;
 				Global.checkOnlineConnId = connId;
 				try {
-//					ChangeStuteView.swichdisconnect(stuteParent);
-//					dealDisConnect();
 					changeToOfflineUI();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -201,8 +199,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				}, MainActivity.this);
 
 			}
-
-			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
+			
 			mSlidingMenu.showContent();
 
 		}
@@ -294,7 +291,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		powerTv.setOnClickListener(this);
 
 		initopenView();
-		updateTitle();
+		updateTitle(mTitleName);
 		boolean InSetting = false;
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -318,22 +315,22 @@ public class MainActivity extends BaseBusinessActivity implements
 		}, 100);
 	}
 
-	private void initSlidingMenu() {
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int mScreenWidth = dm.widthPixels;
-		setBehindContentView(R.layout.main_left_fragment);
-		mSlidingMenu = getSlidingMenu();
-		mSlidingMenu.setMode(SlidingMenu.LEFT);
-		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
-		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
-		mSlidingMenu.setFadeDegree(0.35f);
-		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
-		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
-		mSlidingMenu.setFadeEnabled(true);
-		mSlidingMenu.setBehindScrollScale(0.333f);
-	}
+//	private void initSlidingMenu() {
+//		DisplayMetrics dm = new DisplayMetrics();
+//		getWindowManager().getDefaultDisplay().getMetrics(dm);
+//		int mScreenWidth = dm.widthPixels;
+//		setBehindContentView(R.layout.main_left_fragment);
+//		mSlidingMenu = getSlidingMenu();
+//		mSlidingMenu.setMode(SlidingMenu.LEFT);
+//		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
+//		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
+//		mSlidingMenu.setFadeDegree(0.35f);
+//		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+//		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
+//		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
+//		mSlidingMenu.setFadeEnabled(true);
+//		mSlidingMenu.setBehindScrollScale(0.333f);
+//	}
 
 	public void sentToMsgAfterSix(final int value) {
 		if (mCountDownTimer != null) {
@@ -354,14 +351,13 @@ public class MainActivity extends BaseBusinessActivity implements
 		mCountDownTimer.start();
 	}
 
-	private void updateTitle() {
-
-		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
-				.getCurrentSelectedHeater();
-		if (heaterInfo != null) {
-			mTitleName.setText(Consts.getHeaterName(heaterInfo));
-		}
-	}
+//	private void updateTitle() {
+//		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
+//				.getCurrentSelectedHeater();
+//		if (heaterInfo != null) {
+//			mTitleName.setText(Consts.getHeaterName(heaterInfo));
+//		}
+//	}
 
 	boolean ison = false;
 
@@ -867,20 +863,9 @@ public class MainActivity extends BaseBusinessActivity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		/** only for test */
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+			DialogUtil.instance().showReconnectDialog(this);
 		}
 		return super.onKeyDown(keyCode, event);
-	}
-	
-	private void registerSuicideReceiver() {
-
-		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
-		BroadcastReceiver receiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				finish();
-			}
-		};
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
 	}
 	
 
