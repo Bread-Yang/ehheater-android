@@ -200,7 +200,6 @@ public class MainActivity extends BaseBusinessActivity implements
 					}
 				}, MainActivity.this);
 
-				// CheckOnlineUtil.ins().start(getBaseContext());
 			}
 
 			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
