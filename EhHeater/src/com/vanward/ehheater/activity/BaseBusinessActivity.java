@@ -13,6 +13,7 @@ import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
@@ -155,6 +156,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		Log.d("emmm", "onConnectEvent@BaseBusinessActivity:" + connId + "-" + event);
 
 		if (connId == Global.connectId && event == -7) {
+			
+			if (AlterDeviceHelper.hostActivity != null) {
+				AlterDeviceHelper.alterDevice();
+				return;
+			}
+			
 			// 连接断开
 			if (paused) {
 				shouldReconnect = true;
