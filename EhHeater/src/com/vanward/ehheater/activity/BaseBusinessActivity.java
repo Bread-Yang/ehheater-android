@@ -8,16 +8,13 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
-import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
-import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
@@ -27,15 +24,19 @@ import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 /**
  * 电热, 燃热, 壁挂炉三个MainActivity共用业务:
  * 
- * 1: 重连处理
+ * 1: 自动重连处理
+ * 2: 设备上下线相关逻辑
  * 
  * 
  * 100: 取当前设备-getCurHeater()
+ * 101: 连接当前设备: connectCurDevice()
  * 
  * @author Administrator
  *
  */
 public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
+	
+	abstract protected void changeToOfflineUI();
 
 	private boolean shouldReconnect = false;
 	private boolean paused = false;
@@ -63,7 +64,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	}
 	
 
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -78,6 +78,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		}
 
 	}
+	
 
 	@Override
 	protected void onPause() {
@@ -86,6 +87,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		CheckOnlineUtil.ins().pause();
 		paused = true;
 	}
+	
 
 	@Override
 	protected void onStop() {
@@ -108,7 +110,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
-	
 
 	
 	@Override
@@ -118,7 +119,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	}
 	
 
-	
 	@Override
 	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp, int nConnId) {
 		super.OnDeviceOnlineStateResp(pResp, nConnId);
@@ -131,13 +131,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			// auto reconnect
 
 		if (pResp.getIsOnline() == 0) {
-			
-//			try {
-//				ChangeStuteView.swichdisconnect(stuteParent);
-//				dealDisConnect();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
 
 			// offline ui
 			changeToOfflineUI();
@@ -153,10 +146,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			}
 		} 
 		
-		
 	}
-	
-	abstract protected void changeToOfflineUI();
 	
 
 	@Override
