@@ -70,8 +70,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private static final byte E0 = 0;
 
-	// protected SlidingMenu mSlidingMenu;
-
 	private LeftFragment mLeftFragment;
 
 	private RightFragment mRightFragment;
@@ -314,23 +312,6 @@ public class MainActivity extends BaseBusinessActivity implements
 		}, 100);
 	}
 
-//	private void initSlidingMenu() {
-//		DisplayMetrics dm = new DisplayMetrics();
-//		getWindowManager().getDefaultDisplay().getMetrics(dm);
-//		int mScreenWidth = dm.widthPixels;
-//		setBehindContentView(R.layout.main_left_fragment);
-//		mSlidingMenu = getSlidingMenu();
-//		mSlidingMenu.setMode(SlidingMenu.LEFT);
-//		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
-//		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
-//		mSlidingMenu.setFadeDegree(0.35f);
-//		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-//		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
-//		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
-//		mSlidingMenu.setFadeEnabled(true);
-//		mSlidingMenu.setBehindScrollScale(0.333f);
-//	}
-
 	public void sentToMsgAfterSix(final int value) {
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
@@ -349,14 +330,6 @@ public class MainActivity extends BaseBusinessActivity implements
 		};
 		mCountDownTimer.start();
 	}
-
-//	private void updateTitle() {
-//		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
-//				.getCurrentSelectedHeater();
-//		if (heaterInfo != null) {
-//			mTitleName.setText(Consts.getHeaterName(heaterInfo));
-//		}
-//	}
 
 	boolean ison = false;
 
@@ -477,11 +450,6 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 
 	}
-
-	// public void setButtonCanUse(){
-	// btn_power.
-	//
-	// }
 
 	private void changeToCustomModeUpdateUI(byte[] data) {
 		modeTv.setText("自定义模式");

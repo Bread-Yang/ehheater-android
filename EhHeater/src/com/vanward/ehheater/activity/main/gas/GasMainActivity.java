@@ -293,31 +293,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		}, 50);
 	}
 
-//	private void initSlidingMenu() {
-//		DisplayMetrics dm = new DisplayMetrics();
-//		getWindowManager().getDefaultDisplay().getMetrics(dm);
-//		int mScreenWidth = dm.widthPixels;
-//		setBehindContentView(R.layout.main_left_fragment);
-//		mSlidingMenu = getSlidingMenu();
-//		mSlidingMenu.setMode(SlidingMenu.LEFT);
-//		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
-//		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
-//		mSlidingMenu.setFadeDegree(0.35f);
-//		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-//		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
-//		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
-//		mSlidingMenu.setFadeEnabled(true);
-//		mSlidingMenu.setBehindScrollScale(0.333f);
-//	}
-
-//	private void updateTitle() {
-//		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
-//				.getCurrentSelectedHeater();
-//		if (heaterInfo != null) {
-//			mTitleName.setText(Consts.getHeaterName(heaterInfo));
-//		}
-//	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
