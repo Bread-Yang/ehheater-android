@@ -62,7 +62,7 @@ import com.xtremeprog.xpgconnect.generated.generated;
 public class GasMainActivity extends BaseBusinessActivity implements
 		OnClickListener, OnLongClickListener, CircleListener {
 
-	protected SlidingMenu mSlidingMenu;
+	// protected SlidingMenu mSlidingMenu;
 
 	private TextView mTitleName, modeTv, temptertitleTextView, sumwater, stute,
 			shuiliuliangText;
@@ -89,7 +89,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.d("emmm", "onReceive@mainac");
-			updateTitle();
+			updateTitle(mTitleName);
 			initSlidingMenu();
 		}
 	};
@@ -112,7 +112,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(heaterNameChangeReceiver, 
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 		
-		registerSuicideReceiver();
 		connectCurDevice();
 	}
 
@@ -155,10 +154,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 			} else {
 				// 设备不在线
-				// dealDisConnect();
-				// rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
-				// stute.setText("不在线");
-
 				Global.connectId = -1;
 				Global.checkOnlineConnId = connId;
 				changeToOfflineUI();
@@ -171,7 +166,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				}, this);
 			}
 
-			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
 			mSlidingMenu.showContent();
 
 		}
@@ -279,7 +273,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
 		initopenView();
-		updateTitle();
+		updateTitle(mTitleName);
 		mode.setOnLongClickListener(this);
 		new Handler().postDelayed(new Runnable() {
 			@Override
@@ -298,30 +292,30 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		}, 50);
 	}
 
-	private void initSlidingMenu() {
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int mScreenWidth = dm.widthPixels;
-		setBehindContentView(R.layout.main_left_fragment);
-		mSlidingMenu = getSlidingMenu();
-		mSlidingMenu.setMode(SlidingMenu.LEFT);
-		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
-		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
-		mSlidingMenu.setFadeDegree(0.35f);
-		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
-		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
-		mSlidingMenu.setFadeEnabled(true);
-		mSlidingMenu.setBehindScrollScale(0.333f);
-	}
+//	private void initSlidingMenu() {
+//		DisplayMetrics dm = new DisplayMetrics();
+//		getWindowManager().getDefaultDisplay().getMetrics(dm);
+//		int mScreenWidth = dm.widthPixels;
+//		setBehindContentView(R.layout.main_left_fragment);
+//		mSlidingMenu = getSlidingMenu();
+//		mSlidingMenu.setMode(SlidingMenu.LEFT);
+//		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
+//		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
+//		mSlidingMenu.setFadeDegree(0.35f);
+//		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+//		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
+//		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
+//		mSlidingMenu.setFadeEnabled(true);
+//		mSlidingMenu.setBehindScrollScale(0.333f);
+//	}
 
-	private void updateTitle() {
-		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
-				.getCurrentSelectedHeater();
-		if (heaterInfo != null) {
-			mTitleName.setText(Consts.getHeaterName(heaterInfo));
-		}
-	}
+//	private void updateTitle() {
+//		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
+//				.getCurrentSelectedHeater();
+//		if (heaterInfo != null) {
+//			mTitleName.setText(Consts.getHeaterName(heaterInfo));
+//		}
+//	}
 
 	@Override
 	public void onClick(View v) {
@@ -977,18 +971,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		}
 		mode.setEnabled(isAble);
 		// rightButton.setEnabled(isAble);
-	}
-	
-	private void registerSuicideReceiver() {
-
-		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
-		BroadcastReceiver receiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				finish();
-			}
-		};
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
 	}
 
 	@Override
