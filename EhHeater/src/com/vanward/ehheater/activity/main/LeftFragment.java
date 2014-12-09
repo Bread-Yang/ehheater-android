@@ -228,8 +228,13 @@ public class LeftFragment extends LinearLayout implements
 			AlterDeviceHelper.typeChanged = !newHeaterType.equals(oriHeaterType);
 			AlterDeviceHelper.hostActivity = hostActivity;
 			
-			XPGConnectClient.xpgcDisconnectAsync(Global.connectId); 
-			//上面一行代码会触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
+			if (Global.connectId > 0) {
+				//触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
+				XPGConnectClient.xpgcDisconnectAsync(Global.connectId); 
+			} else {
+				//如果当前未建立连接, 直接调用此方法
+				AlterDeviceHelper.alterDevice();
+			}
 			
 		}
 
