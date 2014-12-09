@@ -799,7 +799,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		}
 	}
 	
-	private boolean stateQueried = true;
+	private boolean stateQueried;
 	private void queryState() {
 		DialogUtil.instance().showQueryingDialog(this);
 		stateQueried = false;
@@ -809,6 +809,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			@Override
 			public void run() {
 				if (!stateQueried) {
+					changeToOfflineUI();
 					DialogUtil.instance().showReconnectDialog(FurnaceMainActivity.this);
 				}
 				
