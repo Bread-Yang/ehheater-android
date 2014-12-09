@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.TextView;
 
+import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
@@ -17,6 +21,7 @@ import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
+import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
@@ -27,7 +32,9 @@ import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
  * 
  * 1: 自动重连处理
  * 2: 设备上下线相关逻辑
- * 
+ * 3: 初始化slidingmenu
+ * 4: setTitle
+ * 5: suicideReceiver: 收到广播时finish自己
  * 
  * 100: 取当前设备-getCurHeater()
  * 101: 连接当前设备: connectCurDevice()
@@ -60,6 +67,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				deviceOnlineReceiver, new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));
+		
+		registerSuicideReceiver();
 		
 		CheckOnlineUtil.ins().reset(getCurHeater().getMac());
 	}
@@ -175,7 +184,34 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	
 	
 	
+
+
+	protected void initSlidingMenu() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int mScreenWidth = dm.widthPixels;
+		setBehindContentView(R.layout.main_left_fragment);
+		mSlidingMenu = getSlidingMenu();
+		mSlidingMenu.setMode(SlidingMenu.LEFT);
+		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
+		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
+		mSlidingMenu.setFadeDegree(0.35f);
+		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
+		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
+		mSlidingMenu.setFadeEnabled(true);
+		mSlidingMenu.setBehindScrollScale(0.333f);
+	}
 	
+	protected void updateTitle(TextView title) {
+		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
+				.getCurrentSelectedHeater();
+		if (heaterInfo != null) {
+			title.setText(Consts.getHeaterName(heaterInfo));
+		}
+	}
+	
+	protected SlidingMenu mSlidingMenu;
 	
 	
 	protected void connectCurDevice() {
@@ -203,4 +239,16 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		return curHeater;
 	}
 	private HeaterInfo curHeater;
+	
+	private void registerSuicideReceiver() {
+
+		IntentFilter filter = new IntentFilter(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
+		BroadcastReceiver receiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				finish();
+			}
+		};
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
+	}
 }
