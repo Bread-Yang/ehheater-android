@@ -58,6 +58,7 @@ public class DialogUtil {
 	}
 
 	public void showReconnectDialog(final Runnable onCancel, final Activity act) {
+		dismissDialog();
 		final Dialog reconnectDialog = new Dialog(act, R.style.custom_dialog);
 		reconnectDialog.setContentView(R.layout.dialog_reconnect);
 		reconnectDialog.findViewById(R.id.dr_btn_cancel).setOnClickListener(

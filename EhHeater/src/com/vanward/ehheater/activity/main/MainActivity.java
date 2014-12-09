@@ -225,23 +225,22 @@ public class MainActivity extends BaseBusinessActivity implements
 	/**
 	 * 多少秒后没有回调
 	 */
-	public static long connectTime=10000;
+	public static long connectTime = 10000;
 	private void queryState() {
 		DialogUtil.instance().showQueryingDialog(this);
+		stateQueried = false;
 		generated.SendStateReq(Global.connectId);
 		rightButton.postDelayed(new  Runnable() {
-			
 			@Override
 			public void run() {
-				if (!isConnect) {
-//					ChangeStuteView.swichdisconnect(stuteParent);
-//					dealDisConnect();
+				if (!stateQueried) {
 					changeToOfflineUI();
 					DialogUtil.instance().showReconnectDialog(MainActivity.this);
 				}
 			}
 		}, connectTime);
 	}
+	private boolean stateQueried;
 
 	@Override
 	protected void onResume() {
@@ -662,7 +661,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
-			isConnect=true;
+			stateQueried=true;
 			DialogUtil.dismissDialog();
 			btn_power.setSelected(false);
 			setTempture(data);
@@ -789,8 +788,6 @@ public class MainActivity extends BaseBusinessActivity implements
 		});
 	}
 
-	boolean isConnect = true;
-
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
@@ -798,7 +795,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-			isConnect = false;
 		}
 		
 	}
@@ -863,7 +859,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		/** only for test */
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-			DialogUtil.instance().showReconnectDialog(this);
+			
 		}
 		return super.onKeyDown(keyCode, event);
 	}

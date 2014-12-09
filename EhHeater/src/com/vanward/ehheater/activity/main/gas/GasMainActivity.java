@@ -188,18 +188,19 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private void queryState() {
 
 		DialogUtil.instance().showQueryingDialog(this);
+		stateQueried = false;
 		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
 		rightButton.postDelayed(new  Runnable() {
 			@Override
 			public void run() {
-				if (!isconnect) {
+				if (!stateQueried) {
 					DialogUtil.instance().showReconnectDialog(GasMainActivity.this);
 					dealDisConnect();
 				}
 			}
 		}, MainActivity.connectTime);
-		
 	}
+	private boolean stateQueried;
 
 	public void dealDisConnect() {
 		tempter.setText("--");
@@ -519,25 +520,25 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		});
 	}
 
-	boolean isconnect=true;
+	private boolean isconnect = true;
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			isconnect=false;
-		} else {
-			isconnect=true;
 		}
 	}
 
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
+		
 		if (nConnId != Global.connectId) {
 			return;
 		}
-		isconnect=true;
+		
+		stateQueried = true;
 		DialogUtil.dismissDialog();
 
 		modeDeal(pResp);
