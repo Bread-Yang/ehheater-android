@@ -2,9 +2,11 @@ package com.vanward.ehheater.util;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.vanward.ehheater.activity.configure.ConnectActivity;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
@@ -23,7 +25,7 @@ import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
  */
 public class AlterDeviceHelper {
 	
-	public static boolean typeChanged;
+	public static Boolean typeChanged;
 	
 	public static Activity hostActivity;
 	
@@ -47,6 +49,9 @@ public class AlterDeviceHelper {
 			
 			ConnectActivity.connectToDevice(hostActivity, 
 					hser.getCurrentSelectedHeater().getMac(), userId, userPsw);
+
+			LocalBroadcastManager.getInstance(hostActivity.getBaseContext()).
+				sendBroadcast(new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 			
 		} else {
 			// 使前个activity停止接收回调
@@ -71,8 +76,10 @@ public class AlterDeviceHelper {
 			}
 
 		}
-		
+
 		AlterDeviceHelper.hostActivity = null;
+		AlterDeviceHelper.typeChanged = null;
+		AlterDeviceHelper.newHeaterType = null;
 		
 	}
 }
