@@ -30,6 +30,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
@@ -43,6 +44,7 @@ import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
@@ -57,7 +59,7 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
-public class GasMainActivity extends BaseSlidingFragmentActivity implements
+public class GasMainActivity extends BaseBusinessActivity implements
 		OnClickListener, OnLongClickListener, CircleListener {
 
 	protected SlidingMenu mSlidingMenu;
@@ -106,26 +108,12 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		setContentView(R.layout.main_gas_center_layout);
 		initView(savedInstanceState);
 		initData();
-		IntentFilter filter = new IntentFilter(
-				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				heaterNameChangeReceiver, filter);
+		
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(heaterNameChangeReceiver, 
+				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
+		
 		registerSuicideReceiver();
-
-		// rightButton.post(new Runnable() {
-		// @Override
-		// public void run() {
-		// generated.SendStateReq(Global.connectId);
-		// }
-		// });
-
-		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
-				.getCurrentSelectedHeater();
-		String mac = curHeater.getMac();
-		String passcode = curHeater.getPasscode();
-		String userId = AccountService.getUserId(getBaseContext());
-		String userPsw = AccountService.getUserPsw(getBaseContext());
-		ConnectActivity.connectToDevice(this, mac, passcode, userId, userPsw);
+		connectCurDevice();
 	}
 
 	@Override
@@ -153,10 +141,10 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 
-			Global.connectId = connId;
 
 			if (isOnline) {
-				
+				Global.connectId = connId;
+				Global.checkOnlineConnId = -1;
 				boolean shouldExecuteBinding = HeaterInfoService.shouldExecuteBinding(curHeater);
 				
 				if (shouldExecuteBinding) {
@@ -166,10 +154,21 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				}
 
 			} else {
-				// TODO 设备不在线
-				dealDisConnect();
-				rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
-				stute.setText("不在线");
+				// 设备不在线
+				// dealDisConnect();
+				// rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+				// stute.setText("不在线");
+
+				Global.connectId = -1;
+				Global.checkOnlineConnId = connId;
+				changeToOfflineUI();
+				
+				DialogUtil.instance().showReconnectDialog(new Runnable() {
+					@Override
+					public void run() {
+						CheckOnlineUtil.ins().start(getBaseContext());
+					}
+				}, this);
 			}
 
 			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
@@ -197,10 +196,8 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		DialogUtil.instance().showQueryingDialog(this);
 		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
 		rightButton.postDelayed(new  Runnable() {
-			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				if (!isconnect) {
 					DialogUtil.instance().showReconnectDialog(GasMainActivity.this);
 					dealDisConnect();
@@ -234,24 +231,18 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	protected void onResume() {
-		// GasWaterHeaterStatusResp_t resp_t = new GasWaterHeaterStatusResp_t();
-		// // resp_t.setFreezeProofingWarning((short) 1);
-		// resp_t.setOxygenWarning((short) 1);
-		// dealErrorWarnIcon(resp_t);
 		super.onResume();
-        XPGConnectClient.AddActivity(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-        XPGConnectClient.RemoveActivity(this);
 	}
-
+	
 	@Override
-	public void onBackPressed() {
-		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-		android.os.Process.killProcess(android.os.Process.myPid());
+	protected void onStop() {
+		super.onStop();
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -336,7 +327,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.start_device_rlt:
-			/* generated.SendOnOffReq(Global.connectId, (short) 1); */
 			rlt_start_device.setVisibility(View.GONE);
 			break;
 		case R.id.ivTitleBtnLeft:
@@ -349,7 +339,6 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 				return;
 			}
 			
-			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
 			if (ison) {
 				DeviceOffUtil.instance(this)
 						.nextButtonCall(new NextButtonCall() {
@@ -543,9 +532,7 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			isconnect=false;
-			DialogUtil.instance().showReconnectDialog(this);
-			dealDisConnect();
-		}else {
+		} else {
 			isconnect=true;
 		}
 	}
@@ -1002,6 +989,13 @@ public class GasMainActivity extends BaseSlidingFragmentActivity implements
 			}
 		};
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
+	}
+
+	@Override
+	protected void changeToOfflineUI() {
+		dealDisConnect();
+		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+		stute.setText("不在线");
 	}
 
 }
