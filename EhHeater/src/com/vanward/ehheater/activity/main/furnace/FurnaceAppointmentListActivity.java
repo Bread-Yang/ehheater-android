@@ -126,7 +126,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		String did = new HeaterInfoService(this).getCurrentSelectedHeater()
 				.getDid();
 		String uid = AccountService.getUserId(getBaseContext());
-
+		
 		String requestURL = "userinfo/getAppointmentList?did=" + did + "&uid="
 				+ uid;
 

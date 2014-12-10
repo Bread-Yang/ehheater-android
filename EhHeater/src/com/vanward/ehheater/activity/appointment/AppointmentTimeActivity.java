@@ -1,7 +1,5 @@
 package com.vanward.ehheater.activity.appointment;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import net.tsz.afinal.FinalActivity;
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -19,14 +16,14 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.main.SendMsgModel;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.view.SeekBarHint;
+import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 import com.vanward.ehheater.view.wheelview.WheelView;
 import com.vanward.ehheater.view.wheelview.adapters.AbstractWheelTextAdapter;
 import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
@@ -44,42 +41,35 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	private final int TO_APPOINTMENT_DAYS = 0;
 
 	private final int TO_APPOINTMENT_NUMBER = 1;
-	@ViewInject(id = R.id.ivTitleName, click = "onClick")
-	TextView ivTitleName;
-	@ViewInject(id = R.id.ivTitleBtnLeft, click = "onClick")
-	Button ivTitleBtnLeft;
-	@ViewInject(id = R.id.ivTitleBtnRigh, click = "onClick")
-	Button ivTitleBtnRigh;
-	@ViewInject(id = R.id.water_radiogroup, click = "onClick")
-	RadioGroup radioGroup;
-	@ViewInject(id = R.id.radioGroup1, click = "onClick")
-	RadioGroup peopleGroup;
-	@ViewInject(id = R.id.seekBar1, click = "onClick")
-	SeekBar seekBar1;
-	@ViewInject(id = R.id.textView2, click = "onClick")
-	TextView textView2;
-	@ViewInject(id = R.id.switch1, click = "onClick")
-	ImageButton switch1;
-	@ViewInject(id = R.id.rlt_number, click = "onClick")
-	RelativeLayout fenrenxiLayout;
-	@ViewInject(id = R.id.RelativeLayout01, click = "onClick")
-	RelativeLayout temLayout;
-	@ViewInject(id = R.id.RelativeLayout02, click = "onClick")
-	RelativeLayout powerLayout;
+	@ViewInject(id = R.id.rg_power, click = "onClick")
+	RadioGroup rg_power;
+	@ViewInject(id = R.id.rg_people, click = "onClick")
+	RadioGroup rg_people;
+	@ViewInject(id = R.id.seekBar, click = "onClick")
+	SeekBarHint seekBar;
+	@ViewInject(id = R.id.ib_switch, click = "onClick")
+	ImageButton ib_switch;
+	@ViewInject(id = R.id.rlt_fenrenxi, click = "onClick")
+	RelativeLayout rlt_fenrenxi;
+	@ViewInject(id = R.id.rlt_temperature, click = "onClick")
+	RelativeLayout rlt_temperature;
+	@ViewInject(id = R.id.rlt_power, click = "onClick")
+	RelativeLayout rlt_power;
 
-	@ViewInject(id = R.id.RelativeLayout04, click = "onClick")
-	RelativeLayout replaceweek;
+	@ViewInject(id = R.id.rlt_week, click = "onClick")
+	RelativeLayout rlt_week;
 
-	@ViewInject(id = R.id.select_week, click = "")
-	TextView select_week;
+	@ViewInject(id = R.id.tv_select_week, click = "")
+	TextView tv_select_week;
 	int power = 1, temper, peoplenum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_appointment_time);
+		setCenterView(R.layout.activity_appointment_time);
+		setLeftButtonBackground(R.drawable.icon_back);
+		setRightButtonBackground(R.drawable.menu_icon_ye);
 		FinalActivity.initInjectedView(this);
-		// setTopText(R.string.add);
 		findViewById();
 		setListener();
 		init();
@@ -92,10 +82,19 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		tv_number = (TextView) findViewById(R.id.tv_number);
 		wheelView1 = (WheelView) findViewById(R.id.wheelView1);
 		wheelView2 = (WheelView) findViewById(R.id.wheelView2);
-		fenrenxiLayout.setVisibility(View.GONE);
+		rlt_fenrenxi.setVisibility(View.GONE);
 	}
 
 	private void setListener() {
+		
+		seekBar.setOnProgressChangeListener(new OnSeekBarHintProgressChangeListener() {
+			
+			@Override
+			public String onHintTextChanged(SeekBarHint seekBarHint, int progress) {
+				return String.format("%s℃", progress + 35);
+			}
+		});
+		
 		btn_right.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -115,8 +114,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				finish();
 			}
 		});
-		switch1.setOnClickListener(this);
-		switch1.setTag(1);
+		ib_switch.setOnClickListener(this);
+		ib_switch.setTag(1);
 	}
 
 	int id = -1;
@@ -130,7 +129,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		id = getIntent().getIntExtra("id", -1);
 		if (weekstring != null && weekstring.length() > 1) {
 			weekstring = weekstring.substring(0, weekstring.length() - 1);
-			select_week.setText(weekstring);
+			tv_select_week.setText(weekstring);
 		}
 
 		if (id == -1) {
@@ -138,22 +137,19 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		}
 		wheelView1.setCurrentItem(hour);
 		wheelView2.setCurrentItem(min);
-		seekBar1.setProgress(tem - 35);
-		((RadioButton) radioGroup.getChildAt(power - 1)).setChecked(true);
+		seekBar.setProgress(tem - 35);
+		((RadioButton) rg_power.getChildAt(power - 1)).setChecked(true);
 
 	}
 
 	private void init() {
 		wheelView1.setCyclic(true);
 		wheelView2.setCyclic(true);
-		seekBar1.setOnSeekBarChangeListener(this);
+		seekBar.setOnSeekBarChangeListener(this);
 		wheelView1.setViewAdapter(new NumericWheelAdapter(this, 0, 23, "%02d",
 				wheelView1));
 		wheelView2.setViewAdapter(new NumericWheelAdapter(this, 0, 59, "%02d",
 				wheelView2));
-		ivTitleName.setText("添加");
-		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
-		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 
 		AppointMentVo appointMentVo = new BaseDao(this).getDb().findById(1,
 				AppointMentVo.class);
@@ -163,7 +159,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 		}
 
-		peopleGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		rg_people.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -191,8 +187,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			}
 		});
 
-		peopleGroup.check(R.id.radio0);
-		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		rg_people.check(R.id.radio0);
+		rg_power.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
 				System.out.println("dsadas");
@@ -216,28 +212,28 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	}
 
 	private void lockTempAndPower() {
-		for (int i = 0; i < radioGroup.getChildCount(); i++) {
-			((RadioButton) radioGroup.getChildAt(i)).setEnabled(false);
+		for (int i = 0; i < rg_power.getChildCount(); i++) {
+			((RadioButton) rg_power.getChildAt(i)).setEnabled(false);
 		}
 	}
 
 	private void unLockTempAndPower() {
-		for (int i = 0; i < radioGroup.getChildCount(); i++) {
-			((RadioButton) radioGroup.getChildAt(i)).setEnabled(true);
+		for (int i = 0; i < rg_power.getChildCount(); i++) {
+			((RadioButton) rg_power.getChildAt(i)).setEnabled(true);
 		}
 	}
 
 	private void setArgsForTempAndPower(int temp, int power) {
-		seekBar1.setProgress(temp - 35);
+		seekBar.setProgress(temp - 35);
 		switch (power) {
 		case 1:
-			radioGroup.check(R.id.RadioButton03);
+			rg_power.check(R.id.RadioButton03);
 			break;
 		case 2:
-			radioGroup.check(R.id.RadioButton01);
+			rg_power.check(R.id.RadioButton01);
 			break;
 		case 3:
-			radioGroup.check(R.id.RadioButton02);
+			rg_power.check(R.id.RadioButton02);
 			break;
 		}
 
@@ -341,13 +337,13 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				weektext = weektext.substring(0, weektext.length() - 1);
 			}
 
-			select_week.setText(weektext);
+			tv_select_week.setText(weektext);
 			if (isallcheck) {
-				select_week.setText("每天");
+				tv_select_week.setText("每天");
 				weektext = "每天";
 			}
 		} else {
-			select_week.setText("永不");
+			tv_select_week.setText("永不");
 		}
 
 	}
@@ -370,18 +366,18 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			break;
 		case R.id.switch1:
 
-			if ((Integer) switch1.getTag() == 1) {
-				fenrenxiLayout.setVisibility(View.VISIBLE);
-				temLayout.setVisibility(View.GONE);
-				powerLayout.setVisibility(View.GONE);
-				switch1.setImageResource(R.drawable.on);
-				switch1.setTag(0);
+			if ((Integer) ib_switch.getTag() == 1) {
+				rlt_fenrenxi.setVisibility(View.VISIBLE);
+				rlt_temperature.setVisibility(View.GONE);
+				rlt_power.setVisibility(View.GONE);
+				ib_switch.setImageResource(R.drawable.on);
+				ib_switch.setTag(0);
 			} else {
-				fenrenxiLayout.setVisibility(View.GONE);
-				temLayout.setVisibility(View.VISIBLE);
-				powerLayout.setVisibility(View.VISIBLE);
-				switch1.setImageResource(R.drawable.off);
-				switch1.setTag(1);
+				rlt_fenrenxi.setVisibility(View.GONE);
+				rlt_temperature.setVisibility(View.VISIBLE);
+				rlt_power.setVisibility(View.VISIBLE);
+				ib_switch.setImageResource(R.drawable.off);
+				ib_switch.setTag(1);
 			}
 			break;
 
@@ -400,8 +396,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					.getViewAdapter()).getItemText(wheelView2.getCurrentItem())
 					.toString();
 			int num = 0;
-			for (int i = 0; i < peopleGroup.getChildCount(); i++) {
-				if (peopleGroup.getCheckedRadioButtonId() == peopleGroup
+			for (int i = 0; i < rg_people.getChildCount(); i++) {
+				if (rg_people.getCheckedRadioButtonId() == rg_people
 						.getChildAt(i).getId()) {
 					num = i;
 				}
@@ -438,7 +434,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
 		// TODO Auto-generated method stub
-		textView2.setText(arg1 + 35 + "℃");
 		temper = arg1 + 35;
 	}
 

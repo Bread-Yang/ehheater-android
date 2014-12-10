@@ -30,12 +30,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/custom_dialog2" >
 		    
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-           
         </activity>
         <activity
             android:name=".activity.configure.ConnectActivity"
@@ -145,6 +139,11 @@
         <activity
             android:name=".activity.appointment.AppointmentListActivity"
             android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.appointment.AppointmentTimeActivity"
