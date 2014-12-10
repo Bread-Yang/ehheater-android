@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -108,7 +109,9 @@ public class ConnectActivity extends GeneratedActivity {
 		});
 		
 		// 45秒后还未成功则连接失败
+		Looper.prepare();
 		new Handler(new Handler.Callback() {
+			
 			@Override
 			public boolean handleMessage(Message msg) {
 				if (!jobDone) {

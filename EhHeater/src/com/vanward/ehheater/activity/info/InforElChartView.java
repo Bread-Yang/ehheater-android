@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +36,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
 import com.vanward.ehheater.activity.info.InforChartView.Initobject;
@@ -54,8 +58,14 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 	String datalistjson = "";
 	String namelistjson = "";
+	
+	long dates;
+	
+	private ImageView imageView1;
+	private ImageView imageView2;
 
 	TextView last, next, sumgas;
+	private TextView lqtime;
 
 	public InforElChartView(Context context) {
 		super(context);
@@ -70,6 +80,14 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		((View) last.getParent()).setOnClickListener(this);
 		next = (TextView) layout.findViewById(R.id.next);
 		sumgas = (TextView) layout.findViewById(R.id.sumgas);
+		
+		dates=System.currentTimeMillis()/1000;
+		imageView1=(ImageView)layout.findViewById(R.id.imageView1);
+		imageView1.setOnClickListener(this);
+		imageView2=(ImageView)layout.findViewById(R.id.imageView2);
+		imageView2.setOnClickListener(this);
+		lqtime=(TextView)layout.findViewById(R.id.messagetime);
+		
 		((View) next.getParent()).setOnClickListener(this);
 		webView.setWebViewClient(new WebViewClient() {
 
@@ -105,57 +123,6 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		// webView.reload();
 	}
 
-	@Override
-	public void onClick(View arg0) {
-//		switch (arg0.getId()) {
-//		case R.id.lastparent:
-//			if (currentShowingPeriodType.equals("1")) {
-//				Calendar cal = Calendar.getInstance();
-//				cal.setTimeInMillis(currentShowingTime);
-//				cal.add(Calendar.DATE, -7);
-//				currentShowingTime = cal.getTimeInMillis();
-//			}
-//
-//			if (currentShowingPeriodType.equals("2")) {
-//				Calendar cal = Calendar.getInstance();
-//				cal.setTimeInMillis(currentShowingTime);
-//				cal.add(Calendar.MONTH, -1);
-//				currentShowingTime = cal.getTimeInMillis();
-//			}
-//
-//			if (currentShowingPeriodType.equals("3")) {
-//
-//			}
-//
-//			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
-//					.execute();
-//
-//			break;
-//		case R.id.nextparent:
-//
-//			if (currentShowingPeriodType.equals("1")) {
-//				Calendar cal = Calendar.getInstance();
-//				cal.setTimeInMillis(currentShowingTime);
-//				cal.add(Calendar.DATE, 7);
-//				currentShowingTime = cal.getTimeInMillis();
-//			}
-//
-//			if (currentShowingPeriodType.equals("2")) {
-//				Calendar cal = Calendar.getInstance();
-//				cal.setTimeInMillis(currentShowingTime);
-//				cal.add(Calendar.MONTH, 1);
-//				currentShowingTime = cal.getTimeInMillis();
-//			}
-//
-//			if (currentShowingPeriodType.equals("3")) {
-//
-//			}
-//
-//			new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
-//					.execute();
-//			break;
-//		}
-	}
 
 	class Initobject {
 		@JavascriptInterface
@@ -326,28 +293,31 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 			// }
 
 			if (resultType.equals("1")) {
-				namelistjson = "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
-				datalistjson = "[{data:2},{data:5},{data:5},{data:3},{data:7},{data:4},{data:4},] ";
-				chart4week();
-				sumgas.setText("50L");
+				getmessageweek();
+//				namelistjson = "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
+//				datalistjson = "[{data:2},{data:5},{data:5},{data:3},{data:7},{data:4},{data:4},] ";
+//				chart4week();
+//				sumgas.setText("50L");
 			}
 
 			if (resultType.equals("2")) {
-				namelistjson = "[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
-				datalistjson = "[{data:30},{data:70},{data:50},{data:30},{data:20}] ";
-				chart4Month();
-				sumgas.setText("200L");
+				getmessagemonth();
+//				namelistjson = "[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
+//				datalistjson = "[{data:30},{data:70},{data:50},{data:30},{data:20}] ";
+//				chart4Month();
+//				sumgas.setText("200L");
 			}
 
 			if (resultType.equals("3")) {
-				namelistjson = "[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
-				datalistjson = "[{data:214.9},{data:310.5},{data:406.4},{data:506.4},{data:206.4},{data:106.4},{data:246.4},{data:266.4},{data:276.4},{data:166.4},{data:0},{data:0}] ";
-				chart4Year();
-				sumgas.setText("2400L");
+				getmessageyear();
+//				namelistjson = "[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
+//				datalistjson = "[{data:214.9},{data:310.5},{data:406.4},{data:506.4},{data:206.4},{data:106.4},{data:246.4},{data:266.4},{data:276.4},{data:166.4},{data:0},{data:0}] ";
+//				chart4Year();
+//				sumgas.setText("2400L");
 			}
 
-			webView.reload();
-			DialogUtil.dismissDialog();
+//			webView.reload();
+//			DialogUtil.dismissDialog();
 
 		}
 
@@ -394,5 +364,378 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 		}
 
+	}
+	
+	public void getmessageweek(){
+		FinalHttp finalHttp = new FinalHttp();
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+dates+"&resultType=1&expendType=1", 
+				new AjaxCallBack<String>(){
+			//等待数据展示
+			@Override
+			public void onStart() {
+				DialogUtil.instance().showDialog();
+				super.onStart();
+			}
+			
+			//请求成功
+			 SimpleDateFormat format = new SimpleDateFormat("MM/dd");
+					  
+			@Override
+					public void onSuccess(String t) {
+				        try {
+							JSONObject jsonObject = new JSONObject(t);
+							JSONArray array = jsonObject.getJSONArray("result");
+							JSONArray jsonArray = new JSONArray();
+							JSONArray jsonArray2 = new JSONArray();
+							List<Electricity> li=new ArrayList<Electricity>();
+							for(int i=0;i<array.length();i++){
+								JSONObject jsonObj = array.getJSONObject(i);
+								String amount =jsonObj.getString("amount");
+								String time = format.format(new Long(jsonObj.getString("time")));
+								//格式化日期
+								Electricity electricity=new Electricity();
+								electricity.setAmount(amount);
+								electricity.setTime(time);
+								li.add(electricity);  
+								JSONObject jsonOBJ = new JSONObject();
+								JSONObject jsonOBJ2 = new JSONObject();
+								jsonOBJ.put("name", li.get(i).getTime());
+								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonArray.put(jsonOBJ);
+								jsonArray2.put(jsonOBJ2);
+							}
+							//赋值name
+							namelistjson = jsonArray.toString();
+							//赋值data
+							datalistjson = jsonArray2.toString();
+							//设置使用的总电数
+							SimpleDateFormat sim=new SimpleDateFormat("yyyy年MM月");
+							Long l=new Long(System.currentTimeMillis());
+							Date da=new Date(l);
+							lqtime.setText(sim.format(da));
+							getall();
+							//更换下方按钮
+							chart4week();
+							//刷新数据展示
+							webView.reload();
+							//销毁等待
+							DialogUtil.dismissDialog();
+
+						} catch (Exception e) {
+							// TODO Auto-generated catch blocks
+							e.printStackTrace();
+						}
+						super.onSuccess(t);
+					}
+			//请求失败  
+			@Override
+			public void onFailure(Throwable t, int errorNo,
+					String strMsg) {
+				// TODO Auto-generated method stub  请求失败
+				super.onFailure(t, errorNo, strMsg);
+			}
+		});
+	}
+	
+	public void getmessagemonth(){
+		FinalHttp finalHttp = new FinalHttp();
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+dates+"&resultType=2&expendType=1", 
+				new AjaxCallBack<String>(){
+			//等待数据展示
+			@Override
+			public void onStart() {
+				DialogUtil.instance().showDialog();
+				super.onStart();
+			}
+			
+			//请求成功
+			 SimpleDateFormat format = new SimpleDateFormat("MM/dd");
+			 SimpleDateFormat format2 = new SimpleDateFormat("-dd");
+			@Override
+					public void onSuccess(String t) {
+				        try {
+							JSONObject jsonObject = new JSONObject(t);
+							JSONArray array = jsonObject.getJSONArray("result");
+							JSONArray jsonArray = new JSONArray();
+							JSONArray jsonArray2 = new JSONArray();
+							List<Electricity> li=new ArrayList<Electricity>();
+							for(int i=0;i<array.length();i++){
+								JSONObject jsonObj = array.getJSONObject(i);
+								String amount =jsonObj.getString("amount");
+								String time = format.format(new Long(jsonObj.getString("time")));
+								//格式化日期
+								
+								Long log=new Long(jsonObj.getString("time"));
+								Date time2=new Date(log);
+								Calendar calendar=Calendar.getInstance();
+								calendar.setTime(time2);
+								if(calendar.get(calendar.DATE)==1){
+									calendar.add(calendar.DATE, 5);
+								}
+								else{
+									calendar.add(calendar.DATE, 6);
+								}
+								String time3=time+format2.format(calendar.getTime());
+								Electricity electricity=new Electricity();
+								electricity.setAmount(amount);
+								electricity.setTime(time3);
+								li.add(electricity);  
+								JSONObject jsonOBJ = new JSONObject();
+								JSONObject jsonOBJ2 = new JSONObject();
+								jsonOBJ.put("name", li.get(i).getTime());
+								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonArray.put(jsonOBJ);
+								jsonArray2.put(jsonOBJ2);
+							}
+							//赋值name
+							namelistjson = jsonArray.toString();
+							//赋值data
+							datalistjson = jsonArray2.toString();
+							SimpleDateFormat sim=new SimpleDateFormat("yyyy年");
+							Long l=new Long(System.currentTimeMillis());
+							Date da=new Date(l);
+							lqtime.setText(sim.format(da));
+							//设置使用的总电数
+							getall();
+							//更换下方按钮
+							chart4Month();
+							//刷新数据展示
+							webView.reload();
+							//销毁等待
+							DialogUtil.dismissDialog();
+
+						} catch (Exception e) {
+							// TODO Auto-generated catch blocks
+							e.printStackTrace();
+						}
+						super.onSuccess(t);
+					}
+			//请求失败  
+			@Override
+			public void onFailure(Throwable t, int errorNo,
+					String strMsg) {
+				// TODO Auto-generated method stub  请求失败
+				super.onFailure(t, errorNo, strMsg);
+			}
+		});
+	}
+	
+	public void getmessageyear(){
+		FinalHttp finalHttp = new FinalHttp();
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+dates+"&resultType=3&expendType=1", 
+				new AjaxCallBack<String>(){
+			//等待数据展示
+			@Override
+			public void onStart() {
+				DialogUtil.instance().showDialog();
+				super.onStart();
+			}
+			
+			//请求成功
+			 SimpleDateFormat format = new SimpleDateFormat("MM");
+					  
+			@Override
+					public void onSuccess(String t) {
+				        try {
+							JSONObject jsonObject = new JSONObject(t);
+							JSONArray array = jsonObject.getJSONArray("result");
+							JSONArray jsonArray = new JSONArray();
+							JSONArray jsonArray2 = new JSONArray();
+							List<Electricity> li=new ArrayList<Electricity>();
+							for(int i=0;i<array.length();i++){
+								JSONObject jsonObj = array.getJSONObject(i);
+								String amount =jsonObj.getString("amount");
+								String time = format.format(new Long(jsonObj.getString("time")));
+								Electricity electricity=new Electricity();
+								electricity.setAmount(amount);
+								electricity.setTime(time);
+								li.add(electricity);  
+								JSONObject jsonOBJ = new JSONObject();
+								JSONObject jsonOBJ2 = new JSONObject();
+								jsonOBJ.put("name", li.get(i).getTime());
+								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonArray.put(jsonOBJ);
+								jsonArray2.put(jsonOBJ2);
+							}
+							//赋值name
+							namelistjson = jsonArray.toString();
+							//赋值data
+							datalistjson = jsonArray2.toString();
+							lqtime.setText("");
+							//设置使用的总电数
+							getall();
+							//更换下方按钮
+							chart4Year();
+							//刷新数据展示
+							webView.reload();
+							//销毁等待
+							DialogUtil.dismissDialog();
+
+						} catch (Exception e) {
+							// TODO Auto-generated catch blocks
+							e.printStackTrace();
+						}
+						super.onSuccess(t);
+					}
+			//请求失败  
+			@Override
+			public void onFailure(Throwable t, int errorNo,
+					String strMsg) {
+				// TODO Auto-generated method stub  请求失败
+				super.onFailure(t, errorNo, strMsg);
+			}
+		});
+	}
+	
+	
+	//上下
+		public void getall(){
+			FinalHttp finalHttp = new FinalHttp();
+			finalHttp.get("http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="+Global.connectId+"", new AjaxCallBack<String>(){
+				@Override
+				public void onSuccess(String t) {
+					try {
+						JSONObject jsonObject = new JSONObject(t);
+						if(jsonObject.get("result").equals(null)){
+							sumgas.setText("0m³");
+						}
+						else{
+							sumgas.setText(jsonObject.get("result")+"m³");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					super.onSuccess(t);
+				}
+				
+				//请求失败  
+				@Override
+				public void onFailure(Throwable t, int errorNo,
+						String strMsg) {
+					// TODO Auto-generated method stub  请求失败
+					super.onFailure(t, errorNo, strMsg);
+				}
+			});
+		}
+	
+	public long timechanged(){
+		System.out.println("hahahahahah");
+	    Long l=new Long(System.currentTimeMillis());
+        Date date = new Date(l); 
+        Calendar ca=Calendar.getInstance();
+        ca.setTime(date);
+        ca.add(ca.DAY_OF_WEEK,-1);
+//        Date date2 = new Date();
+//        date2=ca.getTime();
+        long times =ca.getTime().getTime()/1000;
+        System.out.println("下一周测试"+times);
+		return times;
+	}
+	public long timechanged2(){
+	    Long l=new Long(System.currentTimeMillis());
+       Date date = new Date(l); 
+        Calendar ca=Calendar.getInstance();
+       ca.setTime(date);
+        ca.add(ca.DAY_OF_MONTH,-1);
+//      Date date2 = new Date();
+//        date2=ca.getTime();
+        long times =ca.getTime().getTime();  
+		return times;
+	}
+	public long timechanged3(){
+	    Long l=new Long(System.currentTimeMillis());
+        Date date = new Date(l); 
+        Calendar ca=Calendar.getInstance();
+        ca.setTime(date);
+        ca.add(ca.DAY_OF_YEAR,-1);
+//        Date date2 = new Date();
+//        date2=ca.getTime();
+        long times =ca.getTime().getTime();  
+		return times;
+	}
+	
+	public long timechanged4(){
+		SimpleDateFormat sim=new SimpleDateFormat("yyyy-MM-dd");
+	    Long l=new Long(System.currentTimeMillis());
+        Date date = new Date(l); 
+        Calendar ca=Calendar.getInstance();
+        ca.setTime(date);
+        ca.add(ca.DAY_OF_WEEK,1);
+//        Date date2 = new Date();
+//        date2=ca.getTime();
+        long times =ca.getTime().getTime()/1000;
+		return times;
+	}
+	public long timechanged5(){
+	    Long l=new Long(System.currentTimeMillis());
+        Date date = new Date(l); 
+        Calendar ca=Calendar.getInstance();
+        ca.setTime(date);
+        ca.add(ca.DAY_OF_MONTH,1);
+//        Date date2 = new Date();
+//        date2=ca.getTime();
+        long times =ca.getTime().getTime()/1000 ;  
+		return times;
+	}
+	public long timechanged6(){
+	    Long l=new Long(System.currentTimeMillis());
+        Date date = new Date(l); 
+        Calendar ca=Calendar.getInstance();
+        ca.setTime(date);
+        ca.add(ca.DAY_OF_YEAR,1);
+//        Date date2 = new Date();
+//        date2=ca.getTime();
+        long times =ca.getTime().getTime() ;  
+		return times;
+	}
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.imageView1:
+			switch (last.getText().toString().trim()) {
+			case "上一周":
+				dates=timechanged();
+				webView.reload();
+				break;
+				
+			case "上一月":
+				dates=timechanged2();
+				webView.reload();
+				break;
+				
+			case "上一年":
+				dates=timechanged3();
+				webView.reload();
+				break;
+
+			default:
+				break;
+			}
+			break;
+			
+		case R.id.imageView2:
+			 switch (next.getText().toString().trim()) {
+			case "下一周":
+				dates=timechanged4();
+				webView.reload();
+				break;
+				
+			case "下一月":
+				dates=timechanged5();
+				webView.reload();
+				break;
+				
+			case "下一年":
+				dates=timechanged6();
+				webView.reload();
+				break;
+
+			default:
+				break;
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }
