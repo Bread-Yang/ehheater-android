@@ -6,20 +6,15 @@
     android:background="@drawable/home_bg"
     android:orientation="vertical" >
 
-    <include
-        android:id="@+id/top_layout"
-        layout="@layout/main_title"
-        android:focusable="true" />
-
     <LinearLayout
         android:layout_width="fill_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_top_right_border"
         android:gravity="center"
         android:orientation="horizontal" >
 
         <com.vanward.ehheater.view.wheelview.WheelView
-            android:id="@+id/wheelView1"
             android:layout_width="wrap_content"
             android:layout_height="210dp"
             android:layout_marginLeft="25dp"
@@ -44,7 +39,6 @@
             android:textSize="25sp" />
 
         <com.vanward.ehheater.view.wheelview.WheelView
-            android:id="@+id/wheelView2"
             android:layout_width="wrap_content"
             android:layout_height="210dp"
             android:layout_marginLeft="15dp"
@@ -68,15 +62,52 @@
             android:text="分"
             android:textSize="25sp" />
     </LinearLayout>
-
-    <View
+    
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="5dp"
-        android:background="#4471878B" />
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_top_right_border"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <com.vanward.ehheater.view.wheelview.WheelView
+                android:id="@+id/wheelView1"
+                android:layout_width="70dp"
+                android:layout_height="210dp"
+                android:layout_marginLeft="25dp"
+                app:centerLabelPosition="30"
+                app:hasLeftBorder="false"
+                app:hasRightBorder="false"
+                app:textHighlightColor="@color/appointment_text_color"
+                app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_top_right_border"
+                app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
+
+            <com.vanward.ehheater.view.wheelview.WheelView
+                android:id="@+id/wheelView2"
+                android:layout_width="70dp"
+                android:layout_height="210dp"
+                android:layout_marginLeft="15dp"
+                app:centerLabelPosition="30"
+                app:hasLeftBorder="false"
+                app:hasRightBorder="false"
+                app:textHighlightColor="@color/appointment_text_color"
+                app:wheelBackground="@drawable/layerlist_appointment_time_wheel_bg_without_left_top_right_border"
+                app:wheelForeground="@drawable/layerlist_appointment_time_wheel_fg_without_left_right_border" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/layerlist_wheel_bg_without_left_right_border" />
+    </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout04"
+        android:id="@+id/rlt_week"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
@@ -103,7 +134,7 @@
             android:src="@drawable/right_arrow" />
 
         <TextView
-            android:id="@+id/select_week"
+            android:id="@+id/tv_select_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -140,7 +171,7 @@
             android:textSize="20sp" />
 
         <ImageButton
-            android:id="@+id/switch1"
+            android:id="@+id/ib_switch"
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
@@ -157,14 +188,14 @@
         android:background="#4471878B" />
 
     <RelativeLayout
-        android:id="@+id/rlt_number"
+        android:id="@+id/rlt_fenrenxi"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
         android:clickable="true" >
 
         <RadioGroup
-            android:id="@+id/radioGroup1"
+            android:id="@+id/rg_people"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
@@ -222,7 +253,7 @@
         android:background="#4471878B" />
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout01"
+        android:id="@+id/rlt_temperature"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
@@ -257,7 +288,7 @@
                 android:textSize="16sp" />
 
             <com.vanward.ehheater.view.SeekBarHint
-                android:id="@+id/seekbar"
+                android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -265,7 +296,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/tv_max_value"
                 android:layout_toRightOf="@+id/tv_min_value"
-                android:max="45"
+                android:max="40"
                 android:maxHeight="6dp"
                 android:minHeight="6dp"
                 android:paddingBottom="30dp"
@@ -298,7 +329,7 @@
         android:background="#4471878B" />
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout02"
+        android:id="@+id/rlt_power"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
@@ -316,7 +347,7 @@
             android:textSize="20sp" />
 
         <RadioGroup
-            android:id="@+id/water_radiogroup"
+            android:id="@+id/rg_power"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/TextView02"
