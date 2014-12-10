@@ -1,26 +1,22 @@
 package com.vanward.ehheater.activity.info;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import u.aly.s;
+
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.renderscript.Type;
+
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -49,7 +45,6 @@ public class InformationActivity extends Activity implements
 	TextView title;
 	TextView heatxiaolv, taptv, heattv;
 	McuVo mcuVo;
-	Electricity electricity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +76,7 @@ public class InformationActivity extends Activity implements
 			pageViews.add(inforChartView);
 			pageViews.add(inforElChartView);
 		} else {
+			
 			pageViews.add(inforElcChartView);
 		}
 
@@ -280,63 +276,9 @@ public class InformationActivity extends Activity implements
 						});
 	}
 	
-	public void getmessage(){
-		
-		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:8080/EhHeaterWeb/GasInfo/getgasdata?did=dVfu4XXcUCbE93Z2mu4PyZ&dateTime=1417503892000&resultType=1&expendType=2", 
-				new AjaxCallBack<String>(){
-			//请求失败  
-			//{"responseCode":"200","responseMessage":"成功","result":[{"amount":"","time":1417331092000},{"amount":"999.0000","time":1417417492000},{"amount":"","time":1417503892000},{"amount":"","time":1417590292000},{"amount":"","time":1417676692000},{"amount":"","time":1417763092000}]}
-			@Override
-			public void onFailure(Throwable t, int errorNo,
-					String strMsg) {
-				// TODO Auto-generated method stub  请求失败
-				super.onFailure(t, errorNo, strMsg);
-			}
-			//请求成功
-			@Override
-					public void onSuccess(String t) {
-						System.out.println("数据打印" +1);
-				        try {
-							JSONObject jsonObject = new JSONObject(t);
-							System.out.println("数据打印" +t);
-//							t = jsonObject.getJSONObject("result")
-//									.toString();
-							
-							JSONArray array = jsonObject.getJSONArray("result");
-							System.out.println("数据打印" +array.length());
-							for(int i=0;i<array.length();i++){
-								JSONObject jsonObj = array.getJSONObject(i);
-								String amount = jsonObj.getString("coOverproofWarning");
-								System.out.println("数据打印100000" +amount);
-							}
-//							List<Electricity> ps = gson.fromJson(t, new TypeToken<List<Electricity>>(){}.getType());
-							//electricity=gson.fromJson(t, Electricity.class); 
-							//System.out.println("数据打印" + ps.size());
-							
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						super.onSuccess(t);
-					}
-			
-		});
-	}
-//	public static void main(String[] args) throws JSONException{
-//		JSONArray array = new JSONArray();
-//		for(int i=0;i<2;i++){
-//			JSONObject json = new JSONObject();
-//			json.put("amount", 5+i);
-//			json.put("time", 333+i);
-//			array.put(json);
-//		}
-//		String str = array.toString();
-//		System.out.print(str);
-//		Gson gson = new Gson();
-//		List<Electricity> ps = gson.fromJson(str, new TypeToken<List<Electricity>>(){}.getType());
-//		System.out.print(ps.toString());
-//	}
+	
+	
+	
 	public void setViewData() {
 		// System.out.println(mcuVo.getCumulativeGas());
 		// // heatxiaolv.setText(mcuVo.get);
