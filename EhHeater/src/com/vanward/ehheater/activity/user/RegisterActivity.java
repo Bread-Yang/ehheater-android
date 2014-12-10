@@ -180,6 +180,8 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 				.toString());
 		boolean phoneNotEmpty = !TextUtils.isEmpty(mEtPhone.getText()
 				.toString());
+		boolean pswNotEmpty = !TextUtils.isEmpty(mEtPsw.getText()
+				.toString());
 		boolean lengthGt6 = mEtPsw.getText().toString().length() >= 6;
 		boolean lengthGt18 = mEtPsw.getText().toString().length() <= 18;
 		boolean pswMatch = mEtPsw.getText().toString()
@@ -193,6 +195,10 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
 			return false;
 		}
+		if (!pswNotEmpty) {
+			Toast.makeText(getBaseContext(), "请输入密码", 1000).show();
+			return false;
+		}
 		if (mEtPhone.getText().toString().length() != 11) {
 			Toast.makeText(getBaseContext(), "请输入11位手机号码", 1000).show();
 			return false;
@@ -204,7 +210,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 		}
 
 		if (!pswMatch) {
-			Toast.makeText(getBaseContext(), "请输入确认密码", 1000).show();
+			Toast.makeText(getBaseContext(), "请输入正确的确认密码", 1000).show();
 			return false;
 		}
 

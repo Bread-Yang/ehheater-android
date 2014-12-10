@@ -1,5 +1,9 @@
 package com.vanward.ehheater.activity.main.furnace;
 
+import java.util.logging.SimpleFormatter;
+
+import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.bitmap.core.BitmapDisplayConfig;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -38,10 +42,7 @@ import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
-import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
-import com.vanward.ehheater.view.DeviceOffUtil;
-import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -117,14 +118,14 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 		btn_top_right.post(new Runnable() {
 
-			@Override
+			@Override 
 			public void run() {
 				btn_top_right.setWidth(btn_top_right.getWidth());
 				btn_top_right.setHeight(btn_top_right.getHeight());
 				generated.SendDERYRefreshReq(Global.connectId);
 			}
 		});
-
+		
 		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeater();
 		String mac = curHeater.getMac();
@@ -273,7 +274,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		} else {
 			statusResp = pResp;
 		}
-        isConnect= true;
+		isConnect = true;
 		seasonAndModeDeal(pResp); // switch season and mode
 		onOffDeal(pResp);
 		gasConsumptionDeal(pResp);
@@ -400,7 +401,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 		} else if (pResp.getSeasonState() == 1) { // winner
 
-			Log.e("冬季返回来的温度是 : ", pResp.getHeatingTemTarget() + "");
+//			Log.e("冬季返回来的温度是 : ", pResp.getHeatingTemTarget() + "");
 
 			if (pResp.getHeatingSend() == 0) { // 0 : 散热器
 				rb_supply_heating
@@ -553,6 +554,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		if (pResp.getOnOff() == 1) {
 			tv_gas_unit.setVisibility(View.VISIBLE);
 			tv_gas_consumption.setText(String.valueOf(pResp.getGasCountNow()));
+			Log.e("实时燃气量是 : ", String.valueOf(pResp.getGasCountNow()));
+			Log.e("累计燃气量是 : ", String.valueOf(pResp.getGasCount()));
 		} else {
 			tv_gas_unit.setVisibility(View.GONE);
 			tv_gas_consumption.setText(R.string.no_set);
@@ -811,7 +814,9 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 		}
 	}
-	boolean isConnect= true;
+
+	boolean isConnect = true;
+
 	private void queryState() {
 
 		mSlidingMenu.post(new Runnable() {
@@ -821,18 +826,18 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 				generated.SendDERYRefreshReq(Global.connectId);
 			}
 		});
-		mSlidingMenu.postDelayed(new  Runnable() {
-			
+		mSlidingMenu.postDelayed(new Runnable() {
+
 			@Override
 			public void run() {
 				if (!isConnect) {
-					DialogUtil.instance().showReconnectDialog(FurnaceMainActivity.this);
+					DialogUtil.instance().showReconnectDialog(
+							FurnaceMainActivity.this);
 				}
-				
+
 			}
 		}, MainActivity.connectTime);
-		
-		
+
 	}
 
 	@Override
@@ -863,7 +868,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void didBeginTouchCircleSlider() {
-		Log.e(TAG, "didBeginTouchCircleSlider");
+//		Log.e(TAG, "didBeginTouchCircleSlider");
 	}
 
 	@Override
@@ -919,9 +924,10 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void didEndChangeValue() {
-		Log.e(TAG, "didEndChangeValue");
+//		Log.e(TAG, "didEndChangeValue");
 		boolean isBathMode = true;
-		if (rg_winner.getCheckedRadioButtonId() == R.id.rb_supply_heating) {
+		if (rg_winner.getVisibility() == View.VISIBLE
+				&& rg_winner.getCheckedRadioButtonId() == R.id.rb_supply_heating) {
 			isBathMode = false;
 		}
 		sendToMsgAfterThreeSeconds(circle_slider.getValue(), isBathMode);
