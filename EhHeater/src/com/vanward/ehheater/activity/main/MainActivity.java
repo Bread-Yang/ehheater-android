@@ -225,7 +225,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	 */
 	public static long connectTime = 10000;
 	private void queryState() {
-		DialogUtil.instance().showQueryingDialog(this);
+		// DialogUtil.instance().showQueryingDialog(this);
+		DialogUtil.instance().showLoadingDialog(this, "");
 		stateQueried = false;
 		generated.SendStateReq(Global.connectId);
 		rightButton.postDelayed(new  Runnable() {

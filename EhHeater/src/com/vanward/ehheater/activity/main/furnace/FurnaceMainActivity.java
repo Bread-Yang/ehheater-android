@@ -809,7 +809,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private boolean stateQueried;
 
 	private void queryState() {
-		DialogUtil.instance().showQueryingDialog(this);
+		// DialogUtil.instance().showQueryingDialog(this);
+		DialogUtil.instance().showLoadingDialog(this, "");
 		stateQueried = false;
 		generated.SendDERYRefreshReq(Global.connectId);
 		mSlidingMenu.postDelayed(new Runnable() {
