@@ -331,8 +331,6 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 			@Override
 			public void onClick(View v) {
 
-				editModel.setIsAppointmentOn(1); // 添加或者编辑完后,默认打开
-
 				int setHour = wheelView1.getCurrentItem();
 
 				int setMinute = wheelView2.getCurrentItem();
@@ -427,6 +425,7 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 				if (isEdit) {
 					requestURL = "userinfo/updateAppointment";
 				} else {
+					editModel.setIsAppointmentOn(1); // 添加完后,默认打开
 					requestURL = "userinfo/saveAppointment";
 				}
 

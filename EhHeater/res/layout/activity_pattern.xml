@@ -42,7 +42,8 @@
             android:gravity="center"
             android:text="暂无自定义情景"
             android:textColor="#c3c9cc"
-            android:textSize="23sp" />
+            android:textSize="23sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/zidingyiradio"
@@ -50,6 +51,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_add_pattern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@null"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="18sp" 
+            android:drawablePadding="20dp"
+            android:drawableLeft="@drawable/icon_moshi_add"
+            android:text="@string/add_pattern"
+            android:textColor="#5d7884" />
     </LinearLayout>
 
     <View

@@ -596,7 +596,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
-		System.out.println("回调");
 		super.OnStateResp(pResp, nConnId);
 	}
 	
@@ -684,7 +683,8 @@ public class MainActivity extends BaseBusinessActivity implements
 				+ new EhState(b).getInnerTemp3());
 		// tempter.setText(new EhState(b).getInnerTemp2() + "");
 		if (!Insetting && circularView != null) {
-			circularView.setAngle(new EhState(b).getInnerTemp1());
+//			circularView.setAngle(new EhState(b).getInnerTemp1());
+			circularView.setAngle(new EhState(b).getTargetTemperature());
 			tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
 
@@ -758,6 +758,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
+			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 		}
 		
 	}

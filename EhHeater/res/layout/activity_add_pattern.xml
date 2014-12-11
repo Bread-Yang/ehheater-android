@@ -10,16 +10,14 @@
         android:id="@+id/top_layout"
         layout="@layout/main_title"
         android:focusable="true" />
-        
-        
 
     <RelativeLayout
         android:id="@+id/RelativeLayout03"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
-        android:paddingBottom="10dp"
-        android:clickable="true" >
+        android:clickable="true"
+        android:paddingBottom="10dp" >
 
         <EditText
             android:id="@+id/nameedittext"
@@ -27,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="25dp"
             android:layout_marginTop="10dp"
+            android:singleLine="true"
             android:background="@drawable/white_button_bg"
             android:hint="名称"
             android:lines="1"
@@ -67,7 +66,6 @@
             android:background="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/off" />
-
     </RelativeLayout>
 
     <View
@@ -81,8 +79,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
-            android:paddingBottom="10dp" 
-        android:clickable="true" >
+        android:clickable="true"
+        android:paddingBottom="10dp" >
 
         <RadioGroup
             android:id="@+id/RadioGroup01"
@@ -99,11 +97,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
+                android:checked="true"
                 android:tag="1"
                 android:text=" 1人"
                 android:textColor="@color/appointment_text_color"
-                android:textSize="18sp"
-                android:checked="true" />
+                android:textSize="18sp" />
 
             <RadioButton
                 android:id="@+id/RadioButton04"
@@ -153,38 +151,57 @@
             android:textColor="@color/appointment_text_color"
             android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/TextView01"
+             android:layout_marginLeft="20dp"
             android:layout_below="@+id/TextView01" >
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="60dp"
+                android:id="@+id/tv_min_value"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/TextView01"
-                android:layout_below="@+id/TextView01"
-                android:gravity="center_horizontal"
-                android:padding="5dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
                 android:text="35℃"
-                android:textColor="#e9670e"
-                android:textSize="20sp" />
+                android:textColor="@color/appointment_text_color"
+                android:textSize="16sp" />
 
-            <SeekBar
-                android:id="@+id/seekBar1"
+            <com.vanward.ehheater.view.SeekBarHint
+                android:id="@+id/seekBar"
                 android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center_vertical"
-                android:layout_toRightOf="@+id/TextView01"
-                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/tv_max_value"
+                android:layout_toRightOf="@+id/tv_min_value"
                 android:max="40"
+                android:maxHeight="6dp"
+                android:minHeight="6dp"
+                android:paddingBottom="30dp"
+                android:paddingTop="30dp"
                 android:progress="0"
-                android:progressDrawable="@drawable/seekbar_style"
-                android:thumb="@drawable/seekbar_thumb"
-                android:thumbOffset="0dip" />
-        </LinearLayout>
+                android:progressDrawable="@drawable/seekbarhint_style"
+                android:thumb="@drawable/seekbarhint_thumb"
+                android:thumbOffset="10dp"
+                app:minValueTips="35"
+                app:popupStyle="follow"
+                app:popupWidth="100dp"
+                app:yOffset="-15dp" />
+
+            <TextView
+                android:id="@+id/tv_max_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:text="75℃"
+                android:textColor="@color/appointment_text_color"
+                android:textSize="16sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <View
@@ -193,7 +210,7 @@
         android:background="#4471878B" />
 
     <RelativeLayout
-         android:id="@+id/power_layout"
+        android:id="@+id/power_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"

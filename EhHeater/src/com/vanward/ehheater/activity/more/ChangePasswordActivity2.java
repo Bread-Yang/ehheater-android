@@ -167,7 +167,9 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 		if( pResp.getResult() == 0 ){
 			Toast.makeText(getBaseContext(), R.string.success, Toast.LENGTH_SHORT).show();
 			AccountService.setUser(getBaseContext(), AccountService.getUserId(getBaseContext()), newPsw);
-			onBackPressed();
+			setResult(RESULT_OK);
+			finish();
+//			onBackPressed();
 		}else{
 			Toast.makeText(getBaseContext(), R.string.failure, Toast.LENGTH_SHORT).show();
 		}

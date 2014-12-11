@@ -30,7 +30,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.model.AppointmentVo;
@@ -87,8 +86,14 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(FurnaceAppointmentListActivity.this,
-						FurnaceAppointmentTimeActivity.class);
+				Intent intent = new Intent();
+				if (deviceType == HeaterType.Eh) {    // 电热水器
+					intent.setClass(FurnaceAppointmentListActivity.this,
+							AppointmentTimeActivity.class);
+				} else {
+					intent.setClass(FurnaceAppointmentListActivity.this,
+							FurnaceAppointmentTimeActivity.class);
+				}
 				startActivityForResult(intent, 0);
 			}
 		});
@@ -126,7 +131,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		String did = new HeaterInfoService(this).getCurrentSelectedHeater()
 				.getDid();
 		String uid = AccountService.getUserId(getBaseContext());
-		
+
 		String requestURL = "userinfo/getAppointmentList?did=" + did + "&uid="
 				+ uid;
 
@@ -190,7 +195,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					model.setPower(item.getString("power"));
 					model.setDeviceType(item.getInt("deviceType"));
 					model.setTemper(item.getString("temper"));
-					model.setPeopleNum(item.getString("peopelNum"));
+					model.setPeopleNum(item.getString("peopleNum"));
 
 					adapter_data.add(model);
 				}
@@ -324,7 +329,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 				}
 			} else { // 电热水器
-				holder.tv_mode.setText(model.getPower());
+				holder.tv_mode.setText(model.getPower() + "w");
 			}
 
 			if (model.getIsAppointmentOn() == 0) {

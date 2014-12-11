@@ -179,7 +179,7 @@ public class LeftFragment extends LinearLayout implements
 					.getCurrentSelectedHeater();
 			if (heaterInfo!=null&&heaterInfo.getMac().equals(objects.get(position).getMac())) {
 				holder1.checkImage.setVisibility(View.VISIBLE);
-				holder1.devicename.setTextColor(R.color.yeallow);
+				holder1.devicename.setTextColor(0xFFF76F21);
 			} else {
 				holder1.checkImage.setVisibility(View.GONE);
 				holder1.devicename.setTextColor(R.color.black);

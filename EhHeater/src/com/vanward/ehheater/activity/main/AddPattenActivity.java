@@ -16,8 +16,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +24,11 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.util.db.DBService;
+import com.vanward.ehheater.view.SeekBarHint;
+import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 
 public class AddPattenActivity extends EhHeaterBaseActivity implements
-		OnClickListener, OnSeekBarChangeListener {
+		OnClickListener {
 
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
 	TextView ivTitleName;
@@ -40,8 +40,8 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 	@ViewInject(id = R.id.nameedittext, click = "")
 	EditText nameedittext;
 
-	@ViewInject(id = R.id.seekBar1, click = "")
-	SeekBar seekBar;
+	@ViewInject(id = R.id.seekBar, click = "")
+	SeekBarHint seekBar;
 
 	@ViewInject(id = R.id.power, click = "")
 	RadioGroup powerGroup;
@@ -49,98 +49,105 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 	@ViewInject(id = R.id.RadioGroup01, click = "")
 	RadioGroup peopleGroup;
 
-	@ViewInject(id = R.id.textView2, click = "")
-	TextView degree;
-	
 	@ViewInject(id = R.id.tem_latout, click = "")
 	RelativeLayout temlayout;
-	
+
 	@ViewInject(id = R.id.power_layout, click = "")
 	RelativeLayout powerLayout;
-	
-	
+
 	@ViewInject(id = R.id.imageButton1, click = "onClick")
 	ImageButton swich;
 	@ViewInject(id = R.id.RelativeLayout04, click = "onClick")
 	RelativeLayout peopleNum;
 	private CustomSetVo oldcustomSetVo;
-	
-	static Map<Integer,Integer> tempMap = new HashMap<Integer,Integer>();
-	
-	static{
+
+	static Map<Integer, Integer> tempMap = new HashMap<Integer, Integer>();
+
+	static {
 		tempMap.put(1, 45);
 		tempMap.put(2, 65);
 		tempMap.put(3, 75);
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_pattern);
 		FinalActivity.initInjectedView(this);
-		
+
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
-		seekBar.setOnSeekBarChangeListener(this);
-		
+
 		setData();
-		
+
 		peopleGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
-//				case R.id.RadioButton07:
-//					// unlock
-//					unLockTempAndPower();
-//					break;
+				// case R.id.RadioButton07:
+				// // unlock
+				// unLockTempAndPower();
+				// break;
 				case R.id.RadioButton05:
 					// lock
 					// set args
-//					lockTempAndPower();
+					// lockTempAndPower();
 					setArgsForTempAndPower(45, 3);
 					break;
 				case R.id.RadioButton04:
-//					lockTempAndPower();
+					// lockTempAndPower();
 					setArgsForTempAndPower(65, 3);
 					break;
 				case R.id.RadioButton06:
-//					lockTempAndPower();
+					// lockTempAndPower();
 					setArgsForTempAndPower(75, 3);
 					break;
 				}
 			}
 		});
+		
+		seekBar.setOnProgressChangeListener(new OnSeekBarHintProgressChangeListener() {
+
+			@Override
+			public String onHintTextChanged(SeekBarHint seekBarHint,
+					int progress) {
+				return String.format("%s℃", progress + 35);
+			}
+		});
 	}
-	
+
 	public void setData() {
 		String name = getIntent().getStringExtra("index");
 		if (name != null) {
-			oldcustomSetVo = DBService.getInstance(this).findById(name, CustomSetVo.class);
-			
+			oldcustomSetVo = DBService.getInstance(this).findById(name,
+					CustomSetVo.class);
+
 			nameedittext.setText(oldcustomSetVo.getName());
-			
-			if( oldcustomSetVo.getPeoplenum() > 0 ){
+
+			if (oldcustomSetVo.getPeoplenum() > 0) {
 				for (int i = 0; i < peopleGroup.getChildCount(); i++) {
-					if ( Integer.parseInt(peopleGroup.getChildAt(i).getTag().toString()) == oldcustomSetVo.getPeoplenum()) {
-						((RadioButton)peopleGroup.getChildAt(i)).setChecked(true);
+					if (Integer.parseInt(peopleGroup.getChildAt(i).getTag()
+							.toString()) == oldcustomSetVo.getPeoplenum()) {
+						((RadioButton) peopleGroup.getChildAt(i))
+								.setChecked(true);
 						break;
 					}
 				}
 				setSwich(true);
-			}else{
-				setArgsForTempAndPower(oldcustomSetVo.getTempter(),oldcustomSetVo.getPower());
+			} else {
+				setArgsForTempAndPower(oldcustomSetVo.getTempter(),
+						oldcustomSetVo.getPower());
 				setSwich(false);
 			}
-			
+
 			ivTitleName.setText("编辑模式");
-			
-		}else{
+
+		} else {
 			ivTitleName.setText("添加模式");
-			degree.setText("35℃");
 			swich.setTag(1);
 			peopleNum.setVisibility(View.GONE);
-			
+
 		}
 
 	}
@@ -183,20 +190,23 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			return null;
 		}
 		customSetVo.setName(nameedittext.getText().toString());
-		
-		if( swich.getTag() != null && Integer.parseInt(swich.getTag().toString()) == 0 ){
-			
+
+		if (swich.getTag() != null
+				&& Integer.parseInt(swich.getTag().toString()) == 0) {
+
 			View view = null;
 			for (int i = 0; i < peopleGroup.getChildCount(); i++) {
-				if (peopleGroup.getCheckedRadioButtonId() == peopleGroup.getChildAt(i).getId()) {
+				if (peopleGroup.getCheckedRadioButtonId() == peopleGroup
+						.getChildAt(i).getId()) {
 					view = peopleGroup.getChildAt(i);
 				}
 			}
-			
-			customSetVo.setPeoplenum(Integer.parseInt(view.getTag().toString()));
+
+			customSetVo
+					.setPeoplenum(Integer.parseInt(view.getTag().toString()));
 			customSetVo.setTempter(tempMap.get(customSetVo.getPeoplenum()));
 			customSetVo.setPower(3);
-		}else{
+		} else {
 			customSetVo.setTempter(seekBar.getProgress() + 35);
 			List list = new BaseDao(this).getDb().findAll(CustomSetVo.class);
 			View view = null;
@@ -208,13 +218,11 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			}
 			System.out.println("power:　" + view.getTag());
 			customSetVo.setPower(Integer.parseInt((String) view.getTag()));
-			
+
 		}
 		return customSetVo;
 	}
 
-	
-	
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -228,35 +236,37 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 					new BaseDao(this).getDb().delete(oldcustomSetVo);
 				}
 				new BaseDao(this).getDb().replace(customSetVo);
-			if (getIntent().getBooleanExtra("ischeck",false)) {
-				new  Thread(new  Runnable() {
-					
-					@Override
-					public void run() {
+				if (getIntent().getBooleanExtra("ischeck", false)) {
+					new Thread(new Runnable() {
 
-						System.out.println("自定义");
-						SendMsgModel.changeToZidingyiMode();
-						try {
-							Thread.sleep(700);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						@Override
+						public void run() {
+
+							System.out.println("自定义");
+							SendMsgModel.changeToZidingyiMode();
+							try {
+								Thread.sleep(700);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							System.out.println("自定义 pow: "
+									+ customSetVo.getPower());
+							SendMsgModel.setPower(customSetVo.getPower());
+							try {
+								Thread.sleep(700);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							System.out.println("自定义 Tem: "
+									+ customSetVo.getTempter());
+							SendMsgModel.setTempter(customSetVo.getTempter());
+
 						}
-						System.out.println("自定义 pow: " + customSetVo.getPower());
-						SendMsgModel.setPower(customSetVo.getPower());
-						try {
-							Thread.sleep(700);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						System.out.println("自定义 Tem: " + customSetVo.getTempter());
-						SendMsgModel.setTempter(customSetVo.getTempter());
-											
-					}
-				}).start();
-				
-			}
+					}).start();
+
+				}
 				finish();
 			}
 
@@ -270,14 +280,14 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		super.onClick(view);
 	}
 
-	public void setSwich(boolean plag){
-		if( plag ){
+	public void setSwich(boolean plag) {
+		if (plag) {
 			peopleNum.setVisibility(View.VISIBLE);
 			temlayout.setVisibility(View.GONE);
 			powerLayout.setVisibility(View.GONE);
 			swich.setImageResource(R.drawable.on);
 			swich.setTag(0);
-		}else{
+		} else {
 			peopleNum.setVisibility(View.GONE);
 			temlayout.setVisibility(View.VISIBLE);
 			powerLayout.setVisibility(View.VISIBLE);
@@ -285,20 +295,5 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			swich.setTag(1);
 		}
 	}
-	
-	@Override
-	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-		degree.setText(arg1 + 35 + "℃");
-	}
 
-	@Override
-	public void onStartTrackingTouch(SeekBar arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onStopTrackingTouch(SeekBar arg0) {
-		// TODO Auto-generated method stub
-	}
 }

@@ -111,6 +111,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
+        android:onClick="onClick"
         android:clickable="true"
         android:padding="10dp" >
 
@@ -134,7 +135,7 @@
             android:src="@drawable/right_arrow" />
 
         <TextView
-            android:id="@+id/tv_select_week"
+            android:id="@+id/tv_days"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -169,17 +170,18 @@
             android:text="@string/number"
             android:textColor="@color/appointment_text_color"
             android:textSize="20sp" />
-
-        <ImageButton
-            android:id="@+id/ib_switch"
-            android:layout_width="100dp"
+        
+        <ToggleButton
+            android:id="@+id/tb_switch"
+            android:layout_width="55dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:scaleType="fitCenter"
-            android:src="@drawable/off"
-            android:text="" />
+            android:layout_marginRight="20dp"
+            android:background="@drawable/selector_bg_furnace_on_or_off"
+            android:textOff=""
+            android:textOn="" />
+
     </RelativeLayout>
 
     <View
@@ -204,7 +206,7 @@
             android:padding="10dp" >
 
             <RadioButton
-                android:id="@+id/radio0"
+                android:id="@+id/rb_people_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -214,7 +216,7 @@
                 android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/radio1"
+                android:id="@+id/rb_people_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -224,7 +226,7 @@
                 android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/radio2"
+                android:id="@+id/rb_people_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -356,7 +358,7 @@
             android:orientation="horizontal" >
 
             <RadioButton
-                android:id="@+id/RadioButton03"
+                android:id="@+id/rb_power_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -367,7 +369,7 @@
                 android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/RadioButton01"
+                android:id="@+id/rb_power_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -377,7 +379,7 @@
                 android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/RadioButton02"
+                android:id="@+id/rb_power_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -502,6 +502,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			isconnect=false;
+			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 		}
 	}
 
