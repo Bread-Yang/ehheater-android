@@ -187,7 +187,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	
 	private void queryState() {
 
-		DialogUtil.instance().showQueryingDialog(this);
+		// DialogUtil.instance().showQueryingDialog(this);
+		DialogUtil.instance().showLoadingDialog(this, "");
 		stateQueried = false;
 		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
 		rightButton.postDelayed(new  Runnable() {
