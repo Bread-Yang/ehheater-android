@@ -12,7 +12,7 @@
         android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
         android:textSize="16dp"
-        android:text="无法连接热水器"/>
+        android:text="无法连接设备"/>
     
     <View 
         android:layout_width="match_parent"

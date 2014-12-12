@@ -45,7 +45,6 @@ public class InformationActivity extends Activity implements
 	TextView title;
 	TextView heatxiaolv, taptv, heattv;
 	McuVo mcuVo;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,6 +58,7 @@ public class InformationActivity extends Activity implements
 
 	private void initView(Context context) {
 
+		
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		leftbutton.setOnClickListener(this);
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
@@ -76,15 +76,13 @@ public class InformationActivity extends Activity implements
 			pageViews.add(inforChartView);
 			pageViews.add(inforElChartView);
 		} else {
-			
 			pageViews.add(inforElcChartView);
 		}
 
 		//pageViews.add(view3);
 		pageViews.add(new InforHistoryView(this));
 		heattv = (TextView) view3.findViewById(R.id.heattv);
-	
-
+		
 		sumwater = (TextView) inforChartView.findViewById(R.id.sumwater);
 		sumgas = (TextView) inforElChartView.findViewById(R.id.sumgas);
 		taptv = (TextView) view3.findViewById(R.id.taptv);

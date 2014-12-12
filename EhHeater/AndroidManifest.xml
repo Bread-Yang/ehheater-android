@@ -29,13 +29,15 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/custom_dialog2" >
-		    
-            <intent-filter>
+
+   			
+              <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-           
+
+		    
         </activity>
         <activity
             android:name=".activity.configure.ConnectActivity"
@@ -71,6 +73,7 @@
             android:name=".activity.main.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >
+
         </activity>
         <activity
             android:name=".activity.main.gas.GasMainActivity"
@@ -161,6 +164,7 @@
         <activity
             android:name=".activity.info.InformationActivity"
             android:screenOrientation="portrait" >
+
         </activity>
         <activity
             android:name=".activity.configure.ConfigureDeviceActivity"
