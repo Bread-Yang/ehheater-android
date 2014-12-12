@@ -1,7 +1,6 @@
 package com.vanward.ehheater.activity.more;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,18 +9,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.CloudBaseActivity;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.WelcomeActivity;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.login.LoginActivity;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.SharedPreferUtils;
-import com.vanward.ehheater.util.UIUtil;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
+import com.vanward.ehheater.util.UIUtil;
 import com.vanward.ehheater.view.LogoutUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
+import com.xtremeprog.xpgconnect.XPGConnectClient;
 
 public class AccountManagementActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
@@ -81,17 +80,22 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 	}
 
 	private void logout() {
-		Intent killerIntent = new Intent(
-				Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
-				killerIntent);
+				new Intent(Consts.INTENT_ACTION_LOGOUT));
+		
+		if (Global.connectId > -1) {
+			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+			Global.connectId = -1;
+		}
+		
+		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
+				new Intent(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY));
 
 		new SharedPreferUtils(getBaseContext()).clear();
 		new HeaterInfoService(getBaseContext()).deleteAllHeaters();
 		AccountService.setUser(this, null, null);
 
-		intent.setClass(getBaseContext(), WelcomeActivity.class);
-		startActivity(intent);
+		startActivity(new Intent(getBaseContext(), WelcomeActivity.class));
 		finish();
 	}
 

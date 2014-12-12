@@ -222,7 +222,6 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 //			} catch (JSONException e) {
 //				e.printStackTrace();
 //			}
-			//long dates=dates=System.currentTimeMillis()/1000;
 			if (resultType.equals("1")) {
 				getmessageweek(dates);
 //				namelistjson="[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
@@ -523,7 +522,10 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 							namelistjson = jsonArray.toString();
 							//赋值data
 							datalistjson = jsonArray2.toString();
-							lqtime.setText("");
+							SimpleDateFormat sim=new SimpleDateFormat("yyyy年");
+							Long l=new Long(dtime);
+							Date da=new Date(l);
+							lqtime.setText(sim.format(da));
 							//设置使用的总电数
 							getall();
 							//更换下方按钮
@@ -617,11 +619,8 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	        Date date = new Date(l); 
 	        Calendar ca=Calendar.getInstance();
 	        ca.setTime(date);
-	        if(ca.get(ca.WEEK_OF_MONTH)==ca2.get(ca2.WEEK_OF_MONTH)){
-	        	ca.add(ca.DATE,0);
-	        }
-	        else{
-	        ca.add(ca.DATE,7);
+	        if(ca.get(ca.WEEK_OF_MONTH)!=ca2.get(ca2.WEEK_OF_MONTH)){
+	        	ca.add(ca.DATE,7);  
 	        }
 	        long times =ca.getTime().getTime();
 	        return times;
@@ -673,7 +672,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 				 switch (next.getText().toString().trim()) {
 				case "下一周":
 					long dates2=timechanged4();
-					getmessageweek(dates2);
+					if(timechanged4()!=dtime){
+						getmessageweek(dates2);
+					}
 					break;
 					
 				case "下一月":
