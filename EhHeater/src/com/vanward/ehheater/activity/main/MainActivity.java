@@ -250,8 +250,13 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onStop() {
 		super.onStop();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
 	};
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
+	}
 
 	private void initView() {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);

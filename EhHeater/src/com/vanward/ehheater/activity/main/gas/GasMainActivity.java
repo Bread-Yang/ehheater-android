@@ -238,6 +238,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onStop() {
 		super.onStop();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
 	}
 
