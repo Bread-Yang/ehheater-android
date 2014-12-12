@@ -68,6 +68,8 @@ public class SendMsgModel {
 		}
 		generated.SendSettingWaterTempReq(Global.connectId, (short) 45);
 		
+		setPower(1);
+		
 	}
 
 	// 自定义

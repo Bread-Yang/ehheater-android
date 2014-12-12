@@ -1,7 +1,9 @@
 package com.vanward.ehheater.activity;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +16,6 @@ import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
@@ -22,6 +23,7 @@ import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
@@ -193,7 +195,8 @@ public class WelcomeActivity extends GeneratedActivity {
 				
 			case STATE_NORMAL:
 				// 直接进入MainActivity
-				HeaterType type = new HeaterInfoService(getBaseContext()).getCurHeaterType();
+				HeaterInfoService heaterService = new HeaterInfoService(getBaseContext());
+				HeaterType type = heaterService.getCurHeaterType();
 				switch (type) {
 				case Eh:
 					startActivity(new Intent(getBaseContext(), MainActivity.class));

@@ -12,7 +12,7 @@
         android:ellipsize="end"
         android:gravity="center"
         android:singleLine="true"
-        android:text="@string/title_name"
+        android:text="@string/heater"
         android:textColor="@color/title_color"
         android:textSize="20dp" />
 

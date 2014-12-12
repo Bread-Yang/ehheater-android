@@ -329,7 +329,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 				}
 			} else { // 电热水器
-				holder.tv_mode.setText(model.getPower() + "w");
+				holder.tv_mode.setText(model.getPower() + "kw");
 			}
 
 			if (model.getIsAppointmentOn() == 0) {

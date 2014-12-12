@@ -3,6 +3,7 @@ package com.vanward.ehheater.activity.main.gas;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
@@ -79,6 +81,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	AnimationDrawable animationDrawable;
 	RelativeLayout rlt_start_device, content;
 
+	private Dialog appointmentSwitchSuccessDialog;
+	
 	private View openView;
 
 	private Button rightButton;
@@ -108,11 +112,16 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		setContentView(R.layout.main_gas_center_layout);
 		initView(savedInstanceState);
 		initData();
-		
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(heaterNameChangeReceiver, 
+
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				heaterNameChangeReceiver,
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
-		
+
 		connectCurDevice();
+		
+		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithOneButton(R.string.switch_success,
+						BaoDialogShowUtil.DEFAULT_RESID, null);
 	}
 
 	@Override
@@ -140,16 +149,20 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 
-
 			if (isOnline) {
 				Global.connectId = connId;
 				Global.checkOnlineConnId = -1;
-				boolean shouldExecuteBinding = HeaterInfoService.shouldExecuteBinding(curHeater);
-				
+				boolean shouldExecuteBinding = HeaterInfoService
+						.shouldExecuteBinding(curHeater);
+
 				if (shouldExecuteBinding) {
 					HeaterInfoService.setBinding(this, did, passcode);
 				} else {
 					queryState();
+				}
+				
+				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+					appointmentSwitchSuccessDialog.show();
 				}
 
 			} else {
@@ -157,7 +170,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Global.connectId = -1;
 				Global.checkOnlineConnId = connId;
 				changeToOfflineUI();
-				
+
 				DialogUtil.instance().showReconnectDialog(new Runnable() {
 					@Override
 					public void run() {
@@ -173,34 +186,37 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			if (resultCode == RESULT_OK) {
 				// binded
-				new HeaterInfoService(getBaseContext()).updateBinded(curHeater.getMac(), true);
+				new HeaterInfoService(getBaseContext()).updateBinded(
+						curHeater.getMac(), true);
 			}
-			
+
 			queryState();
-			
+
 		}
 
 	}
-	
+
 	private void queryState() {
 
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
 		stateQueried = false;
 		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-		rightButton.postDelayed(new  Runnable() {
+		rightButton.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				if (!stateQueried) {
-					DialogUtil.instance().showReconnectDialog(GasMainActivity.this);
+					DialogUtil.instance().showReconnectDialog(
+							GasMainActivity.this);
 					dealDisConnect();
 				}
 			}
 		}, MainActivity.connectTime);
 	}
+
 	private boolean stateQueried;
 
 	public void dealDisConnect() {
@@ -211,18 +227,19 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		target_tem.setText("--");
 		settemper.setText("--");
 		sumwater.setText(" ");
+		circularView.setOn(false);
 		mode.setEnabled(false);
 		stute.setText("不在线");
 		if (hotImgeImageView != null) {
 			hotImgeImageView.setVisibility(View.GONE);
 			hotImgeImageView.clearAnimation();
 			iv_wave.setVisibility(View.GONE);
-			if (animationDrawable!=null) {
+			if (animationDrawable != null) {
 				animationDrawable.stop();
 			}
-		
+
 		}
-		
+
 	}
 
 	@Override
@@ -234,11 +251,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	protected void onPause() {
 		super.onPause();
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				heaterNameChangeReceiver);
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -304,12 +322,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			mSlidingMenu.showMenu(true);
 			break;
 		case R.id.ivTitleBtnRigh:
-			
-			if (!isconnect) {
-				DialogUtil.instance().showReconnectDialog(this);
-				return;
-			}
-			
+
 			if (ison) {
 				DeviceOffUtil.instance(this)
 						.nextButtonCall(new NextButtonCall() {
@@ -322,6 +335,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 						}).showDialog();
 			} else {
 				SendMsgModel.openDevice();
+			}
+
+			if (!isconnect) {
+				DialogUtil.instance().showReconnectDialog(this);
+				return;
 			}
 
 			break;
@@ -497,24 +515,25 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	}
 
 	private boolean isconnect = true;
+
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-			isconnect=false;
-			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+			isconnect = false;
+			changeToOfflineUI();
 		}
 	}
 
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
-		
+
 		if (nConnId != Global.connectId) {
 			return;
 		}
-		
+
 		stateQueried = true;
 		DialogUtil.dismissDialog();
 
@@ -579,7 +598,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	public void closeDevice() {
 		openView.setVisibility(View.VISIBLE);
-		//rightButton.setVisibility(View.GONE);
+		// rightButton.setVisibility(View.GONE);
 		ChangeStuteView.swichDeviceOff(stuteParent);
 	}
 
@@ -665,15 +684,16 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		leavewater.setText(pResp.getNowVolume() + "L");
 		sumwater.setText(pResp.getSetWater_cumulative() + "L");
 
-			if (pResp.getSetWater_cumulative() == (pResp.getSetWater_power() * 10)) {
-				
-				if (FullWaterWarnDialogUtil.instance(this).getDialog()==null||!FullWaterWarnDialogUtil.instance(this).getDialog().isShowing()) {
-					FullWaterWarnDialogUtil.instance(this).showDialog();
-				}
-				
+		if (pResp.getSetWater_cumulative() == (pResp.getSetWater_power() * 10)) {
+
+			if (FullWaterWarnDialogUtil.instance(this).getDialog() == null
+					|| !FullWaterWarnDialogUtil.instance(this).getDialog()
+							.isShowing()) {
+				FullWaterWarnDialogUtil.instance(this).showDialog();
 			}
-		
-	
+
+		}
+
 		// if (pResp.getFunction_state() == 3) {
 		// ((View) sumwater.getParent()).setVisibility(View.VISIBLE);
 		// sumwater.setText(pResp.getSetWater_power() + "0L");

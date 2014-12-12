@@ -139,10 +139,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:text="@string/never"
             android:layout_toLeftOf="@+id/imageView1"
             android:layout_toRightOf="@+id/TextView04"
             android:gravity="right"
-            android:text=""
             android:textColor="@color/appointment_text_color"
             android:textSize="15sp" />
     </RelativeLayout>

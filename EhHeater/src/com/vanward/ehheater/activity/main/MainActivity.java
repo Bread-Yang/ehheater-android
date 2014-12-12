@@ -44,6 +44,7 @@ import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.NetworkStatusUtil;
@@ -88,8 +89,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	RelativeLayout rlt_start_device, content;
 
 	private View openView;
-	
-	//主界面错误图标
+
+	// 主界面错误图标
 	Byte errors;
 	private ImageView tipsimg;
 
@@ -106,9 +107,13 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 	};
 
+	private Dialog appointmentSwitchSuccessDialog;
+
 	private CountDownTimer mCountDownTimer;
 
 	private boolean canupdateView = false;
+
+	private int currentTemp;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -117,15 +122,20 @@ public class MainActivity extends BaseBusinessActivity implements
 		setContentView(R.layout.main_center_layout);
 		initView();
 		initData();
-		
+
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				heaterNameChangeReceiver, new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
+				heaterNameChangeReceiver,
+				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 		
 		canupdateView = false;
 
 		connectCurDevice();
+
+		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithOneButton(R.string.switch_success,
+						BaoDialogShowUtil.DEFAULT_RESID, null);
 	}
-	
+
 	public void changeToOfflineUI() {
 		try {
 			ChangeStuteView.swichdisconnect(stuteParent);
@@ -141,7 +151,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
 				&& resultCode == RESULT_OK) {
-			
 
 			int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
 			boolean isOnline = data.getBooleanExtra(
@@ -161,19 +170,23 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 
-
 			if (isOnline) {
 
 				Global.connectId = connId;
 				Global.checkOnlineConnId = -1;
-				boolean shouldExecuteBinding = HeaterInfoService.shouldExecuteBinding(curHeater);
-				
+				boolean shouldExecuteBinding = HeaterInfoService
+						.shouldExecuteBinding(curHeater);
+
 				if (shouldExecuteBinding) {
 					HeaterInfoService.setBinding(this, did, passcode);
 				} else {
 					queryState();
 				}
 				
+				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+					appointmentSwitchSuccessDialog.show();
+				}
+
 			} else {
 				// 设备不在线, 需检测上线
 				Global.connectId = -1;
@@ -183,7 +196,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 				DialogUtil.instance().showReconnectDialog(new Runnable() {
 					@Override
 					public void run() {
@@ -192,48 +205,50 @@ public class MainActivity extends BaseBusinessActivity implements
 				}, MainActivity.this);
 
 			}
-			
+
 			mSlidingMenu.showContent();
 
 		}
-		
-
 
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
-			
+
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			if (resultCode == RESULT_OK) {
 				// binded
-				new HeaterInfoService(getBaseContext()).updateBinded(curHeater.getMac(), true);
+				new HeaterInfoService(getBaseContext()).updateBinded(
+						curHeater.getMac(), true);
 			}
-			
+
 			queryState();
-			
+
 		}
 
 	}
-	
+
 	/**
 	 * 多少秒后没有回调
 	 */
 	public static long connectTime = 10000;
+
 	private void queryState() {
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
 		stateQueried = false;
 		generated.SendStateReq(Global.connectId);
-		rightButton.postDelayed(new  Runnable() {
+		rightButton.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				if (!stateQueried) {
 					changeToOfflineUI();
-					DialogUtil.instance().showReconnectDialog(MainActivity.this);
+					DialogUtil.instance()
+							.showReconnectDialog(MainActivity.this);
 				}
 			}
 		}, connectTime);
 	}
+
 	private boolean stateQueried;
 
 	@Override
@@ -250,7 +265,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onStop() {
 		super.onStop();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				heaterNameChangeReceiver);
 	};
 
 	private void initView() {
@@ -263,9 +279,9 @@ public class MainActivity extends BaseBusinessActivity implements
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
 
 		hotImgeImageView.clearAnimation();
-		
-		//主界面错误图标
-		tipsimg=(ImageView)findViewById(R.id.infor_tip);
+
+		// 主界面错误图标
+		tipsimg = (ImageView) findViewById(R.id.infor_tip);
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		rlt_start_device = (RelativeLayout) findViewById(R.id.start_device_rlt);
@@ -298,7 +314,7 @@ public class MainActivity extends BaseBusinessActivity implements
 						R.anim.tip_4500);
 				LinearInterpolator lin = new LinearInterpolator();
 				operatingAnim.setInterpolator(lin);
-				//hotImgeImageView.startAnimation(operatingAnim);
+				// hotImgeImageView.startAnimation(operatingAnim);
 				hotImgeImageView.setVisibility(View.GONE);
 				animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 				animationDrawable.start();
@@ -342,7 +358,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		case R.id.ivTitleBtnRigh:
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
 			if (!NetworkStatusUtil.isConnected(getBaseContext())) {
-				Toast.makeText(this,"无网络连接", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			if (ison) {
@@ -382,7 +398,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			break;
 		case R.id.btn_information:
-			
+
 			Intent intent3 = new Intent();
 			intent3.putExtra("isgas", false);
 			intent3.setClass(this, InformationActivity.class);
@@ -391,8 +407,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			break;
 
 		case R.id.power_tv:
-			
-		
+
 			if (currentModeCode == 7 || currentModeCode == 4) {
 				setPower();
 			}
@@ -539,15 +554,15 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	}
 
-	//错误图标
-	
+	// 错误图标
 
-	
-	SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+			"yyyy/MM/dd hh:mm:ss");
+
 	public void dealErrorWarnIcon(byte[] date) {
-		final EhState en=new EhState(date);
-//		freezeProofing(pResp);
-//		oxygenWarning(pResp);
+		final EhState en = new EhState(date);
+		// freezeProofing(pResp);
+		// oxygenWarning(pResp);
 		System.out.println("错误码：" + en.getErrorCode());
 		if (en.getErrorCode() != 0) {
 			tipsimg.setVisibility(View.VISIBLE);
@@ -559,8 +574,7 @@ public class MainActivity extends BaseBusinessActivity implements
 					ErrorDialogUtil
 							.instance(MainActivity.this)
 							.initName(
-									Integer.toHexString(en.getErrorCode())
-											+ "")
+									Integer.toHexString(en.getErrorCode()) + "")
 							.setNextButtonCall(new NextButtonCall() {
 								@Override
 								public void oncall(View v) {
@@ -576,15 +590,13 @@ public class MainActivity extends BaseBusinessActivity implements
 									intent.putExtra("time",
 											simpleDateFormat.format(new Date()));
 									intent.putExtra(
-											//new EhState(data).getErrorCode()
-											//errors
+											// new EhState(data).getErrorCode()
+											// errors
 											"detail",
 											ErrorDialogUtil
-													.instance(
-															MainActivity.this)
+													.instance(MainActivity.this)
 													.getMap()
-													.get(en.getErrorCode()
-															+ ""));
+													.get(en.getErrorCode() + ""));
 									startActivity(intent);
 								}
 							}).showDialog();
@@ -594,29 +606,29 @@ public class MainActivity extends BaseBusinessActivity implements
 			tipsimg.setVisibility(View.GONE);
 		}
 	}
-	
+
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
 		super.OnStateResp(pResp, nConnId);
 	}
-	
+
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
-		
+
 		if (connId != Global.connectId) {
 			return;
 		}
 		/**
-		 * <!--警告代码：0xa0-0xaf（警告A0-AF）,故障代码：0xe0-0xef（故障E0-EF）-->
-           <field name="error" type="byte" value="{INPUT}" range="160-239" />
-			new EhState(data).getErrorCode()
+		 * <!--警告代码：0xa0-0xaf（警告A0-AF）,故障代码：0xe0-0xef（故障E0-EF）--> <field
+		 * name="error" type="byte" value="{INPUT}" range="160-239" /> new
+		 * EhState(data).getErrorCode()
 		 */
 
 		System.out.println("回调onTcpPacket");
 		System.out.println("MainActivity.onTcpPacket()： "
 				+ new EhState(data).getRemainingHotWaterAmount());
-		
+
 		dealErrorWarnIcon(data);
 
 		if (!canupdateView) {
@@ -624,7 +636,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
-			stateQueried=true;
+			stateQueried = true;
 			DialogUtil.dismissDialog();
 			btn_power.setSelected(false);
 			setTempture(data);
@@ -683,8 +695,9 @@ public class MainActivity extends BaseBusinessActivity implements
 				+ new EhState(b).getInnerTemp2() + "   "
 				+ new EhState(b).getInnerTemp3());
 		// tempter.setText(new EhState(b).getInnerTemp2() + "");
+		currentTemp = new EhState(b).getInnerTemp1();
 		if (!Insetting && circularView != null) {
-//			circularView.setAngle(new EhState(b).getInnerTemp1());
+			// circularView.setAngle(new EhState(b).getInnerTemp1());
 			circularView.setAngle(new EhState(b).getTargetTemperature());
 			tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
@@ -759,11 +772,10 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+			changeToOfflineUI();
 		}
-		
+
 	}
-	
 
 	public void dealDisConnect() {
 		tempter.setText("--");
@@ -774,6 +786,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		btn_power.setEnabled(false);
 		findViewById(R.id.pattern).setEnabled(false);
 		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+		circularView.setOn(false);
 		hotImgeImageView.setVisibility(View.GONE);
 	}
 
@@ -812,7 +825,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		img.setBounds(0, 0, dp32, dp32);
 		temptertitleTextView.setCompoundDrawables(img, null, null, null);
 
-		tempter.setText(outlevel + "");
+		tempter.setText(currentTemp + "");
 	}
 
 	@Override
@@ -824,10 +837,9 @@ public class MainActivity extends BaseBusinessActivity implements
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		/** only for test */
 		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-			
+
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
 
 }

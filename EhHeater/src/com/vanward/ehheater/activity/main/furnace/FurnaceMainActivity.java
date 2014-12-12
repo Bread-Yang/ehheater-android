@@ -62,6 +62,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	private ImageView iv_fire_wave_animation, iv_rotate_animation,
 			iv_season_mode;
+	
+	private Dialog appointmentSwitchSuccessDialog;
 
 	private RelativeLayout rlt_content, rlt_open;
 
@@ -240,6 +242,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 								turnOffInWinnerDialog.dismiss();
 							}
 						});
+		
+		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithOneButton(R.string.switch_success,
+						BaoDialogShowUtil.DEFAULT_RESID, null);
 
 		btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 
@@ -755,6 +761,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					HeaterInfoService.setBinding(this, did, passcode);
 				} else {
 					queryState();
+				}
+				
+				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+					appointmentSwitchSuccessDialog.show();
 				}
 
 			} else {
