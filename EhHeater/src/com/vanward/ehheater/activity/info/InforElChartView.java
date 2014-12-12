@@ -59,7 +59,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 	String datalistjson = "";
 	String namelistjson = "";
 	
-	long dates;
+	long dates,dtime;
 	
 	private ImageView imageView1;
 	private ImageView imageView2;
@@ -81,7 +81,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		next = (TextView) layout.findViewById(R.id.next);
 		sumgas = (TextView) layout.findViewById(R.id.sumgas);
 		
-		dates=System.currentTimeMillis()/1000;
+		dates=System.currentTimeMillis();
 		imageView1=(ImageView)layout.findViewById(R.id.imageView1);
 		imageView1.setOnClickListener(this);
 		imageView2=(ImageView)layout.findViewById(R.id.imageView2);
@@ -293,7 +293,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 			// }
 
 			if (resultType.equals("1")) {
-				getmessageweek();
+				getmessageweek(dates);
 //				namelistjson = "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
 //				datalistjson = "[{data:2},{data:5},{data:5},{data:3},{data:7},{data:4},{data:4},] ";
 //				chart4week();
@@ -301,7 +301,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 			}
 
 			if (resultType.equals("2")) {
-				getmessagemonth();
+				getmessagemonth(dates);
 //				namelistjson = "[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
 //				datalistjson = "[{data:30},{data:70},{data:50},{data:30},{data:20}] ";
 //				chart4Month();
@@ -309,7 +309,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 			}
 
 			if (resultType.equals("3")) {
-				getmessageyear();
+				getmessageyear(dates);
 //				namelistjson = "[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
 //				datalistjson = "[{data:214.9},{data:310.5},{data:406.4},{data:506.4},{data:206.4},{data:106.4},{data:246.4},{data:266.4},{data:276.4},{data:166.4},{data:0},{data:0}] ";
 //				chart4Year();
@@ -366,9 +366,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 	}
 	
-	public void getmessageweek(){
+	public void getmessageweek(long da){
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+dates+"&resultType=1&expendType=1", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=1", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -376,15 +376,17 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 				DialogUtil.instance().showDialog();
 				super.onStart();
 			}
-			
 			//请求成功
-			 SimpleDateFormat format = new SimpleDateFormat("MM/dd");
-					  
+			 SimpleDateFormat format = new SimpleDateFormat("MM/dd");				  
 			@Override
 					public void onSuccess(String t) {
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
+							
+							JSONObject jb=(JSONObject) array.get(3);
+							dtime=Long.valueOf(jb.getString("time"));
+							
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
@@ -404,19 +406,14 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
-							//赋值name
 							namelistjson = jsonArray.toString();
-							//赋值data
 							datalistjson = jsonArray2.toString();
-							//设置使用的总电数
-							SimpleDateFormat sim=new SimpleDateFormat("yyyy年MM月");
+							SimpleDateFormat sim=new SimpleDateFormat("yyyy年");
 							Long l=new Long(System.currentTimeMillis());
 							Date da=new Date(l);
 							lqtime.setText(sim.format(da));
 							getall();
-							//更换下方按钮
 							chart4week();
-							//刷新数据展示
 							webView.reload();
 							//销毁等待
 							DialogUtil.dismissDialog();
@@ -437,9 +434,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		});
 	}
 	
-	public void getmessagemonth(){
+	public void getmessagemonth(long da2){
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+dates+"&resultType=2&expendType=1", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da2+"&resultType=2&expendType=1", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -456,6 +453,10 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
+							
+							JSONObject jb=(JSONObject) array.get(0);
+							dtime=Long.valueOf(jb.getString("time"));
+							
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
@@ -475,7 +476,23 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								else{
 									calendar.add(calendar.DATE, 6);
 								}
-								String time3=time+format2.format(calendar.getTime());
+								String time4=format2.format(calendar.getTime());
+								//本月的最后一天
+								Calendar cal=Calendar.getInstance();//获取当前日期 
+								cal.setTime(calendar.getTime());
+								cal.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
+								cal.add(Calendar.MONTH,1);//月增加1天 
+								cal.add(Calendar.DAY_OF_MONTH,-1);//日期倒数一日,既得到本月最后一天 
+								//下个月的一月一号
+								Calendar cal2=Calendar.getInstance();//获取当前日期 
+								cal2.setTime(calendar.getTime());
+								cal2.add(Calendar.MONTH,1);//月增加1天
+								
+								if(calendar.get(calendar.MONTH)+1==cal2.get(calendar.MONTH)){
+									time4=String.valueOf("-"+cal.get(cal.DATE));
+								}
+								
+								String time3=time+time4;
 								Electricity electricity=new Electricity();
 								electricity.setAmount(amount);
 								electricity.setTime(time3);
@@ -487,6 +504,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
+							
 							//赋值name
 							namelistjson = jsonArray.toString();
 							//赋值data
@@ -520,9 +538,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		});
 	}
 	
-	public void getmessageyear(){
+	public void getmessageyear(long da3){
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+dates+"&resultType=3&expendType=1", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da3+"&resultType=3&expendType=1", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -539,6 +557,10 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
+							
+							JSONObject jb=(JSONObject) array.get(0);
+							dtime=Long.valueOf(jb.getString("time"));
+							
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
@@ -619,72 +641,67 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		}
 	
 	public long timechanged(){
-		System.out.println("hahahahahah");
-	    Long l=new Long(System.currentTimeMillis());
+	    Long l=new Long(dtime);
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        ca.add(ca.DAY_OF_WEEK,-1);
-//        Date date2 = new Date();
-//        date2=ca.getTime();
-        long times =ca.getTime().getTime()/1000;
-        System.out.println("下一周测试"+times);
+        ca.add(ca.DATE,-7);
+        long times =ca.getTime().getTime();
 		return times;
 	}
 	public long timechanged2(){
-	    Long l=new Long(System.currentTimeMillis());
+	    Long l=new Long(dtime);
        Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
        ca.setTime(date);
-        ca.add(ca.DAY_OF_MONTH,-1);
-//      Date date2 = new Date();
-//        date2=ca.getTime();
+        ca.add(ca.MONTH,-1);
         long times =ca.getTime().getTime();  
 		return times;
 	}
 	public long timechanged3(){
-	    Long l=new Long(System.currentTimeMillis());
+	    Long l=new Long(dtime);
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        ca.add(ca.DAY_OF_YEAR,-1);
-//        Date date2 = new Date();
-//        date2=ca.getTime();
+        ca.add(ca.YEAR,-1);
         long times =ca.getTime().getTime();  
 		return times;
 	}
 	
 	public long timechanged4(){
-		SimpleDateFormat sim=new SimpleDateFormat("yyyy-MM-dd");
-	    Long l=new Long(System.currentTimeMillis());
+		Long l2=new Long(System.currentTimeMillis());
+		Date t2=new Date(l2);
+		Calendar ca2=Calendar.getInstance();
+		ca2.setTime(t2);
+		
+	    Long l=new Long(dtime);
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        ca.add(ca.DAY_OF_WEEK,1);
-//        Date date2 = new Date();
-//        date2=ca.getTime();
-        long times =ca.getTime().getTime()/1000;
-		return times;
+        if(ca.get(ca.WEEK_OF_MONTH)==ca2.get(ca2.WEEK_OF_MONTH)){
+        	ca.add(ca.DATE,0);
+        }
+        else{
+        ca.add(ca.DATE,7);
+        }
+        long times =ca.getTime().getTime();
+        return times;
 	}
 	public long timechanged5(){
-	    Long l=new Long(System.currentTimeMillis());
+	    Long l=new Long(dtime);
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        ca.add(ca.DAY_OF_MONTH,1);
-//        Date date2 = new Date();
-//        date2=ca.getTime();
-        long times =ca.getTime().getTime()/1000 ;  
+        ca.add(ca.MONTH,1);
+        long times =ca.getTime().getTime();  
 		return times;
 	}
 	public long timechanged6(){
-	    Long l=new Long(System.currentTimeMillis());
+	    Long l=new Long(dtime);
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        ca.add(ca.DAY_OF_YEAR,1);
-//        Date date2 = new Date();
-//        date2=ca.getTime();
+        ca.add(ca.YEAR,1);
         long times =ca.getTime().getTime() ;  
 		return times;
 	}
@@ -694,18 +711,18 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		case R.id.imageView1:
 			switch (last.getText().toString().trim()) {
 			case "上一周":
-				dates=timechanged();
-				webView.reload();
+				long dates5=timechanged();
+				getmessageweek(dates5);
 				break;
 				
 			case "上一月":
-				dates=timechanged2();
-				webView.reload();
+				long dates6=timechanged2();
+				getmessagemonth(dates6);
 				break;
 				
 			case "上一年":
-				dates=timechanged3();
-				webView.reload();
+				long dates7=timechanged3();
+				getmessageyear(dates7);
 				break;
 
 			default:
@@ -716,18 +733,18 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		case R.id.imageView2:
 			 switch (next.getText().toString().trim()) {
 			case "下一周":
-				dates=timechanged4();
-				webView.reload();
+				long dates2=timechanged4();
+				getmessageweek(dates2);
 				break;
 				
 			case "下一月":
-				dates=timechanged5();
-				webView.reload();
+				long dates3=timechanged5();
+				getmessagemonth(dates3);
 				break;
 				
 			case "下一年":
-				dates=timechanged6();
-				webView.reload();
+				long dates4=timechanged6();
+				getmessageyear(dates4);
 				break;
 
 			default:

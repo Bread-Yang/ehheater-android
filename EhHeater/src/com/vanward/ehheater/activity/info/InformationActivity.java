@@ -79,7 +79,7 @@ public class InformationActivity extends Activity implements
 			pageViews.add(inforElcChartView);
 		}
 
-		pageViews.add(view3);
+		//pageViews.add(view3);
 		pageViews.add(new InforHistoryView(this));
 		heattv = (TextView) view3.findViewById(R.id.heattv);
 		
