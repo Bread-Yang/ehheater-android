@@ -212,7 +212,7 @@
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
                 android:text="  1人"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -222,7 +222,7 @@
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
                 android:text="  2人"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -232,7 +232,7 @@
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
                 android:text="  3人"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -365,7 +365,7 @@
                 android:button="@drawable/radio_selector"
                 android:checked="true"
                 android:text="  1kw"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -375,7 +375,7 @@
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
                 android:text="  2kw"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -385,7 +385,7 @@
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
                 android:text="  3kw"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
         </RadioGroup>
     </RelativeLayout>

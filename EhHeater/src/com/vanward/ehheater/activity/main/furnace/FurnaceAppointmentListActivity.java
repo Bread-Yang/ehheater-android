@@ -87,7 +87,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
-				if (deviceType == HeaterType.Eh) {    // 电热水器
+				if (deviceType == HeaterType.Eh) { // 电热水器
 					intent.setClass(FurnaceAppointmentListActivity.this,
 							AppointmentTimeActivity.class);
 				} else {
@@ -137,6 +137,8 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 		// String requestURL =
 		// "userinfo/getAppointmentList?did=LWFWwtEcFWJ5hSBPXrVXFS&uid=q1231";
+
+		Log.e("请求的地址是", requestURL);
 
 		showRequestDialog();
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
@@ -329,7 +331,14 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 				}
 			} else { // 电热水器
-				holder.tv_mode.setText(model.getPower() + "kw");
+				if (Integer.valueOf(model.getPeopleNum()) > 0) {
+					holder.tv_temperature.setVisibility(View.INVISIBLE);
+					holder.tv_mode.setText(model.getPeopleNum()
+							+ getResources().getString(R.string.num_wash));
+				} else {
+					holder.tv_temperature.setVisibility(View.VISIBLE);
+					holder.tv_mode.setText(model.getPower() + "kw");
+				}
 			}
 
 			if (model.getIsAppointmentOn() == 0) {
@@ -351,11 +360,13 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 						model.setIsAppointmentOn(1);
 					}
 
-					// 热水器多余的数据
-					model.setPeopleNum("0");
-
-					model.setPower("0");
-
+//					if (deviceType == HeaterType.EH_FURNACE) { 
+//						// 热水器多余的数据
+//						model.setPeopleNum("0");
+//
+//						model.setPower("0");
+//					}
+					
 					String requestURL = "userinfo/updateAppointment";
 
 					showRequestDialog();
@@ -379,10 +390,12 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 										((ImageButton) view)
 												.setImageResource(R.drawable.off);
 										model.setIsAppointmentOn(0);
+										view.setTag(0);
 									} else {
 										((ImageButton) view)
 												.setImageResource(R.drawable.on);
 										model.setIsAppointmentOn(1);
+										view.setTag(1);
 									}
 
 									dismissRequestDialog();

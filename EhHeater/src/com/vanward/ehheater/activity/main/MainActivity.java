@@ -95,7 +95,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	private ImageView tipsimg;
 
 	private Button rightButton;
-
+ 
 	private Animation operatingAnim;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
@@ -663,7 +663,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				changeToCustomModeUpdateUI(data);
 			} else if (mode == 2) {
 				changeToNightModeUpdateUI(data);
-			} else if (mode == 7) {
+			} else if (mode == 7) {  // 智能模式
 				changeToIntelligenceModeUpdateUI(data);
 			}
 

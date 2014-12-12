@@ -339,6 +339,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 										.dissmiss();
 							}
 						}).showDialog();
+				return;
 			} else {
 				SendMsgModel.openDevice();
 			}

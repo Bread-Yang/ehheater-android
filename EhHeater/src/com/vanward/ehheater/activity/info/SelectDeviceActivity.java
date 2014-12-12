@@ -28,6 +28,9 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 	public void initview() {
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		leftbutton.setOnClickListener(this);
+		if (getIntent().getBooleanExtra("isDeleteAll", false)) {
+			leftbutton.setVisibility(View.GONE);
+		}
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightbButton.setVisibility(View.GONE);
 		leftbutton.setBackgroundResource(R.drawable.icon_back);

@@ -179,5 +179,6 @@
     <string name="turn_off_in_winter">在冬天时关机，可能会由于气温过冷导致硬件损坏！</string>
     <string name="add_pattern">添加模式</string>
     <string name="switch_success">切换成功</string>
+    <string name="num_wash">人洗</string>
 
 </resources>
