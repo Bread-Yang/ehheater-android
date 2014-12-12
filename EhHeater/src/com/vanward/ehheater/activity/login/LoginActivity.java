@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -46,6 +47,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	Button btn_new_device, btn_login;
 	EditText et_user, et_pwd;
 	TextView mTvReg;
+	
+	SharedPreferUtils spu;
 
 	@Override
 	public void onBackPressed() {
@@ -71,6 +74,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		et_pwd = (EditText) findViewById(R.id.login_pwd_et);
 
 		mTvReg = (TextView) findViewById(R.id.ll_tv_register);
+
+		spu = new SharedPreferUtils(getBaseContext());
+		preSelectedDeviceMac = spu.get(ShareKey.CurDeviceMac, "");
 
 		IntentFilter filter = new IntentFilter(
 				Consts.INTENT_FILTER_KILL_LOGIN_ACTIVITY);
@@ -273,8 +279,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if (count++ == 0) {
 			AccountService.setUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
-			new SharedPreferUtils(getBaseContext()).put(ShareKey.CurDeviceMac,
-					hi.getMac());
+			
+			if (TextUtils.isEmpty(preSelectedDeviceMac)) {
+				spu.put(ShareKey.CurDeviceMac, hi.getMac());
+			}
 
 			new Timer().schedule(new TimerTask() {
 				@Override
@@ -295,10 +303,14 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		hser.saveDownloadedHeater(hi);
+		if (preSelectedDeviceMac.equals(hi.getMac())) {
+			spu.put(ShareKey.CurDeviceMac, hi.getMac());
+		}
 	};
 
 	int count;
 	boolean onDeviceFoundTriggered;
+	String preSelectedDeviceMac;
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
