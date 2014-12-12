@@ -100,7 +100,9 @@ public class MainActivity extends BaseBusinessActivity implements
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("emmm", "heaterNameChangeReceiver:onReceive@MainActivity");
+			if (isFinishing()) {
+				return;
+			}
 			updateTitle(mTitleName);
 			initSlidingMenu();
 		}

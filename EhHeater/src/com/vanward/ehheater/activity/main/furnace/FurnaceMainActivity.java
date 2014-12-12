@@ -91,6 +91,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			if (isFinishing()) {
+				return;
+			}
 			updateTitle(mTitleName);
 			initSlidingMenu();
 		}
