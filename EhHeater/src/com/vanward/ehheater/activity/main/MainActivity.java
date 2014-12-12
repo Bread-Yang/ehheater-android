@@ -47,6 +47,7 @@ import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.IntelligentPatternUtil;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
@@ -95,8 +96,10 @@ public class MainActivity extends BaseBusinessActivity implements
 	private ImageView tipsimg;
 
 	private Button rightButton;
- 
+
 	private Animation operatingAnim;
+
+	private EhState lastEhState;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -128,14 +131,14 @@ public class MainActivity extends BaseBusinessActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver,
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
-		
+
 		canupdateView = false;
 
 		connectCurDevice();
 
 		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
-						BaoDialogShowUtil.DEFAULT_RESID, null);
+						R.string.confirm, null);
 	}
 
 	public void changeToOfflineUI() {
@@ -184,7 +187,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				} else {
 					queryState();
 				}
-				
+
 				if (getIntent().getBooleanExtra("switchSuccess", false)) {
 					appointmentSwitchSuccessDialog.show();
 				}
@@ -268,11 +271,12 @@ public class MainActivity extends BaseBusinessActivity implements
 	protected void onStop() {
 		super.onStop();
 	};
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				heaterNameChangeReceiver);
 	}
 
 	private void initView() {
@@ -343,6 +347,10 @@ public class MainActivity extends BaseBusinessActivity implements
 			public void onFinish() {
 				SendMsgModel.setTempter(value);
 				tempter.setText(value + "");
+				if (null != lastEhState && lastEhState.getFunctionState() == 7) { // 智能模式
+//					IntelligentPatternUtil.addLastTemperature(
+//							MainActivity.this, value);
+				}
 				Insetting = false;
 			}
 		};
@@ -622,6 +630,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
 
+		lastEhState = new EhState(data);
+
 		if (connId != Global.connectId) {
 			return;
 		}
@@ -663,7 +673,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				changeToCustomModeUpdateUI(data);
 			} else if (mode == 2) {
 				changeToNightModeUpdateUI(data);
-			} else if (mode == 7) {  // 智能模式
+			} else if (mode == 7) { // 智能模式
 				changeToIntelligenceModeUpdateUI(data);
 			}
 

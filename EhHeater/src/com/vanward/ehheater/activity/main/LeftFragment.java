@@ -241,9 +241,7 @@ public class LeftFragment extends LinearLayout implements
 				// 如果当前未建立连接, 直接调用此方法
 				AlterDeviceHelper.alterDevice();
 			}
-
 		}
-
 	}
 
 }

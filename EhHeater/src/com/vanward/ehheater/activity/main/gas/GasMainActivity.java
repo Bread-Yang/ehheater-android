@@ -123,7 +123,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		
 		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
-						BaoDialogShowUtil.DEFAULT_RESID, null);
+						R.string.confirm, null);
 	}
 
 	@Override
