@@ -92,7 +92,7 @@ public class CircularView extends View {
 		if (f - temp > 0) {
 			temp = temp + 1;
 		}
-		System.out.println("degreeToAngle : " + (degree * angledegree / 360)
+		System.out.println("testdegreeToAngle : " + (degree * angledegree / 360)
 				+ "temp： " + temp);
 		temp = temp + 25;
 		return temp;
@@ -311,12 +311,24 @@ public class CircularView extends View {
 				y = event.getY();
 				int tempdegree = (int) finalangel(x, y, angel(x, y));
 				if (isclick) {
+					System.out.println("test1;"+ degree);
 					if (tempdegree > olddegree && degree < 360) {
-						degree = angleToDegree(targerdegree) + perangle;
+						if (isHeat&& targerdegree>50) {
+							System.out.println("test加");
+							degree=angleToDegree(targerdegree) + (18);
+						}else {
+							degree = angleToDegree(targerdegree) + perangle;
+						}
+//						degree = angleToDegree(targerdegree) + perangle;
 						// degree = degree + 6;
 					} else if (tempdegree < olddegree && degree > 0) {
-						if (isHeat&& targerdegree==65) {
-							degree=angleToDegree(targerdegree) - 3*perangle;
+						if (isHeat&& targerdegree>50) {
+							if (degree==angleToDegree(targerdegree) - (18)) {
+								degree=angleToDegree(targerdegree) - (50);
+							}else {
+								degree=angleToDegree(targerdegree) - (18);
+							}
+						
 						}else {
 							degree = angleToDegree(targerdegree) - perangle;
 						}
@@ -327,7 +339,7 @@ public class CircularView extends View {
 					}
 				}
 				olddegree = degree;
-				System.out.println("test;"+ degree);
+				System.out.println("test;"+ degree+" : "+ degreeToAngle(degree));
 				heatmakeRange(degreeToAngle(degree));
 				if (degree >= angleToDegree(endangle)) {
 					degree = angleToDegree(endangle);
