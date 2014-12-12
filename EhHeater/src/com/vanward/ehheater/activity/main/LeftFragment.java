@@ -37,8 +37,10 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
+import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
+import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
 public class LeftFragment extends LinearLayout implements
 		android.view.View.OnClickListener, OnItemClickListener {
@@ -177,7 +179,7 @@ public class LeftFragment extends LinearLayout implements
 					.getCurrentSelectedHeater();
 			if (heaterInfo!=null&&heaterInfo.getMac().equals(objects.get(position).getMac())) {
 				holder1.checkImage.setVisibility(View.VISIBLE);
-				holder1.devicename.setTextColor(R.color.yeallow);
+				holder1.devicename.setTextColor(0xFFF76F21);
 			} else {
 				holder1.checkImage.setVisibility(View.GONE);
 				holder1.devicename.setTextColor(R.color.black);
@@ -215,46 +217,27 @@ public class LeftFragment extends LinearLayout implements
 		} else {
 
 			Activity hostActivity = (Activity) getContext();
-			String userId = AccountService.getUserId(getContext());
-			String userPsw = AccountService.getUserPsw(getContext());
 
 			HeaterInfoService hser = new HeaterInfoService(getContext());
 			HeaterType oriHeaterType = hser.getCurHeaterType();
 			HeaterType newHeaterType = hser.getHeaterType(heaterInfo);
-			hser.setCurrentSelectedHeater(heaterInfo.getMac()); // TODO
-																// 这里不应该写这里,
-																// 应该卸载连接成功的回调里
-
-			XPGConnectClient.xpgcDisconnectAsync(Global.connectId); // 连接另一个设备之前,
-																	// 断开现连接
-
-			if (newHeaterType.equals(oriHeaterType)) {
-				ConnectActivity.connectToDevice(hostActivity,
-						heaterInfo.getMac(), heaterInfo.getPasscode(), userId,
-						userPsw);
+			
+			hser.setCurrentSelectedHeater(heaterInfo.getMac()); 
+			
+			AlterDeviceHelper.newHeaterType = newHeaterType;
+			AlterDeviceHelper.typeChanged = !newHeaterType.equals(oriHeaterType);
+			AlterDeviceHelper.hostActivity = hostActivity;
+			
+			if (Global.connectId > 0) {
+				//触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
+				XPGConnectClient.xpgcDisconnectAsync(Global.connectId); 
 			} else {
-				switch (newHeaterType) {
-				case Eh:
-					hostActivity.startActivity(new Intent(hostActivity, MainActivity.class));
-					hostActivity.finish();
-					break;
-				case ST:
-					hostActivity.startActivity(new Intent(hostActivity, GasMainActivity.class));
-					hostActivity.finish();
-					break;
-				case EH_FURNACE:
-					hostActivity.startActivity(new Intent(hostActivity, FurnaceMainActivity.class));
-					hostActivity.finish();
-					break;
-				default:
-					Toast.makeText(hostActivity, "无法识别该设备", Toast.LENGTH_LONG)
-							.show();
-					break;
-				}
-
+				//如果当前未建立连接, 直接调用此方法
+				AlterDeviceHelper.alterDevice();
 			}
-
+			
 		}
 
 	}
+	
 }

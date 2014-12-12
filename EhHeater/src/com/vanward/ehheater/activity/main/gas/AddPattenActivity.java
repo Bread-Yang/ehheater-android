@@ -19,6 +19,8 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.view.SeekBarHint;
+import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 
 public class AddPattenActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
@@ -32,15 +34,11 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 	@ViewInject(id = R.id.nameedittext, click = "")
 	EditText nameedittext;
 
-	@ViewInject(id = R.id.seekBar1, click = "")
-	SeekBar seekBar;
+	@ViewInject(id = R.id.seekBar, click = "")
+	SeekBarHint seekBar;
 
 	@ViewInject(id = R.id.water_radiogroup, click = "")
 	RadioGroup waterGroup;
-
-	@ViewInject(id = R.id.textView2, click = "")
-	TextView degree;
-	private TextView textView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,14 +49,37 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 		seekBar.setOnSeekBarChangeListener(this);
-		degree.setText("35℃");
-		textView = (TextView) findViewById(R.id.textView2);
 		int voId = getIntent().getIntExtra("gasCusVoId", -1);
 		if (voId != -1) {
 			gasVo = new BaseDao(this).getDb().findById(voId,
 					GasCustomSetVo.class);
 			setData(gasVo);
 		}
+		
+		seekBar.setOnProgressChangeListener(new OnSeekBarHintProgressChangeListener() {
+
+			@Override
+			public String onHintTextChanged(SeekBarHint seekBarHint,
+					int progress) {
+				int position = seekBar.getProgress();
+				int temp = position + 35;
+
+				if (48 >= temp)
+					;
+				else if (49 == temp)
+					temp = 48;
+				else if (50 <= temp && 53 > temp)
+					temp = 50;
+				else if (53 <= temp && 58 > temp)
+					temp = 55;
+				else if (58 <= temp && 63 > temp)
+					temp = 60;
+				else if (63 <= temp && 65 >= temp)
+					temp = 65;
+				
+				return String.format("%s℃",temp);
+			}
+		});
 	}
 
 	GasCustomSetVo gasVo;
@@ -208,12 +229,6 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		System.out.println("width: " + width);
 		System.out.println("x: " + x);
 		System.out.println("position: " + position);
-
-		textView.setText(temp + "");
-		// textView.setX(width);
-		// textView.setY(y);
-		// textView.invalidate();
-		degree.setText(heatmakeRange(arg1 + 35) + "℃");
 	}
 
 	@Override

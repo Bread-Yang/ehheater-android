@@ -13,6 +13,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.BitmapThumbUtil;
 
 public class BaoCircleSlider extends View {
 
@@ -91,17 +92,16 @@ public class BaoCircleSlider extends View {
 
 		ctrlIconView.setLayoutParams(new LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		
+
 		if (isFirstDisplay) {
 			ctrlIconViewCenterPoint = new Point(widthSpecSize / 2,
 					heightSpecSize - ctrlIconViewWidth / 2);
 			ctrlIconView.layout(widthSpecSize / 2 - ctrlIconViewWidth / 2,
-					heightSpecSize - ctrlIconViewWidth,
-					widthSpecSize / 2 + ctrlIconViewWidth / 2,
-					heightSpecSize);
+					heightSpecSize - ctrlIconViewWidth, widthSpecSize / 2
+							+ ctrlIconViewWidth / 2, heightSpecSize);
 		} else {
-			ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
-					ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
+			ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth
+					/ 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
 					ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 2,
 					ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 2);
 		}
@@ -113,7 +113,7 @@ public class BaoCircleSlider extends View {
 		minusImageView.setLayoutParams(new LayoutParams(100, 100));
 		minusImageView.layout(0, 0, widthSpecSize, heightSpecSize);
 
-	}
+	} 
 
 	private void initRoutine() {
 		isOnline = false;
@@ -123,19 +123,25 @@ public class BaoCircleSlider extends View {
 		maxValue = 90;
 		if (ctrlIconView == null) {
 			ctrlIconView = new ImageView(getContext());
-			ctrlIconView.setImageResource(R.drawable.home_yuan_tiao_intact);
+			ctrlIconView.setImageBitmap(BitmapThumbUtil
+					.decodeSampledBitmapFromResource(getResources(),
+							R.drawable.home_yuan_tiao_intact, 100, 100));
 		}
 		if (addImageView == null) {
 			addImageView = new ImageView(getContext());
-			addImageView.setImageResource(R.drawable.home_yuan_add);
+			addImageView.setImageBitmap(BitmapThumbUtil
+					.decodeSampledBitmapFromResource(getResources(),
+							R.drawable.home_yuan_add, 300, 300));
 		}
 		if (minusImageView == null) {
 			minusImageView = new ImageView(getContext());
-			minusImageView.setImageResource(R.drawable.home_yuan_reduction);
+			minusImageView.setImageBitmap(BitmapThumbUtil
+					.decodeSampledBitmapFromResource(getResources(),
+							R.drawable.home_yuan_reduction, 300, 300));
 		}
 	}
 
-	/**是否在拖动*/
+	/** 是否在拖动 */
 	public boolean isDraging() {
 		return draging;
 	}
@@ -361,7 +367,7 @@ public class BaoCircleSlider extends View {
 			break;
 
 		case MotionEvent.ACTION_MOVE:
-
+			getParent().requestDisallowInterceptTouchEvent(true);
 			if (isTouchCtrlIcon) {
 				draging = true;
 				changingValue = true;

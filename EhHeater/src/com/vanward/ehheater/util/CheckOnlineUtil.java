@@ -58,6 +58,8 @@ public class CheckOnlineUtil {
 		}
 		
 		checkOnlineTimer = new Timer();
+
+		bindList.clear();
 		
 		checkOnlineTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override

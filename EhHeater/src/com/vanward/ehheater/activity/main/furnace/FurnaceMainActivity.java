@@ -1,5 +1,9 @@
 package com.vanward.ehheater.activity.main.furnace;
 
+import java.util.logging.SimpleFormatter;
+
+import net.tsz.afinal.FinalBitmap;
+import net.tsz.afinal.bitmap.core.BitmapDisplayConfig;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +15,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,33 +30,28 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.configure.ConnectActivity;
+import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
-import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
+import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
-import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
-import com.vanward.ehheater.view.DeviceOffUtil;
-import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
-import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
-import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
-public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
+public class FurnaceMainActivity extends BaseBusinessActivity implements
 		OnClickListener, OnLongClickListener, BaoCircleSliderListener {
 
 	private static final String TAG = "FurnaceMainActivity";
 
-	protected SlidingMenu mSlidingMenu;
+	// protected SlidingMenu mSlidingMenu;
 
 	private Button btn_top_right, btn_appointment, btn_setting,
 			btn_intellectual;
@@ -93,7 +91,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			updateTitle();
+			updateTitle(mTitleName);
 			initSlidingMenu();
 		}
 	};
@@ -107,52 +105,41 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		setListener();
 		init();
 		initOpenView();
-		updateTitle();
+		updateTitle(mTitleName);
 
-		IntentFilter filter = new IntentFilter(
-				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				heaterNameChangeReceiver, filter);
-		registerSuicideReceiver();
+				heaterNameChangeReceiver,
+				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 
-		btn_top_right.post(new Runnable() {
+		// btn_top_right.post(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// btn_top_right.setWidth(btn_top_right.getWidth());
+		// btn_top_right.setHeight(btn_top_right.getHeight());
+		// generated.SendDERYRefreshReq(Global.connectId);
+		// }
+		// });
 
-			@Override
-			public void run() {
-				btn_top_right.setWidth(btn_top_right.getWidth());
-				btn_top_right.setHeight(btn_top_right.getHeight());
-				generated.SendDERYRefreshReq(Global.connectId);
-			}
-		});
-
-		HeaterInfo curHeater = new HeaterInfoService(getBaseContext())
-				.getCurrentSelectedHeater();
-		String mac = curHeater.getMac();
-		String passcode = curHeater.getPasscode();
-		String did = curHeater.getDid();
-
-		String userId = AccountService.getUserId(getBaseContext());
-		String userPsw = AccountService.getUserPsw(getBaseContext());
-
-		ConnectActivity.connectToDevice(this, mac, userId, userPsw);
+		connectCurDevice();
 	}
 
-	private void initSlidingMenu() {
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		int mScreenWidth = dm.widthPixels;
-		setBehindContentView(R.layout.main_left_fragment);
-		mSlidingMenu = getSlidingMenu();
-		mSlidingMenu.setMode(SlidingMenu.LEFT);
-		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
-		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
-		mSlidingMenu.setFadeDegree(0.35f);
-		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
-		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
-		mSlidingMenu.setFadeEnabled(true);
-		mSlidingMenu.setBehindScrollScale(0.333f);
-	}
+	// private void initSlidingMenu() {
+	// DisplayMetrics dm = new DisplayMetrics();
+	// getWindowManager().getDefaultDisplay().getMetrics(dm);
+	// int mScreenWidth = dm.widthPixels;
+	// setBehindContentView(R.layout.main_left_fragment);
+	// mSlidingMenu = getSlidingMenu();
+	// mSlidingMenu.setMode(SlidingMenu.LEFT);
+	// mSlidingMenu.setShadowWidth(mScreenWidth / 40);
+	// mSlidingMenu.setBehindOffset(mScreenWidth / 4);
+	// mSlidingMenu.setFadeDegree(0.35f);
+	// mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+	// mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
+	// mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
+	// mSlidingMenu.setFadeEnabled(true);
+	// mSlidingMenu.setBehindScrollScale(0.333f);
+	// }
 
 	private void findViewById() {
 		btn_top_right = ((Button) findViewById(R.id.ivTitleBtnRigh));
@@ -218,13 +205,13 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		});
 	}
 
-	private void updateTitle() {
-		HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
-				.getCurrentSelectedHeater();
-		if (heaterInfo != null) {
-			mTitleName.setText(Consts.getHeaterName(heaterInfo));
-		}
-	}
+	// private void updateTitle() {
+	// HeaterInfo heaterInfo = new HeaterInfoService(getBaseContext())
+	// .getCurrentSelectedHeater();
+	// if (heaterInfo != null) {
+	// mTitleName.setText(Consts.getHeaterName(heaterInfo));
+	// }
+	// }
 
 	private void initOpenView() {
 		rlt_open = (RelativeLayout) LinearLayout.inflate(this,
@@ -264,21 +251,24 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
+		super.OnDERYStatusResp(pResp, nConnId);
+		DialogUtil.dismissDialog();
+
 		if (tv_sliding_menu_season_mode != null) {
 			changeSlidingSeasonModeItem(pResp.getSeasonState() == 0 ? FurnaceSeasonActivity.SET_SUMMER_MODE
 					: FurnaceSeasonActivity.SET_WINNER_MODE);
 		}
+
 		if (nConnId != Global.connectId) {
 			return;
 		} else {
 			statusResp = pResp;
 		}
-        isConnect= true;
+		stateQueried = true;
 		seasonAndModeDeal(pResp); // switch season and mode
 		onOffDeal(pResp);
 		gasConsumptionDeal(pResp);
 
-		super.OnDERYStatusResp(pResp, nConnId);
 	}
 
 	@Override
@@ -305,10 +295,10 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 			isOn = false;
 
-			DialogUtil.instance().showReconnectDialog(this);
-		} else if (connId == Global.connectId && event == 0) {
-			generated.SendDERYRefreshReq(Global.connectId);
-		}
+		} /*
+		 * else if (connId == Global.connectId && event == 0) {
+		 * generated.SendDERYRefreshReq(Global.connectId); }
+		 */
 	}
 
 	private void onOffDeal(DERYStatusResp_t pResp) {
@@ -400,7 +390,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 			}
 		} else if (pResp.getSeasonState() == 1) { // winner
 
-			Log.e("冬季返回来的温度是 : ", pResp.getHeatingTemTarget() + "");
+			// Log.e("冬季返回来的温度是 : ", pResp.getHeatingTemTarget() + "");
 
 			if (pResp.getHeatingSend() == 0) { // 0 : 散热器
 				rb_supply_heating
@@ -553,6 +543,8 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 		if (pResp.getOnOff() == 1) {
 			tv_gas_unit.setVisibility(View.VISIBLE);
 			tv_gas_consumption.setText(String.valueOf(pResp.getGasCountNow()));
+			Log.e("实时燃气量是 : ", String.valueOf(pResp.getGasCountNow()));
+			Log.e("累计燃气量是 : ", String.valueOf(pResp.getGasCount()));
 		} else {
 			tv_gas_unit.setVisibility(View.GONE);
 			tv_gas_consumption.setText(R.string.no_set);
@@ -730,6 +722,7 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+
 		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
 				&& resultCode == RESULT_OK) {
 
@@ -751,9 +744,9 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 			new HeaterInfoDao(getBaseContext()).save(curHeater);
 
-			Global.connectId = connId;
-
 			if (isOnline) {
+				Global.connectId = connId;
+				Global.checkOnlineConnId = -1;
 
 				boolean shouldExecuteBinding = HeaterInfoService
 						.shouldExecuteBinding(curHeater);
@@ -764,20 +757,21 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 					queryState();
 				}
 
-				// mSlidingMenu.post(new Runnable() {
-				//
-				// @Override
-				// public void run() {
-				// generated.SendDERYRefreshReq(Global.connectId);
-				// }
-				// });
-
 			} else {
-				// TODO 设备不在线
-				// stute.setText("设备不在线");
+
+				Global.connectId = -1;
+				Global.checkOnlineConnId = connId;
+
+				changeToOfflineUI();
+
+				DialogUtil.instance().showReconnectDialog(new Runnable() {
+					@Override
+					public void run() {
+						CheckOnlineUtil.ins().start(getBaseContext());
+					}
+				}, this);
 			}
 
-			updateTitle(); // connect回调可能是由于切换了热水器, 需更新title
 			mSlidingMenu.showContent();
 
 		} else if (tv_sliding_menu_season_mode != null
@@ -811,59 +805,48 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 		}
 	}
-	boolean isConnect= true;
+
+	private boolean stateQueried;
+
 	private void queryState() {
-
-		mSlidingMenu.post(new Runnable() {
+		// DialogUtil.instance().showQueryingDialog(this);
+		DialogUtil.instance().showLoadingDialog(this, "");
+		stateQueried = false;
+		generated.SendDERYRefreshReq(Global.connectId);
+		mSlidingMenu.postDelayed(new Runnable() {
 
 			@Override
 			public void run() {
-				generated.SendDERYRefreshReq(Global.connectId);
-			}
-		});
-		mSlidingMenu.postDelayed(new  Runnable() {
-			
-			@Override
-			public void run() {
-				if (!isConnect) {
-					DialogUtil.instance().showReconnectDialog(FurnaceMainActivity.this);
+				if (!stateQueried) {
+					changeToOfflineUI();
+					DialogUtil.instance().showReconnectDialog(
+							FurnaceMainActivity.this);
 				}
-				
+
 			}
 		}, MainActivity.connectTime);
-		
-		
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		XPGConnectClient.RemoveActivity(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		XPGConnectClient.AddActivity(this);
 	}
 
-	private void registerSuicideReceiver() {
-
-		IntentFilter filter = new IntentFilter(
-				Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
-		BroadcastReceiver receiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				finish();
-			}
-		};
-		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
-				receiver, filter);
+	@Override
+	protected void onStop() {
+		super.onStop();
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				heaterNameChangeReceiver);
 	}
 
 	@Override
 	public void didBeginTouchCircleSlider() {
-		Log.e(TAG, "didBeginTouchCircleSlider");
+		// Log.e(TAG, "didBeginTouchCircleSlider");
 	}
 
 	@Override
@@ -919,12 +902,36 @@ public class FurnaceMainActivity extends BaseSlidingFragmentActivity implements
 
 	@Override
 	public void didEndChangeValue() {
-		Log.e(TAG, "didEndChangeValue");
+		// Log.e(TAG, "didEndChangeValue");
 		boolean isBathMode = true;
-		if (rg_winner.getCheckedRadioButtonId() == R.id.rb_supply_heating) {
+		if (rg_winner.getVisibility() == View.VISIBLE
+				&& rg_winner.getCheckedRadioButtonId() == R.id.rb_supply_heating) {
 			isBathMode = false;
 		}
 		sendToMsgAfterThreeSeconds(circle_slider.getValue(), isBathMode);
+	}
+
+	@Override
+	protected void changeToOfflineUI() {
+
+		try {
+			tv_status.setText(R.string.offline);
+			rb_summer.setText(R.string.no_set);
+			rb_supply_heating.setText(R.string.no_set);
+			rb_bath.setText(R.string.no_set);
+			tv_temperature.setText(R.string.no_set);
+			tv_gas_consumption.setText(R.string.no_set);
+			circle_slider.setVisibility(View.GONE);
+			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
+			iv_rotate_animation.setVisibility(View.INVISIBLE);
+			btn_appointment.setEnabled(false);
+			btn_setting.setEnabled(false);
+			btn_intellectual.setEnabled(false);
+			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }

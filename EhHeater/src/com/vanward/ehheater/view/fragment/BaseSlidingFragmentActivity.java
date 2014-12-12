@@ -25,6 +25,12 @@ public class BaseSlidingFragmentActivity extends EhHeaterBaseActivity implements
 		mHelper = new SlidingActivityHelper(this);
 		mHelper.onCreate(savedInstanceState);
 	}
+	
+//	@Override
+//	public void onDestroy() {
+//		super.onDestroy();
+//		mHelper = null;
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -49,7 +55,7 @@ public class BaseSlidingFragmentActivity extends EhHeaterBaseActivity implements
 			return v;
 		return mHelper.findViewById(id);
 	}
-
+ 
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -92,6 +92,8 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	Button ivTitleBtnLeft;
 	@ViewInject(id = R.id.ivTitleBtnRigh, click = "onClick")
 	Button ivTitleBtnRigh;
+	@ViewInject(id = R.id.btn_add_pattern, click = "onClick")
+	Button btn_add_pattern;
 	@ViewInject(id = R.id.zidingyiradio, click = "onClick")
 	LinearLayout zidingyiradioGroup;
 	@ViewInject(id = R.id.imageView1, click = "onClick")
@@ -112,6 +114,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		ivTitleName.setText("模式");
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.icon_add);
+		ivTitleBtnRigh.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -168,7 +171,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		case R.id.ivTitleBtnLeft:
 			finish();
 			break;
-		case R.id.ivTitleBtnRigh:
+		case R.id.btn_add_pattern:
 			Intent intent = new Intent();
 			intent.setClass(this, AddPattenActivity.class);
 			startActivity(intent);
@@ -183,7 +186,8 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 						@Override
 						public void oncall(View v) {
 							if (radio3.isChecked()) {
-								SendMsgModel.setToBathtubMode(PatternActivity.this);
+								SendMsgModel
+										.setToBathtubMode(PatternActivity.this);
 								finish();
 							}
 						}
@@ -198,9 +202,11 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		name = getIntent().getStringExtra("name");
 		addCustomView();
 		if (customSetVolist.size() >= 3) {
-			ivTitleBtnRigh.setVisibility(View.GONE);
+			// ivTitleBtnRigh.setVisibility(View.GONE);
+			btn_add_pattern.setVisibility(View.GONE);
 		} else {
-			ivTitleBtnRigh.setVisibility(View.VISIBLE);
+			// ivTitleBtnRigh.setVisibility(View.VISIBLE);
+			btn_add_pattern.setVisibility(View.VISIBLE);
 		}
 		// name = name.replace("模式", "");
 		setRadiocheck(name, getWindow().getDecorView());
@@ -248,22 +254,25 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			}
 			for (int i = 0; i < size; i++) {
 				if (name.equals(customSetVolist.get(i).getName())) {
-					zidingyiradioGroup.addView(initCustomItemView(
-							customSetVolist.get(i), true));
+					zidingyiradioGroup
+							.addView(
+									initCustomItemView(customSetVolist.get(i),
+											true), 0);
 				} else {
-					zidingyiradioGroup.addView(initCustomItemView(
-							customSetVolist.get(i), false));
+					zidingyiradioGroup.addView(
+							initCustomItemView(customSetVolist.get(i), false),
+							0);
 				}
 
 				View view2 = new View(this);
 				view2.setBackgroundColor(R.color.line);
 				LinearLayout.LayoutParams lParams = new LayoutParams(
 						LayoutParams.FILL_PARENT, 1);
-				zidingyiradioGroup.addView(view2, lParams);
+				zidingyiradioGroup.addView(view2, 1, lParams);
 			}
-			nopatterm.setVisibility(View.GONE);
+			// nopatterm.setVisibility(View.GONE);
 		} else {
-			nopatterm.setVisibility(View.VISIBLE);
+			// nopatterm.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -294,53 +303,39 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 									@Override
 									public void oncall(View v) {
 										/*
-										AddPatternGasSettingDialogUtil
-												.instance(PatternActivity.this)
-												.initName(
-														customSetVo.getName(),
-														customSetVo.getId())
-												.nextButtonCall(
-														new NextButtonCall() {
-															@Override
-															public void oncall(
-																	View v) {
-																GasCustomSetVo tempcustomSetVo = AddPatternGasSettingDialogUtil
-																		.instance(
-																				PatternActivity.this)
-																		.getData();
-																tempcustomSetVo
-																		.setId(customSetVo
-																				.getId());
-																new BaseDao(
-																		PatternActivity.this)
-																		.getDb()
-																		.update(tempcustomSetVo);
-																if (isCheck) {
-																	SendMsgModel
-																			.setDIYModel(
-																					tempcustomSetVo
-																							.getId(),
-																					tempcustomSetVo);
-																	finish();
-																}
-
-																initViewValue();
-																AddPatternGasSettingDialogUtil
-																		.instance(
-																				PatternActivity.this)
-																		.dissmiss();
-															}
-														}).showDialog();*/
-										
+										 * AddPatternGasSettingDialogUtil
+										 * .instance(PatternActivity.this)
+										 * .initName( customSetVo.getName(),
+										 * customSetVo.getId()) .nextButtonCall(
+										 * new NextButtonCall() {
+										 * 
+										 * @Override public void oncall( View v)
+										 * { GasCustomSetVo tempcustomSetVo =
+										 * AddPatternGasSettingDialogUtil
+										 * .instance( PatternActivity.this)
+										 * .getData(); tempcustomSetVo
+										 * .setId(customSetVo .getId()); new
+										 * BaseDao( PatternActivity.this)
+										 * .getDb() .update(tempcustomSetVo); if
+										 * (isCheck) { SendMsgModel
+										 * .setDIYModel( tempcustomSetVo
+										 * .getId(), tempcustomSetVo); finish();
+										 * }
+										 * 
+										 * initViewValue();
+										 * AddPatternGasSettingDialogUtil
+										 * .instance( PatternActivity.this)
+										 * .dissmiss(); } }).showDialog();
+										 */
 
 										Intent intent = new Intent();
-										intent.setClass(PatternActivity.this, AddPattenActivity.class);
-										intent.putExtra("gasCusVoId", customSetVo.getId());
+										intent.setClass(PatternActivity.this,
+												AddPattenActivity.class);
+										intent.putExtra("gasCusVoId",
+												customSetVo.getId());
 										intent.putExtra("ischeck", isCheck);
 										startActivity(intent);
-										
-										
-										
+
 										AddPatternButtonDialogUtil.instance(
 												PatternActivity.this)
 												.dissmiss();

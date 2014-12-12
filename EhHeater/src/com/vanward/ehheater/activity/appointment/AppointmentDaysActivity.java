@@ -52,8 +52,9 @@ public class AppointmentDaysActivity extends Activity implements
 			
 			@Override
 			public void onClick(View arg0) {
-				AppointmentModel.getInstance(AppointmentDaysActivity.this).setDays(
-						days);
+				Intent intent = new Intent();
+				intent.putExtra("days", days);
+				setResult(RESULT_OK, intent);
 				finish();				
 			}
 		});
@@ -63,7 +64,7 @@ public class AppointmentDaysActivity extends Activity implements
 
 
 	private void init() {
-		days = AppointmentModel.getInstance(this).getDays();
+		days = getIntent().getIntArrayExtra("days");
 		if (days == null) {
 			days = new int[7];
 		}

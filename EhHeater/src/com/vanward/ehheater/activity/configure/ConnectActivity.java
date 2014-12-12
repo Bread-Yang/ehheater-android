@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -34,19 +35,20 @@ import com.xtremeprog.xpgconnect.generated.generated;
 
 public class ConnectActivity extends GeneratedActivity {
 
-	private TextView mTvInfo;
-	
-	private Button mBtnRetry;
-
-	/** 建立的连接类型, LAN / MQTT(大) */
-	private int connType = Integer.MAX_VALUE;
-
 	/** 小循环扫描设备周期,ms */
-	private int defaultScanInterval = 2000;
+	private final static int defaultScanInterval = 2000;
 
 	private final static int LAN_NONE = 0;
 	private final static int LAN_SEARCHING = 1;
 	private final static int LAN_FOUND = 2;
+
+	private TextView mTvInfo, mTvInfo2;
+	
+	private Button mBtnRetry;
+	
+
+	/** 建立的连接类型, LAN / MQTT(大) */
+	private int connType = Integer.MAX_VALUE;
 
 	/** 当前小循环搜索设备的状态, 同一时间点只可能有一个小循环搜索任务在执行 */
 	private int currentLanSearchingState = LAN_NONE;
@@ -61,12 +63,32 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private String didRetrieved = "";
 
+	private boolean jobDone = false;
+	
+	private int onDeviceFoundCounter;
+	
+	private List<XpgEndpoint> tempEndpointList = new ArrayList<XpgEndpoint>();
+	
+	private void initTemporaryFields() {
+		connType = Integer.MAX_VALUE;
+		currentLanSearchingState = LAN_NONE;
+		tempConnId = -1;
+		mac = "";
+		passcode = "";
+		passcodeRetrieved = "";
+		didRetrieved = "";
+		onDeviceFoundCounter = 0;
+		jobDone = false;
+		tempEndpointList.clear();
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_connect_as_dialog);
 		mTvInfo = (TextView) findViewById(R.id.awad_tv);
+		mTvInfo2 = (TextView) findViewById(R.id.awad_tv_2);
 		mBtnRetry = (Button) findViewById(R.id.awad_btn_retry);
 
 		mBtnRetry.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +108,7 @@ public class ConnectActivity extends GeneratedActivity {
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
 			// 无任何网络连接
 			mTvInfo.setText("无网络连接");
+			mTvInfo2.setText("无网络连接");
 			mBtnRetry.setVisibility(View.VISIBLE);
 			return;
 		}
@@ -98,15 +121,27 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private void tryConnectByBigCycle() {
 
-		XPGConnShortCuts.connect2big();
+		XPGConnShortCuts.connect2big();  
 
 		connType = XPG_WAN_LAN.MQTT.swigValue();
 
 		runOnUiThread(new Runnable() {
 			public void run() {
 				mTvInfo.setText("通过云端连接中...");
+				
+				// 45秒后还未成功则连接失败
+				new Handler(new Handler.Callback() {
+					@Override
+					public boolean handleMessage(Message msg) {
+						if (!jobDone) {
+							setOfflineResult();
+						}
+						return false; 
+					}
+				}).sendEmptyMessageDelayed(0, 45000);
 			};
 		});
+<<<<<<< HEAD
 		
 		// 45秒后还未成功则连接失败
 		Looper.prepare();
@@ -120,6 +155,7 @@ public class ConnectActivity extends GeneratedActivity {
 				return false;
 			}
 		}).sendEmptyMessageDelayed(0, 45000);
+
 	}
 
 	/**
@@ -199,8 +235,6 @@ public class ConnectActivity extends GeneratedActivity {
 		}
 
 	}
-	int onDeviceFoundCounter;
-	List<XpgEndpoint> tempEndpointList = new ArrayList<XpgEndpoint>();
 
 	@Override
 	public void onConnectEvent(int connId, int event) {
@@ -287,12 +321,6 @@ public class ConnectActivity extends GeneratedActivity {
 		}
 	}
 	
-	private void initTemporaryFields() {
-		onDeviceFoundCounter = 0;
-		jobDone = false;
-		tempEndpointList.clear();
-	}
-	
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
 		for (XpgEndpoint ep : devList) {
 			if (ep.getSzMac().toLowerCase().equals(mac.toLowerCase())) {
@@ -318,7 +346,6 @@ public class ConnectActivity extends GeneratedActivity {
 		jobDone = true;
 		Log.d("emmm", mac + " isOnline? " + "未绑定此设备");
 	}
-	private boolean jobDone = false;
 	
 	private void setOfflineResult() {
 		mTvInfo.setText("设备不在线");
@@ -345,6 +372,10 @@ public class ConnectActivity extends GeneratedActivity {
 	private void initTargetDeviceInfo() {
 		mac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
 		passcode = passcodeRetrieved = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+		String connectText = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+		if (!TextUtils.isEmpty(connectText)) {
+			mTvInfo2.setText(connectText);
+		}
 	}
 
 	public static String testTime() {
@@ -432,53 +463,24 @@ public class ConnectActivity extends GeneratedActivity {
 	private final static int STATE_NORMAL = 1;
 	private final static int STATE_LAN_ONLY = 2;
 	
-	/**
-	 * 连接成功后会触发调用者activity的onActivityResult回调, 回调参数中会有获取到的connId, isOnline, 
-	 * did和passCode, requestCode = REQUESTCODE_CONNECT_ACTIVITY, 点进来有惊喜
-	 * 
-	 * @param act	调用者activity
-	 */
 	public static void connectToDevice(Activity act, String mac, String userId, String userPsw) {
-
-		Intent intent = new Intent(act.getBaseContext(), ConnectActivity.class);
-		intent.putExtra(Consts.INTENT_EXTRA_MAC, mac);
-		intent.putExtra(Consts.INTENT_EXTRA_USERNAME, userId);
-		intent.putExtra(Consts.INTENT_EXTRA_USERPSW, userPsw);				
-		act.startActivityForResult(intent, Consts.REQUESTCODE_CONNECT_ACTIVITY);
-		
-		
-	/* 以下是在调用者activity的onActivityResult中取出结果的代码, 为了省力, 写到这里
-		
-		int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
-		boolean isOnline = data.getBooleanExtra(Consts.INTENT_EXTRA_ISONLINE, true);
-		String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
-		String passCode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
-		
-	*/
-		
+		connectToDevice(act, mac, "", userId, userPsw, "");
 	}
 	
-	/**
-	 * 连接成功后会触发调用者activity的onActivityResult回调, 回调参数中会有获取到的connId, isOnline, 
-	 * did和passCode, requestCode = REQUESTCODE_CONNECT_ACTIVITY, 点进来有惊喜
-	 * <br /> 
-	 * <br /> 
-	 * 此版本可以传进passCode, 以使小循环连接时减少一个步骤
-	 * 
-	 * @param act	调用者activity
-	 */
 	public static void connectToDevice(Activity act, String mac, String passcode, String userId, String userPsw) {
+		connectToDevice(act, mac, passcode, userId, userPsw, "");
+	}
+	
+	public static void connectToDevice(Activity act, String mac, String passcode, String userId, String userPsw, String connectText) {
 
 		Intent intent = new Intent(act.getBaseContext(), ConnectActivity.class);
-		
 		intent.putExtra(Consts.INTENT_EXTRA_MAC, mac);
 		intent.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcode);
-		
 		intent.putExtra(Consts.INTENT_EXTRA_USERNAME, userId);
-		intent.putExtra(Consts.INTENT_EXTRA_USERPSW, userPsw);			
+		intent.putExtra(Consts.INTENT_EXTRA_USERPSW, userPsw);	
+		intent.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, connectText);	
 		
 		act.startActivityForResult(intent, Consts.REQUESTCODE_CONNECT_ACTIVITY);
-		
 		
 	/* 以下是在调用者activity的onActivityResult中取出结果的代码, 为了省力, 写到这里
 		

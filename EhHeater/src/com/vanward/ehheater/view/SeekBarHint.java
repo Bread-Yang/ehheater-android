@@ -30,6 +30,9 @@ public class SeekBarHint extends SeekBar implements
 	private PopupWindow mPopup;
 	private TextView mPopupTextView;
 	private int mYLocationOffset;
+	private int minValueTips;
+	/** 默认是"℃" */
+	private String tipsUnit;
 
 	private OnSeekBarChangeListener mInternalListener;
 	private OnSeekBarChangeListener mExternalListener;
@@ -66,6 +69,11 @@ public class SeekBarHint extends SeekBar implements
 				ViewGroup.LayoutParams.WRAP_CONTENT);
 		mYLocationOffset = (int) a.getDimension(
 				R.styleable.SeekBarHint_yOffset, 0);
+		minValueTips = (int) a.getInt(R.styleable.SeekBarHint_minValueTips, 0);
+		tipsUnit = (String) a.getString(R.styleable.SeekBarHint_tipsUnit);
+		if (tipsUnit == null) {
+			tipsUnit = "℃";
+		}
 		mPopupStyle = a
 				.getInt(R.styleable.SeekBarHint_popupStyle, POPUP_FOLLOW);
 
@@ -110,7 +118,7 @@ public class SeekBarHint extends SeekBar implements
 
 			@Override
 			public void run() {
-//				showPopup();
+				// showPopup();
 			}
 		});
 	}
@@ -191,7 +199,7 @@ public class SeekBarHint extends SeekBar implements
 			mExternalListener.onStartTrackingTouch(seekBar);
 		}
 
-//		showPopup();
+		// showPopup();
 	}
 
 	@Override
@@ -200,19 +208,15 @@ public class SeekBarHint extends SeekBar implements
 		float baseX = getXPosition(this);
 		float baseY = mYLocationOffset;
 
-		Log.e("我被调用了", "我被调用了");
-		Log.e("getProgress() :", getProgress() + "");
-		Log.e("getMax() :", getMax() + "");
-
 		float val = (((float) getProgress() * (float) (getWidth() - 2 * getThumbOffset())) / getMax());
 
-		String popupText = "30℃";
+		String popupText = minValueTips + tipsUnit;
 
 		if (mProgressChangeListener != null) {
 			popupText = mProgressChangeListener.onHintTextChanged(this,
 					getProgress());
 		}
-		
+
 		float textWidth = label_paint.measureText(popupText);
 		if (val + textWidth > getWidth()) {
 			val = getWidth() - textWidth;

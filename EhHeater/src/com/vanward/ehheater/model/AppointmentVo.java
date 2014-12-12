@@ -178,6 +178,8 @@ public class AppointmentVo implements Parcelable {
 		dest.writeInt(isAppointmentOn);
 		dest.writeInt(isDeviceOn);
 		dest.writeInt(deviceType);
+		dest.writeString(peopleNum);
+		dest.writeString(power);
 	}
 
 	public static final Parcelable.Creator<AppointmentVo> CREATOR = new Parcelable.Creator<AppointmentVo>() {
@@ -197,6 +199,8 @@ public class AppointmentVo implements Parcelable {
 			model.setIsAppointmentOn(source.readInt());
 			model.setIsDeviceOn(source.readInt());
 			model.setDeviceType(source.readInt());
+			model.setPeopleNum(source.readString());
+			model.setPower(source.readString());
 			return model;
 		}
 

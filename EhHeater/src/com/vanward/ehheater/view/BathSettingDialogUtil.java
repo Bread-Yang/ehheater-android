@@ -18,6 +18,7 @@ import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.MoringSeVo;
 import com.vanward.ehheater.activity.main.gas.SendMsgModel;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 
 public class BathSettingDialogUtil implements OnSeekBarChangeListener {
@@ -42,8 +43,8 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 	private static Context context;
 	private Dialog dialog_morning_wash_number_setting;
 	private static BathSettingDialogUtil model;
-	SeekBar seekBarwater, seekBartem;
-	TextView waterttv, temtv;
+	SeekBarHint seekBarwater, seekBartem;
+	int waterttv, temtv;
 
 	private BathSettingDialogUtil(Context context) {
 		this.context = context;
@@ -90,23 +91,19 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 				R.style.custom_dialog);
 		dialog_morning_wash_number_setting
 				.setContentView(R.layout.dialog_bath_setting);
-		seekBarwater = (SeekBar) dialog_morning_wash_number_setting
-				.findViewById(R.id.seekBar1);
-		seekBartem = (SeekBar) dialog_morning_wash_number_setting
-				.findViewById(R.id.SeekBar01);
+		seekBarwater = (SeekBarHint) dialog_morning_wash_number_setting
+				.findViewById(R.id.seekBarwater);
+		seekBartem = (SeekBarHint) dialog_morning_wash_number_setting
+				.findViewById(R.id.seekBartem);
 
-		waterttv = (TextView) dialog_morning_wash_number_setting
-				.findViewById(R.id.textView2);
-		temtv = (TextView) dialog_morning_wash_number_setting
-				.findViewById(R.id.TextView01);
-		temtv.setTag(35);
-		waterttv.setTag(1);
+		temtv = 35;
+		waterttv = 1;
 		seekBartem.setOnSeekBarChangeListener(this);
 		seekBarwater.setOnSeekBarChangeListener(this);
 		BathSettingVo bathSettingVo = new BaseDao(context).getDb().findById(1,
 				BathSettingVo.class);
 		if (bathSettingVo != null) {
-			seekBartem.setProgress(bathSettingVo.getTem()-35);
+			seekBartem.setProgress(bathSettingVo.getTem() - 35);
 			seekBarwater.setProgress(bathSettingVo.getWater());
 		}
 
@@ -125,60 +122,94 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 					@Override
 					public void onClick(View v) {
 						BathSettingVo bathSettingVo = new BathSettingVo(1 + "",
-								(Integer) waterttv.getTag(), (Integer) temtv
-										.getTag());
+								waterttv, temtv);
 						new BaseDao(context).getDb().replace(bathSettingVo);
 						nextButtonCall.oncall(v);
 						dissmiss();
 					}
 				});
 		dialog_morning_wash_number_setting.show();
+
+		seekBartem
+				.setOnProgressChangeListener(new OnSeekBarHintProgressChangeListener() {
+
+					@Override
+					public String onHintTextChanged(SeekBarHint seekBarHint,
+							int progress) {
+
+						int temp = progress + 35;
+
+						if (48 >= temp)
+							;
+						else if (49 == temp)
+							temp = 48;
+						else if (50 <= temp && 53 > temp)
+							temp = 50;
+						else if (53 <= temp && 58 > temp)
+							temp = 55;
+						else if (58 <= temp && 63 > temp)
+							temp = 60;
+						else if (63 <= temp && 65 >= temp)
+							temp = 65;
+
+						temtv = temp;
+
+						return String.format("%s℃", temp);
+					}
+				});
+
+		seekBarwater
+				.setOnProgressChangeListener(new OnSeekBarHintProgressChangeListener() {
+
+					@Override
+					public String onHintTextChanged(SeekBarHint seekBarHint,
+							int progress) {
+						waterttv = progress;
+						if (progress == 0) {
+							progress = 1;
+						}
+						return (progress * 10) + "L";
+					}
+				});
 	}
 
 	@Override
-	public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-		if (arg0.equals(seekBartem)) {
-			
-
-			int temp= arg1 + 35;
-			
-			
-			if (48>=temp) 
-				;
-			else if(49 ==temp)
-				temp = 48;
-			else if(50 <=temp&& 53>temp)
-				temp  = 50;
-			else if(53<=temp&&58>temp)
-				temp  = 55;
-			else if(58<=temp&&63>temp)
-				temp  = 60;
-			else if(63<=temp&&65>=temp)
-				temp  = 65;
-			
-			temtv.setText(temp + "℃");
-			temtv.setTag(temp);
-		} else if (arg0.equals(seekBarwater)) {
-			if (arg1 == 0) {
-				seekBarwater.setProgress(1);
-			} else {
-				waterttv.setText((arg1 * 10) + "L");
-				waterttv.setTag(arg1);
-			}
-
-		}
+	public void onProgressChanged(SeekBar seekbar, int value, boolean arg2) {
+		// if (seekbar.equals(seekBartem)) {
+		//
+		// int temp = value + 35;
+		//
+		// if (48 >= temp)
+		// ;
+		// else if (49 == temp)
+		// temp = 48;
+		// else if (50 <= temp && 53 > temp)
+		// temp = 50;
+		// else if (53 <= temp && 58 > temp)
+		// temp = 55;
+		// else if (58 <= temp && 63 > temp)
+		// temp = 60;
+		// else if (63 <= temp && 65 >= temp)
+		// temp = 65;
+		//
+		// temtv = temp;
+		// } else if (seekbar.equals(seekBarwater)) {
+		// if (value == 0) {
+		// seekBarwater.setProgress(1);
+		// } else {
+		// waterttv = value;
+		// }
+		// }
 
 	}
 
 	@Override
 	public void onStartTrackingTouch(SeekBar arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

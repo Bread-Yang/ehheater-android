@@ -4,7 +4,8 @@ import com.vanward.ehheater.bean.HeaterInfo;
 
 public class Consts {
 	
-	public static final String REQUEST_BASE_URL = "http://122.10.94.216:80/EhHeaterWeb/";
+//	public static final String REQUEST_BASE_URL = "http://vanward.xtremeprog.com/EhHeaterWeb/";
+	public static final String REQUEST_BASE_URL = "http://122.10.94.216/EhHeaterWeb/";
 
 	public static final String INTENT_FILTER_KILL_MAIN_ACTIVITY = "kill_main_activity"; 
 	public static final String INTENT_FILTER_KILL_LOGIN_ACTIVITY = "kill_login_activity";
@@ -17,6 +18,7 @@ public class Consts {
 
 	public static final String INTENT_EXTRA_USERNAME = "username";
 	public static final String INTENT_EXTRA_USERPSW = "userpsw";
+	public static final String INTENT_EXTRA_CONNECT_TEXT = "connect_text";
 	public static final String INTENT_EXTRA_DID2BIND = "did2bind";
 	public static final String INTENT_EXTRA_PASSCODE2BIND = "passcode2bind";
 	public static final String INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH = "configure_activity_should_kill_process";

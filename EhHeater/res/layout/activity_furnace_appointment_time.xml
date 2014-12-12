@@ -237,6 +237,7 @@
                 android:progressDrawable="@drawable/seekbarhint_style"
                 android:thumb="@drawable/seekbarhint_thumb"
                 android:thumbOffset="10dp"
+                app:minValueTips="30"
                 app:popupStyle="follow"
                 app:popupWidth="100dp"
                 app:yOffset="-15dp" />

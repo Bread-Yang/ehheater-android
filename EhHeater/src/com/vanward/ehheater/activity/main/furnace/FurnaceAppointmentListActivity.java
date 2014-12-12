@@ -30,10 +30,12 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.vanward.ehheater.activity.appointment.AppointmentTimeActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.model.AppointmentVo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.view.swipelistview.SwipeListView;
@@ -51,6 +53,8 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 	private ArrayList<AppointmentVo> adapter_data = new ArrayList<AppointmentVo>();
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+	private HeaterType deviceType;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +86,14 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(FurnaceAppointmentListActivity.this,
-						FurnaceAppointmentTimeActivity.class);
+				Intent intent = new Intent();
+				if (deviceType == HeaterType.Eh) {    // 电热水器
+					intent.setClass(FurnaceAppointmentListActivity.this,
+							AppointmentTimeActivity.class);
+				} else {
+					intent.setClass(FurnaceAppointmentListActivity.this,
+							FurnaceAppointmentTimeActivity.class);
+				}
 				startActivityForResult(intent, 0);
 			}
 		});
@@ -105,6 +115,9 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
+		HeaterInfoService service = new HeaterInfoService(getBaseContext());
+		deviceType = service.getHeaterType(service.getCurrentSelectedHeater());
+
 		mHttpFriend = HttpFriend.create(this);
 
 		// extractDataFromJson(getTestData()); // for test
@@ -131,7 +144,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
-						
+
 						Log.e("请求返回来的数据是 : ", jsonString);
 
 						extractDataFromJson(jsonString);
@@ -179,10 +192,10 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					model.setWorkMode(item.getInt("workMode"));
 					model.setIsAppointmentOn(item.getInt("isAppointmentOn"));
 					// model.setIsDeviceOn(item.getInt("isDeviceOn"));
+					model.setPower(item.getString("power"));
 					model.setDeviceType(item.getInt("deviceType"));
 					model.setTemper(item.getString("temper"));
-					model.setPeopleNum("0");
-					model.setPower("0");
+					model.setPeopleNum(item.getString("peopleNum"));
 
 					adapter_data.add(model);
 				}
@@ -300,19 +313,23 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 			holder.tv_temperature.setText(model.getTemper() + "℃");
 
-			switch (model.getWorkMode()) {
-			case 0:
-				holder.tv_mode.setText(R.string.mode_default);
-				break;
-			case 1:
-				holder.tv_mode.setText(R.string.mode_outdoor);
-				holder.tv_temperature.setText("30℃");
+			if (deviceType == HeaterType.EH_FURNACE) { // 壁挂炉
+				switch (model.getWorkMode()) {
+				case 0:
+					holder.tv_mode.setText(R.string.mode_default);
+					break;
+				case 1:
+					holder.tv_mode.setText(R.string.mode_outdoor);
+					holder.tv_temperature.setText("30℃");
 
-				break;
-			case 2:
-				holder.tv_mode.setText(R.string.mode_night);
-				break;
+					break;
+				case 2:
+					holder.tv_mode.setText(R.string.mode_night);
+					break;
 
+				}
+			} else { // 电热水器
+				holder.tv_mode.setText(model.getPower() + "w");
 			}
 
 			if (model.getIsAppointmentOn() == 0) {
@@ -460,8 +477,14 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					// adapter_date.get(position).getId());
 					// intent.putExtra("week", appointment.getDates());
 					intent.putExtra("editAppointment", model);
-					intent.setClass(FurnaceAppointmentListActivity.this,
-							FurnaceAppointmentTimeActivity.class);
+					if (deviceType == HeaterType.EH_FURNACE) {
+						intent.setClass(FurnaceAppointmentListActivity.this,
+								FurnaceAppointmentTimeActivity.class);
+					} else {
+						intent.setClass(FurnaceAppointmentListActivity.this,
+								AppointmentTimeActivity.class);
+					}
+
 					startActivity(intent);
 				}
 			});

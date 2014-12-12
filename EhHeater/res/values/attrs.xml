@@ -5,6 +5,8 @@
 
         <attr name="popupWidth" format="dimension" />
         <attr name="yOffset" format="dimension" />
+        <attr name="minValueTips" format="integer" />
+        <attr name="tipsUnit" format="string" />
         <attr name="popupStyle" format="enum">
             <enum name="follow" value="0"/>
             <enum name="fixed" value="1"/>

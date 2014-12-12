@@ -63,7 +63,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 
 		if (view == rlt_change_password) {
 			intent.setClass(getBaseContext(), ChangePasswordActivity2.class);
-			startActivity(intent);
+			startActivityForResult(intent, 1);
 		}
 
 		if (view == btn_logout) {
@@ -71,26 +71,27 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 					.nextButtonCall(new NextButtonCall() {
 						@Override
 						public void oncall(View v) {
-
-							// send a broad cast to finish main activity
-							Intent killerIntent = new Intent(
-									Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
-							LocalBroadcastManager.getInstance(getBaseContext())
-									.sendBroadcast(killerIntent);
-
-							new SharedPreferUtils(getBaseContext()).clear();  
-							new HeaterInfoService(getBaseContext())
-									.deleteAllHeaters();
-
-							intent.setClass(getBaseContext(),
-									WelcomeActivity.class);
-							startActivity(intent);
-							finish();
+							logout();
 						}
 					}).showDialog();
 
 		}
+	}
+	
+	private void logout() {
+		Intent killerIntent = new Intent(
+				Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY);
+		LocalBroadcastManager.getInstance(getBaseContext())
+				.sendBroadcast(killerIntent);
 
+		new SharedPreferUtils(getBaseContext()).clear();
+		new HeaterInfoService(getBaseContext())
+				.deleteAllHeaters();
+
+		intent.setClass(getBaseContext(),
+				WelcomeActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	private void init() {
@@ -108,11 +109,19 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK && data != null) {
-			String newNickName = data.getStringExtra("newNickName");
-			if (newNickName != null) {
-				tv_nickname.setText(newNickName);
+		switch (requestCode) {
+		case 0:
+			if (resultCode == RESULT_OK && data != null) {
+				String newNickName = data.getStringExtra("newNickName");
+				if (newNickName != null) {
+					tv_nickname.setText(newNickName);
+				}
 			}
+			break;
+		case 1:
+			logout();
+			break;
+
 		}
 	}
 

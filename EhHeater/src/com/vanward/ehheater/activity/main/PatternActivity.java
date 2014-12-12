@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.statedata.EhState;
@@ -90,6 +89,8 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	Button ivTitleBtnLeft;
 	@ViewInject(id = R.id.ivTitleBtnRigh, click = "onClick")
 	Button ivTitleBtnRigh;
+	@ViewInject(id = R.id.btn_add_pattern, click = "onClick")
+	Button btn_add_pattern;
 	@ViewInject(id = R.id.zidingyiradio, click = "onClick")
 	LinearLayout zidingyiradioGroup;
 	private List<CustomSetVo> customSetVolist;
@@ -107,6 +108,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		ivTitleName.setText("模式");
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.icon_add);
+		ivTitleBtnRigh.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -144,7 +146,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		case R.id.ivTitleBtnLeft:
 			finish();
 			break;
-		case R.id.ivTitleBtnRigh:
+		case R.id.btn_add_pattern:
 
 			Intent intent = new Intent();
 			intent.setClass(this, AddPattenActivity.class);
@@ -200,10 +202,10 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		case R.id.mornongsetting:
 			if (name.equals("晨浴模式")) {
 				setMorningWashPeople(true);
-			}else {
+			} else {
 				setMorningWashPeople(false);
 			}
-		
+
 			break;
 		}
 	}
@@ -285,9 +287,11 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		customSetVolist = new BaseDao(this).getDb().findAll(CustomSetVo.class);
 		addCustomView();
 		if (customSetVolist.size() >= 3) {
-			ivTitleBtnRigh.setVisibility(View.GONE);
+			// ivTitleBtnRigh.setVisibility(View.GONE);
+			btn_add_pattern.setVisibility(View.GONE);
 		} else {
-			ivTitleBtnRigh.setVisibility(View.VISIBLE);
+			// ivTitleBtnRigh.setVisibility(View.VISIBLE);
+			btn_add_pattern.setVisibility(View.VISIBLE);
 		}
 		name = getIntent().getStringExtra("name");
 		name.replace("模式", "");
@@ -331,18 +335,17 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				size = customSetVolist.size();
 			}
 			for (int i = 0; i < size; i++) {
-				zidingyiradioGroup.addView(initCustomItemView(
-						customSetVolist.get(i), false));
+				zidingyiradioGroup.addView(
+						initCustomItemView(customSetVolist.get(i), false), 0);
 				View view2 = new View(this);
 				view2.setBackgroundColor(R.color.line);
 				LinearLayout.LayoutParams lParams = new LayoutParams(
 						LayoutParams.FILL_PARENT, 1);
-				zidingyiradioGroup.addView(view2, lParams);
-
+				zidingyiradioGroup.addView(view2, 1, lParams);
 			}
-			nopatterm.setVisibility(View.GONE);
+			// nopatterm.setVisibility(View.GONE);
 		} else {
-			nopatterm.setVisibility(View.VISIBLE);
+			// nopatterm.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -353,7 +356,8 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		final RadioButton radioButton = (RadioButton) view
 				.findViewById(R.id.radioButton1);
 		Button button = (Button) view.findViewById(R.id.textradio1);
-		final RadioButton	tempradioButton=	(RadioButton) view.findViewById(R.id.radioButton1);
+		final RadioButton tempradioButton = (RadioButton) view
+				.findViewById(R.id.radioButton1);
 		view.findViewById(R.id.setting).setOnClickListener(
 				new OnClickListener() {
 					@Override
@@ -373,11 +377,17 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 								}).editButtonCall(new NextButtonCall() {
 									@Override
 									public void oncall(View v) {
-										intent= new  Intent(PatternActivity.this,AddPattenActivity.class);
-										intent.putExtra("index", customSetVo.getName());
-										intent.putExtra("ischeck", tempradioButton.isChecked());
+										intent = new Intent(
+												PatternActivity.this,
+												AddPattenActivity.class);
+										intent.putExtra("index",
+												customSetVo.getName());
+										intent.putExtra("ischeck",
+												tempradioButton.isChecked());
 										startActivity(intent);
-										AddPatternButtonDialogUtil.instance(PatternActivity.this).dissmiss();
+										AddPatternButtonDialogUtil.instance(
+												PatternActivity.this)
+												.dissmiss();
 										if (tempradioButton.isChecked()) {
 											finish();
 										}
@@ -416,7 +426,8 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																	CustomSetVo customSetVo = null;
 																	if (customSetVolist
 																			.size() != 0) {
-																		customSetVo= customSetVolist.get(0);
+																		customSetVo = customSetVolist
+																				.get(0);
 																		setToDIY(customSetVo);
 																		finish();
 																	}
@@ -463,14 +474,15 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 
 	public void setToDIY(CustomSetVo customSetVo) {
 		try {
-			
+
 			int persons = customSetVo.getPeoplenum();
-			
+
 			if (persons >= 1 && persons <= 3) {
-				generated.SendPatternSettingReq(Global.connectId, (short) (persons+4));
+				generated.SendPatternSettingReq(Global.connectId,
+						(short) (persons + 4));
 				return;
 			}
-			
+
 			System.out.println("自定义");
 			SendMsgModel.changeToZidingyiMode();
 			Thread.sleep(700);
@@ -479,8 +491,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			Thread.sleep(700);
 			System.out.println("自定义 Tem: " + customSetVo.getTempter());
 			SendMsgModel.setTempter(customSetVo.getTempter());
-			
-			
+
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
