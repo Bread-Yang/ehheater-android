@@ -91,6 +91,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			if (isFinishing()) {
+				return;
+			}
 			updateTitle(mTitleName);
 			initSlidingMenu();
 		}
@@ -840,8 +843,12 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onStop() {
 		super.onStop();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
-				heaterNameChangeReceiver);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
 	}
 
 	@Override

@@ -100,7 +100,9 @@ public class MainActivity extends BaseBusinessActivity implements
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("emmm", "heaterNameChangeReceiver:onReceive@MainActivity");
+			if (isFinishing()) {
+				return;
+			}
 			updateTitle(mTitleName);
 			initSlidingMenu();
 		}
@@ -250,8 +252,13 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onStop() {
 		super.onStop();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
 	};
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
+	}
 
 	private void initView() {
 		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);

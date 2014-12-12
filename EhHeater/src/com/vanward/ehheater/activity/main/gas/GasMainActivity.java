@@ -88,7 +88,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("emmm", "onReceive@mainac");
+			if (isFinishing()) {
+				return;
+			}
 			updateTitle(mTitleName);
 			initSlidingMenu();
 		}
@@ -238,6 +240,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onStop() {
 		super.onStop();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
 	}
 
