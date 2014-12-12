@@ -141,7 +141,6 @@ public class ConnectActivity extends GeneratedActivity {
 				}).sendEmptyMessageDelayed(0, 45000);
 			};
 		});
-<<<<<<< HEAD
 		
 		// 45秒后还未成功则连接失败
 		Looper.prepare();

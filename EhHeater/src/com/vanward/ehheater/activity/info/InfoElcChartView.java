@@ -249,49 +249,49 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 
 		}
 
-		private void dododo(String resultType, String input)
-				throws JSONException {
-
-			JSONObject jsonObject = new JSONObject(input);
-			JSONArray jr = jsonObject.getJSONArray("result");
-			List<Xvo> nameLi = new ArrayList<Xvo>();
-			List<Datavo> dataLi = new ArrayList<Datavo>();
-
-			for (int i = 0; i < jr.length(); i++) {
-				JSONObject jo = jr.getJSONObject(i);
-
-				long timeStamp = jo.getLong("time");
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(timeStamp);
-				String name = cal.getDisplayName(Calendar.MONTH,
-						Calendar.SHORT, Locale.CHINA);
-
-				if (!resultType.equals("3")) {
-					name += cal.get(Calendar.DATE);
-				}
-
-				Xvo xvo = new Xvo();
-				xvo.setName(name);
-				nameLi.add(xvo);
-
-				Datavo dvo = new Datavo();
-				try {
-					dvo.setData(Integer.parseInt(jo.getString("amount")));
-				} catch (NumberFormatException e) {
-					dvo.setData(0);
-				}
-				dataLi.add(dvo);
-
-			}
-
-			Gson gson = new Gson();
-			namelistjson = gson.toJson(nameLi);
-			datalistjson = gson.toJson(dataLi);
-
-			Log.d("emmm", "namelistjson:" + namelistjson);
-			Log.d("emmm", "datalistjson:" + datalistjson);
-
-		}
+//		private void dododo(String resultType, String input)
+//				throws JSONException {
+//
+//			JSONObject jsonObject = new JSONObject(input);
+//			JSONArray jr = jsonObject.getJSONArray("result");
+//			List<Xvo> nameLi = new ArrayList<Xvo>();
+//			List<Datavo> dataLi = new ArrayList<Datavo>();
+//
+//			for (int i = 0; i < jr.length(); i++) {
+//				JSONObject jo = jr.getJSONObject(i);
+//
+//				long timeStamp = jo.getLong("time");
+//				Calendar cal = Calendar.getInstance();
+//				cal.setTimeInMillis(timeStamp);
+//				String name = cal.getDisplayName(Calendar.MONTH,
+//						Calendar.SHORT, Locale.CHINA);
+//
+//				if (!resultType.equals("3")) {
+//					name += cal.get(Calendar.DATE);
+//				}
+//
+//				Xvo xvo = new Xvo();
+//				xvo.setName(name);
+//				nameLi.add(xvo);
+//
+//				Datavo dvo = new Datavo();
+//				try {
+//					dvo.setData(Integer.parseInt(jo.getString("amount")));
+//				} catch (NumberFormatException e) {
+//					dvo.setData(0);
+//				}
+//				dataLi.add(dvo);
+//
+//			}
+//
+//			Gson gson = new Gson();
+//			namelistjson = gson.toJson(nameLi);
+//			datalistjson = gson.toJson(dataLi);
+//
+//			Log.d("emmm", "namelistjson:" + namelistjson);
+//			Log.d("emmm", "datalistjson:" + datalistjson);
+//
+//		}
 
 	}
 	
@@ -392,7 +392,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							
 							JSONObject jb=(JSONObject) array.get(0);
 							dtime=Long.valueOf(jb.getString("time"));
-							
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
@@ -496,7 +495,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							
 							JSONObject jb=(JSONObject) array.get(0);
 							dtime=Long.valueOf(jb.getString("time"));
-							
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
@@ -519,7 +517,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							namelistjson = jsonArray.toString();
 							//赋值data
 							datalistjson = jsonArray2.toString();
-							lqtime.setText("");
 							//设置使用的总电数
 							getall();
 							//更换下方按钮
@@ -554,10 +551,10 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 				try {
 					JSONObject jsonObject = new JSONObject(t);
 					if(jsonObject.get("result").equals(null)){
-						sumwater.setText("0"+"度");
+						sumwater.setText("0度");
 					}
 					else{
-						sumwater.setText(jsonObject.get("result")+"度");
+						sumwater.setText(jsonObject.get("result")+"0度");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -574,7 +571,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 			}
 		});
 	}
-	
 	public long timechanged(){
 	    Long l=new Long(dtime);
         Date date = new Date(l); 
@@ -599,11 +595,28 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
         ca.add(ca.YEAR,-1);
+		
         long times =ca.getTime().getTime();  
 		return times;
 	}
-	
 	public long timechanged4(){
+		Long l2=new Long(System.currentTimeMillis());
+		Date t2=new Date(l2);
+		Calendar ca2=Calendar.getInstance();
+		ca2.setTime(t2);
+
+	    Long l=new Long(dtime);
+        Date date = new Date(l); 
+        Calendar ca=Calendar.getInstance();
+        ca.setTime(date);
+        if(ca.get(ca.WEEK_OF_MONTH)!=ca2.get(ca2.WEEK_OF_MONTH)){
+        	ca.add(ca.DATE,7);  
+        }
+        long times =ca.getTime().getTime();
+        return times;
+       
+	}
+	public long timechanged5(){
 		Long l2=new Long(System.currentTimeMillis());
 		Date t2=new Date(l2);
 		Calendar ca2=Calendar.getInstance();
@@ -613,30 +626,25 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        if(ca.get(ca.WEEK_OF_MONTH)==ca2.get(ca2.WEEK_OF_MONTH)){
-        	
+        if(ca.get(ca.MONTH)+1!=ca2.get(ca2.MONTH)+1){
+        	ca.add(ca.MONTH,1);  
         }
-        else{
-        ca.add(ca.DATE,7);
-        }
-        long times =ca.getTime().getTime();
-        return times;
-	}
-	public long timechanged5(){
-	    Long l=new Long(dtime);
-        Date date = new Date(l); 
-        Calendar ca=Calendar.getInstance();
-        ca.setTime(date);
-        ca.add(ca.MONTH,1);
         long times =ca.getTime().getTime();  
 		return times;
 	}
 	public long timechanged6(){
+		
+		Long l2=new Long(System.currentTimeMillis());
+		Date t2=new Date(l2);
+		Calendar ca2=Calendar.getInstance();
+		ca2.setTime(t2);
 	    Long l=new Long(dtime);
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        ca.add(ca.YEAR,1);
+        if(ca.get(ca.YEAR)!=ca2.get(ca2.YEAR)){
+            ca.add(ca.YEAR,1); 
+        }
         long times =ca.getTime().getTime() ;  
 		return times;
 	}
@@ -657,6 +665,10 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 				
 			case "上一年":
 				long dates7=timechanged3();
+				SimpleDateFormat sim=new SimpleDateFormat("yyyy年");
+				Long l=new Long(dates7);
+				Date da=new Date(l);
+				lqtime.setText(sim.format(da));
 				getmessageyear(dates7);
 				break;
 
@@ -669,18 +681,26 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 			 switch (next.getText().toString().trim()) {
 			case "下一周":
 					long dates2=timechanged4();
-					getmessageweek(dates2);
+					if(timechanged4()!=dtime){
+						getmessageweek(dates2);
+					}
 					break;
 				
 				
 			case "下一月":
 				long dates3=timechanged5();
+				if(timechanged5()!=dtime){
 				getmessagemonth(dates3);
+				}
 				break;
 				
 			case "下一年":
 				long dates4=timechanged6();
-				getmessageyear(dates4);
+				System.out.println("精确取到下一年"+dates4/1000);
+				System.out.println("精确取到下一年"+dtime/1000);
+				if(timechanged6()!=dtime){
+					getmessageyear(dates4);
+					}
 				break;
 
 			default:
