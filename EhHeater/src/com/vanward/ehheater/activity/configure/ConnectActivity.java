@@ -128,35 +128,23 @@ public class ConnectActivity extends GeneratedActivity {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				mTvInfo.setText("通过云端连接中...");
-				
-				// 45秒后还未成功则连接失败
-				new Handler(new Handler.Callback() {
-					@Override
-					public boolean handleMessage(Message msg) {
-						if (!jobDone) {
-							setOfflineResult();
-						}
-						return false; 
-					}
-				}).sendEmptyMessageDelayed(0, 45000);
 			};
 		});
-<<<<<<< HEAD
 		
-		// 45秒后还未成功则连接失败
-		Looper.prepare();
-		new Handler(new Handler.Callback() {
-			
-			@Override
-			public boolean handleMessage(Message msg) {
-				if (!jobDone) {
-					setOfflineResult();
-				}
-				return false;
-			}
-		}).sendEmptyMessageDelayed(0, 45000);
+		timeoutHandler.sendEmptyMessageDelayed(0, 45000);
 
 	}
+	
+	private Handler timeoutHandler = new Handler(new Handler.Callback() {
+		
+		@Override
+		public boolean handleMessage(Message msg) {
+			if (!jobDone) {
+				setOfflineResult();
+			}
+			return false;
+		}
+	});
 
 	/**
 	 * 小循环唯一入口
