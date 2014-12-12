@@ -53,7 +53,18 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.d("emmm", "deviceOnlineReceiver:onReceive@BaseBusinessActivity:");
+			if (isFinishing()) {
+				return;
+			}
 			connectCurDevice();
+		}
+	};
+	
+	BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("emmm", "logoutReceiver@BaseBusinessActivity:");
+			XPGConnectClient.RemoveActivity(BaseBusinessActivity.this);
 		}
 	};
 	
@@ -67,6 +78,9 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				deviceOnlineReceiver, new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));
+		
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				logoutReceiver, new IntentFilter(Consts.INTENT_ACTION_LOGOUT));
 		
 		registerSuicideReceiver();
 		
@@ -104,8 +118,14 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		super.onStop();
 		CheckOnlineUtil.ins().stop();
 		DialogUtil.dismissDialog();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(deviceOnlineReceiver);
 	};
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(deviceOnlineReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(logoutReceiver);
+	}
 
 
 	@Override

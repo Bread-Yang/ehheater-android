@@ -387,6 +387,14 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 					.show();
 			return;
 		}
+		
+		if (!mType.pkey.equals(hinfo.getProductKey())) {
+
+			Toast.makeText(getBaseContext(), "设备类型错误", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+		
 		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
 		HeaterInfoDao hdao = new HeaterInfoDao(this);
