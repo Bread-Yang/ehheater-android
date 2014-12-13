@@ -141,7 +141,8 @@
             android:layout_alignLeft="@+id/TextView02"
             android:layout_below="@+id/TextView02"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:paddingBottom="10dp" >
 
             <RadioButton
                 android:id="@+id/RadioButton03"
@@ -152,7 +153,7 @@
                 android:checked="true"
                 android:tag="100"
                 android:text=" 大"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -163,7 +164,7 @@
                 android:button="@drawable/radio_selector"
                 android:tag="60"
                 android:text="  中"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -174,7 +175,7 @@
                 android:button="@drawable/radio_selector"
                 android:tag="40"
                 android:text="  小"
-                android:textColor="@color/appointment_text_color"
+                android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
         </RadioGroup>
     </RelativeLayout>

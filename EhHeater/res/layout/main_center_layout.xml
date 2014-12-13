@@ -139,7 +139,7 @@
                 android:layout_height="73dp"
                 android:layout_toRightOf="@+id/circle_bg"
                 android:layout_marginLeft="-55dp"
-                android:layout_marginTop="-80dp"
+                android:layout_marginTop="-60dp"
                 android:layout_below="@+id/circle_bg"
                 android:background="@drawable/set_temperature_bg1"
                 android:focusable="false"

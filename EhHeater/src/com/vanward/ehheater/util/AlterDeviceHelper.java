@@ -21,24 +21,22 @@ import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
  * 
  * 
  * @author Administrator
- *
+ * 
  */
 public class AlterDeviceHelper {
-	
+
 	public static Boolean typeChanged;
-	
+
 	public static Activity hostActivity;
-	
+
 	public static HeaterType newHeaterType;
-	
-	
-	
-	
+
 	public static void alterDevice() {
 		alterDevice(hostActivity, typeChanged, newHeaterType);
 	}
-	
-	public static void alterDevice(Activity hostActivity, boolean typeChanged, HeaterType newHeaterType) {
+
+	public static void alterDevice(Activity hostActivity, boolean typeChanged,
+			HeaterType newHeaterType) {
 
 		String userId = AccountService.getUserId(hostActivity);
 		String userPsw = AccountService.getUserPsw(hostActivity);
@@ -46,32 +44,39 @@ public class AlterDeviceHelper {
 		HeaterInfoService hser = new HeaterInfoService(hostActivity);
 
 		if (!typeChanged) {
-			
-			ConnectActivity.connectToDevice(hostActivity, 
-					hser.getCurrentSelectedHeater().getMac(), userId, userPsw);
 
-			LocalBroadcastManager.getInstance(hostActivity.getBaseContext()).
-				sendBroadcast(new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
-			
+			ConnectActivity.connectToDevice(hostActivity, hser
+					.getCurrentSelectedHeater().getMac(), userId, userPsw);
+
+			LocalBroadcastManager
+					.getInstance(hostActivity.getBaseContext())
+					.sendBroadcast(
+							new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
+
 		} else {
 			// 使前个activity停止接收回调
 			XPGConnectClient.RemoveActivity((GeneratedActivity) hostActivity);
-			
+			Intent intent = new Intent();
+			intent.putExtra("switchSuccess", true);
 			switch (newHeaterType) {
 			case Eh:
-				hostActivity.startActivity(new Intent(hostActivity, MainActivity.class));
+				intent.setClass(hostActivity, MainActivity.class);
+				hostActivity.startActivity(intent);
 				hostActivity.finish();
 				break;
 			case ST:
-				hostActivity.startActivity(new Intent(hostActivity, GasMainActivity.class));
+				intent.setClass(hostActivity, GasMainActivity.class);
+				hostActivity.startActivity(intent);
 				hostActivity.finish();
 				break;
 			case EH_FURNACE:
-				hostActivity.startActivity(new Intent(hostActivity, FurnaceMainActivity.class));
+				intent.setClass(hostActivity, FurnaceMainActivity.class);
+				hostActivity.startActivity(intent);
 				hostActivity.finish();
 				break;
 			default:
-				Toast.makeText(hostActivity, "无法识别该设备", Toast.LENGTH_LONG).show();
+				Toast.makeText(hostActivity, "无法识别该设备", Toast.LENGTH_LONG)
+						.show();
 				break;
 			}
 
@@ -80,6 +85,6 @@ public class AlterDeviceHelper {
 		AlterDeviceHelper.hostActivity = null;
 		AlterDeviceHelper.typeChanged = null;
 		AlterDeviceHelper.newHeaterType = null;
-		
+
 	}
 }

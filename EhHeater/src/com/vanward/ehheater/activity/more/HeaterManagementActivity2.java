@@ -120,6 +120,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			intent.putExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, true);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra("isDeleteAll", true);
 			startActivity(intent);
 			finish();
 			
@@ -338,6 +339,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			intent.putExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, true);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra("isDeleteAll", true);
 			startActivity(intent);
 			finish();
 			

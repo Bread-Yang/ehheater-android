@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
@@ -22,6 +21,8 @@ import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.notification.PollingService;
+import com.vanward.ehheater.notification.PollingUtils;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
@@ -36,18 +37,19 @@ public class WelcomeActivity extends GeneratedActivity {
 	public void onBackPressed() {
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		boolean isReEnter = getIntent().getBooleanExtra(
 				Consts.INTENT_EXTRA_FLAG_REENTER, false);
 		if (!isReEnter) {
 			XPGConnectClient.initClient(this);
 		}
-		
-		boolean asDialog = getIntent().getBooleanExtra(Consts.INTENT_EXTRA_FLAG_AS_DIALOG, false);
+
+		boolean asDialog = getIntent().getBooleanExtra(
+				Consts.INTENT_EXTRA_FLAG_AS_DIALOG, false);
 		if (asDialog) {
 			setContentView(R.layout.activity_welcome_as_dialog);
 			mTvInfo = (TextView) findViewById(R.id.awad_tv);
@@ -63,8 +65,12 @@ public class WelcomeActivity extends GeneratedActivity {
 				checkLoginAndCurrentDeviceStatus(getBaseContext(), flowHandler);
 			}
 		}, 1000);
-		
+
 		MobclickAgent.updateOnlineConfig(this);
+
+		// 每5分钟请求一次
+		PollingUtils.startPollingService(this, 5 * 30, PollingService.class,
+				PollingService.ACTION);
 	}
 
 	public HeaterInfo getCurrentDevice() {
@@ -76,20 +82,18 @@ public class WelcomeActivity extends GeneratedActivity {
 
 		return curHeater;
 
-//		 HeaterInfo hinfo = new HeaterInfo();
-//		 hinfo.setMac("C8934641B3B4");
-//		 hinfo.setDid("1");
-//		 hinfo.setPasscode("FKAIDJKART");
-//		 return hinfo;
-		
+		// HeaterInfo hinfo = new HeaterInfo();
+		// hinfo.setMac("C8934641B3B4");
+		// hinfo.setDid("1");
+		// hinfo.setPasscode("FKAIDJKART");
+		// return hinfo;
 
-
-//		 HeaterInfo hinfo = new HeaterInfo();
-//		 hinfo.setMac("C8934642E4C7");
-//		 hinfo.setDid("o4kvBWCq5QwcWuZZbm4w4Z");
-//		 hinfo.setPasscode("JPDRRIXEKX");
-//		 hinfo.setBinded(1);
-//		 return hinfo;
+		// HeaterInfo hinfo = new HeaterInfo();
+		// hinfo.setMac("C8934642E4C7");
+		// hinfo.setDid("o4kvBWCq5QwcWuZZbm4w4Z");
+		// hinfo.setPasscode("JPDRRIXEKX");
+		// hinfo.setBinded(1);
+		// return hinfo;
 
 	}
 
@@ -128,9 +132,6 @@ public class WelcomeActivity extends GeneratedActivity {
 			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
 			return;
 		}
-		
-		
-		
 
 		flowHandler.sendEmptyMessage(STATE_NORMAL);
 		return;
@@ -142,20 +143,20 @@ public class WelcomeActivity extends GeneratedActivity {
 		Log.d("emmm", "onActivityResult(RESULT_OK = -1):" + requestCode + "~"
 				+ resultCode);
 
-//		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
-//			
-//			if (resultCode == RESULT_OK) {
-//				// binded
-//				new HeaterInfoService(getBaseContext()).updateBinded(
-//						getCurrentDevice().getMac(), true);
-//			}
-//			
-//			flowHandler.sendEmptyMessage(STATE_NORMAL);
-//			
-//		}
-		
+		// if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
+		//
+		// if (resultCode == RESULT_OK) {
+		// // binded
+		// new HeaterInfoService(getBaseContext()).updateBinded(
+		// getCurrentDevice().getMac(), true);
+		// }
+		//
+		// flowHandler.sendEmptyMessage(STATE_NORMAL);
+		//
+		// }
+
 		if (requestCode == Consts.REQUESTCODE_LOGIN) {
-			
+
 			if (resultCode == RESULT_OK) {
 				flowHandler.sendEmptyMessage(STATE_NORMAL);
 			} else {
@@ -168,9 +169,9 @@ public class WelcomeActivity extends GeneratedActivity {
 					android.os.Process.killProcess(android.os.Process.myPid());
 				}
 			}
-			
+
 		}
-		
+
 	}
 
 	private Handler flowHandler = new Handler(new Handler.Callback() {
@@ -180,38 +181,49 @@ public class WelcomeActivity extends GeneratedActivity {
 			switch (msg.what) {
 
 			case STATE_JUMPED_OUT_TO_LOGIN:
-				startActivityForResult(new Intent(getBaseContext(), LoginActivity.class), Consts.REQUESTCODE_LOGIN);
+				startActivityForResult(new Intent(getBaseContext(),
+						LoginActivity.class), Consts.REQUESTCODE_LOGIN);
 				XPGConnectClient.RemoveActivity(WelcomeActivity.this);
 				break;
 
 			case STATE_JUMPED_OUT_TO_CONFIGURE:
-				startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
+				Intent intent = new Intent(getBaseContext(),
+						SelectDeviceActivity.class);
+				intent.putExtra("isDeleteAll", true);
+				startActivity(intent);
 				XPGConnectClient.RemoveActivity(WelcomeActivity.this);
 				finish();
 				break;
 
-				
 			case STATE_NORMAL:
 				// 直接进入MainActivity
-				HeaterType type = new HeaterInfoService(getBaseContext()).getCurHeaterType();
+				HeaterInfoService heaterService = new HeaterInfoService(
+						getBaseContext());
+				HeaterType type = heaterService.getCurHeaterType();
 				switch (type) {
 				case Eh:
-					startActivity(new Intent(getBaseContext(), MainActivity.class));
+					startActivity(new Intent(getBaseContext(),
+							MainActivity.class));
 					finish();
 					break;
 				case ST:
-					startActivity(new Intent(getBaseContext(), GasMainActivity.class));
+					startActivity(new Intent(getBaseContext(),
+							GasMainActivity.class));
 					finish();
 					break;
 				case EH_FURNACE:
-					startActivity(new Intent(getBaseContext(), FurnaceMainActivity.class));
+					startActivity(new Intent(getBaseContext(),
+							FurnaceMainActivity.class));
 					finish();
 					break;
-					
+
 				default:
 					// 无法识别当前选择的设备, 请进入app删除此设备并选择其他设备
-					Toast.makeText(WelcomeActivity.this, "下载到了无法识别的设备, 请进入app切换至别的设备", Toast.LENGTH_LONG).show();
-					startActivity(new Intent(getBaseContext(), MainActivity.class));
+					Toast.makeText(WelcomeActivity.this,
+							"下载到了无法识别的设备, 请进入app切换至别的设备", Toast.LENGTH_LONG)
+							.show();
+					startActivity(new Intent(getBaseContext(),
+							MainActivity.class));
 					finish();
 					break;
 				}
@@ -223,19 +235,19 @@ public class WelcomeActivity extends GeneratedActivity {
 		}
 	});
 
-//	private void setBinding() {
-//		Intent intent = new Intent();
-//		intent.setClass(getBaseContext(), DummySendBindingReqActivity.class);
-//		intent.putExtra(Consts.INTENT_EXTRA_USERNAME,
-//				AccountService.getUserId(getBaseContext()));
-//		intent.putExtra(Consts.INTENT_EXTRA_USERPSW,
-//				AccountService.getUserPsw(getBaseContext()));
-//		intent.putExtra(Consts.INTENT_EXTRA_DID2BIND, getCurrentDevice()
-//				.getDid());
-//		intent.putExtra(Consts.INTENT_EXTRA_PASSCODE2BIND, getCurrentDevice()
-//				.getPasscode());
-//		startActivityForResult(intent, Consts.REQUESTCODE_UPLOAD_BINDING);
-//	}
+	// private void setBinding() {
+	// Intent intent = new Intent();
+	// intent.setClass(getBaseContext(), DummySendBindingReqActivity.class);
+	// intent.putExtra(Consts.INTENT_EXTRA_USERNAME,
+	// AccountService.getUserId(getBaseContext()));
+	// intent.putExtra(Consts.INTENT_EXTRA_USERPSW,
+	// AccountService.getUserPsw(getBaseContext()));
+	// intent.putExtra(Consts.INTENT_EXTRA_DID2BIND, getCurrentDevice()
+	// .getDid());
+	// intent.putExtra(Consts.INTENT_EXTRA_PASSCODE2BIND, getCurrentDevice()
+	// .getPasscode());
+	// startActivityForResult(intent, Consts.REQUESTCODE_UPLOAD_BINDING);
+	// }
 
 	@Override
 	protected void onResume() {
@@ -250,8 +262,8 @@ public class WelcomeActivity extends GeneratedActivity {
 	}
 
 	private final static int STATE_NORMAL = 1;
-//	private final static int STATE_LAN_ONLY = 2;
+	// private final static int STATE_LAN_ONLY = 2;
 	private final static int STATE_JUMPED_OUT_TO_LOGIN = 3;
 	private final static int STATE_JUMPED_OUT_TO_CONFIGURE = 4;
-//	private final static int STATE_INVOKE_BINDING_ACTIVITY = 5;
+	// private final static int STATE_INVOKE_BINDING_ACTIVITY = 5;
 }

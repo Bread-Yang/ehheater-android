@@ -3,12 +3,14 @@ package com.vanward.ehheater.activity.main;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -38,6 +40,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.AlterDeviceHelper;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
@@ -177,7 +180,9 @@ public class LeftFragment extends LinearLayout implements
 					.get(position)));
 			HeaterInfo heaterInfo = new HeaterInfoService(getContext())
 					.getCurrentSelectedHeater();
-			if (heaterInfo!=null&&heaterInfo.getMac().equals(objects.get(position).getMac())) {
+			if (heaterInfo != null
+					&& heaterInfo.getMac().equals(
+							objects.get(position).getMac())) {
 				holder1.checkImage.setVisibility(View.VISIBLE);
 				holder1.devicename.setTextColor(0xFFF76F21);
 			} else {
@@ -221,23 +226,22 @@ public class LeftFragment extends LinearLayout implements
 			HeaterInfoService hser = new HeaterInfoService(getContext());
 			HeaterType oriHeaterType = hser.getCurHeaterType();
 			HeaterType newHeaterType = hser.getHeaterType(heaterInfo);
-			
-			hser.setCurrentSelectedHeater(heaterInfo.getMac()); 
-			
+
+			hser.setCurrentSelectedHeater(heaterInfo.getMac());
+
 			AlterDeviceHelper.newHeaterType = newHeaterType;
-			AlterDeviceHelper.typeChanged = !newHeaterType.equals(oriHeaterType);
+			AlterDeviceHelper.typeChanged = !newHeaterType
+					.equals(oriHeaterType);
 			AlterDeviceHelper.hostActivity = hostActivity;
-			
+
 			if (Global.connectId > 0) {
-				//触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
-				XPGConnectClient.xpgcDisconnectAsync(Global.connectId); 
+				// 触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
+				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			} else {
-				//如果当前未建立连接, 直接调用此方法
+				// 如果当前未建立连接, 直接调用此方法
 				AlterDeviceHelper.alterDevice();
 			}
-			
 		}
-
 	}
-	
+
 }

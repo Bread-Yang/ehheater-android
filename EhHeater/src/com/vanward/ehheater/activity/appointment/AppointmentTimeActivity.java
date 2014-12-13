@@ -374,7 +374,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 						});
 
 		appointmentFullDialog = BaoDialogShowUtil.getInstance(this)
-				.createDialogWithOneButton(R.string.furnace_appointment_full,
+				.createDialogWithOneButton(R.string.heater_appointment_full,
 						BaoDialogShowUtil.DEFAULT_RESID, new OnClickListener() {
 
 							@Override

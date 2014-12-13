@@ -70,16 +70,16 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 					.nextButtonCall(new NextButtonCall() {
 						@Override
 						public void oncall(View v) {
+							LogoutUtil.instance(AccountManagementActivity.this)
+									.dissmiss();
 							logout();
 						}
 					}).showDialog();
 
 		}
 	}
-	
-	private void logout() {
 
-		
+	private void logout() {
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
 				new Intent(Consts.INTENT_ACTION_LOGOUT));
 		
@@ -93,6 +93,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 
 		new SharedPreferUtils(getBaseContext()).clear();
 		new HeaterInfoService(getBaseContext()).deleteAllHeaters();
+		AccountService.setUser(this, null, null);
 
 		startActivity(new Intent(getBaseContext(), WelcomeActivity.class));
 		finish();
@@ -123,7 +124,9 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 			}
 			break;
 		case 1:
-			logout();
+			if (resultCode == RESULT_OK) {
+				logout();
+			}
 			break;
 
 		}
