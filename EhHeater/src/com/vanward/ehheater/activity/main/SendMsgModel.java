@@ -1,6 +1,7 @@
 package com.vanward.ehheater.activity.main;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.util.IntelligentPatternUtil;
@@ -13,9 +14,8 @@ public class SendMsgModel {
 		generated.SendPatternSettingReq(Global.connectId, (short) 3);
 
 		try {
-			Thread.sleep(1500);
+			Thread.sleep(2000);
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		if (num == 1) {
 			generated.SendPatternSettingReq(Global.connectId, (short) 5);

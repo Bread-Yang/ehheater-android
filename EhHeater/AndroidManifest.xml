@@ -26,11 +26,11 @@
         android:theme="@style/AppBaseTheme" >
 
         <!-- Polling Service -->
-        <service android:name=".notification.PollingService" >
+        <!-- <service android:name=".notification.PollingService" >
             <intent-filter>
                 <action android:name="com.vanward.service.PollingService" />
             </intent-filter>
-        </service>
+        </service> -->
 
         <activity
             android:name=".activity.WelcomeActivity"

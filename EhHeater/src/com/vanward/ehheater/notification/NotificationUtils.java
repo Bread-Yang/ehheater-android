@@ -1,19 +1,15 @@
 package com.vanward.ehheater.notification;
 
-import java.util.Random;
+import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 
 import com.vanward.ehheater.R;
@@ -21,44 +17,47 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.HttpFriend;
 
-public class PollingService extends Service {
+public class NotificationUtils {
 
-	public static final String ACTION = "com.vanward.service.PollingService";
+	private static NotificationUtils instance;
+
+	private Context mContext;
 
 	private Notification mNotification;
 	private NotificationManager mManager;
 	private HttpFriend mHttpFriend;
 	private String uid;
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
+	public static NotificationUtils getInstance(Context context) {
+		if (instance == null) {
+			synchronized (NotificationUtils.class) {
+				if (instance == null) {
+					instance = new NotificationUtils(context);
+				}
+			}
+		} else {
+			instance.mContext = context;
+		}
+		return instance;
 	}
 
-	@Override
-	public void onCreate() {
-		initNotifiManager();
-	}
+	private NotificationUtils(Context context) {
+		this.mContext = context;
 
-	@Override
-	public void onStart(Intent intent, int startId) {
-		new PollingThread().start();
-	}
+		mHttpFriend = HttpFriend.create(context);
 
-	private void initNotifiManager() {
-		mHttpFriend = HttpFriend.create(this);
-
-		mManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		mManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 		int icon = R.drawable.icon58;
 		mNotification = new Notification();
 		mNotification.icon = icon;
-		mNotification.tickerText = "New Message";
+		mNotification.tickerText = "需要增加功率!";
 		mNotification.defaults |= Notification.DEFAULT_SOUND;
 		mNotification.flags = Notification.FLAG_AUTO_CANCEL;
 	}
 
-	private void checkAppointment() {
-		uid = AccountService.getUserId(getBaseContext());
+	public void checkAppointment(final String conflictAppointmentId) {
+		uid = AccountService.getUserId(mContext);
 		if (null != uid && !"".equals(uid)) { // 有uid的时候才请求
 			String requestURL = "userinfo/checkAppointmentStatue?uid=" + uid;
 			// String requestURL =
@@ -78,13 +77,19 @@ public class PollingService extends Service {
 								if ("601".equals(responseCode)) {
 									JSONArray result = json
 											.getJSONArray("result");
-									showNotification();
+									for (int i = 0; i < result.length(); i++) {
+										JSONObject item = result.getJSONObject(i);
+										boolean needNotify = item.getBoolean("needNotify");
+										String appointmentId = item.getString("appointmentId");
+										if (appointmentId.equals(conflictAppointmentId) && needNotify) {
+											showNotification();
+											break;
+										}
+									}
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-
-							Log.e("New message!", "New message!");
 
 						}
 					});
@@ -94,37 +99,11 @@ public class PollingService extends Service {
 	private void showNotification() {
 		mNotification.when = System.currentTimeMillis();
 		// Navigator to the new activity when click the notification title
-		Intent i = new Intent(this, MessageActivity.class);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i,
+		Intent i = new Intent(mContext, MessageActivity.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, i,
 				Intent.FLAG_ACTIVITY_NEW_TASK);
-		mNotification.setLatestEventInfo(this,
-				getResources().getString(R.string.app_name), "需要增加功率!",
-				pendingIntent);
+		mNotification.setLatestEventInfo(mContext, mContext.getResources()
+				.getString(R.string.app_name), "亲，您需要增加功率才能保证您的用水。", pendingIntent);
 		mManager.notify(0, mNotification);
 	}
-
-	/**
-	 * Polling thread
-	 */
-	class PollingThread extends Thread {
-		@Override
-		public void run() {
-			Log.e("Polling...", "Polling...");
-			Handler handler = new Handler(Looper.getMainLooper());
-			handler.post(new Runnable() {
-
-				@Override
-				public void run() {
-					checkAppointment();
-				}
-			});
-		}
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Log.e("Service:onDestroy", "Service:onDestroy");
-	}
-
 }

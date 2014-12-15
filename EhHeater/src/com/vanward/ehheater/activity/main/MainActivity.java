@@ -99,6 +99,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private Animation operatingAnim;
 
+	public static String customPatternName = "";
+
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -475,7 +477,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void changeToCustomModeUpdateUI(byte[] data) {
-		modeTv.setText("自定义模式");
 		EhState ehState = new EhState(data);
 		setAppointmentButtonAble(true);
 		final int targetTemperature = ehState.getTargetTemperature();
@@ -487,23 +488,33 @@ public class MainActivity extends BaseBusinessActivity implements
 				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb()
 						.findAll(CustomSetVo.class);
 
-				for (int i = 0; i < list.size(); i++) {
-					CustomSetVo customSetVo = list.get(i);
+				if (list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						CustomSetVo customSetVo = list.get(i);
 
-					if (customSetVo.getPower() == power
-							&& customSetVo.getTempter() == targetTemperature) {
+						// if (customSetVo.getPower() == power
+						// && customSetVo.getTempter() == targetTemperature) {
+						//
+						// if (customSetVo.getName().length() > 6) {
+						// modeTv.setText(customSetVo.getName().substring(
+						// 0, 6)
+						// + "...");
+						// } else {
+						// modeTv.setText(customSetVo.getName());
+						// }
+						//
+						// break;
+						// }
 
-						if (customSetVo.getName().length() > 6) {
-							modeTv.setText(customSetVo.getName()
-									.substring(0, 6) + "...");
-						} else {
+						if (customSetVo.isSet()) {
 							modeTv.setText(customSetVo.getName());
+							break;
 						}
-
-						break;
 					}
-
+				} else {
+					modeTv.setText("自定义模式");
 				}
+				// modeTv.setText(customPatternName);
 			}
 		});
 
@@ -537,8 +548,9 @@ public class MainActivity extends BaseBusinessActivity implements
 								MainActivity.this).getPower();
 						System.out.println("0x00: " + (short) (0x00 + i));
 						SendMsgModel.setPower(i);
-						if (currentModeCode == 7) {  // 智能模式
-							IntelligentPatternUtil.addLastPower(MainActivity.this, i);
+						if (currentModeCode == 7) { // 智能模式
+							IntelligentPatternUtil.addLastPower(
+									MainActivity.this, i);
 						}
 						PowerSettingDialogUtil.instance(MainActivity.this)
 								.dissmiss();
@@ -564,6 +576,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (i == 0) {
 			ChangeStuteView.swichMorningWash(stuteParent);
 		} else if (new EhState(data).getSystemRunningState() == 1) {
+			Log.e("剩余时间是 : ", i + "");
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
 		}
 

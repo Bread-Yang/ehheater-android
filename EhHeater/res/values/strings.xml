@@ -43,7 +43,7 @@
     <string name="number">分人洗</string>
     <string name="power">功率</string>
     <string name="current_power">当前功率</string>
-    <string name="confirm">确认</string>
+    <string name="confirm">确定</string>
     <string name="cancel">取消</string>
     <string name="morning_wash_time">晨浴时间</string>
     <string name="morning_wash_number">晨浴人数</string>

@@ -7,6 +7,7 @@ import java.util.Date;
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,12 +26,14 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.model.AppointmentVo;
+import com.vanward.ehheater.notification.NotificationUtils;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
@@ -70,6 +73,8 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 	private String nickName = "";
 
+	private String conflickName = "";
+
 	private Handler tipsHandler = new Handler() {
 		public void dispatchMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -85,9 +90,9 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 					// + "？");
 					String sFormat = getResources().getString(
 							R.string.appointment_conflict);
-					String sFinalAge = String.format(sFormat, nickName,
-							wheelView1.getCurrentItem(),
-							wheelView2.getCurrentItem());
+					String sFinalAge = String.format(sFormat, conflickName,
+							String.format("%2d", wheelView1.getCurrentItem()),
+							String.format("%2d", wheelView2.getCurrentItem()));
 					tv_tips.setText(sFinalAge);
 
 					appointmentConflictDialog.show();
@@ -271,25 +276,25 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 						switch (i) {
 
 						case 0:
-							cb_Monday.setChecked(true);
+							cb_Sunday.setChecked(true);
 							break;
 						case 1:
-							cb_Thuesday.setChecked(true);
+							cb_Monday.setChecked(true);
 							break;
 						case 2:
-							cb_Wednesday.setChecked(true);
+							cb_Thuesday.setChecked(true);
 							break;
 						case 3:
-							cb_Thursday.setChecked(true);
+							cb_Wednesday.setChecked(true);
 							break;
 						case 4:
-							cb_Friday.setChecked(true);
+							cb_Thursday.setChecked(true);
 							break;
 						case 5:
-							cb_Saturday.setChecked(true);
+							cb_Friday.setChecked(true);
 							break;
 						case 6:
-							cb_Sunday.setChecked(true);
+							cb_Saturday.setChecked(true);
 							break;
 						}
 					}
@@ -412,13 +417,13 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 				StringBuilder week = new StringBuilder(editModel.getWeek());
 
-				week.setCharAt(0, cb_Monday.isChecked() ? '1' : '0'); // Monday
-				week.setCharAt(1, cb_Thuesday.isChecked() ? '1' : '0'); // Thuesday
-				week.setCharAt(2, cb_Wednesday.isChecked() ? '1' : '0'); // Wednesday
-				week.setCharAt(3, cb_Thursday.isChecked() ? '1' : '0'); // Thursday
-				week.setCharAt(4, cb_Friday.isChecked() ? '1' : '0'); // Friday
-				week.setCharAt(5, cb_Saturday.isChecked() ? '1' : '0'); // Saturday
-				week.setCharAt(6, cb_Sunday.isChecked() ? '1' : '0'); // Sunday
+				week.setCharAt(0, cb_Sunday.isChecked() ? '1' : '0'); // Sunday
+				week.setCharAt(1, cb_Monday.isChecked() ? '1' : '0'); // Monday
+				week.setCharAt(2, cb_Thuesday.isChecked() ? '1' : '0'); // Thuesday
+				week.setCharAt(3, cb_Wednesday.isChecked() ? '1' : '0'); // Wednesday
+				week.setCharAt(4, cb_Thursday.isChecked() ? '1' : '0'); // Thursday
+				week.setCharAt(5, cb_Friday.isChecked() ? '1' : '0'); // Friday
+				week.setCharAt(6, cb_Saturday.isChecked() ? '1' : '0'); // Saturday
 
 				editModel.setWeek(week.toString());
 
@@ -477,14 +482,31 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 							@Override
 							public void onSuccess(String jsonString) {
 								super.onSuccess(jsonString);
+								Log.e("更新或保存返回的json数据 : ", jsonString);
 								isOverride = false;
 								try {
 									JSONObject json = new JSONObject(jsonString);
 									String responseCode = json
 											.getString("responseCode");
 									if ("200".equals(responseCode)) {
+//										String appointmentId = null;
+//										if (isEdit) {
+//											appointmentId = String.valueOf(editModel.getAppointmentId());
+//										} else {
+//											appointmentId = json
+//													.getString("result");
+//										}
+//										
+//										Log.e("提交的id是 : ", appointmentId);
+//										NotificationUtils
+//												.getInstance(
+//														FurnaceAppointmentTimeActivity.this)
+//												.checkAppointment(appointmentId);
 										finish();
 									} else if ("501".equals(responseCode)) {
+										JSONObject result = json
+												.getJSONObject("result");
+										conflickName = result.getString("name");
 										tipsHandler.sendEmptyMessage(0);
 									} else if ("403".equals(responseCode)) { // 预约满了
 										tipsHandler.sendEmptyMessage(1);
