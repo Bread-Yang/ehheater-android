@@ -212,7 +212,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 
 	// 设置到智能模式
 	private void setToIntelligenceMode() {
-		SendMsgModel.changeToIntelligenceModeWash();
+		SendMsgModel.changeToIntelligenceModeWash(this);
 	}
 
 	// 设置到自定义模式

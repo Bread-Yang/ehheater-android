@@ -99,8 +99,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private Animation operatingAnim;
 
-	private EhState lastEhState;
-
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -347,9 +345,9 @@ public class MainActivity extends BaseBusinessActivity implements
 			public void onFinish() {
 				SendMsgModel.setTempter(value);
 				tempter.setText(value + "");
-				if (null != lastEhState && lastEhState.getFunctionState() == 7) { // 智能模式
-//					IntelligentPatternUtil.addLastTemperature(
-//							MainActivity.this, value);
+				if (currentModeCode == 7) { // 智能模式
+					IntelligentPatternUtil.addLastTemperature(
+							MainActivity.this, value);
 				}
 				Insetting = false;
 			}
@@ -539,6 +537,9 @@ public class MainActivity extends BaseBusinessActivity implements
 								MainActivity.this).getPower();
 						System.out.println("0x00: " + (short) (0x00 + i));
 						SendMsgModel.setPower(i);
+						if (currentModeCode == 7) {  // 智能模式
+							IntelligentPatternUtil.addLastPower(MainActivity.this, i);
+						}
 						PowerSettingDialogUtil.instance(MainActivity.this)
 								.dissmiss();
 					}
@@ -630,8 +631,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
-
-		lastEhState = new EhState(data);
 
 		if (connId != Global.connectId) {
 			return;

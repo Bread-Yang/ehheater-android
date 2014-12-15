@@ -39,7 +39,8 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/edittext_bg"
-            android:hint="请输入名称" />
+            android:hint="请输入名称"
+            android:singleLine="true" />
     </LinearLayout>
 
     <View

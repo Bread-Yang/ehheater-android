@@ -28,12 +28,14 @@ import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.model.AppointmentVo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.IntelligentPatternUtil;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 import com.vanward.ehheater.view.wheelview.WheelView;
@@ -75,12 +77,19 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 				if (!isFinishing()) {
 					TextView tv_tips = (TextView) appointmentConflictDialog
 							.findViewById(R.id.tv_content);
-					tv_tips.setText(getResources().getString(
-							R.string.appointment_conflict)
-							+ String.format("%2d", wheelView1.getCurrentItem())
-							+ "："
-							+ String.format("%2d", wheelView2.getCurrentItem())
-							+ "？");
+					// tv_tips.setText(getResources().getString(
+					// R.string.appointment_conflict)
+					// + String.format("%2d", wheelView1.getCurrentItem())
+					// + "："
+					// + String.format("%2d", wheelView2.getCurrentItem())
+					// + "？");
+					String sFormat = getResources().getString(
+							R.string.appointment_conflict);
+					String sFinalAge = String.format(sFormat, nickName,
+							wheelView1.getCurrentItem(),
+							wheelView2.getCurrentItem());
+					tv_tips.setText(sFinalAge);
+
 					appointmentConflictDialog.show();
 				}
 				break;
@@ -103,6 +112,25 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 		findViewById();
 		setListener();
 		init();
+
+		// IntelligentPatternUtil.addLastTemperature(this, 11);
+		// IntelligentPatternUtil.addLastTemperature(this, 21);
+		// IntelligentPatternUtil.addLastTemperature(this, 21);
+		// IntelligentPatternUtil.addLastTemperature(this, 11);
+		// IntelligentPatternUtil.addLastTemperature(this, 11);
+		// IntelligentPatternUtil.addLastTemperature(this, 11);
+		// IntelligentPatternUtil.addLastTemperature(this, 21);
+		//
+		// IntelligentPatternUtil.addLastPower(this, 3);
+		// IntelligentPatternUtil.addLastPower(this, 3);
+		// IntelligentPatternUtil.addLastPower(this, 3);
+		// IntelligentPatternUtil.addLastPower(this, 3);
+		// IntelligentPatternUtil.addLastPower(this, 3);
+		//
+		// Log.e("最近的温度 : ", IntelligentPatternUtil.getMostSetTemperature(this)
+		// + "");
+		// Log.e("最近的功率", IntelligentPatternUtil.getMostSetPower(this) + "");
+
 	}
 
 	private void findViewById() {
