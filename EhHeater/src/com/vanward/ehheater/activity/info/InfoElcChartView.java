@@ -465,7 +465,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	public void getmessageyear(long da3){
-		System.out.println("全局变量"+da3);
+		dtime=da3;
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da3+"&resultType=3&expendType=3", 
 				new AjaxCallBack<String>(){
@@ -485,8 +485,8 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
 							
-							JSONObject jb=(JSONObject) array.get(0);
-							dtime=Long.valueOf(jb.getString("time")).longValue();
+//							JSONObject jb=(JSONObject) array.get(0);
+//							dtime=Long.valueOf(jb.getString("time")).longValue();
 							
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
@@ -693,6 +693,10 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 				
 			case "下一年":
 				long dates4=timechanged6();
+				SimpleDateFormat sim=new SimpleDateFormat("yyyy年");
+				Long l=new Long(dates4);
+				Date da=new Date(l);
+				lqtime.setText(sim.format(da));
 				if(timechanged6()!=dtime){
 					getmessageyear(dates4);
 					}
