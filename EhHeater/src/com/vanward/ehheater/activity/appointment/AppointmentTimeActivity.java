@@ -90,12 +90,19 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				if (!isFinishing()) {
 					TextView tv_tips = (TextView) appointmentConflictDialog
 							.findViewById(R.id.tv_content);
-					tv_tips.setText(getResources().getString(
-							R.string.appointment_conflict)
-							+ String.format("%2d", wheelView1.getCurrentItem())
-							+ "："
-							+ String.format("%2d", wheelView2.getCurrentItem())
-							+ "？");
+					// tv_tips.setText(getResources().getString(
+					// R.string.appointment_conflict)
+					// + String.format("%2d", wheelView1.getCurrentItem())
+					// + "："
+					// + String.format("%2d", wheelView2.getCurrentItem())
+					// + "？");
+					String sFormat = getResources().getString(
+							R.string.appointment_conflict);
+					String sFinalAge = String.format(sFormat, nickName,
+							wheelView1.getCurrentItem(),
+							wheelView2.getCurrentItem());
+					tv_tips.setText(sFinalAge);
+
 					appointmentConflictDialog.show();
 				}
 				break;
@@ -449,10 +456,11 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			}
 			showRepeatDays();
 
-			Log.e("editModel.getPeopleNum()", editModel.getPeopleNum() + "");
+			String peopleNum = editModel.getPeopleNum();
 
 			if (!"0".equals(editModel.getPeopleNum())) {
 				tb_switch.setChecked(true);
+				editModel.setPeopleNum(peopleNum);
 				if ("1".equals(editModel.getPeopleNum())) {
 					rg_people.check(R.id.rb_people_1);
 				} else if ("2".equals(editModel.getPeopleNum())) {

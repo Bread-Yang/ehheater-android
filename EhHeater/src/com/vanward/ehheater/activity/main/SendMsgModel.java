@@ -1,6 +1,9 @@
 package com.vanward.ehheater.activity.main;
 
+import android.content.Context;
+
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.util.IntelligentPatternUtil;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class SendMsgModel {
@@ -57,19 +60,24 @@ public class SendMsgModel {
 	}
 
 	// 智能模式
-	public static void changeToIntelligenceModeWash() {
+	public static void changeToIntelligenceModeWash(Context context) {
 		generated.SendPatternSettingReq(Global.connectId, (short) 8);
-		
+
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		generated.SendSettingWaterTempReq(Global.connectId, (short) 45);
-		
-		setPower(1);
-		
+		generated.SendSettingWaterTempReq(Global.connectId, (short) IntelligentPatternUtil.getMostSetTemperature(context));
+
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		setPower(IntelligentPatternUtil.getMostSetPower(context));
+
 	}
 
 	// 自定义

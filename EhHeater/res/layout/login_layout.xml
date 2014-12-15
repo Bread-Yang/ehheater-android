@@ -31,6 +31,7 @@
                 android:hint="@string/phone_number"
                 android:inputType="phone"
                 android:paddingLeft="12dp"
+                android:singleLine="true"
                 android:textSize="16dp" />
 
             <EditText
@@ -43,6 +44,7 @@
                 android:hint="@string/pwd"
                 android:inputType="textPassword"
                 android:paddingLeft="12dp"
+                android:singleLine="true"
                 android:textSize="16dp" />
         </LinearLayout>
 
