@@ -611,6 +611,7 @@ public class MainActivity extends BaseBusinessActivity implements
 													.instance(MainActivity.this)
 													.getMap()
 													.get(en.getErrorCode() + ""));
+									System.out.println(getIntent().getStringExtra("detail")+"故障显示");
 									startActivity(intent);
 								}
 							}).showDialog();

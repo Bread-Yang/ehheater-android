@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/textView1"
-            android:text="222000㎥"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#FFfe6c17" />
     </RelativeLayout>

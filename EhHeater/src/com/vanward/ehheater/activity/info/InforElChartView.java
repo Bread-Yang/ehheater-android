@@ -470,28 +470,26 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								Date time2=new Date(log);
 								Calendar calendar=Calendar.getInstance();
 								calendar.setTime(time2);
-								if(calendar.get(calendar.DATE)==1){
-									calendar.add(calendar.DATE, 5);
-								}
-								else{
+								int sum=calendar.getActualMaximum(Calendar.DAY_OF_MONTH);//当前月的总天数
+								int count=calendar.get(calendar.DATE);//当前天
+//								if(calendar.get(calendar.DATE)==1){
+//									calendar.add(calendar.DATE, 5);
+//								}
+//								else{
 									calendar.add(calendar.DATE, 6);
-								}
-								String time4=format2.format(calendar.getTime());
+//							     }
+								
 								//本月的最后一天
 								Calendar cal=Calendar.getInstance();//获取当前日期 
 								cal.setTime(calendar.getTime());
 								cal.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
 								cal.add(Calendar.MONTH,1);//月增加1天 
 								cal.add(Calendar.DAY_OF_MONTH,-1);//日期倒数一日,既得到本月最后一天 
-								//下个月的一月一号
-								Calendar cal2=Calendar.getInstance();//获取当前日期 
-								cal2.setTime(calendar.getTime());
-								cal2.add(Calendar.MONTH,1);//月增加1天
-								
-								if(calendar.get(calendar.MONTH)+1==cal2.get(calendar.MONTH)){
+								String time4=format2.format(calendar.getTime());
+								//下个月的一月一号					
+								if(count+6>sum){
 									time4=String.valueOf("-"+cal.get(cal.DATE));
-								}
-								
+								}	
 								String time3=time+time4;
 								Electricity electricity=new Electricity();
 								electricity.setAmount(amount);
@@ -688,20 +686,34 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
         return times;
 	}
 	public long timechanged5(){
+		Long l2=new Long(System.currentTimeMillis());
+		Date t2=new Date(l2);
+		Calendar ca2=Calendar.getInstance();
+		ca2.setTime(t2);
+		
 	    Long l=new Long(dtime);
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        ca.add(ca.MONTH,1);
+        if(ca.get(ca.MONTH)+1!=ca2.get(ca2.MONTH)+1){
+        	ca.add(ca.MONTH,1);  
+        }
         long times =ca.getTime().getTime();  
 		return times;
 	}
 	public long timechanged6(){
+		Long l2=new Long(System.currentTimeMillis());
+		Date t2=new Date(l2);
+		Calendar ca2=Calendar.getInstance();
+		ca2.setTime(t2);
+		
 	    Long l=new Long(dtime);
         Date date = new Date(l); 
         Calendar ca=Calendar.getInstance();
         ca.setTime(date);
-        ca.add(ca.YEAR,1);
+        if(ca.get(ca.YEAR)!=ca2.get(ca2.YEAR)){
+            ca.add(ca.YEAR,1); 
+        }
         long times =ca.getTime().getTime() ;  
 		return times;
 	}
@@ -741,12 +753,16 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 				
 			case "下一月":
 				long dates3=timechanged5();
+				if(timechanged5()!=dtime){
 				getmessagemonth(dates3);
+				}
 				break;
 				
 			case "下一年":
 				long dates4=timechanged6();
+				if(timechanged6()!=dtime){
 				getmessageyear(dates4);
+				}
 				break;
 
 			default:

@@ -33,11 +33,30 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 		title.setText("信息");
 		
 
-		name = (TextView) findViewById(R.id.name);
+		name = (TextView) findViewById(R.id.name); 
 		name.setText(getIntent().getStringExtra("name"));
 		detail = (TextView) findViewById(R.id.detail);
 		detail.setText(getIntent().getStringExtra("detail"));
-		detail.setText("请先暂时关闭热水龙头再打开,或关/开显示器，再操作1-2次仍然显示故障代码,请务必关闭水阀和气阀，拔掉电源插头，请与售后服务联系。");
+		String errors=getIntent().getStringExtra("detail");
+		switch (errors) {
+		case "E2":
+			detail.setText("切掉电源，热水器先注满水后，在通电");
+			break;
+			
+		case "E3":
+			detail.setText("请与客服联系");
+			break;
+			
+		case "E4":
+			detail.setText("请与客服联系");
+			break;
+			
+		case "E5":
+			detail.setText("请与客服联系");
+			break;
+		default:
+			break;
+		}
 		time = (TextView) findViewById(R.id.time);
 		time.setText(getIntent().getStringExtra("time"));
 	}
