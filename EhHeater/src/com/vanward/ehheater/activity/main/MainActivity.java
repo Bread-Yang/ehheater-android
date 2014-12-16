@@ -100,6 +100,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	private Animation operatingAnim;
 
 	public static String customPatternName = "";
+	
+	boolean firstShowSwitchSuccess = true;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -188,8 +190,9 @@ public class MainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
 					appointmentSwitchSuccessDialog.show();
+					firstShowSwitchSuccess = false;
 				}
 
 			} else {
@@ -518,7 +521,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			}
 		});
 
-		circularView.setOn(true);
+		circularView.setOn(false);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		// powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
@@ -573,6 +576,9 @@ public class MainActivity extends BaseBusinessActivity implements
 		ChangeStuteView.swichMorningWash(stuteParent);
 		int i = new EhState(data).getRemainingHeatingTime();
 		System.out.println("测试晨浴i: " + i);
+		if (i == -1) {
+			i = 255;
+		}
 		if (i == 0) {
 			ChangeStuteView.swichMorningWash(stuteParent);
 		} else if (new EhState(data).getSystemRunningState() == 1) {

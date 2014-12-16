@@ -88,6 +88,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private Button rightButton;
 
 	private Animation operatingAnim;
+	
+	boolean firstShowSwitchSuccess = true;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -163,8 +165,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 				
-				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
 					appointmentSwitchSuccessDialog.show();
+					firstShowSwitchSuccess = false;
 				}
 
 			} else {
@@ -453,13 +456,14 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
 
-		circularView.setVisibility(View.VISIBLE);
-
+//		circularView.setVisibility(View.VISIBLE);
+		
+		
 		// modeTv.setText("自定义模式");
 		// circularView.setOn(false);
 		// List<GasCustomSetVo> list = new
 		// BaseDao(this).getDb().findAll(GasCustomSetVo.class);
-		// circularView.setOn(false);
+		 circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
 	}
@@ -504,7 +508,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			circularView.setEndangle(65);
 			iv_wave.setVisibility(View.GONE);
 		}
-
 	}
 
 	public void initopenView() {
@@ -555,6 +558,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		dealInHeat(pResp);
 		onoffDeal(pResp);
 		dealErrorWarnIcon(pResp);
+		if (pResp.getCustomFunction() != 0) {
+			circularView.setOn(false);
+		} 
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 

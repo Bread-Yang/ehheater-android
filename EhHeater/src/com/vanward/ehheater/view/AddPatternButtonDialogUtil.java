@@ -79,7 +79,7 @@ public class AddPatternButtonDialogUtil {
 		setLastButtonCall(lastButtonCall);
 		return this;
 	}
-	
+
 	public AddPatternButtonDialogUtil editButtonCall(
 			NextButtonCall lastButtonCall) {
 		setEditButtonListener(lastButtonCall);
@@ -133,8 +133,7 @@ public class AddPatternButtonDialogUtil {
 						lastButtonCall.oncall(v);
 					}
 				});
-		if (!((Activity) context).isDestroyed()
-				&& !((Activity) context).isFinishing()) {
+		if (!((Activity) context).isFinishing()) {
 			setting.show();
 		}
 

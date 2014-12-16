@@ -117,13 +117,12 @@
                 android:background="@drawable/radio_left_bg"
                 android:button="@null"
                 android:checked="true"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/mode_default"
                 android:textColor="@drawable/radoo_select1" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#e6e6e6" />
 
             <RadioButton
                 android:id="@+id/rb_mode_outdoor"
@@ -131,13 +130,12 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/mode_outdoor"
                 android:textColor="@drawable/radoo_select1" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#e6e6e6" />
 
             <RadioButton
                 android:id="@+id/rb_mode_night"
@@ -145,14 +143,12 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_right_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/mode_night"
                 android:textColor="@drawable/radoo_select1" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#e6e6e6"
-                android:visibility="gone" />
 
             <RadioButton
                 android:id="@+id/rb_mode_comfort"
@@ -160,14 +156,12 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/mode_comfort"
                 android:textColor="@drawable/radoo_select1"
-                android:visibility="gone" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#e6e6e6"
                 android:visibility="gone" />
 
             <RadioButton
@@ -176,6 +170,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_right_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/mode_bath"
                 android:textColor="@drawable/radoo_select1"
                 android:visibility="gone" />
@@ -214,7 +212,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
                 android:text="30℃"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="16sp" />
@@ -291,13 +288,12 @@
                 android:background="@drawable/radio_left_bg"
                 android:button="@null"
                 android:checked="false"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/one"
                 android:textColor="@drawable/radoo_select1" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#e6e6e6" />
 
             <CheckBox
                 android:id="@+id/cb_Thuesday"
@@ -305,13 +301,17 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/two"
                 android:textColor="@drawable/radoo_select1" />
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="#e6e6e6" />
+                android:background="#4471878B" />
 
             <CheckBox
                 android:id="@+id/cb_Wednesday"
@@ -319,13 +319,17 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/three"
                 android:textColor="@drawable/radoo_select1" />
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="#e6e6e6" />
+                android:background="#4471878B" />
 
             <CheckBox
                 android:id="@+id/cb_Thursday"
@@ -333,13 +337,17 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/four"
                 android:textColor="@drawable/radoo_select1" />
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="#e6e6e6" />
+                android:background="#4471878B" />
 
             <CheckBox
                 android:id="@+id/cb_Friday"
@@ -347,13 +355,17 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/five"
                 android:textColor="@drawable/radoo_select1" />
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="#e6e6e6" />
+                android:background="#4471878B" />
 
             <CheckBox
                 android:id="@+id/cb_Saturday"
@@ -361,13 +373,12 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_middle_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/six"
                 android:textColor="@drawable/radoo_select1" />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="#e6e6e6" />
 
             <CheckBox
                 android:id="@+id/cb_Sunday"
@@ -375,6 +386,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radio_right_bg"
                 android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/day"
                 android:textColor="@drawable/radoo_select1" />
         </LinearLayout>

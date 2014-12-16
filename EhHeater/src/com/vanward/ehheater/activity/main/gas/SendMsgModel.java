@@ -60,7 +60,7 @@ public class SendMsgModel {
 				BathSettingVo bathSettingVo = new BaseDao(context).getDb().findById("1", BathSettingVo.class);
 				
 				if (bathSettingVo == null) {
-					bathSettingVo = new BathSettingVo("1", 99, 35);  
+					bathSettingVo = new BathSettingVo("1", 50, 35);  
 				}
 				
 				try {

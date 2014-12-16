@@ -14,6 +14,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 
 public class InfoErrorActivity extends Activity implements OnClickListener {
+
 	private Button leftbutton;
 	private Button rightbButton;
 	TextView name, time, detail;
@@ -21,7 +22,6 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_infor_error);
 		initview();
@@ -86,8 +86,10 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 		case R.id.btn_contact:
 			dialog_dial.show();
 			break;
+		case R.id.ivTitleBtnLeft:
+			finish();
+			break;
 		}
-		finish();
 	}
 
 }

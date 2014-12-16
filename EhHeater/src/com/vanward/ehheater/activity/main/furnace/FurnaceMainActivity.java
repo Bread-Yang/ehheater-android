@@ -89,6 +89,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private Dialog turnOffInWinnerDialog;
 
 	private boolean isPowerOffOrOffline;
+	
+	private boolean firstShowSwitchSuccess = true;
 
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -766,8 +768,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
 					appointmentSwitchSuccessDialog.show();
+					firstShowSwitchSuccess = false;
 				}
 
 			} else {

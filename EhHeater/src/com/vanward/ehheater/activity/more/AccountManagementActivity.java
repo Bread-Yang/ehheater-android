@@ -93,7 +93,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 
 		new SharedPreferUtils(getBaseContext()).clear();
 		new HeaterInfoService(getBaseContext()).deleteAllHeaters();
-		AccountService.setUser(this, null, null);
+		AccountService.setUser(this, AccountService.getUserId(getBaseContext()), null);
 
 		startActivity(new Intent(getBaseContext(), WelcomeActivity.class));
 		finish();

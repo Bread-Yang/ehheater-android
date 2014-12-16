@@ -59,7 +59,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setCenterView(R.layout.activity_furnace_appointment_list);
+		setCenterViewWithNoScrollView(R.layout.activity_furnace_appointment_list);
 		setTopText(R.string.appointment);
 		setLeftButtonBackground(R.drawable.icon_back);
 		setRightButtonBackground(R.drawable.icon_add);
@@ -376,8 +376,8 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 					AjaxParams params = new AjaxParams();
 					params.put("data", json);
-					params.put("ignoreConflict", "true");
-
+//					params.put("ignoreConflict", "true");
+					
 					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 							.executePost(params, new AjaxCallBack<String>() {
 								@Override
