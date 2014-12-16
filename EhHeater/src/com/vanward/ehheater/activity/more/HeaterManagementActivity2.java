@@ -33,6 +33,7 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
+import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
@@ -50,6 +51,8 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	private HeaterAdapter adapter;
 	boolean isEdit;
 
+	/** 唯一触发: 删除了当前选择的设备, 并且还有其他设备 */
+	private boolean shouldAlter = false;
 	private String macOfHeaterBeingDeleted;
 	private String didOfHeaterBeingDeleted;
 	private HeaterType typeOfHeaterBeingDeleted;
@@ -77,9 +80,9 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
-		adapter = new HeaterAdapter(
-				new HeaterInfoDao(getBaseContext()).getAll());
+		adapter = new HeaterAdapter(new HeaterInfoDao(getBaseContext()).getAll());
 		lv_listview.setAdapter(adapter);
+		shouldAlter = false;
 	}
 
 	@Override
@@ -124,22 +127,15 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			startActivity(intent);
 			finish();
 			
-		} else  {
+		} else {
 			
 			super.onBackPressed();
 			
-//			if (typeOfHeaterBeingDeleted != null && !typeOfHeaterBeingDeleted.equals(hser.getHeaterType(hinfo))) {
-//				// same type
-//				
-//				
-//				// different type
-//				
-//				
-//				
-//			} else {
-//				super.onBackPressed();
-//			}
-			
+			if (shouldAlter) {
+				shouldAlter = false;
+				LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
+						new Intent(Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
+			}
 		}
 	}
 
@@ -306,20 +302,32 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	private void deleted() {
 		
 		Toast.makeText(getBaseContext(), R.string.success, Toast.LENGTH_SHORT).show();
+		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		
 		if (getCurDeviceMac(getBaseContext()).equals(macOfHeaterBeingDeleted)) {
 			// 删除的设备是当前选定的设备, 此时有2种可能, 1 删光了, 2 未删光 需切换至别的设备
 			
-			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-			
 			List<HeaterInfo> all = new HeaterInfoDao(getBaseContext()).getAll();
 			if (all == null || all.size() == 0) {
 				// 删光了
-				new HeaterInfoService(getBaseContext()).setCurrentSelectedHeater("");
+				hser.setCurrentSelectedHeater("");
+				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			} else {
 				// TODO 需切换至其他设备
-				/*new HeaterInfoService(getBaseContext()).setCurrentSelectedHeater(all.get(0).getMac());*/
+				hser.setCurrentSelectedHeater(all.get(0).getMac());
+				
+				HeaterType oriHeaterType = typeOfHeaterBeingDeleted;
+				HeaterType newHeaterType = hser.getCurHeaterType();
+
+				AlterDeviceHelper.newHeaterType = newHeaterType;
+				AlterDeviceHelper.typeChanged = !newHeaterType.equals(oriHeaterType);
+				
+				shouldAlter = true;
+				
+//				LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
+//						new Intent(Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
 			}
+			
 			
 		}
 		
@@ -329,7 +337,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		Intent heaterNameIntent = new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(heaterNameIntent);
 		
-		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+		// HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hinfo = hser.getCurrentSelectedHeater();
 		
 		if (hinfo == null) {
