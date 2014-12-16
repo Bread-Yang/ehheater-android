@@ -167,7 +167,6 @@ public class AppointmentVo implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(peopleNum);
-		dest.writeString(power);
 		dest.writeString(name);
 		dest.writeInt(appointmentId);
 		dest.writeLong(dateTime);
@@ -180,6 +179,7 @@ public class AppointmentVo implements Parcelable {
 		dest.writeInt(isAppointmentOn);
 		dest.writeInt(isDeviceOn);
 		dest.writeInt(deviceType);
+		dest.writeString(power);
 	}
 
 	public static final Parcelable.Creator<AppointmentVo> CREATOR = new Parcelable.Creator<AppointmentVo>() {
@@ -188,7 +188,6 @@ public class AppointmentVo implements Parcelable {
 		public AppointmentVo createFromParcel(Parcel source) {
 			AppointmentVo model = new AppointmentVo();
 			model.setPeopleNum(source.readString());
-			model.setPower(source.readString());
 			model.setName(source.readString());
 			model.setAppointmentId(source.readInt());
 			model.setDateTime(source.readLong());
@@ -199,8 +198,10 @@ public class AppointmentVo implements Parcelable {
 			model.setWeek(source.readString());
 			model.setWorkMode(source.readInt());
 			model.setIsAppointmentOn(source.readInt());
+			model.setPower(source.readString());
 			model.setIsDeviceOn(source.readInt());
 			model.setDeviceType(source.readInt());
+			
 			return model;
 		}
 

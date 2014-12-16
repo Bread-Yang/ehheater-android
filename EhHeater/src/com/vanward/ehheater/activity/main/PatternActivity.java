@@ -113,6 +113,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	protected void onResume() {
+		// TODO Auto-generated method stub
 		super.onResume();
 		initViewValue();
 
@@ -120,6 +121,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	protected void onPause() {
+		// TODO Auto-generated method stub
 		super.onPause();
 
 	}
@@ -127,6 +129,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onClick(View v) {
 		System.out.println("view:" + v.getId());
+		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.textradio0:
 			radio0.setChecked(true);
@@ -146,7 +149,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		case R.id.btn_add_pattern:
 
 			Intent intent = new Intent();
-			intent.setClass(this, AddPatternActivity.class);
+			intent.setClass(this, AddPattenActivity.class);
 			startActivity(intent);
 
 			// AddPatternNameDialogUtil.instance(this)
@@ -376,7 +379,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 									public void oncall(View v) {
 										intent = new Intent(
 												PatternActivity.this,
-												AddPatternActivity.class);
+												AddPattenActivity.class);
 										intent.putExtra("index",
 												customSetVo.getName());
 										intent.putExtra("ischeck",
@@ -427,9 +430,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																				.get(0);
 																		setToDIY(customSetVo);
 																		finish();
-																	} else {
-																		setToMorningWash();
-																		finish();
 																	}
 																}
 																initViewValue();
@@ -459,14 +459,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						for (CustomSetVo item : customSetVolist) {
-							item.setSet(false);
-							new BaseDao(PatternActivity.this).getDb().update(
-									item);
-						}
-						customSetVo.setSet(true);
-						new BaseDao(PatternActivity.this).getDb().update(
-								customSetVo);
 						setToDIY(customSetVo);
 						finish();
 					}

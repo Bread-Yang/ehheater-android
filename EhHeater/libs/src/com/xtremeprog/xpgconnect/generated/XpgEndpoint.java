@@ -171,6 +171,14 @@ public class XpgEndpoint {
     return generatedJNI.XpgEndpoint_isSdkInternal_get(swigCPtr, this);
   }
 
+  public void setCountLeft(int value) {
+    generatedJNI.XpgEndpoint_countLeft_set(swigCPtr, this, value);
+  }
+
+  public int getCountLeft() {
+    return generatedJNI.XpgEndpoint_countLeft_get(swigCPtr, this);
+  }
+
   public XpgEndpoint() {
     this(generatedJNI.new_XpgEndpoint(), true);
   }
