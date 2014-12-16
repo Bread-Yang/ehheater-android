@@ -27,7 +27,7 @@ import com.vanward.ehheater.util.db.DBService;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 
-public class AddPattenActivity extends EhHeaterBaseActivity implements
+public class AddPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
 
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
