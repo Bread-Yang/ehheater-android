@@ -78,6 +78,10 @@ public class HeaterInfoService {
 		new SharedPreferUtils(context).put(ShareKey.CurDeviceMac, macAddress);
 	}
 
+	public String getCurrentSelectedHeaterMac() {
+		return new SharedPreferUtils(context).get(ShareKey.CurDeviceMac, "");
+	}
+
 	public void deleteHeater(String mac) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
 		HeaterInfo hi = hdao.getHeaterByMac(mac);

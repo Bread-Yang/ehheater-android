@@ -359,6 +359,10 @@ public class ConnectActivity extends GeneratedActivity {
 	
 	private void initTargetDeviceInfo() {
 		mac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
+		if (TextUtils.isEmpty(mac)) {
+			setOfflineResult();
+		}
+		
 		passcode = passcodeRetrieved = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
 		String connectText = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 		if (!TextUtils.isEmpty(connectText)) {
