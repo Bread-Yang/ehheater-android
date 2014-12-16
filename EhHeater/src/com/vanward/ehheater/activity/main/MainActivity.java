@@ -169,6 +169,7 @@ public class MainActivity extends BaseBusinessActivity implements
 					Consts.INTENT_EXTRA_ISONLINE, true);
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+			String conntext = data.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 
 			final HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
@@ -220,7 +221,9 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			}
 
-			mSlidingMenu.showContent();
+			if (!conntext.contains("连接已断开, 正在重新连接")) {
+				mSlidingMenu.showContent();
+			}
 
 		}
 

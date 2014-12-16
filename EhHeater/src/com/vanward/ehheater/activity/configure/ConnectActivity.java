@@ -279,6 +279,12 @@ public class ConnectActivity extends GeneratedActivity {
 			data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
 			data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
 			
+			String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+			if (conntext == null) {
+				conntext = "";
+			}
+			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
+			
 			setResult(RESULT_OK, data);
 			finish();
 		}
@@ -300,6 +306,12 @@ public class ConnectActivity extends GeneratedActivity {
 			data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
 			data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
 			data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
+			
+			String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+			if (conntext == null) {
+				conntext = "";
+			}
+			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
 			
 			setResult(RESULT_OK, data);
 			finish();
@@ -349,6 +361,12 @@ public class ConnectActivity extends GeneratedActivity {
 		data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
 		data.putExtra(Consts.INTENT_EXTRA_PASSCODE, "");
 		data.putExtra(Consts.INTENT_EXTRA_DID, "");
+		
+		String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+		if (conntext == null) {
+			conntext = "";
+		}
+		data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
 		
 		setResult(RESULT_OK, data);
 		finish();
