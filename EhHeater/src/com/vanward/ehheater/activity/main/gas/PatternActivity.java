@@ -173,7 +173,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			break;
 		case R.id.btn_add_pattern:
 			Intent intent = new Intent();
-			intent.setClass(this, AddPattenActivity.class);
+			intent.setClass(this, AddPatternActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.radio3:
@@ -330,7 +330,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 
 										Intent intent = new Intent();
 										intent.setClass(PatternActivity.this,
-												AddPattenActivity.class);
+												AddPatternActivity.class);
 										intent.putExtra("gasCusVoId",
 												customSetVo.getId());
 										intent.putExtra("ischeck", isCheck);

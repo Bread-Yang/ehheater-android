@@ -22,7 +22,7 @@ import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 
-public class AddPattenActivity extends EhHeaterBaseActivity implements
+public class AddPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
 	TextView ivTitleName;
@@ -45,7 +45,6 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_gas_pattern);
 		FinalActivity.initInjectedView(this);
-		ivTitleName.setText("添加模式");
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
 		seekBar.setOnSeekBarChangeListener(this);
@@ -54,6 +53,9 @@ public class AddPattenActivity extends EhHeaterBaseActivity implements
 			gasVo = new BaseDao(this).getDb().findById(voId,
 					GasCustomSetVo.class);
 			setData(gasVo);
+			ivTitleName.setText("编辑模式");
+		} else {
+			ivTitleName.setText("添加模式");
 		}
 		
 		seekBar.setOnProgressChangeListener(new OnSeekBarHintProgressChangeListener() {

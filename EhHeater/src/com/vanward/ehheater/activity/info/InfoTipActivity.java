@@ -16,7 +16,6 @@ public class InfoTipActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_infor_error);
 		initview();
@@ -30,7 +29,7 @@ public class InfoTipActivity extends Activity implements OnClickListener {
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		TextView title = (TextView) findViewById(R.id.ivTitleName);
 		title.setText("信息");
-		Button button1 = ((Button) findViewById(R.id.button1));
+		Button button1 = ((Button) findViewById(R.id.btn_contact));
 		button1.setVisibility(View.GONE);
 		name = (TextView) findViewById(R.id.name);
 		name.setText(getIntent().getStringExtra("name"));

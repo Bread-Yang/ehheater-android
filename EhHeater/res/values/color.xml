@@ -24,6 +24,7 @@
     <color name="color2">#9cabb1</color>
      <color name="yeallow">#e8b59a</color>
      <color name="orange">#fff76805</color>
+     <color name="error_orange">#FF8B0A</color>
 
     
 </resources>

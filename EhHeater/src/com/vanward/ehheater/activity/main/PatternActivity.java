@@ -146,7 +146,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 		case R.id.btn_add_pattern:
 
 			Intent intent = new Intent();
-			intent.setClass(this, AddPattenActivity.class);
+			intent.setClass(this, AddPatternActivity.class);
 			startActivity(intent);
 
 			// AddPatternNameDialogUtil.instance(this)
@@ -376,7 +376,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 									public void oncall(View v) {
 										intent = new Intent(
 												PatternActivity.this,
-												AddPattenActivity.class);
+												AddPatternActivity.class);
 										intent.putExtra("index",
 												customSetVo.getName());
 										intent.putExtra("ischeck",

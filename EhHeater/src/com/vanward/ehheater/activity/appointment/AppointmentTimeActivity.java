@@ -102,8 +102,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					String sFormat = getResources().getString(
 							R.string.appointment_conflict);
 					String sFinalAge = String.format(sFormat, conflickName,
-							String.format("%2d", wheelView1.getCurrentItem()),
-							String.format("%2d", wheelView2.getCurrentItem()));
+							String.format("%02d", wheelView1.getCurrentItem()),
+							String.format("%02d", wheelView2.getCurrentItem()));
 					tv_tips.setText(sFinalAge);
 
 					appointmentConflictDialog.show();
