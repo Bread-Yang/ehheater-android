@@ -82,7 +82,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	RelativeLayout rlt_start_device, content;
 
 	private Dialog appointmentSwitchSuccessDialog;
-	
+
 	private View openView;
 
 	private Button rightButton;
@@ -120,7 +120,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 
 		connectCurDevice();
-		
+
 		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
@@ -162,7 +162,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				} else {
 					queryState();
 				}
-				
+
 				if (getIntent().getBooleanExtra("switchSuccess", false)) {
 					appointmentSwitchSuccessDialog.show();
 				}
@@ -258,11 +258,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	protected void onStop() {
 		super.onStop();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				heaterNameChangeReceiver);
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -753,7 +754,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
 
 	public void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
-
 		freezeProofing(pResp);
 		oxygenWarning(pResp);
 		System.out.println("错误码：" + pResp.getErrorCode());

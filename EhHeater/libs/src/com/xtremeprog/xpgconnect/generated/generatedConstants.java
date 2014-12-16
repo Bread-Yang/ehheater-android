@@ -15,4 +15,5 @@ public interface generatedConstants {
   public final static int MAX_DATA = generatedJNI.MAX_DATA_get();
   public final static int MAX_PATH = generatedJNI.MAX_PATH_get();
   public final static int MAX_TEXT = generatedJNI.MAX_TEXT_get();
+  public final static int DEPRECATED_NOTICE_DISPLAY_COUNT = generatedJNI.DEPRECATED_NOTICE_DISPLAY_COUNT_get();
 }

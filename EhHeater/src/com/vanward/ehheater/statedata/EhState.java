@@ -19,8 +19,19 @@ public class EhState {
 	byte power;
 	byte remainingHeatingTime;
 	byte remainingHotWaterAmount;
-	byte errorCode;
+	short errorCode;
 	short electricityConsumption;
+	short heating_tube_time;
+	short machine_not_heating_time;
+
+	public short getMachine_not_heating_time() {
+		return machine_not_heating_time;
+	}
+
+	public void setMachine_not_heating_time(short machine_not_heating_time) {
+		this.machine_not_heating_time = machine_not_heating_time;
+	}
+
 	short checkSum;
 
 	public EhState(byte[] data) {
@@ -41,14 +52,31 @@ public class EhState {
 			setRemainingHeatingTime(data[14]);
 			setRemainingHotWaterAmount(data[15]);
 			setErrorCode(data[16]);
-			int highElec = data[17]*256;
+			int highElec = data[17] * 256;
 			int lowElec = data[18];
-			setElectricityConsumption((short) (highElec+lowElec));
+			setElectricityConsumption((short) (highElec + lowElec));
+
+			int highheating_tube_time = data[19] * 256;
+			int low_tube_time = data[20];
+			setHeating_tube_time((short) (highheating_tube_time + low_tube_time));
+
+			int highmachine_not_heating_time = data[21] * 256;
+			int lowmachine_not_heating_time = data[22];
+			setMachine_not_heating_time((short) (highmachine_not_heating_time + lowmachine_not_heating_time));
+			
 			setCheckSum((short) 0);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 
+	}
+
+	public short getHeating_tube_time() {
+		return heating_tube_time;
+	}
+
+	public void setHeating_tube_time(short heating_tube_time) {
+		this.heating_tube_time = heating_tube_time;
 	}
 
 	@Override
@@ -187,7 +215,9 @@ public class EhState {
 		this.remainingHotWaterAmount = remainingHotWaterAmount;
 	}
 
-	public byte getErrorCode() {
+
+
+	public short getErrorCode() {
 		return errorCode;
 	}
 
