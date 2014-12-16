@@ -101,7 +101,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	private Animation operatingAnim;
 
 	public static String customPatternName = "";
-	
+
 	boolean firstShowSwitchSuccess = true;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
@@ -165,9 +165,11 @@ public class MainActivity extends BaseBusinessActivity implements
 					Consts.INTENT_EXTRA_ISONLINE, true);
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
-			String conntext = data.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+			String conntext = data
+					.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 
-			final HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			final HeaterInfoService hser = new HeaterInfoService(
+					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
 			if (!TextUtils.isEmpty(passcode)) {
@@ -192,9 +194,10 @@ public class MainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
+				if (getIntent().getBooleanExtra("switchSuccess", false)
+						&& firstShowSwitchSuccess) {
 					// 12月16日需求:去掉切换成功的提示
-					/*appointmentSwitchSuccessDialog.show();*/
+					/* appointmentSwitchSuccessDialog.show(); */
 					firstShowSwitchSuccess = false;
 				}
 
@@ -211,7 +214,8 @@ public class MainActivity extends BaseBusinessActivity implements
 				DialogUtil.instance().showReconnectDialog(new Runnable() {
 					@Override
 					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext(), hser.getCurrentSelectedHeaterMac());
+						CheckOnlineUtil.ins().start(getBaseContext(),
+								hser.getCurrentSelectedHeaterMac());
 					}
 				}, MainActivity.this);
 
@@ -383,16 +387,15 @@ public class MainActivity extends BaseBusinessActivity implements
 				Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
 				return;
 			}
-			
+
 			if (tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
-				DialogUtil.instance()
-						.showReconnectDialog(MainActivity.this);
+				DialogUtil.instance().showReconnectDialog(MainActivity.this);
 				return;
-				
+
 			}
-			
+
 			if (ison) {
 
 				DeviceOffUtil.instance(this)
@@ -557,8 +560,9 @@ public class MainActivity extends BaseBusinessActivity implements
 								MainActivity.this).getPower();
 						System.out.println("0x00: " + (short) (0x00 + i));
 						SendMsgModel.setPower(i);
-						if (currentModeCode == 7) {  // 智能模式
-							IntelligentPatternUtil.addLastPower(MainActivity.this, i);
+						if (currentModeCode == 7) { // 智能模式
+							IntelligentPatternUtil.addLastPower(
+									MainActivity.this, i);
 						}
 						PowerSettingDialogUtil.instance(MainActivity.this)
 								.dissmiss();
@@ -630,7 +634,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void meibangWran(final byte[] data) {
 		System.out.println("镁棒提示：" + new EhState(data).getErrorCode());
 		if (new EhState(data).getHeating_tube_time() > 800 * 60) {
-		tipsimg.setVisibility(View.VISIBLE);
+			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.main_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
@@ -689,7 +693,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void dealErrorWarnIcon(final StateResp_t date) {
 		// freezeProofing(pResp);
 		// oxygenWarning(pResp);
-		System.out.println("错误码：" + date.getError()+"  ");
+		System.out.println("错误码：" + date.getError() + "  ");
 		if (date.getError() != 0) {
 			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.main_error);
@@ -699,8 +703,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				public void onClick(View arg0) {
 					ErrorDialogUtil
 							.instance(MainActivity.this)
-							.initName(
-									Integer.toHexString(date.getError()) + "")
+							.initName(Integer.toHexString(date.getError()) + "")
 							.setNextButtonCall(new NextButtonCall() {
 								@Override
 								public void oncall(View v) {
@@ -710,8 +713,8 @@ public class MainActivity extends BaseBusinessActivity implements
 									intent.putExtra(
 											"name",
 											"机器故障("
-													+ Integer.toHexString(date.getError())
-													+ ")");
+													+ Integer.toHexString(date
+															.getError()) + ")");
 									intent.putExtra("time",
 											simpleDateFormat.format(new Date()));
 									intent.putExtra(
@@ -736,7 +739,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
 		super.OnStateResp(pResp, nConnId);
 		pResp.getError();
-		
+
 		dealErrorWarnIcon(pResp);
 	}
 
