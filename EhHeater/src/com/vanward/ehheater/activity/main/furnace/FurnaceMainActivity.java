@@ -1,9 +1,5 @@
 package com.vanward.ehheater.activity.main.furnace;
 
-import java.util.logging.SimpleFormatter;
-
-import net.tsz.afinal.FinalBitmap;
-import net.tsz.afinal.bitmap.core.BitmapDisplayConfig;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,7 +38,6 @@ import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
-import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -741,7 +736,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
 
-			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			final HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
 			if (!TextUtils.isEmpty(passcode)) {
@@ -767,7 +762,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				}
 
 				if (getIntent().getBooleanExtra("switchSuccess", false)) {
-					appointmentSwitchSuccessDialog.show();
+					// 12月16日需求:去掉切换成功的提示
+					/*appointmentSwitchSuccessDialog.show();*/
 				}
 
 			} else {
@@ -780,7 +776,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				DialogUtil.instance().showReconnectDialog(new Runnable() {
 					@Override
 					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext());
+						CheckOnlineUtil.ins().start(getBaseContext(), hser.getCurrentSelectedHeaterMac());
 					}
 				}, this);
 			}
