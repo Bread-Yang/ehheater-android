@@ -138,7 +138,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		// String requestURL =
 		// "userinfo/getAppointmentList?did=LWFWwtEcFWJ5hSBPXrVXFS&uid=q1231";
 
-		Log.e("请求的地址是", requestURL);
+//		Log.e("请求的地址是", requestURL);
 
 		showRequestDialog();
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
@@ -147,7 +147,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
 
-						Log.e("请求返回来的数据是 : ", jsonString);
+//						Log.e("请求返回来的数据是 : ", jsonString);
 
 						extractDataFromJson(jsonString);
 
@@ -272,40 +272,40 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					int flag = model.getWeek().charAt(i);
 					if (flag == '1') {
 						switch (i) {
-
+						
 						case 0:
+							loopDays += getResources().getString(
+									R.string.Sunday);
+							break;
+						case 1:
 							loopDays += getResources().getString(
 									R.string.Monday)
 									+ " ";
 							break;
-						case 1:
+						case 2:
 							loopDays += getResources().getString(
 									R.string.Tuesday)
 									+ " ";
 							break;
-						case 2:
+						case 3:
 							loopDays += getResources().getString(
 									R.string.Wednesday)
 									+ " ";
 							break;
-						case 3:
+						case 4:
 							loopDays += getResources().getString(
 									R.string.Thursday)
 									+ " ";
 							break;
-						case 4:
+						case 5:
 							loopDays += getResources().getString(
 									R.string.Friday)
 									+ " ";
 							break;
-						case 5:
+						case 6:
 							loopDays += getResources().getString(
 									R.string.Saturday)
 									+ " ";
-							break;
-						case 6:
-							loopDays += getResources().getString(
-									R.string.Sunday);
 							break;
 						}
 					}
@@ -384,7 +384,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 								public void onSuccess(String t) {
 									super.onSuccess(t);
 
-									Log.e("添加成功返回的json : ", t);
+//									Log.e("添加成功返回的json : ", t);
 
 									if ((Integer) view.getTag() == 1) {
 										((ImageButton) view)

@@ -49,7 +49,7 @@ public class PollingService extends Service {
 		mHttpFriend = HttpFriend.create(this);
 
 		mManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		int icon = R.drawable.ic_launcher;
+		int icon = R.drawable.icon58;
 		mNotification = new Notification();
 		mNotification.icon = icon;
 		mNotification.tickerText = "New Message";
@@ -59,7 +59,7 @@ public class PollingService extends Service {
 
 	private void checkAppointment() {
 		uid = AccountService.getUserId(getBaseContext());
-		if (null != uid && !"".equals(uid)) {   // 有uid的时候才请求
+		if (null != uid && !"".equals(uid)) { // 有uid的时候才请求
 			String requestURL = "userinfo/checkAppointmentStatue?uid=" + uid;
 			// String requestURL =
 			// "userinfo/checkAppointmentStatue?uid=13528297235";
