@@ -292,13 +292,13 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 //			Log.d("emmm", "namelistjson:" + namelistjson);
 //			Log.d("emmm", "datalistjson:" + datalistjson);
 //
-//		}
+//		}http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=3
 
 	}
 	
 	public void getmessageweek(long da){
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=3", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did=dVfu4XXcUCbE93Z2mu4PyZ&dateTime=1417503892000&resultType=1&expendType=2", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -314,6 +314,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 					public void onSuccess(String t) {
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
+							System.out.println("ttttttttttttttttttttttt"+t);
 							JSONArray array = jsonObject.getJSONArray("result");
 							
 							JSONObject jb=(JSONObject) array.get(3);
@@ -332,7 +333,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								electricity.setTime(time);
 								li.add(electricity);  
 								JSONObject jsonOBJ = new JSONObject();
-								JSONObject jsonOBJ2 = new JSONObject();
+								JSONObject jsonOBJ2 = new JSONObject(); 
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put("data", li.get(i).getAmount());
 								jsonArray.put(jsonOBJ);
@@ -387,6 +388,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 			 SimpleDateFormat format2 = new SimpleDateFormat("-dd");
 			@Override
 					public void onSuccess(String t) {
+					System.out.println("ttttttttttttttttttttttt"+t);
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -403,22 +405,22 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								//格式化日期s
 								Long log=new Long(jsonObj.getString("time"));
 								Date time2=new Date(log);
+								
 								Calendar calendar=Calendar.getInstance();		
 								calendar.setTime(time2);
-								int sum=calendar.getActualMaximum(Calendar.DAY_OF_MONTH);//当前月的总天数
-								int count=calendar.get(calendar.DATE);//当前天
-							    calendar.add(calendar.DATE, 6);
-							    
-								//本月的最后一天
-								Calendar cal=Calendar.getInstance();//获取当前日期 
-								cal.setTime(calendar.getTime());
-								cal.set(cal.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
-								cal.add(cal.MONTH,1);//月增加1天 
-								cal.add(cal.DAY_OF_MONTH,-1);//日期倒数一日,既得到本月最后一天 
-								String time4=format2.format(calendar.getTime());
-								if(count+6>sum){
-									time4=String.valueOf("-"+cal.get(cal.DATE));
+								calendar.set(calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
+								calendar.add(calendar.MONTH,1);//月增加1天 
+								calendar.add(calendar.DAY_OF_MONTH,-1);//日期倒数一日,既得到本月最后一天 
+
+								Calendar ca=Calendar.getInstance();
+								ca.setTime(time2);
+								ca.set(ca.DAY_OF_WEEK,7);
+
+								String time4=String.valueOf(format2.format(ca.getTime()));
+								if(i==4){
+									time4=String.valueOf(format2.format(calendar.getTime()));
 								}
+
 								String time3=time+time4;
 								Electricity electricity=new Electricity();
 								electricity.setAmount(amount);
@@ -481,6 +483,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 					  
 			@Override
 					public void onSuccess(String t) {
+				System.out.println("ttttttttttttttttttttttt"+t);
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
