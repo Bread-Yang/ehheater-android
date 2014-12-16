@@ -6,7 +6,6 @@ import java.util.Map;
 import u.aly.l;
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
@@ -56,6 +55,8 @@ public class ErrorDialogUtil {
 	}
 
 	static Map<String, String> map = new HashMap<String, String>();
+	
+	static Map<String, String> dialogmap = new HashMap<String, String>();
 
 	private ErrorDialogUtil(Context context) {
 		this.context = context;
@@ -69,11 +70,30 @@ public class ErrorDialogUtil {
 		map.put("80", "出水超温保护");
 		map.put("81", "进水超温保护");
 		map.put("96", "出水温度电路故障保护");
+		
 		map.put("112", "拔码开关选择错误故障保护");
-		map.put("E2", "热水器未注满水直接通电，发生干烧");
-		map.put("E3", "中层发热管处传感器故障");
-		map.put("E4", "加热水温失控超过设定值");
-		map.put("E5", "下层发热管处传感器故障");
+		
+		map.put("226", "热水器未注满水直接通电，发生干烧。切断电源，热水器注满水后，再通电。");
+		map.put("227", "中层发热管处传感器故障，请联系客服");
+		map.put("228", "加热水温失控超过设定值，请联系客服");
+		map.put("229", "下层发热管处传感器故障，请联系客服");
+		
+		dialogmap.put("226", "干烧故障");
+		dialogmap.put("227", "传感器故障");
+		dialogmap.put("228", "超温故障");
+		//dialogmap.put("229", "传感器故障");
+		
+	}
+	
+	
+
+
+	public static Map<String, String> getDialogmap() {
+		return dialogmap;
+	}
+
+	public static void setDialogmap(Map<String, String> dialogmap) {
+		ErrorDialogUtil.dialogmap = dialogmap;
 	}
 
 	NextButtonCall nextButtonCall, lastButtonCall;
@@ -114,13 +134,8 @@ public class ErrorDialogUtil {
 		TextView title = (TextView) setting.findViewById(R.id.tv_order_title);
 		TextView detail = (TextView) setting.findViewById(R.id.tv_detail);
 		title.setText("机器故障(" + errorcode + ")");
-		try {
-			detail.setText(map.get(Integer.parseInt(errorcode, 16) + ""));
-		} catch (Exception e) {
-			detail.setText(map.get(errorcode.substring(6, 8).toUpperCase())
-					+ "");
-			title.setText("机器故障(" + errorcode.substring(6, 8).toUpperCase() + ")");
-		}
+		System.out.println(errorcode);
+		detail.setText(dialogmap.get(Integer.parseInt(errorcode,16)+""));
 		return this;
 	}
 
