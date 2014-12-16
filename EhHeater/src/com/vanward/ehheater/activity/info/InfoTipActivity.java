@@ -16,7 +16,7 @@ public class InfoTipActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);   
 		setContentView(R.layout.activity_infor_error);
 		initview();
 	}

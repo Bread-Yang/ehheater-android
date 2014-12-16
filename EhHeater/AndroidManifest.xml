@@ -124,7 +124,7 @@
         <activity
             android:name=".activity.main.furnace.FurnaceGasConsumptionActivity"
             android:screenOrientation="portrait" >
-        </activity>
+        </activity> 
         <activity
             android:name=".activity.main.gas.AddPatternActivity"
             android:screenOrientation="portrait" >

@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="15dp"
-            android:text="你确认注销此帐号？"
+            android:text="你确定注销此帐号？"
             android:textColor="#ffffffff"
             android:textSize="20dp" />
     </LinearLayout>

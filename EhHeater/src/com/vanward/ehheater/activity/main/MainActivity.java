@@ -768,6 +768,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	public void setTargerTempertureUI(byte[] b) {
 		circularView.setTargerdegree(new EhState(b).getTargetTemperature());
+		Log.e("返回分人洗的温度是 ： ", new EhState(b).getTargetTemperature() + "");
 		target_tem.setText(new EhState(b).getTargetTemperature() + "℃");
 	}
 
