@@ -312,53 +312,5 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	boolean onDeviceFoundTriggered;
 	String preSelectedDeviceMac;
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		/** only for test */
-		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-
-			// HeaterInfo hinfo = new HeaterInfo();
-			// hinfo.setMac("C8934641B3B4");
-			// hinfo.setDid("1");
-			// hinfo.setPasscode("FKAIDJKART");
-			// return hinfo;
-			//
-			// HeaterInfo hinfo = new HeaterInfo();
-			// hinfo.setMac("C8934642E4C7");
-			// hinfo.setDid("o4kvBWCq5QwcWuZZbm4w4Z");
-			// hinfo.setPasscode("JPDRRIXEKX");
-			// hinfo.setBinded(1);
-			// return hinfo;
-
-			HeaterInfo hinfo1 = new HeaterInfo();
-			hinfo1.setMac("C8934642E4C7");
-			hinfo1.setPasscode("JPDRRIXEKX");
-
-			HeaterInfo hinfo2 = new HeaterInfo();
-			hinfo2.setMac("C8934642F763");
-			hinfo2.setPasscode("UMBXIWTCEM");
-
-			HeaterInfo hinfo3 = new HeaterInfo();
-			hinfo3.setMac("C893464073FA");
-			hinfo3.setPasscode("GIKQLYIVFQ");
-
-			HeaterInfo hinfo4 = new HeaterInfo();
-			hinfo4.setMac("C8934641B421");
-			hinfo4.setPasscode("TGKJROLIQU");
-
-			HeaterInfo hinfo5 = new HeaterInfo();
-			hinfo5.setMac("C8934641B41D");
-			hinfo5.setPasscode("CCVXPHVUCO");
-
-			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-			// hser.addNewHeater(hinfo1);
-			// hser.addNewHeater(hinfo2);
-			// hser.addNewHeater(hinfo3);
-			hser.addNewHeater(hinfo5);
-			Context context = getBaseContext();
-			AccountService.setUser(context, "111111", "111111");
-		}
-		return super.onKeyDown(keyCode, event);
-	}
 
 }

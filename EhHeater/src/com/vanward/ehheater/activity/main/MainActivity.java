@@ -116,6 +116,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	};
 
 	private Dialog appointmentSwitchSuccessDialog;
+	
+	private boolean switchHintShowed;
 
 	private CountDownTimer mCountDownTimer;
 
@@ -136,6 +138,8 @@ public class MainActivity extends BaseBusinessActivity implements
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 
 		canupdateView = false;
+		
+		switchHintShowed = false;
 
 		connectCurDevice();
 
@@ -191,7 +195,8 @@ public class MainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+				if (getIntent().getBooleanExtra("switchSuccess", false) && !switchHintShowed) {
+					switchHintShowed = true;
 					appointmentSwitchSuccessDialog.show();
 				}
 
@@ -380,6 +385,16 @@ public class MainActivity extends BaseBusinessActivity implements
 				Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
 				return;
 			}
+			
+			if (tempter.getText().toString().contains("--")) {
+				// 以此判定为不在线
+
+				DialogUtil.instance()
+						.showReconnectDialog(MainActivity.this);
+				return;
+				
+			}
+			
 			if (ison) {
 
 				DeviceOffUtil.instance(this)

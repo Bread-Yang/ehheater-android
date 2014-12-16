@@ -82,6 +82,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	RelativeLayout rlt_start_device, content;
 
 	private Dialog appointmentSwitchSuccessDialog;
+	
+	private boolean switchHintShowed;
 
 	private View openView;
 
@@ -120,6 +122,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 
 		connectCurDevice();
+		
+		switchHintShowed = false;
 
 		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
@@ -163,8 +167,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+				if (getIntent().getBooleanExtra("switchSuccess", false) && !switchHintShowed) {
 					appointmentSwitchSuccessDialog.show();
+					switchHintShowed = true;
 				}
 
 			} else {
@@ -329,6 +334,15 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			mSlidingMenu.showMenu(true);
 			break;
 		case R.id.ivTitleBtnRigh:
+			
+			if (tempter.getText().toString().contains("--")) {
+				// 以此判定为不在线
+
+				DialogUtil.instance()
+						.showReconnectDialog(this);
+				return;
+				
+			}
 
 			if (ison) {
 				DeviceOffUtil.instance(this)
