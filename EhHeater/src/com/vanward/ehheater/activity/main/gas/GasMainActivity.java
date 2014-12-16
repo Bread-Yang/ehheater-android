@@ -811,7 +811,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		System.out.println("防冻报警：" + pResp.getFreezeProofingWarning());
 		if (pResp.getFreezeProofingWarning() == 1) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.home_icon_tip);
+			tipsimg.setImageResource(R.drawable.main_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -842,7 +842,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		System.out.println("氧护提示：" + pResp.getOxygenWarning());
 		if (pResp.getOxygenWarning() == 1) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.home_icon_tip);
+			tipsimg.setImageResource(R.drawable.main_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override

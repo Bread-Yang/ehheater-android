@@ -596,7 +596,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		System.out.println("防冻报警：" + new EhState(data).getErrorCode());
 		if (new EhState(data).getErrorCode() == 160) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.home_icon_tip);
+			tipsimg.setImageResource(R.drawable.main_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -626,7 +626,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		System.out.println("镁棒提示：" + new EhState(data).getErrorCode());
 		if (new EhState(data).getHeating_tube_time() > 800 * 60) {
 		tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.home_icon_tip);
+			tipsimg.setImageResource(R.drawable.main_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -656,7 +656,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		System.out.println("水质提醒：" + new EhState(data).getErrorCode());
 		if (new EhState(data).getHeating_tube_time() > 800 * 60) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.home_icon_tip);
+			tipsimg.setImageResource(R.drawable.main_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
