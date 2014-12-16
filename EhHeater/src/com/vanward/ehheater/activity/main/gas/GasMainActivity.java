@@ -359,11 +359,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				SendMsgModel.openDevice();
 			}
 
-			if (!isconnect) {
-				DialogUtil.instance().showReconnectDialog(this);
-				return;
-			}
-
 			break;
 		case R.id.appointment_btn:
 			Intent intent = new Intent();
@@ -536,14 +531,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		});
 	}
 
-	private boolean isconnect = true;
-
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
-			isconnect = false;
 			changeToOfflineUI();
 		}
 	}
