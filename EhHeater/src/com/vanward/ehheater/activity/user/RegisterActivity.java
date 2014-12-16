@@ -180,7 +180,8 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 				.toString());
 		boolean phoneNotEmpty = !TextUtils.isEmpty(mEtPhone.getText()
 				.toString());
-		boolean pswNotEmpty = !TextUtils.isEmpty(mEtPsw.getText()
+		boolean pswNotEmpty = !TextUtils.isEmpty(mEtPsw.getText().toString());
+		boolean confirmPswNotEmpty = !TextUtils.isEmpty(mEtPsw2.getText()
 				.toString());
 		boolean lengthGt6 = mEtPsw.getText().toString().length() >= 6;
 		boolean lengthGt18 = mEtPsw.getText().toString().length() <= 18;
@@ -195,22 +196,35 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
 			return false;
 		}
-		if (!pswNotEmpty) {
-			Toast.makeText(getBaseContext(), "请输入密码", 1000).show();
-			return false;
-		}
 		if (mEtPhone.getText().toString().length() != 11) {
 			Toast.makeText(getBaseContext(), "请输入11位手机号码", 1000).show();
 			return false;
 		}
+		if (!pswNotEmpty) {
+			Toast.makeText(getBaseContext(), "请输入密码", 1000).show();
+			return false;
+		}
 
 		if (!lengthGt6 || !lengthGt18) {
-			Toast.makeText(getBaseContext(), "密码长度需为6-18位", 1000).show();
+			Toast.makeText(getBaseContext(), R.string.psw_6_to_18, 1000).show();
+			return false;
+		}
+
+		if (!confirmPswNotEmpty) {
+			Toast.makeText(getBaseContext(), R.string.please_input_confirm_psw,
+					1000).show();
+			return false;
+		}
+
+		if (6 > mEtPsw2.getText().length() || 18 < mEtPsw2.getText().length()) {
+			Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
+					Toast.LENGTH_SHORT).show();
 			return false;
 		}
 
 		if (!pswMatch) {
-			Toast.makeText(getBaseContext(), "请输入正确的确认密码", 1000).show();
+			Toast.makeText(getBaseContext(), R.string.new_pwd_error, 1000)
+					.show();
 			return false;
 		}
 

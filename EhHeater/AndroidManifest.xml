@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" >
     </uses-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" >
     </uses-permission>
 
@@ -37,7 +38,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/custom_dialog2" >
-            <intent-filter>
+             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -123,7 +124,7 @@
         <activity
             android:name=".activity.main.furnace.FurnaceGasConsumptionActivity"
             android:screenOrientation="portrait" >
-        </activity>
+        </activity> 
         <activity
             android:name=".activity.main.gas.AddPatternActivity"
             android:screenOrientation="portrait" >
@@ -167,6 +168,7 @@
         <activity
             android:name=".activity.info.InformationActivity"
             android:screenOrientation="portrait" >
+           
         </activity>
         <activity
             android:name=".activity.configure.ConfigureDeviceActivity"

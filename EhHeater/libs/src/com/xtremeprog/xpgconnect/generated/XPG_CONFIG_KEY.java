@@ -16,7 +16,6 @@ public final class XPG_CONFIG_KEY {
   public final static XPG_CONFIG_KEY SERVER_ADDR = new XPG_CONFIG_KEY("SERVER_ADDR");
   public final static XPG_CONFIG_KEY SERVER_PORT = new XPG_CONFIG_KEY("SERVER_PORT");
   public final static XPG_CONFIG_KEY SERVER_ADDR_GET = new XPG_CONFIG_KEY("SERVER_ADDR_GET");
-  public final static XPG_CONFIG_KEY DEVICE_FOUND_TIMER = new XPG_CONFIG_KEY("DEVICE_FOUND_TIMER");
 
   public final int swigValue() {
     return swigValue;
@@ -52,7 +51,7 @@ public final class XPG_CONFIG_KEY {
     swigNext = this.swigValue+1;
   }
 
-  private static XPG_CONFIG_KEY[] swigValues = { INTERVAL_BEFORE_SEND, CONNECT_TIMEOUT, LOG_LEVEL, LAN_TTL_TIMEOUT, SERVER_ADDR, SERVER_PORT, SERVER_ADDR_GET, DEVICE_FOUND_TIMER };
+  private static XPG_CONFIG_KEY[] swigValues = { INTERVAL_BEFORE_SEND, CONNECT_TIMEOUT, LOG_LEVEL, LAN_TTL_TIMEOUT, SERVER_ADDR, SERVER_PORT, SERVER_ADDR_GET };
   private static int swigNext = 0;
   private final int swigValue;
   private final String swigName;

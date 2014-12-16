@@ -40,9 +40,6 @@ import com.xtremeprog.xpgconnect.generated.*;
                      break;
                 case XPGConnectClient.ON_VERSION_EVENT:
                      break;
-                case XPGConnectClient.ON_HTTP_RESP:
-                     myActivity.onHTTPResp(msg.arg1,(String) msg.obj);
-                     break;
                 case 0:
                      myActivity.OnWriteWifiConfigResp(
                          (WriteWifiConfigResp_t) msg.obj, msg.arg1); // arg1 = nConnId

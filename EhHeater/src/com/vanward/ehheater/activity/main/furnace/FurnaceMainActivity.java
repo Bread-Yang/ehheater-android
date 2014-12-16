@@ -84,6 +84,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private Dialog turnOffInWinnerDialog;
 
 	private boolean isPowerOffOrOffline;
+	
+	private boolean firstShowSwitchSuccess = true;
 
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -762,9 +764,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false)) {
+				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
 					// 12月16日需求:去掉切换成功的提示
 					/*appointmentSwitchSuccessDialog.show();*/
+					firstShowSwitchSuccess = false;
 				}
 
 			} else {

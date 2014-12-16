@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="80%"
+            android:text="0"
             android:textColor="#FFf86e00"
             android:textSize="30sp" />
     </RelativeLayout>
@@ -41,7 +41,7 @@
         android:layout_height="1dp"
         android:background="#80808080" />
 
-    <RelativeLayout
+<!--     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:paddingLeft="20dp"
@@ -63,11 +63,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="11134"
+            android:text="0"
             android:textColor="#FFf86e00"
             android:textSize="30sp" />
     </RelativeLayout>
-
+--> 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="1000mins"
+            android:text="0mins"
             android:textColor="#FFf86e00"
             android:textSize="30sp" />
     </RelativeLayout>

@@ -85,7 +85,7 @@ public class InformationActivity extends Activity implements
 		
 		sumwater = (TextView) inforChartView.findViewById(R.id.sumwater);
 		sumgas = (TextView) inforElChartView.findViewById(R.id.sumgas);
-		taptv = (TextView) view3.findViewById(R.id.taptv);
+		//taptv = (TextView) view3.findViewById(R.id.taptv);
 		heatxiaolv = (TextView) view3.findViewById(R.id.heatxiaolv);
 		
 		if (isgas) {
@@ -291,9 +291,9 @@ public class InformationActivity extends Activity implements
 		// sumgas.setText(mcuVo.getCumulativeGas() + "L");
 		// }
 
-		heattv.setText("1000mins");
-		sumwater.setText("120000L");
-		sumgas.setText("140000L");
+		heattv.setText("0mins");
+		sumwater.setText("0L");
+		sumgas.setText("0㎥");
 
 	}
 }

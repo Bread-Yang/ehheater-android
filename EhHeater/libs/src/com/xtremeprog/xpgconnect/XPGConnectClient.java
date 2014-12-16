@@ -34,7 +34,6 @@ public class XPGConnectClient {
 	public static final int ON_WRITE_EVENT = -6;
 	public static final int ON_VERSION_EVENT = -7;
 	public static final int ON_SEND_PACKET = -9;
-	public static final int ON_HTTP_RESP = -10;
 	
 	static {
 		System.loadLibrary("xpgconnectcli");
@@ -80,11 +79,7 @@ public class XPGConnectClient {
 	public static native int xpgcWrite(byte[] data, int connId);
 	public static native int xpgcWriteAsync(byte[] data, int connId);
 	public static native int xpgcReset();
-	public static native void xpgcGetVerifyCodes(String appId,String phone);
-	public static native void xpgcCreatUser(String appId,String userID,String pwd,String code);
-	public static native void xpgcLoginV4(String appId,String userID,String pwd);
-	public static native void xpgcRequestPasswordReset(String appId,String userID,String code,String newPwd);
-	public static native void xpgcLogin2Wan(String uid,String password,String did,String passcode);
+	public static native int xpgcHTTPpost(String addr);
 
 	private static native long GetEndpointPtr(int connId);
 	public static XpgEndpoint GetEndpoint(int connId)
@@ -308,22 +303,5 @@ public class XPGConnectClient {
         }
 		for (ClientListener listener : lstClientListeners)
 			listener.onVersionEvent(key, value, connId);
-	}
-
-	/**
-	 * @category JNI Callback
-	 * @param result
-	 * @param buffer
-	 */
-	public static void onHTTPResp(int result, String buffer) {
-		Log.i(TAG, String.format("%s, result = %d, buffer = %s",
-			Utils.GetFileLineMethod(), result, buffer));
-        for (GeneratedActivity activity : lstActivities)
-        {
-            Message msg = activity.handler.obtainMessage(ON_HTTP_RESP, result, 0, buffer);
-            activity.handler.sendMessage(msg);
-        }
-		for (ClientListener listener : lstClientListeners)
-			listener.onHTTPResp(result, buffer);
 	}
 }

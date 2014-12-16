@@ -14,6 +14,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 
 public class InfoErrorActivity extends Activity implements OnClickListener {
+
 	private Button leftbutton;
 	private Button rightbButton;
 	TextView name, time, detail;
@@ -21,14 +22,13 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_infor_error);
 		initview();
 	}
 
 	public void initview() {
-		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
+		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));  
 		leftbutton.setOnClickListener(this);
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightbButton.setVisibility(View.GONE);
@@ -40,26 +40,6 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 		name.setText(getIntent().getStringExtra("name"));
 		detail = (TextView) findViewById(R.id.detail);
 		detail.setText(getIntent().getStringExtra("detail"));
-		String errors = getIntent().getStringExtra("detail");
-		switch (errors) {
-		case "E2":
-			detail.setText("切掉电源，热水器先注满水后，在通电");
-			break;
-
-		case "E3":
-			detail.setText("请与客服联系");
-			break;
-
-		case "E4":
-			detail.setText("请与客服联系");
-			break;
-
-		case "E5":
-			detail.setText("请与客服联系");
-			break;
-		default:
-			break;
-		}
 		time = (TextView) findViewById(R.id.time);
 		time.setText(getIntent().getStringExtra("time"));
 
@@ -86,8 +66,10 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 		case R.id.btn_contact:
 			dialog_dial.show();
 			break;
+		case R.id.ivTitleBtnLeft:
+			finish();
+			break;
 		}
-		finish();
 	}
 
 }

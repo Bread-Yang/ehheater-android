@@ -164,10 +164,10 @@ public class BathSettingDialogUtil implements OnSeekBarChangeListener {
 					@Override
 					public String onHintTextChanged(SeekBarHint seekBarHint,
 							int progress) {
-						waterttv = progress;
 						if (progress == 0) {
 							progress = 1;
 						}
+						waterttv = progress;
 						return (progress * 10) + "L";
 					}
 				});

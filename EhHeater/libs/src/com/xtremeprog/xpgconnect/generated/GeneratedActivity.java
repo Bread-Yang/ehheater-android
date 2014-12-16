@@ -59,9 +59,6 @@ public class GeneratedActivity extends Activity
     public void onSendPacket(byte[] data, int connId) { }
 
     @Override
-    public void onHTTPResp(int result, String buffer) { }
-
-    @Override
     public void OnWriteWifiConfigResp(WriteWifiConfigResp_t pResp, int nConnId) {
         generated.DumpWriteWifiConfigResp(pResp);
     }

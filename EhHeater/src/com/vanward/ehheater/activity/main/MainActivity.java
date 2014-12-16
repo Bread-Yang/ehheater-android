@@ -37,10 +37,8 @@ import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
-import com.vanward.ehheater.activity.info.InfoTipActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentListActivity;
-import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -61,7 +59,6 @@ import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.wheelview.WheelView;
-import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -103,6 +100,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	private Animation operatingAnim;
 
 	public static String customPatternName = "";
+	
+	boolean firstShowSwitchSuccess = true;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -116,8 +115,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	};
 
 	private Dialog appointmentSwitchSuccessDialog;
-	
-	private boolean switchHintShowed;
 
 	private CountDownTimer mCountDownTimer;
 
@@ -138,8 +135,6 @@ public class MainActivity extends BaseBusinessActivity implements
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 
 		canupdateView = false;
-		
-		switchHintShowed = false;
 
 		connectCurDevice();
 
@@ -196,10 +191,10 @@ public class MainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false) && !switchHintShowed) {
-					switchHintShowed = true;
+				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
 					// 12月16日需求:去掉切换成功的提示
 					/*appointmentSwitchSuccessDialog.show();*/
+					firstShowSwitchSuccess = false;
 				}
 
 			} else {
@@ -271,8 +266,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-		
 		canupdateView = true;
 	}
 
@@ -501,6 +494,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void changeToCustomModeUpdateUI(byte[] data) {
+		modeTv.setText("自定义模式");
 		EhState ehState = new EhState(data);
 		setAppointmentButtonAble(true);
 		final int targetTemperature = ehState.getTargetTemperature();
@@ -512,37 +506,27 @@ public class MainActivity extends BaseBusinessActivity implements
 				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb()
 						.findAll(CustomSetVo.class);
 
-				if (list.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						CustomSetVo customSetVo = list.get(i);
+				for (int i = 0; i < list.size(); i++) {
+					CustomSetVo customSetVo = list.get(i);
 
-						// if (customSetVo.getPower() == power
-						// && customSetVo.getTempter() == targetTemperature) {
-						//
-						// if (customSetVo.getName().length() > 6) {
-						// modeTv.setText(customSetVo.getName().substring(
-						// 0, 6)
-						// + "...");
-						// } else {
-						// modeTv.setText(customSetVo.getName());
-						// }
-						//
-						// break;
-						// }
+					if (customSetVo.getPower() == power
+							&& customSetVo.getTempter() == targetTemperature) {
 
-						if (customSetVo.isSet()) {
+						if (customSetVo.getName().length() > 6) {
+							modeTv.setText(customSetVo.getName()
+									.substring(0, 6) + "...");
+						} else {
 							modeTv.setText(customSetVo.getName());
-							break;
 						}
+
+						break;
 					}
-				} else {
-					modeTv.setText("自定义模式");
+
 				}
-				// modeTv.setText(customPatternName);
 			}
 		});
 
-		circularView.setOn(true);
+		circularView.setOn(false);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		// powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
@@ -572,9 +556,8 @@ public class MainActivity extends BaseBusinessActivity implements
 								MainActivity.this).getPower();
 						System.out.println("0x00: " + (short) (0x00 + i));
 						SendMsgModel.setPower(i);
-						if (currentModeCode == 7) { // 智能模式
-							IntelligentPatternUtil.addLastPower(
-									MainActivity.this, i);
+						if (currentModeCode == 7) {  // 智能模式
+							IntelligentPatternUtil.addLastPower(MainActivity.this, i);
 						}
 						PowerSettingDialogUtil.instance(MainActivity.this)
 								.dissmiss();
@@ -597,114 +580,28 @@ public class MainActivity extends BaseBusinessActivity implements
 		ChangeStuteView.swichMorningWash(stuteParent);
 		int i = new EhState(data).getRemainingHeatingTime();
 		System.out.println("测试晨浴i: " + i);
+		if (i == -1) {
+			i = 255;
+		}
 		if (i == 0) {
 			ChangeStuteView.swichMorningWash(stuteParent);
 		} else if (new EhState(data).getSystemRunningState() == 1) {
-			Log.e("剩余时间是 : ", i + "");
 			ChangeStuteView.swichLeaveMinView(stuteParent, i);
 		}
 
 	}
 
-	/**
-	 * 防冻报警提示：0（无）、1（有）
-	 * 
-	 * @param pResp
-	 */
-	public void freezeProofing(byte[] data) {
-		System.out.println("防冻报警：" + new EhState(data).getErrorCode());
-		if (new EhState(data).getErrorCode() == 160) {
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
-			tipsimg.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					// 提醒
-					// ErrorDialogUtil.instance(this).showDialog();
-					Intent intent = new Intent();
-					// intent.putExtra("data", inforVo);
-					intent.setClass(MainActivity.this, InfoTipActivity.class);
-					intent.putExtra("name", "防冻报警");
-					intent.putExtra("time", simpleDateFormat.format(new Date()));
-					intent.putExtra("detail",
-							"亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。");
-					startActivity(intent);
-
-				}
-			});
-		}
-	}
-
-	/**
-	 * 镁棒提示
-	 * 
-	 * @param pResp
-	 */
-	public void meibangWran(final byte[] data) {
-		System.out.println("镁棒提示：" + new EhState(data).getErrorCode());
-		if (new EhState(data).getHeating_tube_time() > 800 * 60) {
-		tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
-			tipsimg.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					// 提醒
-					// ErrorDialogUtil.instance(this).showDialog();
-					Intent intent = new Intent();
-					// intent.putExtra("data", inforVo);
-					intent.setClass(MainActivity.this, InfoTipActivity.class);
-					intent.putExtra("name", "镁棒更换");
-					intent.putExtra("time", simpleDateFormat.format(new Date()));
-					intent.putExtra("detail", "亲，距离上次更换镁棒，您的热水器已经累计加热"
-							+ new EhState(data).getHeating_tube_time() / 60
-							+ "个小时，为保证加热管能长期有效工作，建议您联系客服更换镁棒。");
-					startActivity(intent);
-				}
-			});
-		}
-	}
-
-	/**
-	 * 水质
-	 * 
-	 * @param pResp
-	 */
-	public void waterWran(final byte[] data) {
-		System.out.println("水质提醒：" + new EhState(data).getErrorCode());
-		if (new EhState(data).getHeating_tube_time() > 800 * 60) {
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
-			tipsimg.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					// 提醒
-					// ErrorDialogUtil.instance(this).showDialog();
-					Intent intent = new Intent();
-					// intent.putExtra("data", inforVo);
-					intent.setClass(MainActivity.this, InfoTipActivity.class);
-					intent.putExtra("name", "水质提醒");
-					intent.putExtra("time", simpleDateFormat.format(new Date()));
-					intent.putExtra("detail",
-							"亲，我们发现您的热水器长时间没用了，为了您的健康，建议您排空污水后再使用。");
-					startActivity(intent);
-				}
-			});
-		}
-	}
-
 	// 错误图标
 
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-			"yyyy/MM/dd HH:mm:ss");
+			"yyyy/MM/dd hh:mm:ss");
 
-	public void dealErrorWarnIcon(final StateResp_t date) {
+	public void dealErrorWarnIcon(byte[] date) {
+		final EhState en = new EhState(date);
 		// freezeProofing(pResp);
 		// oxygenWarning(pResp);
-		System.out.println("错误码：" + date.getError()+"  ");
-		if (date.getError() != 0) {
+		System.out.println("错误码：" + en.getErrorCode());
+		if (en.getErrorCode() != 0) {
 			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.main_error);
 			tipsimg.setOnClickListener(new OnClickListener() {
@@ -714,7 +611,7 @@ public class MainActivity extends BaseBusinessActivity implements
 					ErrorDialogUtil
 							.instance(MainActivity.this)
 							.initName(
-									Integer.toHexString(date.getError()) + "")
+									Integer.toHexString(en.getErrorCode()) + "")
 							.setNextButtonCall(new NextButtonCall() {
 								@Override
 								public void oncall(View v) {
@@ -724,7 +621,8 @@ public class MainActivity extends BaseBusinessActivity implements
 									intent.putExtra(
 											"name",
 											"机器故障("
-													+ Integer.toHexString(date.getError())
+													+ Integer.toHexString(en
+															.getErrorCode())
 													+ ")");
 									intent.putExtra("time",
 											simpleDateFormat.format(new Date()));
@@ -735,7 +633,8 @@ public class MainActivity extends BaseBusinessActivity implements
 											ErrorDialogUtil
 													.instance(MainActivity.this)
 													.getMap()
-													.get(date.getError() + ""));
+													.get(en.getErrorCode() + ""));
+									System.out.println(getIntent().getStringExtra("detail")+"故障显示");
 									startActivity(intent);
 								}
 							}).showDialog();
@@ -749,9 +648,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
 		super.OnStateResp(pResp, nConnId);
-		pResp.getError();
-		
-		dealErrorWarnIcon(pResp);
 	}
 
 	@Override
@@ -771,9 +667,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		System.out.println("MainActivity.onTcpPacket()： "
 				+ new EhState(data).getRemainingHotWaterAmount());
 
-		freezeProofing(data);
-		meibangWran(data);
-		waterWran(data);
+		dealErrorWarnIcon(data);
 
 		if (!canupdateView) {
 			return;
@@ -888,6 +782,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	public void setTargerTempertureUI(byte[] b) {
 		circularView.setTargerdegree(new EhState(b).getTargetTemperature());
+		Log.e("返回分人洗的温度是 ： ", new EhState(b).getTargetTemperature() + "");
 		target_tem.setText(new EhState(b).getTargetTemperature() + "℃");
 	}
 

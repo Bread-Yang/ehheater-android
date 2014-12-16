@@ -73,6 +73,4 @@ public interface ClientListener {
 	public void onTcpPacket(byte data[], int connId);
 	
 	public void onSendPacket(byte data[], int connId);
-
-	public void onHTTPResp(int result, String buffer);
 }

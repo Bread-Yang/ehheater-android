@@ -21,7 +21,7 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 
 	protected Button btn_left, btn_right;
 	private TextView tv_center_title;
-	private RelativeLayout rlt_center, rlt_top;
+	private RelativeLayout rlt_center, rlt_top,rlt_center_no_scrollview;
 	public Intent intent;
 	public LoadingDialog loadingDialog;
 
@@ -39,6 +39,7 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 		btn_left = (Button) findViewById(R.id.btn_left);
 		btn_right = (Button) findViewById(R.id.btn_right);
 		rlt_center = (RelativeLayout) findViewById(R.id.rlt_center);
+		rlt_center_no_scrollview = (RelativeLayout) findViewById(R.id.rlt_center_no_scrollview);
 		tv_center_title = (TextView) findViewById(R.id.tv_center_title);
 		rlt_top = (RelativeLayout) findViewById(R.id.rlt_title);
 		loadingDialog = new LoadingDialog();
@@ -58,6 +59,15 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 		rlt_center.addView(addView, RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 	}
+	
+	public void setCenterViewWithNoScrollView(int resId) {
+		LayoutInflater inflater = getLayoutInflater();
+		View addView = inflater.inflate(resId, null);
+		rlt_center_no_scrollview.addView(addView, RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.MATCH_PARENT);
+		rlt_center_no_scrollview.setVisibility(View.VISIBLE);
+	}
+	
 
 	protected void setTopText(int resourceId) {
 		tv_center_title.setText(resourceId);

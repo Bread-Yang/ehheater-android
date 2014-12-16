@@ -77,12 +77,14 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private Dialog appointmentSwitchSuccessDialog;
 	
 	private boolean switchHintShowed;
-
+	
 	private View openView;
 
 	private Button rightButton;
 
 	private Animation operatingAnim;
+	
+	boolean firstShowSwitchSuccess = true;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -117,7 +119,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		connectCurDevice();
 		
 		switchHintShowed = false;
-
+		
 		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
@@ -160,11 +162,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				} else {
 					queryState();
 				}
-
-				if (getIntent().getBooleanExtra("switchSuccess", false) && !switchHintShowed) {
+				
+				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
 					// 12月16日需求:去掉切换成功的提示
 					/*appointmentSwitchSuccessDialog.show();*/
-					switchHintShowed = true;
+					firstShowSwitchSuccess = false;
 				}
 
 			} else {
@@ -260,12 +262,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	protected void onStop() {
 		super.onStop();
 	}
-
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
-				heaterNameChangeReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -460,13 +461,14 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
 
-		circularView.setVisibility(View.VISIBLE);
-
+//		circularView.setVisibility(View.VISIBLE);
+		
+		
 		// modeTv.setText("自定义模式");
 		// circularView.setOn(false);
 		// List<GasCustomSetVo> list = new
 		// BaseDao(this).getDb().findAll(GasCustomSetVo.class);
-		// circularView.setOn(false);
+		 circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
 	}
@@ -511,7 +513,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			circularView.setEndangle(65);
 			iv_wave.setVisibility(View.GONE);
 		}
-
 	}
 
 	public void initopenView() {
@@ -559,6 +560,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		dealInHeat(pResp);
 		onoffDeal(pResp);
 		dealErrorWarnIcon(pResp);
+		if (pResp.getCustomFunction() != 0) {
+			circularView.setOn(false);
+		} 
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 
@@ -757,6 +761,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
 
 	public void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
+
 		freezeProofing(pResp);
 		oxygenWarning(pResp);
 		System.out.println("错误码：" + pResp.getErrorCode());
@@ -814,7 +819,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		System.out.println("防冻报警：" + pResp.getFreezeProofingWarning());
 		if (pResp.getFreezeProofingWarning() == 1) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setImageResource(R.drawable.home_icon_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -845,7 +850,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		System.out.println("氧护提示：" + pResp.getOxygenWarning());
 		if (pResp.getOxygenWarning() == 1) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setImageResource(R.drawable.home_icon_tip);
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
