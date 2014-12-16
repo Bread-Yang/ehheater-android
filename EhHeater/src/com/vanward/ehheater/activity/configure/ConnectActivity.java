@@ -157,9 +157,10 @@ public class ConnectActivity extends GeneratedActivity {
 	private void tryConnectBySmallCycle(final int scanInterval, int timeOut,
 			final TimerTask t) {
 
-		final Timer startFind = new Timer();
+		startFind = new Timer();
 		startFind.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
+				Log.d("emmm", "finding device");
 				XPGConnectClient.xpgcFindDevice();
 			}
 		}, 0, scanInterval);
@@ -180,6 +181,7 @@ public class ConnectActivity extends GeneratedActivity {
 		connType = XPG_WAN_LAN.LAN.swigValue();
 
 	}
+	Timer startFind;
 
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
@@ -200,6 +202,9 @@ public class ConnectActivity extends GeneratedActivity {
 				didRetrieved = didFound;
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 				currentLanSearchingState = LAN_FOUND;
+				if (startFind != null) {
+					startFind.cancel();
+				}
 			}
 			
 		}
@@ -427,7 +432,7 @@ public class ConnectActivity extends GeneratedActivity {
 				if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
 					mTvInfo.setText("通过局域网连接中...");
 					currentLanSearchingState = LAN_SEARCHING;
-					tryConnectBySmallCycle(defaultScanInterval, 10000,
+					tryConnectBySmallCycle(defaultScanInterval, 8000,
 							new TimerTask() {
 								@Override
 								public void run() {
