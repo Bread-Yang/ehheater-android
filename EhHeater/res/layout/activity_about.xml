@@ -54,7 +54,7 @@
         android:layout_alignTop="@+id/btn_check_update"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="44dp"
-        android:text="版本：1.0.0"
+        android:text="@string/version"
         android:textColor="#ff808080"
         android:textSize="13sp" />
 

@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">万和云智能</string>
+    <string name="version">版本：v 1.0.0 B 0.09</string>
     <string name="heater">热水器</string>
     <string name="account">用户名</string>
     <string name="password">密码</string>
@@ -112,11 +113,15 @@
     <string name="device_configure">亲，电器正在配对中，请您耐心等待</string>
     <string name="second">秒</string>
     <string name="not_null">密码最少为6位</string>
+    <string name="psw_6_to_18">请输入6-18位密码！</string>
+    <string name="please_input_old_psw">请输入旧密码！</string>
+    <string name="please_input_new_psw">请输入新密码！</string>
+    <string name="please_input_confirm_psw">请输入确认密码！</string>
     <string name="old_pwd">旧密码</string>
     <string name="new_pwd">新密码</string>
     <string name="new_pwd_confirm">确认密码</string>
-    <string name="new_pwd_error">两次输入的密码不相同</string>
-    <string name="old_pwd_error">输入密码有误</string>
+    <string name="new_pwd_error">两次密码不一致，请重新输入！</string>
+    <string name="old_pwd_error">原密码不正确，请重新输入！</string>
     <string name="success">成功</string>
     <string name="failure">失败</string>
     <string name="heater_wifi_ssid">XPG-GAgent</string>

@@ -6,6 +6,7 @@ import java.util.Map;
 import u.aly.l;
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
@@ -113,7 +114,13 @@ public class ErrorDialogUtil {
 		TextView title = (TextView) setting.findViewById(R.id.tv_order_title);
 		TextView detail = (TextView) setting.findViewById(R.id.tv_detail);
 		title.setText("机器故障(" + errorcode + ")");
-		detail.setText(map.get(Integer.parseInt(errorcode,16)+""));
+		try {
+			detail.setText(map.get(Integer.parseInt(errorcode, 16) + ""));
+		} catch (Exception e) {
+			detail.setText(map.get(errorcode.substring(6, 8).toUpperCase())
+					+ "");
+			title.setText("机器故障(" + errorcode.substring(6, 8).toUpperCase() + ")");
+		}
 		return this;
 	}
 
