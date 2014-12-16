@@ -220,7 +220,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 			
 			Log.d("emmm", "theString: " + result);
 			if (resultType.equals("1")) {
-				
 				getmessageweek(dates);	
 //				namelistjson = "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
 //				datalistjson = "[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5},{data:5},] ";
@@ -297,8 +296,11 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	public void getmessageweek(long da){
+		
+		
+		
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did=dVfu4XXcUCbE93Z2mu4PyZ&dateTime=1417503892000&resultType=1&expendType=2", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=3", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -306,7 +308,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 				DialogUtil.instance().showDialog();
 				super.onStart();
 			}
-			
 			//请求成功
 			 SimpleDateFormat format = new SimpleDateFormat("MM/dd");
 					  
@@ -314,7 +315,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 					public void onSuccess(String t) {
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
-							System.out.println("ttttttttttttttttttttttt"+t);
 							JSONArray array = jsonObject.getJSONArray("result");
 							
 							JSONObject jb=(JSONObject) array.get(3);
@@ -388,7 +388,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 			 SimpleDateFormat format2 = new SimpleDateFormat("-dd");
 			@Override
 					public void onSuccess(String t) {
-					System.out.println("ttttttttttttttttttttttt"+t);
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -483,7 +482,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 					  
 			@Override
 					public void onSuccess(String t) {
-				System.out.println("ttttttttttttttttttttttt"+t);
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");

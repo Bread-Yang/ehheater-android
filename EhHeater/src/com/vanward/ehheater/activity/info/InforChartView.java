@@ -314,7 +314,6 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 					  
 			@Override
 					public void onSuccess(String t) {
-					System.out.println("ttttttttttttttttttttttt"+t);
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -391,7 +390,6 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 			 SimpleDateFormat format2 = new SimpleDateFormat("-dd");
 			@Override
 					public void onSuccess(String t) {
-				System.out.println("ttttttttttttttttttttttt"+t);
 				        try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -487,7 +485,6 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 					  
 			@Override
 					public void onSuccess(String t) {
-				System.out.println("ttttttttttttttttttttttt"+t);
 				        try {
 				        	
 							JSONObject jsonObject = new JSONObject(t);
