@@ -794,12 +794,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 											simpleDateFormat.format(new Date()));
 									intent.putExtra(
 											"detail",
-											ErrorDialogUtil
-													.instance(
-															GasMainActivity.this)
-													.getMap()
-													.get(pResp.getErrorCode()
-															+ ""));
+											"请先暂关闭水龙头再打开，或关/开显示器，再操作1-2次仍然显示故障，请务必关闭水阀和气阀，拔掉电源插头，请与售后服务联系。");
 									startActivity(intent);
 								}
 							}).showDialog();
