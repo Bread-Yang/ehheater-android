@@ -55,7 +55,7 @@ public class ErrorDialogUtil {
 	}
 
 	static Map<String, String> map = new HashMap<String, String>();
-	
+
 	static Map<String, String> dialogmap = new HashMap<String, String>();
 
 	private ErrorDialogUtil(Context context) {
@@ -70,23 +70,20 @@ public class ErrorDialogUtil {
 		map.put("80", "出水超温保护");
 		map.put("81", "进水超温保护");
 		map.put("96", "出水温度电路故障保护");
-		
+
 		map.put("112", "拔码开关选择错误故障保护");
-		
+
 		map.put("226", "热水器未注满水直接通电，发生干烧。切断电源，热水器注满水后，再通电。");
 		map.put("227", "中层发热管处传感器故障，请联系客服");
 		map.put("228", "加热水温失控超过设定值，请联系客服");
 		map.put("229", "下层发热管处传感器故障，请联系客服");
-		
+
 		dialogmap.put("226", "干烧故障");
 		dialogmap.put("227", "传感器故障");
 		dialogmap.put("228", "超温故障");
-		//dialogmap.put("229", "传感器故障");
-		
-	}
-	
-	
+		// dialogmap.put("229", "传感器故障");
 
+	}
 
 	public static Map<String, String> getDialogmap() {
 		return dialogmap;
@@ -135,7 +132,11 @@ public class ErrorDialogUtil {
 		TextView detail = (TextView) setting.findViewById(R.id.tv_detail);
 		title.setText("机器故障(" + errorcode + ")");
 		System.out.println(errorcode);
-		detail.setText(dialogmap.get(Integer.parseInt(errorcode,16)+""));
+
+		detail.setText(dialogmap.get(Integer.parseInt(errorcode, 16) + ""));
+		if (detail.getText().length() == 0) {
+			detail.setText(map.get(Integer.parseInt(errorcode, 16) + ""));
+		}
 		return this;
 	}
 

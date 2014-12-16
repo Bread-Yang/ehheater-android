@@ -732,6 +732,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			});
 		} else {
 			tipsimg.setVisibility(View.GONE);
+			ErrorDialogUtil.instance(this).dissmiss();
 		}
 	}
 
