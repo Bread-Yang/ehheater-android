@@ -80,6 +80,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 	private String nickName = "";
 
+	private String conflictName = "";
+	
+	private long conflictTime;
+
 	private Handler tipsHandler = new Handler() {
 		public void dispatchMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -95,9 +99,9 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					// + "？");
 					String sFormat = getResources().getString(
 							R.string.appointment_conflict);
-					String sFinalAge = String.format(sFormat, nickName,
-							wheelView1.getCurrentItem(),
-							wheelView2.getCurrentItem());
+					String sFinalAge = String
+							.format(sFormat, conflictName, dateFormat
+									.format(new Date(conflictTime)));
 					tv_tips.setText(sFinalAge);
 
 					appointmentConflictDialog.show();
@@ -270,9 +274,11 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 				String week = "";
 
-				for (int i = 0; i < days.length; i++) {
+				for (int i = 0; i < days.length - 1; i++) {
 					week += days[i];
 				}
+
+				week = days[6] + week;
 
 				editModel.setWeek(week);
 
@@ -324,6 +330,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 							@Override
 							public void onSuccess(String jsonString) {
 								super.onSuccess(jsonString);
+								Log.e("编辑或者保存返回的json数据是 : ", jsonString);
 								isOverride = false;
 								try {
 									JSONObject json = new JSONObject(jsonString);
@@ -332,6 +339,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 									if ("200".equals(responseCode)) {
 										finish();
 									} else if ("501".equals(responseCode)) {
+										JSONObject result = json
+												.getJSONObject("result");
+										conflictName = result.getString("name");
+										conflictTime = result.getLong("dateTime");
 										tipsHandler.sendEmptyMessage(0);
 									} else if ("403".equals(responseCode)) { // 预约满了
 										tipsHandler.sendEmptyMessage(1);

@@ -439,6 +439,9 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																				.get(0);
 																		setToDIY(customSetVo);
 																		finish();
+																	} else {
+																		setToMorningWash();
+																		finish();
 																	}
 																}
 																initViewValue();
@@ -468,6 +471,14 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
+						for (CustomSetVo item : customSetVolist) {
+							item.setSet(false);
+							new BaseDao(PatternActivity.this).getDb().update(
+									item);
+						}
+						customSetVo.setSet(true);
+						new BaseDao(PatternActivity.this).getDb().update(
+								customSetVo);
 						setToDIY(customSetVo);
 						finish();
 					}

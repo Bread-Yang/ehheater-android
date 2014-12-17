@@ -70,6 +70,10 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 	private String nickName = "";
 
+	private String conflictName = "";
+	
+	private long conflictTime;
+
 	private Handler tipsHandler = new Handler() {
 		public void dispatchMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -85,9 +89,9 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 					// + "？");
 					String sFormat = getResources().getString(
 							R.string.appointment_conflict);
-					String sFinalAge = String.format(sFormat, nickName,
-							wheelView1.getCurrentItem(),
-							wheelView2.getCurrentItem());
+					String sFinalAge = String
+							.format(sFormat, conflictName, dateFormat
+									.format(new Date(conflictTime)));
 					tv_tips.setText(sFinalAge);
 
 					appointmentConflictDialog.show();
@@ -294,7 +298,7 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 						}
 					}
 				}
-				
+
 			}
 		} else {
 			setTopText(R.string.add);
@@ -478,6 +482,7 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 							@Override
 							public void onSuccess(String jsonString) {
 								super.onSuccess(jsonString);
+								Log.e("编辑或者保存返回的json数据是 : ", jsonString);
 								isOverride = false;
 								try {
 									JSONObject json = new JSONObject(jsonString);
@@ -486,6 +491,10 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 									if ("200".equals(responseCode)) {
 										finish();
 									} else if ("501".equals(responseCode)) {
+										JSONObject result = json
+												.getJSONObject("result");
+										conflictName = result.getString("name");
+										conflictTime = result.getLong("dateTime");
 										tipsHandler.sendEmptyMessage(0);
 									} else if ("403".equals(responseCode)) { // 预约满了
 										tipsHandler.sendEmptyMessage(1);

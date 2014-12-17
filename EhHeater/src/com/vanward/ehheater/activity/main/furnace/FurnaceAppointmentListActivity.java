@@ -457,6 +457,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 								@Override
 								public void onSuccess(String jsonString) {
 									super.onSuccess(jsonString);
+									Log.e("删除预约返回的json数据是 : ", jsonString);
 									try {
 										JSONObject json;
 										json = new JSONObject(jsonString);
@@ -466,6 +467,9 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 											// adapter_data.remove(position);
 											// adapter.notifyDataSetChanged();
 											requestHttpData();
+										} else if ("503".equals(responseCode)) {
+											adapter_data.clear();
+											lv_listview.setAdapter(new AppointmentListAdapter());
 										}
 									} catch (JSONException e) {
 										e.printStackTrace();

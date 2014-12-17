@@ -14,7 +14,7 @@
         android:singleLine="true"
         android:text="@string/heater"
         android:textColor="@color/title_color"
-        android:textSize="20dp" />
+        android:textSize="24dp" />
 
     <Button
         android:id="@+id/ivTitleBtnLeft"

@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:text="实时热效率"
             android:textColor="#FF807a79"
-            android:textSize="23sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/heatxiaolv"
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:text="0"
             android:textColor="#FFf86e00"
-            android:textSize="30sp" />
+            android:textSize="22sp" />
     </RelativeLayout>
 
     <View
@@ -87,7 +87,7 @@
             android:layout_centerVertical="true"
             android:text="总计使用时长"
             android:textColor="#FF807a79"
-            android:textSize="23sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/heattv"
@@ -97,7 +97,7 @@
             android:layout_centerVertical="true"
             android:text="0mins"
             android:textColor="#FFf86e00"
-            android:textSize="30sp" />
+            android:textSize="22sp" />
     </RelativeLayout>
 
     <View
