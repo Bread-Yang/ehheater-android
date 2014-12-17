@@ -186,20 +186,22 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
-		Log.d("emmm", "onDeviceFound@ConnectActivity: " + endpoint.getSzMac());
 		
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
 
 			if (currentLanSearchingState == LAN_FOUND) {
 				return;
 			}
+			
+			Log.d("emmm", "onDeviceFound@ConnectActivity(SMALL): " + endpoint.getSzMac() + "-" + 
+					endpoint.getSzDid() + "-" + endpoint.getIsOnline());
 
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();
-			Log.d("emmm", "onDeviceFound:found : " + macFound + "-" + endpoint.getSzDid() + "-" + endpoint.getSzPasscode());
 
 			if (!TextUtils.isEmpty(macFound) && macFound.equals(mac.toLowerCase())) {
 				didRetrieved = didFound;
+				Log.d("emmm", "onDeviceFound:found target, connecting by small");
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 				currentLanSearchingState = LAN_FOUND;
 				if (startFind != null) {
@@ -211,6 +213,9 @@ public class ConnectActivity extends GeneratedActivity {
 		
 
 		if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
+			
+			Log.d("emmm", "onDeviceFound@ConnectActivity(BIG): " + endpoint.getSzMac() + "-" + 
+					endpoint.getSzDid() + "-" + endpoint.getIsOnline());
 			
 			if (onDeviceFoundCounter++ == 0) {
 				
