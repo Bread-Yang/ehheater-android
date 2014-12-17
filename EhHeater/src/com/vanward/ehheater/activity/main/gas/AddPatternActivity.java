@@ -18,7 +18,9 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.main.CustomSetVo;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 
@@ -111,6 +113,7 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 		if (gasVo != null) {
 			customSetVo = gasVo;
 		}
+		customSetVo.setUid(AccountService.getUserId(AddPatternActivity.this));
 		customSetVo.setConnid(Global.connectId);
 		if (nameedittext.getText().toString().length() <= 0) {
 			Toast.makeText(this, "请输入名称", Toast.LENGTH_SHORT).show();
@@ -119,8 +122,11 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 
 		customSetVo.setName(nameedittext.getText().toString());
 		customSetVo.setTempter(seekBar.getProgress() + 35);
-		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAll(
-				GasCustomSetVo.class);
+		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAllByWhere(
+				GasCustomSetVo.class,
+				" uid = '"
+						+ AccountService.getUserId(AddPatternActivity.this)
+						+ "'");
 
 		if (gasVo == null) {
 			for (int i = 0; i < list.size(); i++) {

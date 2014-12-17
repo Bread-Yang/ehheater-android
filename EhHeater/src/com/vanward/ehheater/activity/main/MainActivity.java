@@ -37,6 +37,7 @@ import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
+import com.vanward.ehheater.activity.info.InfoTipActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentListActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -100,7 +101,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	private Animation operatingAnim;
 
 	public static String customPatternName = "";
-	
+
 	boolean firstShowSwitchSuccess = true;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
@@ -114,7 +115,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 	};
 
-	private Dialog appointmentSwitchSuccessDialog;
+	private Dialog deviceSwitchSuccessDialog;
 
 	private CountDownTimer mCountDownTimer;
 
@@ -138,7 +139,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		connectCurDevice();
 
-		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
+		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
 	}
@@ -164,8 +165,11 @@ public class MainActivity extends BaseBusinessActivity implements
 					Consts.INTENT_EXTRA_ISONLINE, true);
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+			String conntext = data
+					.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 
-			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			final HeaterInfoService hser = new HeaterInfoService(
+					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
 			if (!TextUtils.isEmpty(passcode)) {
@@ -190,8 +194,10 @@ public class MainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
-					appointmentSwitchSuccessDialog.show();
+				if (getIntent().getBooleanExtra("switchSuccess", false)
+						&& firstShowSwitchSuccess) {
+					// 12月16日需求:去掉切换成功的提示
+					/* appointmentSwitchSuccessDialog.show(); */
 					firstShowSwitchSuccess = false;
 				}
 
@@ -208,13 +214,16 @@ public class MainActivity extends BaseBusinessActivity implements
 				DialogUtil.instance().showReconnectDialog(new Runnable() {
 					@Override
 					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext());
+						CheckOnlineUtil.ins().start(getBaseContext(),
+								hser.getCurrentSelectedHeaterMac());
 					}
 				}, MainActivity.this);
 
 			}
 
-			mSlidingMenu.showContent();
+			if (!conntext.contains("连接已断开, 正在重新连接")) {
+				mSlidingMenu.showContent();
+			}
 
 		}
 
@@ -378,6 +387,15 @@ public class MainActivity extends BaseBusinessActivity implements
 				Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
 				return;
 			}
+
+			if (tempter.getText().toString().contains("--")) {
+				// 以此判定为不在线
+
+				DialogUtil.instance().showReconnectDialog(MainActivity.this);
+				return;
+
+			}
+
 			if (ison) {
 
 				DeviceOffUtil.instance(this)
@@ -492,23 +510,23 @@ public class MainActivity extends BaseBusinessActivity implements
 				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb()
 						.findAll(CustomSetVo.class);
 
-				for (int i = 0; i < list.size(); i++) {
-					CustomSetVo customSetVo = list.get(i);
+				if (list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						CustomSetVo customSetVo = list.get(i);
 
-					if (customSetVo.getPower() == power
-							&& customSetVo.getTempter() == targetTemperature) {
+						if (customSetVo.getPower() == power
+								&& customSetVo.getTempter() == targetTemperature) {
 
-						if (customSetVo.getName().length() > 6) {
-							modeTv.setText(customSetVo.getName()
-									.substring(0, 6) + "...");
-						} else {
-							modeTv.setText(customSetVo.getName());
+							if (customSetVo.isSet()) {
+								modeTv.setText(customSetVo.getName());
+								break;
+							}
 						}
-
-						break;
 					}
-
+				} else {
+					modeTv.setText("自定义模式");
 				}
+				
 			}
 		});
 
@@ -542,8 +560,9 @@ public class MainActivity extends BaseBusinessActivity implements
 								MainActivity.this).getPower();
 						System.out.println("0x00: " + (short) (0x00 + i));
 						SendMsgModel.setPower(i);
-						if (currentModeCode == 7) {  // 智能模式
-							IntelligentPatternUtil.addLastPower(MainActivity.this, i);
+						if (currentModeCode == 7) { // 智能模式
+							IntelligentPatternUtil.addLastPower(
+									MainActivity.this, i);
 						}
 						PowerSettingDialogUtil.instance(MainActivity.this)
 								.dissmiss();
@@ -577,17 +596,105 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	}
 
+	/**
+	 * 防冻报警提示：0（无）、1（有）
+	 * 
+	 * @param pResp
+	 */
+	public void freezeProofing(byte[] data) {
+		System.out.println("防冻报警：" + new EhState(data).getErrorCode());
+		if (new EhState(data).getErrorCode() == 160) {
+			tipsimg.setVisibility(View.VISIBLE);
+			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// 提醒
+					// ErrorDialogUtil.instance(this).showDialog();
+					Intent intent = new Intent();
+					// intent.putExtra("data", inforVo);
+					intent.setClass(MainActivity.this, InfoTipActivity.class);
+					intent.putExtra("name", "防冻报警");
+					intent.putExtra("time", simpleDateFormat.format(new Date()));
+					intent.putExtra("detail",
+							"亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。");
+					startActivity(intent);
+
+				}
+			});
+		}
+	}
+
+	/**
+	 * 镁棒提示
+	 * 
+	 * @param pResp
+	 */
+	public void meibangWran(final byte[] data) {
+		System.out.println("镁棒提示：" + new EhState(data).getErrorCode());
+		if (new EhState(data).getHeating_tube_time() > 800 * 60) {
+			tipsimg.setVisibility(View.VISIBLE);
+			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// 提醒
+					// ErrorDialogUtil.instance(this).showDialog();
+					Intent intent = new Intent();
+					// intent.putExtra("data", inforVo);
+					intent.setClass(MainActivity.this, InfoTipActivity.class);
+					intent.putExtra("name", "镁棒更换");
+					intent.putExtra("time", simpleDateFormat.format(new Date()));
+					intent.putExtra("detail", "亲，距离上次更换镁棒，您的热水器已经累计加热"
+							+ new EhState(data).getHeating_tube_time() / 60
+							+ "个小时，为保证加热管能长期有效工作，建议您联系客服更换镁棒。");
+					startActivity(intent);
+				}
+			});
+		}
+	}
+
+	/**
+	 * 水质
+	 * 
+	 * @param pResp
+	 */
+	public void waterWran(final byte[] data) {
+		System.out.println("水质提醒：" + new EhState(data).getErrorCode());
+		if (new EhState(data).getHeating_tube_time() > 800 * 60) {
+			tipsimg.setVisibility(View.VISIBLE);
+			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					// 提醒
+					// ErrorDialogUtil.instance(this).showDialog();
+					Intent intent = new Intent();
+					// intent.putExtra("data", inforVo);
+					intent.setClass(MainActivity.this, InfoTipActivity.class);
+					intent.putExtra("name", "水质提醒");
+					intent.putExtra("time", simpleDateFormat.format(new Date()));
+					intent.putExtra("detail",
+							"亲，我们发现您的热水器长时间没用了，为了您的健康，建议您排空污水后再使用。");
+					startActivity(intent);
+				}
+			});
+		}
+	}
+
 	// 错误图标
 
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-			"yyyy/MM/dd hh:mm:ss");
+			"yyyy/MM/dd HH:mm:ss");
 
-	public void dealErrorWarnIcon(byte[] date) {
-		final EhState en = new EhState(date);
+	public void dealErrorWarnIcon(final StateResp_t date) {
 		// freezeProofing(pResp);
 		// oxygenWarning(pResp);
-		System.out.println("错误码：" + en.getErrorCode());
-		if (en.getErrorCode() != 0) {
+		System.out.println("错误码：" + date.getError() + "  ");
+		if (date.getError() != 0) {
 			tipsimg.setVisibility(View.VISIBLE);
 			tipsimg.setImageResource(R.drawable.main_error);
 			tipsimg.setOnClickListener(new OnClickListener() {
@@ -596,8 +703,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				public void onClick(View arg0) {
 					ErrorDialogUtil
 							.instance(MainActivity.this)
-							.initName(
-									Integer.toHexString(en.getErrorCode()) + "")
+							.initName(Integer.toHexString(date.getError()) + "")
 							.setNextButtonCall(new NextButtonCall() {
 								@Override
 								public void oncall(View v) {
@@ -607,9 +713,8 @@ public class MainActivity extends BaseBusinessActivity implements
 									intent.putExtra(
 											"name",
 											"机器故障("
-													+ Integer.toHexString(en
-															.getErrorCode())
-													+ ")");
+													+ Integer.toHexString(date
+															.getError()) + ")");
 									intent.putExtra("time",
 											simpleDateFormat.format(new Date()));
 									intent.putExtra(
@@ -619,8 +724,7 @@ public class MainActivity extends BaseBusinessActivity implements
 											ErrorDialogUtil
 													.instance(MainActivity.this)
 													.getMap()
-													.get(en.getErrorCode() + ""));
-									System.out.println(getIntent().getStringExtra("detail")+"故障显示");
+													.get(date.getError() + ""));
 									startActivity(intent);
 								}
 							}).showDialog();
@@ -628,12 +732,16 @@ public class MainActivity extends BaseBusinessActivity implements
 			});
 		} else {
 			tipsimg.setVisibility(View.GONE);
+			ErrorDialogUtil.instance(this).dissmiss();
 		}
 	}
 
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
 		super.OnStateResp(pResp, nConnId);
+		pResp.getError();
+
+		dealErrorWarnIcon(pResp);
 	}
 
 	@Override
@@ -653,7 +761,9 @@ public class MainActivity extends BaseBusinessActivity implements
 		System.out.println("MainActivity.onTcpPacket()： "
 				+ new EhState(data).getRemainingHotWaterAmount());
 
-		dealErrorWarnIcon(data);
+		freezeProofing(data);
+		meibangWran(data);
+		waterWran(data);
 
 		if (!canupdateView) {
 			return;

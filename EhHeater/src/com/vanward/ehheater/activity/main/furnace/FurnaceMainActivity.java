@@ -1,9 +1,5 @@
 package com.vanward.ehheater.activity.main.furnace;
 
-import java.util.logging.SimpleFormatter;
-
-import net.tsz.afinal.FinalBitmap;
-import net.tsz.afinal.bitmap.core.BitmapDisplayConfig;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,7 +38,6 @@ import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
-import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -63,7 +58,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private ImageView iv_fire_wave_animation, iv_rotate_animation,
 			iv_season_mode;
 
-	private Dialog appointmentSwitchSuccessDialog;
+	private Dialog deviceSwitchSuccessDialog;
 
 	private RelativeLayout rlt_content, rlt_open;
 
@@ -248,7 +243,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 							}
 						});
 
-		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
+		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
 
@@ -742,8 +737,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					Consts.INTENT_EXTRA_ISONLINE, true);
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+			String conntext = data.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 
-			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			final HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
 			if (!TextUtils.isEmpty(passcode)) {
@@ -769,7 +765,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				}
 
 				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
-					appointmentSwitchSuccessDialog.show();
+					// 12月16日需求:去掉切换成功的提示
+					/*appointmentSwitchSuccessDialog.show();*/
 					firstShowSwitchSuccess = false;
 				}
 
@@ -783,12 +780,14 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				DialogUtil.instance().showReconnectDialog(new Runnable() {
 					@Override
 					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext());
+						CheckOnlineUtil.ins().start(getBaseContext(), hser.getCurrentSelectedHeaterMac());
 					}
 				}, this);
 			}
 
-			mSlidingMenu.showContent();
+			if (!conntext.contains("连接已断开, 正在重新连接")) {
+				mSlidingMenu.showContent();
+			}
 
 		} else if (tv_sliding_menu_season_mode != null
 				&& resultCode == RESULT_OK && data != null) {

@@ -31,18 +31,17 @@
             android:text=""
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#FFfe6c17" />
-        
-         <TextView
+
+        <TextView
             android:id="@+id/sumwater2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/sumwater"
+            android:paddingTop="8dp"
             android:text="度"
             android:textColor="#FFfe6c17"
-            android:paddingTop="8dp"
             android:visibility="invisible" />
-      
     </RelativeLayout>
 
     <RadioGroup
@@ -60,6 +59,10 @@
             android:background="@drawable/radio_left_bg"
             android:button="@null"
             android:checked="false"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:text="按周"
             android:textColor="@drawable/radoo_select1"/>
 
@@ -69,6 +72,10 @@
             android:layout_height="wrap_content"
             android:background="@drawable/radio_middle_bg"
             android:button="@null"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:text="按月"
             android:textColor="@drawable/radoo_select1" />
 
@@ -78,6 +85,10 @@
             android:layout_height="wrap_content"
             android:background="@drawable/radio_right_bg"
             android:button="@null"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:text="按年"
             android:textColor="@drawable/radoo_select1" />
     </RadioGroup>
@@ -92,7 +103,7 @@
         android:padding="10dp" >
 
         <LinearLayout
-             android:id="@+id/lastparent"
+            android:id="@+id/lastparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
@@ -110,22 +121,21 @@
                 android:layout_height="wrap_content"
                 android:text="" />
         </LinearLayout>
-        
-        <LinearLayout 
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
-            
-            <TextView 
+            android:gravity="center" >
+
+            <TextView
                 android:id="@+id/messagetime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""/>
-            
+                android:text="" />
         </LinearLayout>
 
         <LinearLayout
-             android:id="@+id/nextparent"
+            android:id="@+id/nextparent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

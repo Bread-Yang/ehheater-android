@@ -78,6 +78,10 @@ public class HeaterInfoService {
 		new SharedPreferUtils(context).put(ShareKey.CurDeviceMac, macAddress);
 	}
 
+	public String getCurrentSelectedHeaterMac() {
+		return new SharedPreferUtils(context).get(ShareKey.CurDeviceMac, "");
+	}
+
 	public void deleteHeater(String mac) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
 		HeaterInfo hi = hdao.getHeaterByMac(mac);
@@ -109,6 +113,9 @@ public class HeaterInfoService {
 
 	public HeaterType getHeaterType(HeaterInfo hinfo) {
 
+		if (hinfo == null) {
+			return HeaterType.Unknown;
+		}
 		if (Consts.EH_P_KEY.equals(hinfo.getProductKey())) {
 			return HeaterType.Eh;
 		} else if (Consts.ST_P_KEY.equals(hinfo.getProductKey())) {

@@ -271,29 +271,30 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 						switch (i) {
 
 						case 0:
-							cb_Monday.setChecked(true);
+							cb_Sunday.setChecked(true);
 							break;
 						case 1:
-							cb_Thuesday.setChecked(true);
+							cb_Monday.setChecked(true);
 							break;
 						case 2:
-							cb_Wednesday.setChecked(true);
+							cb_Thuesday.setChecked(true);
 							break;
 						case 3:
-							cb_Thursday.setChecked(true);
+							cb_Wednesday.setChecked(true);
 							break;
 						case 4:
-							cb_Friday.setChecked(true);
+							cb_Thursday.setChecked(true);
 							break;
 						case 5:
-							cb_Saturday.setChecked(true);
+							cb_Friday.setChecked(true);
 							break;
 						case 6:
-							cb_Sunday.setChecked(true);
+							cb_Saturday.setChecked(true);
 							break;
 						}
 					}
 				}
+				
 			}
 		} else {
 			setTopText(R.string.add);
@@ -412,13 +413,13 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 				StringBuilder week = new StringBuilder(editModel.getWeek());
 
-				week.setCharAt(0, cb_Monday.isChecked() ? '1' : '0'); // Monday
-				week.setCharAt(1, cb_Thuesday.isChecked() ? '1' : '0'); // Thuesday
-				week.setCharAt(2, cb_Wednesday.isChecked() ? '1' : '0'); // Wednesday
-				week.setCharAt(3, cb_Thursday.isChecked() ? '1' : '0'); // Thursday
-				week.setCharAt(4, cb_Friday.isChecked() ? '1' : '0'); // Friday
-				week.setCharAt(5, cb_Saturday.isChecked() ? '1' : '0'); // Saturday
-				week.setCharAt(6, cb_Sunday.isChecked() ? '1' : '0'); // Sunday
+				week.setCharAt(1, cb_Monday.isChecked() ? '1' : '0'); // Monday
+				week.setCharAt(2, cb_Thuesday.isChecked() ? '1' : '0'); // Thuesday
+				week.setCharAt(3, cb_Wednesday.isChecked() ? '1' : '0'); // Wednesday
+				week.setCharAt(4, cb_Thursday.isChecked() ? '1' : '0'); // Thursday
+				week.setCharAt(5, cb_Friday.isChecked() ? '1' : '0'); // Friday
+				week.setCharAt(6, cb_Saturday.isChecked() ? '1' : '0'); // Saturday
+				week.setCharAt(0, cb_Sunday.isChecked() ? '1' : '0'); // Sunday
 
 				editModel.setWeek(week.toString());
 

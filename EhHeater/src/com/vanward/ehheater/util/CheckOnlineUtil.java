@@ -51,7 +51,11 @@ public class CheckOnlineUtil {
 		}
 	}
 	
-	public void start(final Context context) {
+	public void start(Context context) {
+		start(context, curmac);
+	}
+	
+	public void start(final Context context, final String checkMac) {
 		
 		if (checkOnlineTimer != null) {
 			checkOnlineTimer.cancel();
@@ -81,7 +85,7 @@ public class CheckOnlineUtil {
 				
 				for (XpgEndpoint end : bindList) {
 					
-					if (end.getSzMac().equals(curmac) && end.getIsOnline() == 1) {
+					if (end.getSzMac().equals(checkMac) && end.getIsOnline() == 1) {
 
 						Log.d("emmm", "checking online: device online!");
 						checkOnlineTimer.cancel();

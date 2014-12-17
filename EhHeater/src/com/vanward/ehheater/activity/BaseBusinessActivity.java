@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
@@ -60,6 +62,26 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		}
 	};
 	
+	BroadcastReceiver alterDeviceDueToDeleteReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("emmm", "alterDeviceDueToDeleteReceiver@BaseBusinessActivity:");
+			if (isFinishing()) {
+				return;
+			}
+
+			AlterDeviceHelper.hostActivity = BaseBusinessActivity.this;
+
+			if (Global.connectId > 0) {
+				// 触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
+				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+			} else {
+				// 如果当前未建立连接, 直接调用此方法
+				AlterDeviceHelper.alterDevice();
+			}
+		}
+	};
+	
 	BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -80,11 +102,15 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 				deviceOnlineReceiver, new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));
 		
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				alterDeviceDueToDeleteReceiver, new IntentFilter(Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
+		
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				logoutReceiver, new IntentFilter(Consts.INTENT_ACTION_LOGOUT));
 		
 		registerSuicideReceiver();
-		
-		CheckOnlineUtil.ins().reset(getCurHeater().getMac());
+
+		String mac = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeaterMac();
+		CheckOnlineUtil.ins().reset(mac);
 	}
 	
 
@@ -124,6 +150,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(deviceOnlineReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(alterDeviceDueToDeleteReceiver);
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(logoutReceiver);
 	}
 
@@ -172,7 +199,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			if (paused) {
 				shouldReconnect = true;
 			} else {
-				connectCurDevice();
+				// connectCurDevice();
+				connectCurDevice("连接已断开, 正在重新连接...");
 			}
 		} 
 		
@@ -240,25 +268,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	
 	protected void connectCurDevice(String connectText) {
 
-		if (curHeater == null) {
-			curHeater = getCurHeater();
-		}
-		
-		String mac = curHeater.getMac();
+		String mac = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeaterMac();
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());
 
 		ConnectActivity.connectToDevice(this, mac, "", userId, userPsw, connectText);
 	}
-	
-	private HeaterInfo getCurHeater() {
-		if (curHeater == null) {
-			curHeater = new HeaterInfoService(getBaseContext()).getCurrentSelectedHeater();
-		}
-		
-		return curHeater;
-	}
-	private HeaterInfo curHeater;
 	
 	private void registerSuicideReceiver() {
 
@@ -270,5 +285,16 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			}
 		};
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(receiver, filter);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		
+		if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+//			changeToOfflineUI();
+//			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+		}
+		
+		return super.onKeyDown(keyCode, event);
 	}
 }

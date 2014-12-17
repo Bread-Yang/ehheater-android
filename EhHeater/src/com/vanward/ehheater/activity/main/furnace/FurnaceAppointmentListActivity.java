@@ -268,7 +268,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 			if (model.getLoopflag() == 1) {
 				loopDays = getResources().getString(R.string.everyday);
 			} else if (model.getLoopflag() == 2) {
-				for (int i = 0; i < model.getWeek().length(); i++) {
+				for (int i = 1; i < model.getWeek().length(); i++) {
 					int flag = model.getWeek().charAt(i);
 					if (flag == '1') {
 						switch (i) {
@@ -309,6 +309,10 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 							break;
 						}
 					}
+				}
+				if (model.getWeek().charAt(0) == '1') {
+					loopDays += getResources().getString(
+							R.string.Sunday);
 				}
 			}
 			holder.tv_days.setText(loopDays);

@@ -14,6 +14,16 @@ public class CustomSetVo {
 	public void setConnid(int connid) {
 		this.connid = connid;
 	}
+	
+	String uid;
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
 	public int getTempter() {
 		return tempter;

@@ -8,6 +8,8 @@ public class Consts {
 	public static final String REQUEST_BASE_URL = "http://122.10.94.216/EhHeaterWeb/";
 	
 	public static final String INTENT_ACTION_LOGOUT = "logout";
+	
+	public static final String INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE = "alter_device_due_to_device";
 
 	public static final String INTENT_FILTER_KILL_MAIN_ACTIVITY = "kill_main_activity"; 
 	public static final String INTENT_FILTER_KILL_LOGIN_ACTIVITY = "kill_login_activity";

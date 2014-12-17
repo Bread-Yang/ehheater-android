@@ -157,9 +157,10 @@ public class ConnectActivity extends GeneratedActivity {
 	private void tryConnectBySmallCycle(final int scanInterval, int timeOut,
 			final TimerTask t) {
 
-		final Timer startFind = new Timer();
+		startFind = new Timer();
 		startFind.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
+				Log.d("emmm", "finding device");
 				XPGConnectClient.xpgcFindDevice();
 			}
 		}, 0, scanInterval);
@@ -180,32 +181,41 @@ public class ConnectActivity extends GeneratedActivity {
 		connType = XPG_WAN_LAN.LAN.swigValue();
 
 	}
+	Timer startFind;
 
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
-		Log.d("emmm", "onDeviceFound@ConnectActivity: " + endpoint.getSzMac());
 		
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
 
 			if (currentLanSearchingState == LAN_FOUND) {
 				return;
 			}
+			
+			Log.d("emmm", "onDeviceFound@ConnectActivity(SMALL): " + endpoint.getSzMac() + "-" + 
+					endpoint.getSzDid() + "-" + endpoint.getIsOnline());
 
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();
-			Log.d("emmm", "onDeviceFound:found : " + macFound + "-" + endpoint.getSzDid() + "-" + endpoint.getSzPasscode());
 
 			if (!TextUtils.isEmpty(macFound) && macFound.equals(mac.toLowerCase())) {
 				didRetrieved = didFound;
+				Log.d("emmm", "onDeviceFound:found target, connecting by small");
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 				currentLanSearchingState = LAN_FOUND;
+				if (startFind != null) {
+					startFind.cancel();
+				}
 			}
 			
 		}
 		
 
 		if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
+			
+			Log.d("emmm", "onDeviceFound@ConnectActivity(BIG): " + endpoint.getSzMac() + "-" + 
+					endpoint.getSzDid() + "-" + endpoint.getIsOnline());
 			
 			if (onDeviceFoundCounter++ == 0) {
 				
@@ -274,6 +284,12 @@ public class ConnectActivity extends GeneratedActivity {
 			data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
 			data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
 			
+			String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+			if (conntext == null) {
+				conntext = "";
+			}
+			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
+			
 			setResult(RESULT_OK, data);
 			finish();
 		}
@@ -295,6 +311,12 @@ public class ConnectActivity extends GeneratedActivity {
 			data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
 			data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
 			data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
+			
+			String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+			if (conntext == null) {
+				conntext = "";
+			}
+			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
 			
 			setResult(RESULT_OK, data);
 			finish();
@@ -345,6 +367,12 @@ public class ConnectActivity extends GeneratedActivity {
 		data.putExtra(Consts.INTENT_EXTRA_PASSCODE, "");
 		data.putExtra(Consts.INTENT_EXTRA_DID, "");
 		
+		String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+		if (conntext == null) {
+			conntext = "";
+		}
+		data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
+		
 		setResult(RESULT_OK, data);
 		finish();
 	}
@@ -359,6 +387,10 @@ public class ConnectActivity extends GeneratedActivity {
 	
 	private void initTargetDeviceInfo() {
 		mac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
+		if (TextUtils.isEmpty(mac)) {
+			setOfflineResult();
+		}
+		
 		passcode = passcodeRetrieved = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
 		String connectText = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 		if (!TextUtils.isEmpty(connectText)) {
@@ -423,7 +455,7 @@ public class ConnectActivity extends GeneratedActivity {
 				if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
 					mTvInfo.setText("通过局域网连接中...");
 					currentLanSearchingState = LAN_SEARCHING;
-					tryConnectBySmallCycle(defaultScanInterval, 10000,
+					tryConnectBySmallCycle(defaultScanInterval, 8000,
 							new TimerTask() {
 								@Override
 								public void run() {
