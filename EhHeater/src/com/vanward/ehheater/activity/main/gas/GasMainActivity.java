@@ -659,6 +659,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		System.out.println("进水温度： " + pResp.getIncomeTemperature());
 		System.out.println("出水温度： " + pResp.getOutputTemperature());
 		if (Insetting) {
+			circularView.setTargerdegree(pResp.getTargetTemperature());
 			return;
 		}
 		target_tem.setText(pResp.getTargetTemperature() + "℃");
