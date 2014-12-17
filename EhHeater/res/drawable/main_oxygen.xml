@@ -3,15 +3,15 @@
     android:oneshot="false" >
 
     <item
-        android:drawable="@drawable/home_icon_tip"
+        android:drawable="@drawable/icon_tip"
         android:duration="500">
     </item>
     <item
         android:drawable="@drawable/touming"
         android:duration="500">
     </item>
-    <item
-        android:drawable="@drawable/home_icon_tip"
+      <item
+        android:drawable="@drawable/icon_tip"
         android:duration="500">
     </item>
 

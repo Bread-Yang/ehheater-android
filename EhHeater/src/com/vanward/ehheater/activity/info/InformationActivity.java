@@ -260,7 +260,7 @@ public class InformationActivity extends Activity implements
 								System.out.println("tt:" + t);
 								mcuVo = gson.fromJson(t, McuVo.class);
 								setViewData();
-								DialogUtil.instance().dismissDialog();
+//								DialogUtil.instance().dismissDialog();
 								super.onSuccess(t);
 							}
 							
@@ -268,7 +268,7 @@ public class InformationActivity extends Activity implements
 							public void onFailure(Throwable t, int errorNo,
 									String strMsg) {
 								// TODO Auto-generated method stub
-								DialogUtil.instance().dismissDialog();
+//								DialogUtil.instance().dismissDialog();
 								super.onFailure(t, errorNo, strMsg);
 							}
 						});

@@ -560,6 +560,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		dealInHeat(pResp);
 		onoffDeal(pResp);
 		dealErrorWarnIcon(pResp);
+		if (pResp.getOn_off() == 0) {
+			tipsimg.setVisibility(View.GONE);
+		}
 		if (pResp.getCustomFunction() != 0) {
 			circularView.setOn(false);
 		} 
@@ -768,7 +771,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		System.out.println("错误码：" + pResp.getErrorCode());
 		if (pResp.getErrorCode() != 0) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_error);
+			tipsimg.setBackgroundResource(R.drawable.main_error);
+			AnimationDrawable drawable = (AnimationDrawable) tipsimg.getBackground();
+			drawable.start();
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -818,7 +823,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		System.out.println("防冻报警：" + pResp.getFreezeProofingWarning());
 		if (pResp.getFreezeProofingWarning() == 1) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setBackgroundResource(R.drawable.main_tip);
+			AnimationDrawable drawable = (AnimationDrawable) tipsimg.getBackground();
+			drawable.start();
 			tipsimg.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
@@ -848,7 +855,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		System.out.println("氧护提示：" + pResp.getOxygenWarning());
 		if (pResp.getOxygenWarning() == 1) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setBackgroundResource(R.drawable.main_tip);
+			AnimationDrawable drawable = (AnimationDrawable) tipsimg.getBackground();
+			drawable.start();
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -857,12 +866,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 					Intent intent = new Intent();
 					// intent.putExtra("data", inforVo);
 					intent.setClass(GasMainActivity.this, InfoTipActivity.class);
-					intent.putExtra("name", "智能养护");
+					intent.putExtra("name", "智能氧护");
 					intent.putExtra("time", simpleDateFormat.format(new Date()));
 					intent.putExtra("detail",
 							"亲，现检测到您热水器处于环境缺氧状态，机器已自动启动智能氧护措施，请确保您热水器处于通风环境下运行。");
 					startActivity(intent);
-				}
+				} 
 			});
 		}
 	}

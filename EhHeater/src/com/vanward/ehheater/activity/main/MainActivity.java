@@ -849,7 +849,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			// 加热
 			hotImgeImageView.setVisibility(View.VISIBLE);
 			hotImgeImageView.clearAnimation();
-			if (new EhState(b).getPower() == 1) {
+			if (new EhState(b).getPower() == 1) { 
 				operatingAnim = AnimationUtils.loadAnimation(this,
 						R.anim.tip_4500);
 			} else if (new EhState(b).getPower() == 2) {
@@ -878,7 +878,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	public void setTargerTempertureUI(byte[] b) {
 		circularView.setTargerdegree(new EhState(b).getTargetTemperature());
-		Log.e("返回分人洗的温度是 ： ", new EhState(b).getTargetTemperature() + "");
 		target_tem.setText(new EhState(b).getTargetTemperature() + "℃");
 	}
 
