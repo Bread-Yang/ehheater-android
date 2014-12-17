@@ -402,7 +402,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
@@ -490,7 +490,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
@@ -566,7 +566,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
