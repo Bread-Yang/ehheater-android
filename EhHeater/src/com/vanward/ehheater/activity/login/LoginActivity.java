@@ -60,7 +60,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		super.onStop();
 		DialogUtil.dismissDialog();
 	}
-
+	
 	@Override
 	public void initUI() {
 		super.initUI();
@@ -70,7 +70,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		btn_new_device = (Button) findViewById(R.id.new_device_btn);
 		btn_login = (Button) findViewById(R.id.login_btn);
 		et_user = (EditText) findViewById(R.id.login_user_et);
-		et_user.setText(AccountService.getUserId(this));
 		et_pwd = (EditText) findViewById(R.id.login_pwd_et);
 
 		mTvReg = (TextView) findViewById(R.id.ll_tv_register);
@@ -159,6 +158,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		super.onResume();
 		Log.d("emmm", "login resumed");
 
+		et_user.setText(AccountService.getUserId(this));
+		
 		XPGConnectClient.AddActivity(this);
 	}
 

@@ -58,7 +58,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private ImageView iv_fire_wave_animation, iv_rotate_animation,
 			iv_season_mode;
 
-	private Dialog appointmentSwitchSuccessDialog;
+	private Dialog deviceSwitchSuccessDialog;
 
 	private RelativeLayout rlt_content, rlt_open;
 
@@ -243,7 +243,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 							}
 						});
 
-		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
+		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
 
