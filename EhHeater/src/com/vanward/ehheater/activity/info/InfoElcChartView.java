@@ -82,6 +82,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
 		lqtime=(TextView)layout.findViewById(R.id.messagetime);
+		sumwater2=(TextView) layout.findViewById(R.id.sumwater2);
 				
 		dates=System.currentTimeMillis();
 		imageView1=(ImageView)layout.findViewById(R.id.imageView1);
@@ -300,7 +301,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	public void getmessageweek(long da){
-		
 		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 		String url="http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da+"&resultType=1&expendType=3";
 		FinalHttp finalHttp = new FinalHttp();
@@ -327,7 +327,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
-							//float a=0;
+							float a=0;
 							for(int i=0;i<array.length();i++){
 								float b = 0;
 								JSONObject jsonObj = array.getJSONObject(i);
@@ -338,17 +338,17 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								electricity.setAmount(amount);
 								electricity.setTime(time);
 								li.add(electricity);  
-								
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
-//								b=Math.round(Float.parseFloat(li.get(i).getAmount()));
-//								a = a + b + 0f;
-								//System.out.println("liqlqilqhjahdfgkjdfag"+a);
+//								
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
+								b=Math.round(Float.parseFloat(li.get(i).getAmount().equals("")?"0":li.get(i).getAmount()));
+								a = a + b + 0f;
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
+							System.out.println("gafdgfdffffffffffff"+a);
 							//赋值namengh
 							namelistjson = jsonArray.toString();
 							//赋值data
@@ -358,7 +358,8 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							Long l=new Long(dtime);
 							Date da=new Date(l);
 							lqtime.setText(sim.format(da));
-							getall();
+							sumwater.setText(Math.round(a)+"");
+							sumwater2.setVisibility(VISIBLE);
 							//更换下方按钮
 							chart4week();
 							//刷新数据展示
@@ -408,7 +409,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
+							float a=0;
 							for(int i=0;i<array.length();i++){
+								float b=0;
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount =jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj.getString("time")));
@@ -438,11 +441,11 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);  
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
-								
+								b=Math.round(Float.parseFloat(li.get(i).getAmount().equals("")?"0":li.get(i).getAmount()));
+								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
-								
 								jsonArray2.put(jsonOBJ2);
 							}
 							//赋值name
@@ -454,7 +457,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							Date da=new Date(l);
 							lqtime.setText(sim.format(da));
 							//设置使用的总电数
-							getall();
+							
+							sumwater.setText(Math.round(a)+"");
+							sumwater2.setVisibility(VISIBLE);
 							//更换下方按钮
 							chart4Month();
 							//刷新数据展示
@@ -506,7 +511,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
+							float a=0;
 							for(int i=0;i<array.length();i++){
+								float b=0;
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount =jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj.getString("time")));
@@ -516,6 +523,8 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);  
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
+								b=Math.round(Float.parseFloat(li.get(i).getAmount().equals("")?"0":li.get(i).getAmount()));
+								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
@@ -526,7 +535,8 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							//赋值data
 							datalistjson = jsonArray2.toString();
 							//设置使用的总电数
-							getall();
+							sumwater.setText(Math.round(a)+"");
+							sumwater2.setVisibility(VISIBLE);
 							//更换下方按钮
 							chart4Year();
 							//刷新数据展示
@@ -551,38 +561,38 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	//上下
-	public void getall(){
-		sumwater2=(TextView) layout.findViewById(R.id.sumwater2);
-		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="+Global.connectId+"", new AjaxCallBack<String>(){
-
-			@Override
-			public void onSuccess(String t) {
-				try {
-					JSONObject jsonObject = new JSONObject(t);
-					if(jsonObject.get("result").equals(null)){
-						sumwater2.setVisibility(VISIBLE);
-						sumwater.setText("0");
-					}
-					else{
-						sumwater2.setVisibility(VISIBLE);
-						sumwater.setText(jsonObject.getString("result"));
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				super.onSuccess(t);
-			}
-			
-			//请求失败  
-			@Override
-			public void onFailure(Throwable t, int errorNo,
-					String strMsg) {
-				// TODO Auto-generated method stub  请求失败
-				super.onFailure(t, errorNo, strMsg);
-			}
-		});
-	}
+//	public void getall(){
+//		
+//		FinalHttp finalHttp = new FinalHttp();
+//		finalHttp.get("http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="+Global.connectId+"", new AjaxCallBack<String>(){
+//
+//			@Override
+//			public void onSuccess(String t) {
+//				try {
+//					JSONObject jsonObject = new JSONObject(t);
+//					if(jsonObject.get("result").equals(null)){
+//						sumwater2.setVisibility(VISIBLE);
+//						sumwater.setText("0");
+//					}
+//					else{
+//						sumwater2.setVisibility(VISIBLE);
+//						sumwater.setText(jsonObject.getString("result"));
+//					}
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//				super.onSuccess(t);
+//			}
+//			
+//			//请求失败  
+//			@Override
+//			public void onFailure(Throwable t, int errorNo,
+//					String strMsg) {
+//				// TODO Auto-generated method stub  请求失败
+//				super.onFailure(t, errorNo, strMsg);
+//			}
+//		});
+//	}
 	public long timechanged(){
 	    Long l=new Long(dtime);
         Date date = new Date(l); 
