@@ -58,7 +58,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/radio_left_bg"
             android:button="@null"
-            android:checked="false"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
