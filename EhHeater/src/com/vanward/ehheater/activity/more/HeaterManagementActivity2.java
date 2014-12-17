@@ -364,6 +364,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		renameDialog.setContentView(R.layout.dialog_rename_heater);
 		final EditText etName = (EditText) renameDialog
 				.findViewById(R.id.drename_et);
+		etName.setText(heater.getName());
 		renameDialog.findViewById(R.id.drename_btn_cancel).setOnClickListener(
 				new View.OnClickListener() {
 					@Override
