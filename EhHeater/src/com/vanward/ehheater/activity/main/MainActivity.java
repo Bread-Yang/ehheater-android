@@ -510,23 +510,23 @@ public class MainActivity extends BaseBusinessActivity implements
 				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb()
 						.findAll(CustomSetVo.class);
 
-				for (int i = 0; i < list.size(); i++) {
-					CustomSetVo customSetVo = list.get(i);
+				if (list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						CustomSetVo customSetVo = list.get(i);
 
-					if (customSetVo.getPower() == power
-							&& customSetVo.getTempter() == targetTemperature) {
+						if (customSetVo.getPower() == power
+								&& customSetVo.getTempter() == targetTemperature) {
 
-						if (customSetVo.getName().length() > 6) {
-							modeTv.setText(customSetVo.getName()
-									.substring(0, 6) + "...");
-						} else {
-							modeTv.setText(customSetVo.getName());
+							if (customSetVo.isSet()) {
+								modeTv.setText(customSetVo.getName());
+								break;
+							}
 						}
-
-						break;
 					}
-
+				} else {
+					modeTv.setText("自定义模式");
 				}
+				
 			}
 		});
 

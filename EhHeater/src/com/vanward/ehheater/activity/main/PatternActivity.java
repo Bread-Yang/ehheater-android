@@ -31,6 +31,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.AddPatternButtonDialogUtil;
@@ -284,7 +285,11 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	}
 
 	public void initViewValue() {
-		customSetVolist = new BaseDao(this).getDb().findAll(CustomSetVo.class);
+		customSetVolist = new BaseDao(this).getDb().findAllByWhere(
+				CustomSetVo.class,
+				" uid = '" + AccountService.getUserId(PatternActivity.this)
+						+ "'");
+		;
 		addCustomView();
 		if (customSetVolist.size() >= 3) {
 			// ivTitleBtnRigh.setVisibility(View.GONE);
@@ -421,8 +426,12 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																	customSetVolist = new BaseDao(
 																			PatternActivity.this)
 																			.getDb()
-																			.findAll(
-																					CustomSetVo.class);
+																			.findAllByWhere(
+																					CustomSetVo.class,
+																					" uid = '"
+																							+ AccountService
+																									.getUserId(PatternActivity.this)
+																							+ "'");
 																	CustomSetVo customSetVo = null;
 																	if (customSetVolist
 																			.size() != 0) {

@@ -193,5 +193,7 @@
     <string name="ask_for_help">寻求帮助</string>
     <string name="ewh_error_e2_title">机器故障(E2)</string>
     <string name="ewh_error_e2">热水器未注满水直接通电，发生干烧</string>
+    <string name="change_success_relogin">密码修改成功，请重新登录</string>
+    
 
 </resources>
