@@ -74,7 +74,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	AnimationDrawable animationDrawable;
 	RelativeLayout rlt_start_device, content;
 
-	private Dialog appointmentSwitchSuccessDialog;
+	private Dialog deviceSwitchSuccessDialog;
 	
 	private boolean switchHintShowed;
 	
@@ -120,7 +120,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		
 		switchHintShowed = false;
 		
-		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
+		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
 	}

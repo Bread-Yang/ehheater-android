@@ -115,7 +115,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 	};
 
-	private Dialog appointmentSwitchSuccessDialog;
+	private Dialog deviceSwitchSuccessDialog;
 
 	private CountDownTimer mCountDownTimer;
 
@@ -139,7 +139,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		connectCurDevice();
 
-		appointmentSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
+		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
 	}

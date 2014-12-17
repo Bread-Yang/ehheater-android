@@ -133,6 +133,8 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			Toast.makeText(getBaseContext(), "注册成功", 1000).show();
 			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
 					.toString(), mEtPsw.getText().toString());
+			AccountService.setUser(getBaseContext(), mEtPhone.getText()
+					.toString(), mEtPsw.getText().toString());
 
 			String requestURL = "userinfo/saveMemberInfo";
 
@@ -163,6 +165,19 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 
 							DialogUtil.dismissDialog();
 						};
+
+						@Override
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+							Log.e("注册账号的时候请求昵称失败", "注册账号的时候请求昵称失败");
+							startActivity(new Intent(getBaseContext(),
+									SelectDeviceActivity.class));
+							new SharedPreferUtils(getBaseContext()).put(
+									ShareKey.UserNickname, "");
+							finish();
+							DialogUtil.dismissDialog();
+						}
 					});
 		} else {
 			if (!isChangingConfigurations()) {
@@ -216,11 +231,11 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			return false;
 		}
 
-		if (6 > mEtPsw2.getText().length() || 18 < mEtPsw2.getText().length()) {
-			Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
-					Toast.LENGTH_SHORT).show();
-			return false;
-		}
+//		if (6 > mEtPsw2.getText().length() || 18 < mEtPsw2.getText().length()) {
+//			Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
+//					Toast.LENGTH_SHORT).show();
+//			return false;
+//		}
 
 		if (!pswMatch) {
 			Toast.makeText(getBaseContext(), R.string.new_pwd_error, 1000)
