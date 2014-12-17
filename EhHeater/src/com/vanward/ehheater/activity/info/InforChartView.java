@@ -299,8 +299,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	}
 
 	public void getmessageweek(long da){
-		String url="http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=2";
-		System.out.println("快过年了"+url);
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
+		String url="http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da+"&resultType=1&expendType=2";
+		System.out.println("当前设备的url"+url);
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(url, 
 				new AjaxCallBack<String>(){
@@ -377,8 +378,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	public void getmessagemonth(long da2){
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da2+"&resultType=2&expendType=2", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da2+"&resultType=2&expendType=2", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -472,8 +474,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	
 	public void getmessageyear(long da3){
 		dtime=da3;
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da3+"&resultType=3&expendType=2", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da3+"&resultType=3&expendType=2", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override

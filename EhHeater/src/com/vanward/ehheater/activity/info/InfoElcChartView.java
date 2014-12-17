@@ -33,6 +33,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
@@ -76,6 +77,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		layout = (ViewGroup) inflate(context, R.layout.infor_elc_chart, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
+		RadioButton radiobutton = (RadioButton) radioGroup.findViewById(R.id.radio0);
 		radioGroup.setOnCheckedChangeListener(this);
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
@@ -131,7 +133,8 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		// initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
 		// initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
 
-		radioGroup.check(R.id.radio0);
+//		radioGroup.check(R.id.radio0);
+		radiobutton.setChecked(true);
 	}
 	
 	
@@ -170,6 +173,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 
 		if (arg1 == R.id.radio0) {
 			currentShowingPeriodType = "1";
+			
 		} else if (arg1 == R.id.radio1) {
 			currentShowingPeriodType = "2";
 		} else if (arg1 == R.id.radio2) {
@@ -296,7 +300,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	public void getmessageweek(long da){
-		String url="http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=3";
+		
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
+		String url="http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da+"&resultType=1&expendType=3";
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(url, 
 				new AjaxCallBack<String>(){
@@ -321,7 +327,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li=new ArrayList<Electricity>();
+							//float a=0;
 							for(int i=0;i<array.length();i++){
+								float b = 0;
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount =jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj.getString("time")));
@@ -333,7 +341,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
-								
+//								b=Math.round(Float.parseFloat(li.get(i).getAmount()));
+//								a = a + b + 0f;
+								//System.out.println("liqlqilqhjahdfgkjdfag"+a);
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
@@ -373,8 +383,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	public void getmessagemonth(long da2){
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da2+"&resultType=2&expendType=3", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da2+"&resultType=2&expendType=3", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -427,10 +438,11 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);  
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
-
+								
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
+								
 								jsonArray2.put(jsonOBJ2);
 							}
 							//赋值name
@@ -468,8 +480,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	
 	public void getmessageyear(long da3){
 		dtime=da3;
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da3+"&resultType=3&expendType=3", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da3+"&resultType=3&expendType=3", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
