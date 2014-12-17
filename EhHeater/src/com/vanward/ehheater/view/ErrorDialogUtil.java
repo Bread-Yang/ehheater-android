@@ -182,7 +182,6 @@ public class ErrorDialogUtil {
 						dissmiss();
 					}
 				});
-
 		setting.show();
 	}
 
