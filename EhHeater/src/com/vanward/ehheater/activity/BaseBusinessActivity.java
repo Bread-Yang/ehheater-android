@@ -199,7 +199,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			if (paused) {
 				shouldReconnect = true;
 			} else {
-				connectCurDevice();
+				// connectCurDevice();
+				connectCurDevice("连接已断开, 正在重新连接...");
 			}
 		} 
 		
