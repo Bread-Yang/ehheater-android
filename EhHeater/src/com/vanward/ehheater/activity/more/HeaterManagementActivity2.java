@@ -1,18 +1,17 @@
 package com.vanward.ehheater.activity.more;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewDebug.FlagToString;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.configure.ShitActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
@@ -35,6 +33,7 @@ import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.PingWebsiteUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.UIUtil;
@@ -238,24 +237,52 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		} else {
 			// server delete
 			DialogUtil.instance().showLoadingDialog(this, "");
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					if (/* 失败 */tempConnId == -2) {
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								DialogUtil.dismissDialog();
-								Toast.makeText(getBaseContext(), "删除失败", 3000)
-										.show();
-							}
-						});
+			
+			PingWebsiteUtil.testGizwitsAvail(
+					
+				new Runnable() {/*onSuccess*/
+					@Override
+					public void run() {
+						Log.d("emmm", "ping gizwits SUCCESS");
+						serverAcessHandler.sendEmptyMessage(0);
+					}
+				}, 
+				
+				new Runnable() {/*onFail*/
+					@Override
+					public void run() {
+						Log.d("emmm", "ping gizwits FAIL");
+						serverAcessHandler.sendEmptyMessage(1);
 					}
 				}
-			}, 5000);
-			XPGConnShortCuts.connect2big();
+			
+			);
+			
+			
 		}
 	}
+	
+	private Handler serverAcessHandler = new Handler(new Handler.Callback() {
+		
+		@Override
+		public boolean handleMessage(Message msg) {
+			
+			switch (msg.what) {
+			
+			case 0:	//	与服务器连接通畅
+				XPGConnShortCuts.connect2big();
+				break;
+			case 1: //	未与服务器连接
+				DialogUtil.dismissDialog();
+				Toast.makeText(getBaseContext(), "删除失败", 3000).show();
+				break;
+			default:
+				break;
+			}
+			
+			return false;
+		}
+	});
 
 	@Override
 	public void onConnectEvent(int connId, int event) {
@@ -297,6 +324,8 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			Toast.makeText(getBaseContext(), R.string.failure,
 					Toast.LENGTH_SHORT).show();
 		}
+		
+		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
 	}
 
 	private void deleted() {
