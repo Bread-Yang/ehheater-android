@@ -368,7 +368,8 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 	
 	public void getmessageweek(long da){
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=1", 
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da+"&resultType=1&expendType=1", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -435,8 +436,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	public void getmessagemonth(long da2){
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da2+"&resultType=2&expendType=1", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da2+"&resultType=2&expendType=1", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -530,8 +532,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 	
 	public void getmessageyear(long da3){
 		dtime=da3;
+		String adid =new HeaterInfoService(context).getCurrentSelectedHeater().getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da3+"&resultType=3&expendType=1", 
+		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+adid+"&dateTime="+da3+"&resultType=3&expendType=1", 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
