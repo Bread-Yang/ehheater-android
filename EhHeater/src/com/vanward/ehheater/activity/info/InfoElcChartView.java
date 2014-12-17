@@ -296,11 +296,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	}
 	
 	public void getmessageweek(long da){
-		
-		
-		
+		String url="http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=3";
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get("http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=3", 
+		finalHttp.get(url, 
 				new AjaxCallBack<String>(){
 			//等待数据展示
 			@Override
@@ -332,10 +330,12 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								electricity.setAmount(amount);
 								electricity.setTime(time);
 								li.add(electricity);  
+								
 								JSONObject jsonOBJ = new JSONObject();
-								JSONObject jsonOBJ2 = new JSONObject(); 
+								JSONObject jsonOBJ2 = new JSONObject();
+								
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
@@ -427,8 +427,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);  
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
+
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
@@ -503,7 +504,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put("data", li.get(i).getAmount());
+								jsonOBJ2.put("data", li.get(i).getAmount().equals("")?0:Math.round(Float.parseFloat(li.get(i).getAmount())));
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
