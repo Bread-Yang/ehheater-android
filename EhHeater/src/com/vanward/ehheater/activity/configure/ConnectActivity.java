@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
@@ -44,6 +45,8 @@ public class ConnectActivity extends GeneratedActivity {
 	private TextView mTvInfo, mTvInfo2;
 	
 	private Button mBtnRetry;
+	
+	private ProgressBar mPbar;
 	
 
 	/** 建立的连接类型, LAN / MQTT(大) */
@@ -89,6 +92,7 @@ public class ConnectActivity extends GeneratedActivity {
 		mTvInfo = (TextView) findViewById(R.id.awad_tv);
 		mTvInfo2 = (TextView) findViewById(R.id.awad_tv_2);
 		mBtnRetry = (Button) findViewById(R.id.awad_btn_retry);
+		mPbar = (ProgressBar) findViewById(R.id.acad_pbar);
 
 		mBtnRetry.setOnClickListener(new View.OnClickListener() {
 			
@@ -102,14 +106,24 @@ public class ConnectActivity extends GeneratedActivity {
 		helper1();
 	}
 	
+	@Override
+	public void onBackPressed() {
+		
+	};
+	
 	private void helper1() {
 
-		mBtnRetry.setVisibility(View.GONE);
+//		mPbar.setVisibility(View.VISIBLE);
+//		mBtnRetry.setVisibility(View.GONE);
+//		mTvInfo2.setText("连接中...");
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
 			// 无任何网络连接
-			mTvInfo.setText("无网络连接");
-			mTvInfo2.setText("无网络连接");
-			mBtnRetry.setVisibility(View.VISIBLE);
+//			mTvInfo.setText("无网络连接");
+//			mTvInfo2.setText("无网络连接");
+//			mBtnRetry.setVisibility(View.VISIBLE);
+//			mPbar.setVisibility(View.GONE);
+
+			setOfflineResult();
 			return;
 		}
 		
@@ -202,6 +216,7 @@ public class ConnectActivity extends GeneratedActivity {
 			if (!TextUtils.isEmpty(macFound) && macFound.equals(mac.toLowerCase())) {
 				didRetrieved = didFound;
 				Log.d("emmm", "onDeviceFound:found target, connecting by small");
+				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 				currentLanSearchingState = LAN_FOUND;
 				if (startFind != null) {
@@ -225,7 +240,7 @@ public class ConnectActivity extends GeneratedActivity {
 						// 接收绑定的设备列表完毕
 						doAfterBindingDevicesReceivedFromMQTT(tempEndpointList);
 					}
-				}, 4000);
+				}, 8000);
 				
 			}
 			
@@ -274,6 +289,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		if (pResp.getResult() == 0) {
 			mTvInfo.setText("设备已连接!");
+			jobDone = true;
 //			generated.SendStateReq(Global.connectId);
 			
 			Intent data = new Intent();
@@ -332,6 +348,7 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 	
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
+		jobDone = true;
 		for (XpgEndpoint ep : devList) {
 			if (ep.getSzMac().toLowerCase().equals(mac.toLowerCase())) {
 				
@@ -353,7 +370,6 @@ public class ConnectActivity extends GeneratedActivity {
 		
 		// is offline
 		setOfflineResult();
-		jobDone = true;
 		Log.d("emmm", mac + " isOnline? " + "未绑定此设备");
 	}
 	
@@ -393,9 +409,9 @@ public class ConnectActivity extends GeneratedActivity {
 		
 		passcode = passcodeRetrieved = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
 		String connectText = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
-		if (!TextUtils.isEmpty(connectText)) {
-			mTvInfo2.setText(connectText);
-		}
+//		if (!TextUtils.isEmpty(connectText)) {
+//			mTvInfo2.setText(connectText);
+//		}
 	}
 
 	public static String testTime() {
@@ -511,10 +527,5 @@ public class ConnectActivity extends GeneratedActivity {
 		
 	*/
 		
-	}
-	
-	@Override
-	public void onBackPressed() {
-//		super.onBackPressed();
 	}
 }

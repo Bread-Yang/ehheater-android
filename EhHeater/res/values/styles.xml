@@ -41,6 +41,8 @@
     <style name="custom_dialog2" parent="DialogBaseTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
     
     <style name="dialogStyle" parent="@android:style/Theme.Dialog">

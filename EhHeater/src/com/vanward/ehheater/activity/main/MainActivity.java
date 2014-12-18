@@ -221,7 +221,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			}
 
-			if (!conntext.contains("连接已断开, 正在重新连接")) {
+			if (!conntext.contains("reconnect")) {
 				mSlidingMenu.showContent();
 			}
 
