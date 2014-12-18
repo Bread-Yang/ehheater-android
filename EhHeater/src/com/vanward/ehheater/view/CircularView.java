@@ -313,7 +313,7 @@ public class CircularView extends View {
 				if (isclick) {
 					System.out.println("test1;"+ degree);
 					if (tempdegree > olddegree && degree < 360) {
-						if (isHeat&& targerdegree>50) {
+						if (isHeat&& targerdegree>=50) {
 							System.out.println("test加");
 							degree=angleToDegree(targerdegree) + (18);
 						}else {
@@ -323,19 +323,12 @@ public class CircularView extends View {
 						// degree = degree + 6;
 					} else if (tempdegree < olddegree && degree > 0) {
 						if (isHeat&& targerdegree>50) {
-							if (degree==angleToDegree(targerdegree) - (18)) {
-								degree=angleToDegree(targerdegree) - (50);
-							}else {
-								degree=angleToDegree(targerdegree) - (18);
-							}
-						
+							degree=angleToDegree(targerdegree) - (18);
 						}else {
 							degree = angleToDegree(targerdegree) - perangle;
 						}
-						
-						// degree = degree - 6;
 					} else {
-						// degree = tempdegree;
+						degree = tempdegree;
 					}
 				}
 				olddegree = degree;
@@ -351,6 +344,7 @@ public class CircularView extends View {
 					handler.sendEmptyMessage(UpdateUIToSet);
 				}
 				handler.sendEmptyMessage(SentToMsg);
+				
 			}
 		}
 		return true;
