@@ -32,6 +32,7 @@ import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.CustomSetVo;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.AddPatternButtonDialogUtil;
@@ -197,8 +198,10 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	}
 
 	public void initViewValue() {
-		customSetVolist = new BaseDao(this).getDb().findAll(
-				GasCustomSetVo.class);
+		customSetVolist = new BaseDao(this).getDb().findAllByWhere(
+				GasCustomSetVo.class,
+				" uid = '" + AccountService.getUserId(PatternActivity.this)
+						+ "'");
 		name = getIntent().getStringExtra("name");
 		addCustomView();
 		if (customSetVolist.size() >= 3) {
@@ -369,8 +372,10 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																	customSetVolist = new BaseDao(
 																			PatternActivity.this)
 																			.getDb()
-																			.findAll(
-																					GasCustomSetVo.class);
+																			.findAllByWhere(
+																					GasCustomSetVo.class,
+																					" uid = '" + AccountService.getUserId(PatternActivity.this)
+																							+ "'");
 																	if (customSetVolist
 																			.size() != 0) {
 																		GasCustomSetVo tempcustomSetVo = new BaseDao(
@@ -448,8 +453,10 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 
 						if (name != null && name.length() != 0) {
 							List<GasCustomSetVo> list = new BaseDao(
-									PatternActivity.this).getDb().findAll(
-									GasCustomSetVo.class);
+									PatternActivity.this).getDb().findAllByWhere(
+											GasCustomSetVo.class,
+											" uid = '" + AccountService.getUserId(PatternActivity.this)
+													+ "'");
 							for (int i = 0; i < list.size(); i++) {
 								GasCustomSetVo gasCustomSetVo = list.get(i);
 								if (gasCustomSetVo.getName().equals(name)) {

@@ -85,7 +85,7 @@ public class InformationActivity extends Activity implements
 		
 		sumwater = (TextView) inforChartView.findViewById(R.id.sumwater);
 		sumgas = (TextView) inforElChartView.findViewById(R.id.sumgas);
-		//taptv = (TextView) view3.findViewById(R.id.taptv);
+		taptv = (TextView) view3.findViewById(R.id.taptv);
 		heatxiaolv = (TextView) view3.findViewById(R.id.heatxiaolv);
 		
 		if (isgas) {

@@ -23,6 +23,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.db.DBService;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
@@ -106,7 +107,7 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 				}
 			}
 		});
-		
+
 		seekBar.setOnProgressChangeListener(new OnSeekBarHintProgressChangeListener() {
 
 			@Override
@@ -184,6 +185,7 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 
 	public CustomSetVo getData() {
 		CustomSetVo customSetVo = new CustomSetVo();
+		customSetVo.setUid(AccountService.getUserId(AddPatternActivity.this));
 		customSetVo.setConnid(Global.connectId);
 		if (nameedittext.getText().toString().length() <= 0) {
 			Toast.makeText(this, "请输入名字", Toast.LENGTH_SHORT).show();
@@ -208,7 +210,11 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 			customSetVo.setPower(3);
 		} else {
 			customSetVo.setTempter(seekBar.getProgress() + 35);
-			List list = new BaseDao(this).getDb().findAll(CustomSetVo.class);
+			List list = new BaseDao(this).getDb().findAllByWhere(
+					CustomSetVo.class,
+					" uid = '"
+							+ AccountService.getUserId(AddPatternActivity.this)
+							+ "'");
 			View view = null;
 			for (int i = 0; i < powerGroup.getChildCount(); i++) {
 				if (powerGroup.getCheckedRadioButtonId() == powerGroup

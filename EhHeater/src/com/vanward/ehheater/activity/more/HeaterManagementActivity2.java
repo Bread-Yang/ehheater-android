@@ -32,6 +32,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.AlterDeviceHelper;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.PingWebsiteUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
@@ -57,6 +58,8 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	private HeaterType typeOfHeaterBeingDeleted;
 	private int tempConnId = -2;
 
+	private Dialog deleteHeaterConfirmDialog, deleteFurnaceConfirmDialog;
+
 	@Override
 	public void initUI() {
 		super.initUI();
@@ -79,7 +82,32 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
-		adapter = new HeaterAdapter(new HeaterInfoDao(getBaseContext()).getAll());
+		deleteHeaterConfirmDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithTwoButton(R.string.confirm_delete_heater,
+						BaoDialogShowUtil.DEFAULT_RESID, -1, null,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								deleteHeaterConfirmDialog.dismiss();
+								deleteHeater();
+							}
+						});
+		
+		deleteFurnaceConfirmDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithTwoButton(R.string.confirm_delete_furnace,
+						BaoDialogShowUtil.DEFAULT_RESID, -1, null,
+						new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						deleteFurnaceConfirmDialog.dismiss();
+						deleteHeater();
+					}
+				});
+
+		adapter = new HeaterAdapter(
+				new HeaterInfoDao(getBaseContext()).getAll());
 		lv_listview.setAdapter(adapter);
 		shouldAlter = false;
 	}
@@ -99,41 +127,49 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		}
 
 		if (view == btn_add) {
-			startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
+			startActivity(new Intent(getBaseContext(),
+					SelectDeviceActivity.class));
 		}
 		if (view == btn_left) {
-//			if (new HeaterInfoDao(getBaseContext()).getAll().size() == 0) {
-//				startActivity(new Intent(getBaseContext(), SelectDeviceActivity.class));
-//			} else {
-				onBackPressed();
-//			}
+			// if (new HeaterInfoDao(getBaseContext()).getAll().size() == 0) {
+			// startActivity(new Intent(getBaseContext(),
+			// SelectDeviceActivity.class));
+			// } else {
+			onBackPressed();
+			// }
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hinfo = hser.getCurrentSelectedHeater();
-		
+
 		if (hinfo == null) {
 			// 删光了
-			
-			Intent intent = new Intent(getBaseContext(), SelectDeviceActivity.class);
-			intent.putExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, true);
+
+			Intent intent = new Intent(getBaseContext(),
+					SelectDeviceActivity.class);
+			intent.putExtra(
+					Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH,
+					true);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.putExtra("isDeleteAll", true);
 			startActivity(intent);
 			finish();
-			
+
 		} else {
-			
+
 			super.onBackPressed();
-			
+
 			if (shouldAlter) {
 				shouldAlter = false;
-				LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
-						new Intent(Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
+				LocalBroadcastManager
+						.getInstance(getBaseContext())
+						.sendBroadcast(
+								new Intent(
+										Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
 			}
 		}
 	}
@@ -176,7 +212,8 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 					.findViewById(R.id.device_name);
 			ImageView actionBtn = ((ImageView) convertView
 					.findViewById(R.id.action_btn));
-			ImageView deviceImage = (ImageView) convertView.findViewById(R.id.device_img);
+			ImageView deviceImage = (ImageView) convertView
+					.findViewById(R.id.device_img);
 			switch (new HeaterInfoService(getBaseContext()).getHeaterType(item)) {
 			case Eh:
 				deviceImage.setImageResource(R.drawable.setting_img3);
@@ -207,8 +244,15 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 						HeaterInfo hinfo = (HeaterInfo) view.getTag();
 						macOfHeaterBeingDeleted = hinfo.getMac();
 						didOfHeaterBeingDeleted = hinfo.getDid();
-						typeOfHeaterBeingDeleted = new HeaterInfoService(view.getContext()).getHeaterType(hinfo);
-						deleteHeater();
+						typeOfHeaterBeingDeleted = new HeaterInfoService(view
+								.getContext()).getHeaterType(hinfo);
+						HeaterType type = new HeaterInfoService(view
+								.getContext()).getHeaterType(hinfo);
+						if (HeaterType.EH_FURNACE == type) {
+							deleteFurnaceConfirmDialog.show();
+						} else {
+							deleteHeaterConfirmDialog.show();
+						}
 					}
 				}
 			});
@@ -237,49 +281,48 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		} else {
 			// server delete
 			DialogUtil.instance().showLoadingDialog(this, "");
-			
+
 			PingWebsiteUtil.testGizwitsAvail(
-					
-				new Runnable() {/*onSuccess*/
-					@Override
-					public void run() {
-						Log.d("emmm", "ping gizwits SUCCESS");
-						serverAcessHandler.sendEmptyMessage(0);
-					}
-				}, 
-				
-				new Runnable() {/*onFail*/
-					@Override
-					public void run() {
-						Log.d("emmm", "ping gizwits FAIL");
-						serverAcessHandler.sendEmptyMessage(1);
-					}
+
+			new Runnable() {/* onSuccess */
+				@Override
+				public void run() {
+					Log.d("emmm", "ping gizwits SUCCESS");
+					serverAcessHandler.sendEmptyMessage(0);
 				}
-			
+			},
+
+			new Runnable() {/* onFail */
+				@Override
+				public void run() {
+					Log.d("emmm", "ping gizwits FAIL");
+					serverAcessHandler.sendEmptyMessage(1);
+				}
+			}
+
 			);
-			
-			
+
 		}
 	}
-	
+
 	private Handler serverAcessHandler = new Handler(new Handler.Callback() {
-		
+
 		@Override
 		public boolean handleMessage(Message msg) {
-			
+
 			switch (msg.what) {
-			
-			case 0:	//	与服务器连接通畅
+
+			case 0: // 与服务器连接通畅
 				XPGConnShortCuts.connect2big();
 				break;
-			case 1: //	未与服务器连接
+			case 1: // 未与服务器连接
 				DialogUtil.dismissDialog();
 				Toast.makeText(getBaseContext(), "删除失败", 3000).show();
 				break;
 			default:
 				break;
 			}
-			
+
 			return false;
 		}
 	});
@@ -324,18 +367,19 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			Toast.makeText(getBaseContext(), R.string.failure,
 					Toast.LENGTH_SHORT).show();
 		}
-		
+
 		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
 	}
 
 	private void deleted() {
-		
-		Toast.makeText(getBaseContext(), R.string.success, Toast.LENGTH_SHORT).show();
+
+		Toast.makeText(getBaseContext(), R.string.success, Toast.LENGTH_SHORT)
+				.show();
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-		
+
 		if (getCurDeviceMac(getBaseContext()).equals(macOfHeaterBeingDeleted)) {
 			// 删除的设备是当前选定的设备, 此时有2种可能, 1 删光了, 2 未删光 需切换至别的设备
-			
+
 			List<HeaterInfo> all = new HeaterInfoDao(getBaseContext()).getAll();
 			if (all == null || all.size() == 0) {
 				// 删光了
@@ -344,44 +388,49 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			} else {
 				// TODO 需切换至其他设备
 				hser.setCurrentSelectedHeater(all.get(0).getMac());
-				
+
 				HeaterType oriHeaterType = typeOfHeaterBeingDeleted;
 				HeaterType newHeaterType = hser.getCurHeaterType();
 
 				AlterDeviceHelper.newHeaterType = newHeaterType;
-				AlterDeviceHelper.typeChanged = !newHeaterType.equals(oriHeaterType);
-				
+				AlterDeviceHelper.typeChanged = !newHeaterType
+						.equals(oriHeaterType);
+
 				shouldAlter = true;
-				
-//				LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
-//						new Intent(Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
+
+				// LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
+				// new Intent(Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
 			}
-			
-			
+
 		}
-		
+
 		adapter.setList(new HeaterInfoDao(getBaseContext()).getAll());
 		adapter.notifyDataSetChanged();
 
-		Intent heaterNameIntent = new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
-		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(heaterNameIntent);
-		
+		Intent heaterNameIntent = new Intent(
+				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
+		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
+				heaterNameIntent);
+
 		// HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hinfo = hser.getCurrentSelectedHeater();
-		
+
 		if (hinfo == null) {
 			// 删光了
-			
-			Intent intent = new Intent(getBaseContext(), SelectDeviceActivity.class);
-			intent.putExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, true);
+
+			Intent intent = new Intent(getBaseContext(),
+					SelectDeviceActivity.class);
+			intent.putExtra(
+					Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH,
+					true);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.putExtra("isDeleteAll", true);
 			startActivity(intent);
 			finish();
-			
+
 		}
-		
+
 	}
 
 	private String getCurDeviceMac(Context context) {

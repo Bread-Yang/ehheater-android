@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.os.Bundle;
+import android.app.Dialog;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -18,15 +18,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.CloudBaseActivity;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.service.AccountService;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.UserPwdChangeResp_t;
 import com.xtremeprog.xpgconnect.generated.XPG_RESULT;
-import com.xtremeprog.xpgconnect.generated.XpgDataField;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
@@ -39,6 +38,8 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 	private String newPsw;
 
 	private EditText et_password, et_new_password, et_new_password_confirm;
+
+	private Dialog changePswSuccessdialog;
 
 	@Override
 	public void initUI() {
@@ -98,9 +99,8 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 
 				if (6 > et_password.getText().length()
 						|| 18 < et_password.getText().length()) {
-					Toast.makeText(getBaseContext(),
-							R.string.psw_6_to_18, Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
+							Toast.LENGTH_SHORT).show();
 					return;
 				}
 
@@ -113,7 +113,7 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 
 					return;
 				}
-				
+
 				// 请输入新密码！
 				if ("".equals(et_new_password.getText().toString())) {
 					Toast.makeText(getBaseContext(),
@@ -124,28 +124,25 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 
 				if (6 > et_new_password.getText().length()
 						|| 18 < et_new_password.getText().length()) {
-					Toast.makeText(getBaseContext(),
-							R.string.psw_6_to_18, Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
+							Toast.LENGTH_SHORT).show();
 					return;
 				}
-				
+
 				// 请输入确认密码！
 				if ("".equals(et_new_password_confirm.getText().toString())) {
 					Toast.makeText(getBaseContext(),
-							R.string.please_input_confirm_psw, Toast.LENGTH_SHORT)
-							.show();
+							R.string.please_input_confirm_psw,
+							Toast.LENGTH_SHORT).show();
 					return;
 				}
 
 				if (6 > et_new_password_confirm.getText().length()
 						|| 18 < et_new_password_confirm.getText().length()) {
-					Toast.makeText(getBaseContext(),
-							R.string.psw_6_to_18, Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
+							Toast.LENGTH_SHORT).show();
 					return;
 				}
-				
 
 				if (!editList.get(1).getEditableText().toString()
 						.equals(editList.get(2).getEditableText().toString())) {
@@ -178,6 +175,18 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 		editList.add((EditText) findViewById(R.id.new_password));
 		editList.add((EditText) findViewById(R.id.new_password_confirm));
 		setLeftButtonBackground(R.drawable.icon_back);
+
+		changePswSuccessdialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithOneButton(R.string.change_success_relogin,
+						R.string.ok, new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								changePswSuccessdialog.dismiss();
+								setResult(RESULT_OK);
+								finish();
+							}
+						});
 	}
 
 	private void requestChangePsw() {
@@ -232,13 +241,9 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 		DialogUtil.dismissDialog();
 
 		if (pResp.getResult() == 0) {
-			Toast.makeText(getBaseContext(), R.string.success,
-					Toast.LENGTH_SHORT).show();
 			AccountService.setUser(getBaseContext(),
 					AccountService.getUserId(getBaseContext()), newPsw);
-			setResult(RESULT_OK);
-			finish();
-			// onBackPressed();
+			changePswSuccessdialog.show();
 		} else {
 			Toast.makeText(getBaseContext(), R.string.failure,
 					Toast.LENGTH_SHORT).show();

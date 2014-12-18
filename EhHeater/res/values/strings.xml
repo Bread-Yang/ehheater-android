@@ -176,13 +176,15 @@
     <string name="furnace_switch">壁挂炉开关</string>
     <string name="requesting_http">正在请求,请稍后...</string>
     <string name="edit_appointment">编辑预约</string>
-    <string name="appointment_conflict">亲，请问是否要覆盖%1$s的预约%2$s:%3$s</string>
+    <string name="appointment_conflict">亲，请问是否要覆盖%1$s的预约%2$s</string>
     <string name="override">覆盖</string>
     <string name="furnace_appointment_full">亲，壁挂炉的预约已经满了哦！</string>
     <string name="heater_appointment_full">亲，热水器的预约已经满了哦！</string>
     <string name="edit_nickname">修改用户名</string>
     <string name="switch_summer">您确定要切换到夏季模式？</string>
     <string name="switch_winner">您确定要切换到冬季模式？</string>
+    <string name="confirm_delete_heater">确定删除该热水器？</string>
+    <string name="confirm_delete_furnace">确定删除该壁挂炉？</string>
     <string name="turn_off_in_winter">在冬天时关机，可能会由于气温过冷导致硬件损坏！</string>
     <string name="add_pattern">添加模式</string>
     <string name="switch_success">切换成功</string>
@@ -193,5 +195,7 @@
     <string name="ask_for_help">寻求帮助</string>
     <string name="ewh_error_e2_title">机器故障(E2)</string>
     <string name="ewh_error_e2">热水器未注满水直接通电，发生干烧</string>
+    <string name="change_success_relogin">密码修改成功，请重新登录</string>
+    
 
 </resources>

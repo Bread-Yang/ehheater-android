@@ -4,12 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import net.tsz.afinal.FinalActivity;
-import net.tsz.afinal.http.AjaxCallBack;
-import net.tsz.afinal.http.AjaxParams;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,9 +30,7 @@ import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentTimeActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
-import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.model.AppointmentVo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -41,7 +39,6 @@ import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 import com.vanward.ehheater.view.wheelview.WheelView;
-import com.vanward.ehheater.view.wheelview.adapters.AbstractWheelTextAdapter;
 import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
 
 public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
@@ -83,6 +80,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 	private String nickName = "";
 
+	private String conflictName = "";
+	
+	private long conflictTime;
+
 	private Handler tipsHandler = new Handler() {
 		public void dispatchMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -98,9 +99,9 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					// + "？");
 					String sFormat = getResources().getString(
 							R.string.appointment_conflict);
-					String sFinalAge = String.format(sFormat, nickName,
-							wheelView1.getCurrentItem(),
-							wheelView2.getCurrentItem());
+					String sFinalAge = String
+							.format(sFormat, conflictName, dateFormat
+									.format(new Date(conflictTime)));
 					tv_tips.setText(sFinalAge);
 
 					appointmentConflictDialog.show();
@@ -273,9 +274,11 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 				String week = "";
 
-				for (int i = 0; i < days.length; i++) {
+				for (int i = 0; i < days.length - 1; i++) {
 					week += days[i];
 				}
+
+				week = days[6] + week;
 
 				editModel.setWeek(week);
 
@@ -327,6 +330,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 							@Override
 							public void onSuccess(String jsonString) {
 								super.onSuccess(jsonString);
+								Log.e("编辑或者保存返回的json数据是 : ", jsonString);
 								isOverride = false;
 								try {
 									JSONObject json = new JSONObject(jsonString);
@@ -335,6 +339,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 									if ("200".equals(responseCode)) {
 										finish();
 									} else if ("501".equals(responseCode)) {
+										JSONObject result = json
+												.getJSONObject("result");
+										conflictName = result.getString("name");
+										conflictTime = result.getLong("dateTime");
 										tipsHandler.sendEmptyMessage(0);
 									} else if ("403".equals(responseCode)) { // 预约满了
 										tipsHandler.sendEmptyMessage(1);
@@ -447,12 +455,13 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			if (editModel.getLoopflag() == 1) {
 				days = new int[] { 1, 1, 1, 1, 1, 1, 1 };
 			} else if (editModel.getLoopflag() == 2) {
-				for (int i = 0; i < editModel.getWeek().length(); i++) {
+				for (int i = 1; i < editModel.getWeek().length(); i++) {
 					int flag = Integer.valueOf(editModel.getWeek().substring(i,
 							i + 1));
 					Log.e("flag", flag + "");
-					days[i] = flag;
+					days[i - 1] = flag;
 				}
+				days[6] = Integer.valueOf(editModel.getWeek().substring(0, 1));
 			}
 			showRepeatDays();
 
