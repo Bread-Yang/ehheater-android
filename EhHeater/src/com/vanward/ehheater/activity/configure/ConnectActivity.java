@@ -202,6 +202,7 @@ public class ConnectActivity extends GeneratedActivity {
 			if (!TextUtils.isEmpty(macFound) && macFound.equals(mac.toLowerCase())) {
 				didRetrieved = didFound;
 				Log.d("emmm", "onDeviceFound:found target, connecting by small");
+				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 				currentLanSearchingState = LAN_FOUND;
 				if (startFind != null) {
@@ -225,7 +226,7 @@ public class ConnectActivity extends GeneratedActivity {
 						// 接收绑定的设备列表完毕
 						doAfterBindingDevicesReceivedFromMQTT(tempEndpointList);
 					}
-				}, 4000);
+				}, 8000);
 				
 			}
 			
@@ -274,6 +275,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		if (pResp.getResult() == 0) {
 			mTvInfo.setText("设备已连接!");
+			jobDone = true;
 //			generated.SendStateReq(Global.connectId);
 			
 			Intent data = new Intent();
@@ -332,6 +334,7 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 	
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
+		jobDone = true;
 		for (XpgEndpoint ep : devList) {
 			if (ep.getSzMac().toLowerCase().equals(mac.toLowerCase())) {
 				
@@ -353,7 +356,6 @@ public class ConnectActivity extends GeneratedActivity {
 		
 		// is offline
 		setOfflineResult();
-		jobDone = true;
 		Log.d("emmm", mac + " isOnline? " + "未绑定此设备");
 	}
 	
