@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import u.aly.w;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -32,13 +35,15 @@ import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
+import com.vanward.ehheater.util.HttpConnectUtil;
 
 public class InforChartView extends LinearLayout implements OnClickListener,
 		OnCheckedChangeListener {
@@ -62,22 +67,22 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	// 上一年，下一年，等等
 	private ImageView imageView1;
 	private ImageView imageView2;
-	
+
 	private Dialog loadingDialog;
 
 	public InforChartView(Context context) {
 		super(context);
-		Log.e("InforChartView", "InforChartView");
 		this.context = context;
 		layout = (ViewGroup) inflate(context, R.layout.inforchart, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
-		RadioButton radioButton = (RadioButton) radioGroup
+		RadioButton radiobutton = (RadioButton) radioGroup
 				.findViewById(R.id.radio0);
 		radioGroup.setOnCheckedChangeListener(this);
-		
-		loadingDialog = BaoDialogShowUtil.getInstance(context).createLoadingDialog();
-		
+
+		loadingDialog = BaoDialogShowUtil.getInstance(context)
+				.createLoadingDialog();
+
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
 		sumwater = (TextView) layout.findViewById(R.id.sumwater);
@@ -101,12 +106,14 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
+				// TODO Auto-generated method stub
 				super.onPageFinished(view, url);
 				webView.setVisibility(view.VISIBLE);
 			}
 
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				// TODO Auto-generated method stub
 				super.onPageStarted(view, url, favicon);
 				webView.setVisibility(view.GONE);
 			}
@@ -128,8 +135,8 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 		// initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
 		// initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
 
-//		radioGroup.check(R.id.radio0);
-		radioButton.setChecked(true);
+		// radioGroup.check(R.id.radio0);
+		radiobutton.setChecked(true);
 	}
 
 	class Initobject {
@@ -177,8 +184,6 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
 				.execute();
-		
-		Log.e("InforChartView的onCheckedChanged被调用了", "InforChartView的onCheckedChanged被调用了");
 
 		// webView.reload();
 
@@ -255,7 +260,6 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 			// webView.reload();
 			//
 			// DialogUtil.dismissDialog();
-			
 
 		}
 
@@ -308,8 +312,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	public void getmessageweek(long da) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
-				+ "&dateTime=" + da + "&resultType=1&expendType=2";
+		String url = "http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
+				+ adid + "&dateTime=" + da + "&resultType=1&expendType=2";
+		System.out.println("当前设备的url" + url);
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(url, new AjaxCallBack<String>() {
 			// 等待数据展示
@@ -324,7 +329,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 			@Override
 			public void onSuccess(String t) {
-				Log.e("返回的json数据是 : ", t);
+				System.out.println("燃气消耗量" + t);
 				try {
 					JSONObject jsonObject = new JSONObject(t);
 					JSONArray array = jsonObject.getJSONArray("result");
@@ -335,7 +340,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 					JSONArray jsonArray = new JSONArray();
 					JSONArray jsonArray2 = new JSONArray();
 					List<Electricity> li = new ArrayList<Electricity>();
+					float a = 0;
 					for (int i = 0; i < array.length(); i++) {
+						float b = 0;
 						JSONObject jsonObj = array.getJSONObject(i);
 						String amount = jsonObj.getString("amount");
 						String time = format.format(new Long(jsonObj
@@ -347,6 +354,10 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 						li.add(electricity);
 						JSONObject jsonOBJ = new JSONObject();
 						JSONObject jsonOBJ2 = new JSONObject();
+						b = Math.round(Float.parseFloat(li.get(i).getAmount()
+								.equals("") ? "0" : li.get(i).getAmount()));
+						;
+						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
 						jsonOBJ2.put(
 								"data",
@@ -365,13 +376,14 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 					Long l = new Long(System.currentTimeMillis());
 					Date da = new Date(l);
 					lqtime.setText(sim.format(da));
-					getall();
+					sumwater.setText(Math.round(a) + "L");
 					// 更换下方按钮
 					chart4week();
 					// 刷新数据展示
 					webView.reload();
 					// 销毁等待
 					loadingDialog.dismiss();
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch blocks
 					e.printStackTrace();
@@ -384,8 +396,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
 				// TODO Auto-generated method stub 请求失败
 				super.onFailure(t, errorNo, strMsg);
-				Toast.makeText(context,
-						"服务器错误", Toast.LENGTH_LONG).show();
+				Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG).show();
 				loadingDialog.dismiss();
 			}
 		});
@@ -423,7 +434,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li = new ArrayList<Electricity>();
+							float a = 0;
 							for (int i = 0; i < array.length(); i++) {
+								float b = 0;
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount = jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj
@@ -456,6 +469,11 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
+								b = Math.round(Float.parseFloat(li.get(i)
+										.getAmount().equals("") ? "0" : li.get(
+										i).getAmount()));
+								;
+								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
@@ -475,7 +493,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 							Date da = new Date(l);
 							lqtime.setText(sim.format(da));
 							// 设置使用的总电数
-							getall();
+							sumwater.setText(Math.round(a) + "L");
 							// 更换下方按钮
 							chart4Month();
 							// 刷新数据展示
@@ -494,10 +512,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 					@Override
 					public void onFailure(Throwable t, int errorNo,
 							String strMsg) {
-						// TODO Auto-generated method stub 请求失败
 						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context,
-								"服务器错误", Toast.LENGTH_LONG).show();
+						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
+								.show();
 						loadingDialog.dismiss();
 					}
 				});
@@ -535,7 +552,9 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li = new ArrayList<Electricity>();
+							float a = 0;
 							for (int i = 0; i < array.length(); i++) {
+								float b = 0;
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount = jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj
@@ -546,6 +565,11 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
+								b = Math.round(Float.parseFloat(li.get(i)
+										.getAmount().equals("") ? "0" : li.get(
+										i).getAmount()));
+								;
+								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
@@ -565,7 +589,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 							Date da = new Date(l);
 							lqtime.setText(sim.format(da));
 							// 设置使用的总电数
-							getall();
+							sumwater.setText(Math.round(a) + "L");
 							// 更换下方按钮
 							chart4Year();
 							// 刷新数据展示
@@ -586,8 +610,8 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 							String strMsg) {
 						// TODO Auto-generated method stub 请求失败
 						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context,
-								"服务器错误", Toast.LENGTH_LONG).show();
+						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
+								.show();
 						loadingDialog.dismiss();
 					}
 				});

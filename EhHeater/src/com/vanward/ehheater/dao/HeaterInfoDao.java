@@ -1,13 +1,12 @@
 package com.vanward.ehheater.dao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 
@@ -16,21 +15,22 @@ public class HeaterInfoDao extends BaseDao {
 	public HeaterInfoDao(Context context) {
 		super(context);
 	}
-	
+
 	public HeaterInfo getHeaterByMac(String mac) {
-		List<HeaterInfo> result = getDb().findAllByWhere(HeaterInfo.class, " mac = '" + mac + "'");
-		
+		List<HeaterInfo> result = getDb().findAllByWhere(HeaterInfo.class,
+				" mac = '" + mac + "'");
+
 		if (result != null && result.size() > 0) {
 			return result.get(0);
 		} else {
 			return null;
 		}
 	}
-	
+
 	public void save(HeaterInfo heater) {
 		Log.d("emmm", "saving heater(allow empty passcode): " + heater);
-//		getDb().replace(heater);
-		
+		// getDb().replace(heater);
+
 		HeaterInfo old = getHeaterByMac(heater.getMac());
 		if (old == null) {
 			getDb().save(heater);
@@ -38,20 +38,21 @@ public class HeaterInfoDao extends BaseDao {
 			heater.setId(old.getId());
 			getDb().update(heater);
 		}
-		
+
 	}
-	
-	public List<HeaterInfo> getAll(){
+
+	public List<HeaterInfo> getAll() {
 		return getDb().findAll(HeaterInfo.class);
 	}
-	
+
 	public int getHeaterCountOfType(HeaterType type) {
 		List<HeaterInfo> ret;
-		
+
 		if (type == HeaterType.Unknown) {
 			return getUnknownHeaterCount();
 		} else {
-			ret = getDb().findAllByWhere(HeaterInfo.class, " productKey = '" + type.pkey + "'");
+			ret = getDb().findAllByWhere(HeaterInfo.class,
+					" productKey = '" + type.pkey + "'");
 		}
 
 		if (ret == null) {
@@ -60,30 +61,45 @@ public class HeaterInfoDao extends BaseDao {
 			return ret.size();
 		}
 	}
-	
+
+	public List<String> getAllDeviceDidOfType(HeaterType type) {
+		List<HeaterInfo> deviceList;
+		List<String> didList = new ArrayList<String>();
+		if (type == HeaterType.Unknown) {
+			return null;
+		} else {
+			deviceList = getDb().findAllByWhere(HeaterInfo.class,
+					" productKey = '" + type.pkey + "'");
+			for (int i = 0; i < deviceList.size(); i++) {
+				didList.add(deviceList.get(i).getDid());
+			}
+			return didList;
+		}
+	}
+
 	private int getUnknownHeaterCount() {
 		List<HeaterInfo> allHeaters = getAll();
 		int totalCount = 0;
 		if (allHeaters != null) {
 			totalCount = allHeaters.size();
 		}
-		
+
 		List<HeaterType> allTypes = Arrays.asList(HeaterType.values());
-//		allTypes.remove(HeaterType.Unknown);
-		
+		// allTypes.remove(HeaterType.Unknown);
+
 		int totalKnown = 0;
 		for (HeaterType type : allTypes) {
 			if (type != HeaterType.Unknown) {
 				totalKnown += getHeaterCountOfType(type);
 			}
 		}
-		
+
 		return totalCount - totalKnown;
 	}
-	
+
 	public boolean nameExists(String name) {
 		boolean ret = false;
-		
+
 		List<HeaterInfo> all = getAll();
 		if (all == null) {
 			return false;
@@ -94,8 +110,8 @@ public class HeaterInfoDao extends BaseDao {
 				}
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 }

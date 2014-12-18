@@ -9,10 +9,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:gravity="center"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
         android:textSize="16dp"
-        android:text="无法连接设备"/>
+        android:text="@string/cannot_connect"/>
     
     <View 
         android:layout_width="match_parent"

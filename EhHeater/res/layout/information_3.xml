@@ -22,7 +22,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="实时热效率"
-            android:textColor="#FF807a79"
+            android:textColor="@color/appointment_text_color"
             android:textSize="18sp" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="0"
+            android:text="70%"
             android:textColor="#FFf86e00"
             android:textSize="22sp" />
     </RelativeLayout>
@@ -56,7 +56,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="总计使用次数"
-            android:textColor="#FF807a79"
+            android:textColor="@color/appointment_text_color"
             android:textSize="18sp" />
 
         <TextView
@@ -88,7 +88,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="总计使用时长"
-            android:textColor="#FF807a79"
+            android:textColor="@color/appointment_text_color"
             android:textSize="18sp" />
 
         <TextView

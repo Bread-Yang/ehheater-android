@@ -115,8 +115,9 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 		}
 		customSetVo.setUid(AccountService.getUserId(AddPatternActivity.this));
 		customSetVo.setConnid(Global.connectId);
-		if (nameedittext.getText().toString().length() <= 0) {
-			Toast.makeText(this, "请输入名称", Toast.LENGTH_SHORT).show();
+		String name = nameedittext.getText().toString().trim();
+		if ("".equals(name)) {
+			Toast.makeText(this, "请输入名字", Toast.LENGTH_SHORT).show();
 			return null;
 		}
 

@@ -8,11 +8,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -98,6 +97,7 @@ public class ConnectActivity extends GeneratedActivity {
 				helper1();
 			}
 		});
+		
 		
 		helper1();
 	}
@@ -511,5 +511,10 @@ public class ConnectActivity extends GeneratedActivity {
 		
 	*/
 		
+	}
+	
+	@Override
+	public void onBackPressed() {
+//		super.onBackPressed();
 	}
 }

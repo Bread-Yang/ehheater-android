@@ -845,6 +845,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		deviceSwitchSuccessDialog.dismiss();
 	}
 
 	@Override

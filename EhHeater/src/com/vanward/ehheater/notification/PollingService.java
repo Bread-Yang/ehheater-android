@@ -1,9 +1,12 @@
 package com.vanward.ehheater.notification;
 
+import java.util.List;
 import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import u.aly.cn;
 
 import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Notification;
@@ -18,7 +21,9 @@ import android.util.Log;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
+import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.HttpFriend;
 
 public class PollingService extends Service {
@@ -49,12 +54,6 @@ public class PollingService extends Service {
 		mHttpFriend = HttpFriend.create(this);
 
 		mManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		int icon = R.drawable.icon58;
-		mNotification = new Notification();
-		mNotification.icon = icon;
-		mNotification.tickerText = "New Message";
-		mNotification.defaults |= Notification.DEFAULT_SOUND;
-		mNotification.flags = Notification.FLAG_AUTO_CANCEL;
 	}
 
 	private void checkAppointment() {
@@ -78,27 +77,121 @@ public class PollingService extends Service {
 								if ("601".equals(responseCode)) {
 									JSONArray result = json
 											.getJSONArray("result");
-									showNotification();
+									showNotification("需要增加功率", "需要增加功率");
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+						}
+					});
+		}
+	}
 
-							Log.e("New message!", "New message!");
+	/** 电热水器故障 */
+	private void checkElecticHeaterInfo() {
+		List<String> ehDids = new HeaterInfoDao(getBaseContext())
+				.getAllDeviceDidOfType(HeaterType.Eh);
+		if (ehDids != null && ehDids.size() > 0) {
+			// String requestURL =
+			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
+			String requestURL = "uGasInfo/getNewestElData?did=" + ehDids.get(0);
+			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					null, new AjaxCallBack<String>() {
+						@Override
+						public void onSuccess(String jsonString) {
+							super.onSuccess(jsonString);
+
+							Log.e("checkElecticHeaterInfo请求返回来的数据是 : ",
+									jsonString);
+
+							try {
+								JSONObject json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									JSONObject result = json
+											.getJSONObject("result");
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 
 						}
 					});
 		}
 	}
 
-	private void showNotification() {
+	/** 燃热水器故障 */
+	private void checkGasHeaterInfo() {
+		Log.e("checkGasHeaterInfo被调用了", "checkGasHeaterInfo被调用了");
+		List<String> ehDids = new HeaterInfoDao(getBaseContext())
+				.getAllDeviceDidOfType(HeaterType.ST);
+		if (ehDids != null && ehDids.size() > 0) {
+			// String requestURL =
+			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
+			String requestURL = "uGasInfo/getNewestData?did=" + ehDids.get(0);
+			Log.e("请求的URL是 : ", "请求的URL是");
+			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					null, new AjaxCallBack<String>() {
+						@Override
+						public void onSuccess(String jsonString) {
+							super.onSuccess(jsonString);
+
+							Log.e("checkGasHeaterInfo请求返回来的数据是 : ", jsonString);
+
+							try {
+								JSONObject json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									JSONObject result = json
+											.getJSONObject("result");
+
+									// 防冻警报
+									int coOverproofWarning = result
+											.getInt("coOverproofWarning");
+									if (coOverproofWarning == 0) {
+										showNotification(
+												R.string.freezeProof_warn,
+												R.string.freezeProof_tips);
+									}
+
+									// 氧护警报
+									int oxygenWarning = result
+											.getInt("oxygenWarning");
+									if (oxygenWarning == 0) {
+										showNotification(R.string.oxygen_warn,
+												R.string.oxygen_tips);
+									}
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+		}
+	}
+
+	private void showNotification(int titleResId, int contentResId) {
+		String title = getResources().getString(titleResId);
+		String content = getResources().getString(contentResId);
+		showNotification(title, content);
+	}
+
+	private void showNotification(String title, String content) {
+		mNotification = new Notification();
+		int icon = R.drawable.icon58;
+		mNotification.icon = icon;
+		mNotification.tickerText = title;
+		mNotification.defaults |= Notification.DEFAULT_SOUND;
+		mNotification.flags = Notification.FLAG_AUTO_CANCEL;
 		mNotification.when = System.currentTimeMillis();
 		// Navigator to the new activity when click the notification title
 		Intent i = new Intent(this, MessageActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i,
 				Intent.FLAG_ACTIVITY_NEW_TASK);
 		mNotification.setLatestEventInfo(this,
-				getResources().getString(R.string.app_name), "需要增加功率!",
+				getResources().getString(R.string.app_name), content,
 				pendingIntent);
 		mManager.notify(0, mNotification);
 	}
@@ -115,7 +208,9 @@ public class PollingService extends Service {
 
 				@Override
 				public void run() {
-					checkAppointment();
+					// checkAppointment();
+//					checkElecticHeaterInfo();
+//					checkGasHeaterInfo();
 				}
 			});
 		}

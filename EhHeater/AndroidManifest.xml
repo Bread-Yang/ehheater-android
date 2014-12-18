@@ -27,18 +27,18 @@
         android:theme="@style/AppBaseTheme" >
 
         <!-- Polling Service -->
-        <!-- <service android:name=".notification.PollingService" >
+        <service android:name=".notification.PollingService" >
             <intent-filter>
                 <action android:name="com.vanward.service.PollingService" />
             </intent-filter>
-        </service> -->
+        </service>
 
         <activity
             android:name=".activity.WelcomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/custom_dialog2" >
-             <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -124,7 +124,7 @@
         <activity
             android:name=".activity.main.furnace.FurnaceGasConsumptionActivity"
             android:screenOrientation="portrait" >
-        </activity> 
+        </activity>
         <activity
             android:name=".activity.main.gas.AddPatternActivity"
             android:screenOrientation="portrait" >
@@ -168,7 +168,6 @@
         <activity
             android:name=".activity.info.InformationActivity"
             android:screenOrientation="portrait" >
-           
         </activity>
         <activity
             android:name=".activity.configure.ConfigureDeviceActivity"

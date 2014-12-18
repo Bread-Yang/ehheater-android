@@ -156,6 +156,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Global.checkOnlineConnId = -1;
 				boolean shouldExecuteBinding = HeaterInfoService
 						.shouldExecuteBinding(curHeater);
+				
+				if(ison) {
+					rightButton.setBackgroundResource(R.drawable.icon_shut);
+				} else {
+					rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+				}
 
 				if (shouldExecuteBinding) {
 					HeaterInfoService.setBinding(this, did, passcode);
@@ -256,6 +262,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		deviceSwitchSuccessDialog.dismiss();
 	}
 
 	@Override
@@ -762,7 +769,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	}
 
 	private GasCustomSetVo curGasCustomVo = null;
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm");
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
 	public void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
 
@@ -926,8 +933,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// SendMsgModel.setTempter(outlevel);
 		// tempter.setText(outlevel + "");
 		// temptertitleTextView.setText("当前温度");
-		hotImgeImageView.setVisibility(View.GONE);
-		hotImgeImageView.clearAnimation();
+//		hotImgeImageView.setVisibility(View.GONE);
+//		hotImgeImageView.clearAnimation();
 	}
 
 	@Override

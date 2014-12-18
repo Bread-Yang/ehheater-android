@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/menu_icon_next" />
+            android:src="@drawable/icon_jian" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -43,9 +43,8 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageView2"
             android:text="万和电热水器"
-            android:textColor="#FF838181"
+            android:textColor="@color/appointment_text_color"
             android:textSize="22sp" />
-
     </RelativeLayout>
 
     <View
@@ -65,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/menu_icon_next" />
+            android:src="@drawable/icon_jian" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -82,7 +81,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageView3"
             android:text="万和燃气热水器"
-            android:textColor="#FF838181"
+            android:textColor="@color/appointment_text_color"
             android:textSize="22sp" />
     </RelativeLayout>
 
@@ -90,8 +89,7 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="#80808080" />
-    
-    
+
     <RelativeLayout
         android:id="@+id/rlt_furnace"
         android:layout_width="match_parent"
@@ -104,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/menu_icon_next" />
+            android:src="@drawable/icon_jian" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -121,7 +119,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageView3"
             android:text="@string/eh_furnace"
-            android:textColor="#FF838181"
+            android:textColor="@color/appointment_text_color"
             android:textSize="22sp" />
     </RelativeLayout>
 

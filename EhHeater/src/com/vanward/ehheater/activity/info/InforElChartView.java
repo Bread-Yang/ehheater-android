@@ -74,13 +74,10 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 	public InforElChartView(Context context) {
 		super(context);
-		Log.e("InforElChartView", "InforElChartView");
 		this.context = context;
 		layout = (ViewGroup) inflate(context, R.layout.infor_el_chart, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
-		RadioButton radioButton = (RadioButton) radioGroup
-				.findViewById(R.id.radio0);
 		radioGroup.setOnCheckedChangeListener(this);
 
 		loadingDialog = BaoDialogShowUtil.getInstance(context)
@@ -250,9 +247,6 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "3")
 				.execute();
 
-		Log.e("InforElChartView的onCheckedChanged被调用了",
-				"InforElChartView的onCheckedChanged被调用了");
-
 		// webView.reload();
 
 	}
@@ -336,6 +330,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 			}
 
 			// webView.reload();
+			// DialogUtil.dismissDialog();
 
 		}
 
@@ -415,7 +410,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li = new ArrayList<Electricity>();
+							float a = 0;
 							for (int i = 0; i < array.length(); i++) {
+								float b = 0;
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount = jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj
@@ -427,6 +424,11 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
+								b = Math.round(Float.parseFloat(li.get(i)
+										.getAmount().equals("") ? "0" : li.get(
+										i).getAmount()));
+								;
+								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
@@ -443,7 +445,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 							Long l = new Long(System.currentTimeMillis());
 							Date da = new Date(l);
 							lqtime.setText(sim.format(da));
-							getall();
+							sumgas.setText(Math.round(a) + "㎥");
 							chart4week();
 							webView.reload();
 							// 销毁等待
@@ -490,6 +492,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 					@Override
 					public void onSuccess(String t) {
+						System.out.println("最后一个bug" + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -500,7 +503,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li = new ArrayList<Electricity>();
+							float a = 0;
 							for (int i = 0; i < array.length(); i++) {
+								float b = 0;
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount = jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj
@@ -532,6 +537,10 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
+								b = (int) Math.floor(Float.parseFloat(li.get(i)
+										.getAmount().equals("") ? "0" : li.get(
+										i).getAmount()));
+								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
@@ -552,7 +561,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 							Date da = new Date(l);
 							lqtime.setText(sim.format(da));
 							// 设置使用的总电数
-							getall();
+							sumgas.setText(Math.round(a) + "㎥");
 							// 更换下方按钮
 							chart4Month();
 							// 刷新数据展示
@@ -571,6 +580,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 					@Override
 					public void onFailure(Throwable t, int errorNo,
 							String strMsg) {
+						// TODO Auto-generated method stub 请求失败
 						super.onFailure(t, errorNo, strMsg);
 						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
 								.show();
@@ -611,7 +621,9 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li = new ArrayList<Electricity>();
+							float a = 0;
 							for (int i = 0; i < array.length(); i++) {
+								float b = 0;
 								JSONObject jsonObj = array.getJSONObject(i);
 								String amount = jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj
@@ -622,6 +634,10 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								li.add(electricity);
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
+								b = Math.round(Float.parseFloat(li.get(i)
+										.getAmount().equals("") ? "0" : li.get(
+										i).getAmount()));
+								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
@@ -641,7 +657,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 							Date da = new Date(l);
 							lqtime.setText(sim.format(da));
 							// 设置使用的总电数
-							getall();
+							sumgas.setText(Math.round(a) + "㎥");
 							// 更换下方按钮
 							chart4Year();
 							// 刷新数据展示
@@ -669,35 +685,35 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 	}
 
 	// 上下
-	public void getall() {
-		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get(
-				"http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="
-						+ Global.connectId + "", new AjaxCallBack<String>() {
-					@Override
-					public void onSuccess(String t) {
-						try {
-							JSONObject jsonObject = new JSONObject(t);
-							if (jsonObject.get("result").equals(null)) {
-								sumgas.setText("0㎥");
-							} else {
-								sumgas.setText(jsonObject.get("result") + "㎥");
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						super.onSuccess(t);
-					}
-
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						// TODO Auto-generated method stub 请求失败
-						super.onFailure(t, errorNo, strMsg);
-					}
-				});
-	}
+	// public void getall(){
+	// FinalHttp finalHttp = new FinalHttp();
+	// finalHttp.get("http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="+Global.connectId+"",
+	// new AjaxCallBack<String>(){
+	// @Override
+	// public void onSuccess(String t) {
+	// try {
+	// JSONObject jsonObject = new JSONObject(t);
+	// if(jsonObject.get("result").equals(null)){
+	// sumgas.setText("0㎥");
+	// }
+	// else{
+	// sumgas.setText(jsonObject.get("result")+"㎥");
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// super.onSuccess(t);
+	// }
+	//
+	// //请求失败
+	// @Override
+	// public void onFailure(Throwable t, int errorNo,
+	// String strMsg) {
+	// // TODO Auto-generated method stub 请求失败
+	// super.onFailure(t, errorNo, strMsg);
+	// }
+	// });
+	// }
 
 	public long timechanged() {
 		Long l = new Long(dtime);

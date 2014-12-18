@@ -127,10 +127,10 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		super.onResume();
 		applyCurWifiSsid();
 
-		if (curindex == 3 && !dialog_easylink.isShowing()) {
-			mRlStepContainer.removeAllViews();
-			mRlStepContainer.addView(getStepView(1));
-		}
+//		if (curindex == 3 && !dialog_easylink.isShowing()) {
+//			mRlStepContainer.removeAllViews();
+//			mRlStepContainer.addView(getStepView(1));
+//		}
 		XPGConnectClient.AddActivity(this);
 	}
 
@@ -140,7 +140,8 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 		if (childCount > 1) {
 			mRlStepContainer.removeViewAt(childCount - 1);
-			mRlStepContainer.getChildAt(childCount - 2).setVisibility(View.VISIBLE);
+			mRlStepContainer.getChildAt(childCount - 2).setVisibility(
+					View.VISIBLE);
 		} else {
 
 			boolean shouldKillProcess = getIntent()
@@ -160,8 +161,10 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		int curStep = mRlStepContainer.getChildCount();
 		View step = getStepView(curStep + 1);
 		if (step != null) {
-			for (int i = 0; i < mRlStepContainer.getChildCount(); i++) {
-				mRlStepContainer.getChildAt(i).setVisibility(View.INVISIBLE);
+			if (mRlStepContainer.getChildCount() != 3) {
+				mRlStepContainer.getChildAt(
+						mRlStepContainer.getChildCount() - 1).setVisibility(
+						View.INVISIBLE);
 			}
 			mRlStepContainer.addView(step);
 		} else {
@@ -391,14 +394,14 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 					.show();
 			return;
 		}
-		
+
 		if (!mType.pkey.equals(hinfo.getProductKey())) {
 
 			Toast.makeText(getBaseContext(), "设备类型错误", Toast.LENGTH_LONG)
 					.show();
 			return;
 		}
-		
+
 		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
 		HeaterInfoDao hdao = new HeaterInfoDao(this);

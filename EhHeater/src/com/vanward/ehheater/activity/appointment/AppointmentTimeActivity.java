@@ -7,6 +7,7 @@ import java.util.Date;
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -74,15 +75,18 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 	int temper, peoplenum;
 
-	private Dialog appointmentConflictDialog, appointmentFullDialog;
+	private Dialog appointmentConflictDialog, appointmentFullDialog,
+			appointmentAddPowerLess3Dailog, appointmentAddPowerLarger3Dailog;
 
 	private boolean isEdit, isOverride;
 
 	private String nickName = "";
 
 	private String conflictName = "";
-	
+
 	private long conflictTime;
+
+	private String saveOrUpdateAppointmentId = "";
 
 	private Handler tipsHandler = new Handler() {
 		public void dispatchMessage(android.os.Message msg) {
@@ -99,9 +103,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					// + "？");
 					String sFormat = getResources().getString(
 							R.string.appointment_conflict);
-					String sFinalAge = String
-							.format(sFormat, conflictName, dateFormat
-									.format(new Date(conflictTime)));
+					String sFinalAge = String.format(sFormat, conflictName,
+							dateFormat.format(new Date(conflictTime)));
 					tv_tips.setText(sFinalAge);
 
 					appointmentConflictDialog.show();
@@ -337,22 +340,88 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 									String responseCode = json
 											.getString("responseCode");
 									if ("200".equals(responseCode)) {
-										finish();
+										if (isEdit) {
+											saveOrUpdateAppointmentId = String.valueOf(editModel
+													.getAppointmentId());
+										} else {
+											saveOrUpdateAppointmentId = json
+													.getString("result");
+										}
+
+										String requestURL = "userinfo/checkAppointmentStatue?uid="
+												+ AccountService
+														.getUserId(getBaseContext());
+
+										mHttpFriend
+												.toUrl(Consts.REQUEST_BASE_URL
+														+ requestURL)
+												.executeGet(
+														null,
+														new AjaxCallBack<String>() {
+															@Override
+															public void onSuccess(
+																	String jsonString) {
+																super.onSuccess(jsonString);
+
+																Log.e("请求返回来的数据是 : ",
+																		jsonString);
+																dismissRequestDialog();
+																try {
+																	JSONObject json = new JSONObject(
+																			jsonString);
+																	String responseCode = json
+																			.getString("responseCode");
+																	if ("601"
+																			.equals(responseCode)) {
+																		JSONArray result = json
+																				.getJSONArray("result");
+																		for (int i = 0; i < result
+																				.length(); i++) {
+																			JSONObject item = result
+																					.getJSONObject(i);
+																			boolean needNotify = item
+																					.getBoolean("needNotify");
+																			String appointmentId = item
+																					.getString("appointmentId");
+																			if (appointmentId
+																					.equals(saveOrUpdateAppointmentId)
+																					&& needNotify) {
+																				if (!"3".equals(editModel
+																						.getPower())) {
+																					appointmentAddPowerLess3Dailog
+																							.show();
+																				} else {
+																					appointmentAddPowerLarger3Dailog
+																							.show();
+																				}
+																				break;
+																			}
+																		}
+																	} else {
+																		finish();
+																	}
+																} catch (Exception e) {
+																	e.printStackTrace();
+																}
+
+															}
+														});
+
 									} else if ("501".equals(responseCode)) {
 										JSONObject result = json
 												.getJSONObject("result");
 										conflictName = result.getString("name");
-										conflictTime = result.getLong("dateTime");
+										conflictTime = result
+												.getLong("dateTime");
+										dismissRequestDialog();
 										tipsHandler.sendEmptyMessage(0);
 									} else if ("403".equals(responseCode)) { // 预约满了
+										dismissRequestDialog();
 										tipsHandler.sendEmptyMessage(1);
 									}
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
-
-								dismissRequestDialog();
-
 							}
 
 							@Override
@@ -377,12 +446,14 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 							@Override
 							public void onClick(View v) {
+								appointmentConflictDialog.dismiss();
 								finish();
 							}
 						}, new OnClickListener() {
 
 							@Override
 							public void onClick(View v) {
+								appointmentConflictDialog.dismiss();
 								isOverride = true;
 								btn_right.performClick();
 							}
@@ -395,6 +466,28 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 							@Override
 							public void onClick(View v) {
 								finish();
+							}
+						});
+
+		appointmentAddPowerLess3Dailog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithOneButton(R.string.add_power_less_than_3,
+						BaoDialogShowUtil.DEFAULT_RESID, new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								appointmentAddPowerLess3Dailog.dismiss();
+								// finish();
+							}
+						});
+
+		appointmentAddPowerLarger3Dailog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithOneButton(R.string.add_power_larger_than_3,
+						BaoDialogShowUtil.DEFAULT_RESID, new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								appointmentAddPowerLarger3Dailog.dismiss();
+								// finish();
 							}
 						});
 

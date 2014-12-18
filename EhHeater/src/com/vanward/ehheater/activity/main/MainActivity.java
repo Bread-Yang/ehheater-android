@@ -277,6 +277,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		deviceSwitchSuccessDialog.dismiss();
 	}
 
 	@Override
@@ -488,11 +489,13 @@ public class MainActivity extends BaseBusinessActivity implements
 		circularView.setOn(false);
 		setAppointmentButtonAble(false);
 		ChangeStuteView.swichNight(stuteParent);
-		int i = new EhState(data).getRemainingHeatingTime();
-		if (i == 0 || i == -1) {
+		int i = new EhState(data).getSystemRunningState();
+		int remainingTime = new EhState(data).getRemainingHeatingTime();
+		Log.e("得到的剩余加热 时间是 : ", i + "");
+		if (i == 0) {
 			ChangeStuteView.swichNight(stuteParent);
 		} else {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
+			ChangeStuteView.swichLeaveMinView(stuteParent, remainingTime);
 		}
 
 	}

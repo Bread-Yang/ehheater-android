@@ -12,6 +12,7 @@
         android:background="@color/transparent"
         android:minHeight="20dp"
         android:text="@string/heat_amount"
+        android:textColor="@color/appointment_text_color"
         android:textSize="15dp" />
 
     <TextView
