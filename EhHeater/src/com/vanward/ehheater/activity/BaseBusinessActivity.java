@@ -124,7 +124,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		
 		if (shouldReconnect) {
 			shouldReconnect = false;
-			connectCurDevice("连接已断开, 正在重新连接...");
+			connectCurDevice("reconnect");
 		}
 
 	}
@@ -200,7 +200,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 				shouldReconnect = true;
 			} else {
 				// connectCurDevice();
-				connectCurDevice("连接已断开, 正在重新连接...");
+				connectCurDevice("reconnect");
 			}
 		} 
 		
@@ -223,7 +223,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			if (paused) {
 				shouldReconnect = true;
 			} else {
-				connectCurDevice("连接已断开, 正在重新连接...");
+				connectCurDevice("reconnect");
 			}
 			
 		}
