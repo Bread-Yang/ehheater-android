@@ -5,6 +5,22 @@
     android:background="#000"
     android:orientation="vertical" >
     
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="提示"
+        android:textColor="@color/white"
+        android:textSize="19sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#44ffffff" />
+    
     <TextView 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="24dp"
-        android:background="#fff"
+        android:background="#44ffffff"
         />
     
     <LinearLayout 
@@ -37,7 +53,7 @@
 	    <View 
 	        android:layout_width="1dp"
 	        android:layout_height="match_parent"
-	        android:background="#fff"
+	        android:background="#44ffffff"
 	        />
         <Button 
             android:id="@+id/dr_btn_reconnect"
@@ -46,7 +62,7 @@
             android:background="@null"
         	android:textColor="@color/white"
        		android:textSize="16dp"
-            android:text="重试"/>
+            android:text="重新连接"/>
     </LinearLayout>
 
 </LinearLayout>

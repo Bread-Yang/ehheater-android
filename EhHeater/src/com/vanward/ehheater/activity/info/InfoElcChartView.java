@@ -316,6 +316,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 				.getDid();
 		String url = "http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
 				+ adid + "&dateTime=" + da + "&resultType=1&expendType=3";
+		Log.e("getmessageweek的连接是 : ", url);
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(url, new AjaxCallBack<String>() {
 			// 等待数据展示
@@ -359,7 +360,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 						jsonOBJ.put("name", li.get(i).getTime());
 						jsonOBJ2.put(
 								"data",
-								li.get(i).getAmount().equals("") ? 0 : Math
+								li.get(i).getAmount().equals("") ? "" : Math
 										.round(Float.parseFloat(li.get(i)
 												.getAmount())));
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
@@ -479,7 +480,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
-										li.get(i).getAmount().equals("") ? 0
+										li.get(i).getAmount().equals("") ? ""
 												: Math.round(Float
 														.parseFloat(li.get(i)
 																.getAmount())));
@@ -577,7 +578,7 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
-										li.get(i).getAmount().equals("") ? 0
+										li.get(i).getAmount().equals("") ? ""
 												: Math.round(Float
 														.parseFloat(li.get(i)
 																.getAmount())));

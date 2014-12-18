@@ -29,8 +29,9 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:layout_marginTop="20dp"
-        android:textSize="20dp"
-        android:layout_marginLeft="25dp"
+        android:textSize="14dp"
+        android:textColor="#FF848484"
+        android:layout_marginLeft="20dp"
         android:text="暂无历史消息记录" />
 
 </LinearLayout>

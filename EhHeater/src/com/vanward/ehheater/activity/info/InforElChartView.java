@@ -432,7 +432,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
-										li.get(i).getAmount().equals("") ? 0
+										li.get(i).getAmount().equals("") ? ""
 												: Math.round(Float
 														.parseFloat(li.get(i)
 																.getAmount())));
@@ -544,7 +544,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
-										li.get(i).getAmount().equals("") ? 0
+										li.get(i).getAmount().equals("") ? ""
 												: Math.round(Float
 														.parseFloat(li.get(i)
 																.getAmount())));
@@ -641,7 +641,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
-										li.get(i).getAmount().equals("") ? 0
+										li.get(i).getAmount().equals("") ? ""
 												: Math.round(Float
 														.parseFloat(li.get(i)
 																.getAmount())));

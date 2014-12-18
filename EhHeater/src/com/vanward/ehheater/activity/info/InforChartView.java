@@ -361,7 +361,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 						jsonOBJ.put("name", li.get(i).getTime());
 						jsonOBJ2.put(
 								"data",
-								li.get(i).getAmount().equals("") ? 0 : Math
+								li.get(i).getAmount().equals("") ? "" : Math
 										.round(Float.parseFloat(li.get(i)
 												.getAmount())));
 						jsonArray.put(jsonOBJ);
@@ -405,119 +405,113 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	public void getmessagemonth(long da2) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
+		String url = "http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
+				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=2";
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get(
-				"http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
-						+ adid + "&dateTime=" + da2
-						+ "&resultType=2&expendType=2",
-				new AjaxCallBack<String>() {
-					// 等待数据展示
-					@Override
-					public void onStart() {
-						loadingDialog.show();
-						super.onStart();
-					}
+		finalHttp.get(url, new AjaxCallBack<String>() {
+			// 等待数据展示
+			@Override
+			public void onStart() {
+				loadingDialog.show();
+				super.onStart();
+			}
 
-					// 请求成功
-					SimpleDateFormat format = new SimpleDateFormat("MM/dd");
-					SimpleDateFormat format2 = new SimpleDateFormat("-dd");
+			// 请求成功
+			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
+			SimpleDateFormat format2 = new SimpleDateFormat("-dd");
 
-					@Override
-					public void onSuccess(String t) {
-						try {
-							JSONObject jsonObject = new JSONObject(t);
-							JSONArray array = jsonObject.getJSONArray("result");
+			@Override
+			public void onSuccess(String t) {
+				try {
+					JSONObject jsonObject = new JSONObject(t);
+					JSONArray array = jsonObject.getJSONArray("result");
 
-							JSONObject jb = (JSONObject) array.get(0);
-							dtime = Long.valueOf(jb.getString("time"));
+					JSONObject jb = (JSONObject) array.get(0);
+					dtime = Long.valueOf(jb.getString("time"));
 
-							JSONArray jsonArray = new JSONArray();
-							JSONArray jsonArray2 = new JSONArray();
-							List<Electricity> li = new ArrayList<Electricity>();
-							float a = 0;
-							for (int i = 0; i < array.length(); i++) {
-								float b = 0;
-								JSONObject jsonObj = array.getJSONObject(i);
-								String amount = jsonObj.getString("amount");
-								String time = format.format(new Long(jsonObj
-										.getString("time")));
-								// 格式化日期
+					JSONArray jsonArray = new JSONArray();
+					JSONArray jsonArray2 = new JSONArray();
+					List<Electricity> li = new ArrayList<Electricity>();
+					float a = 0;
+					for (int i = 0; i < array.length(); i++) {
+						float b = 0;
+						JSONObject jsonObj = array.getJSONObject(i);
+						String amount = jsonObj.getString("amount");
+						String time = format.format(new Long(jsonObj
+								.getString("time")));
+						// 格式化日期
 
-								Long log = new Long(jsonObj.getString("time"));
-								Date time2 = new Date(log);
+						Long log = new Long(jsonObj.getString("time"));
+						Date time2 = new Date(log);
 
-								Calendar calendar = Calendar.getInstance();
-								calendar.setTime(time2);
-								calendar.set(calendar.DAY_OF_MONTH, 1);// 设置为1号,当前日期既为本月第一天
-								calendar.add(calendar.MONTH, 1);// 月增加1天
-								calendar.add(calendar.DAY_OF_MONTH, -1);// 日期倒数一日,既得到本月最后一天
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(time2);
+						calendar.set(calendar.DAY_OF_MONTH, 1);// 设置为1号,当前日期既为本月第一天
+						calendar.add(calendar.MONTH, 1);// 月增加1天
+						calendar.add(calendar.DAY_OF_MONTH, -1);// 日期倒数一日,既得到本月最后一天
 
-								Calendar ca = Calendar.getInstance();
-								ca.setTime(time2);
-								ca.set(ca.DAY_OF_WEEK, 7);
+						Calendar ca = Calendar.getInstance();
+						ca.setTime(time2);
+						ca.set(ca.DAY_OF_WEEK, 7);
 
-								String time4 = String.valueOf(format2.format(ca
-										.getTime()));
-								if (i == 4) {
-									time4 = String.valueOf(format2
-											.format(calendar.getTime()));
-								}
-								String time3 = time + time4;
-								Electricity electricity = new Electricity();
-								electricity.setAmount(amount);
-								electricity.setTime(time3);
-								li.add(electricity);
-								JSONObject jsonOBJ = new JSONObject();
-								JSONObject jsonOBJ2 = new JSONObject();
-								b = Math.round(Float.parseFloat(li.get(i)
-										.getAmount().equals("") ? "0" : li.get(
-										i).getAmount()));
-								;
-								a = a + b + 0f;
-								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put(
-										"data",
-										li.get(i).getAmount().equals("") ? 0
-												: Math.round(Float
-														.parseFloat(li.get(i)
-																.getAmount())));
-								jsonArray.put(jsonOBJ);
-								jsonArray2.put(jsonOBJ2);
-							}
-							// 赋值name
-							namelistjson = jsonArray.toString();
-							// 赋值data
-							datalistjson = jsonArray2.toString();
-							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-							Long l = new Long(System.currentTimeMillis());
-							Date da = new Date(l);
-							lqtime.setText(sim.format(da));
-							// 设置使用的总电数
-							sumwater.setText(Math.round(a) + "L");
-							// 更换下方按钮
-							chart4Month();
-							// 刷新数据展示
-							webView.reload();
-							// 销毁等待
-							loadingDialog.dismiss();
-
-						} catch (Exception e) {
-							// TODO Auto-generated catch blocks
-							e.printStackTrace();
+						String time4 = String.valueOf(format2.format(ca
+								.getTime()));
+						if (i == 4) {
+							time4 = String.valueOf(format2.format(calendar
+									.getTime()));
 						}
-						super.onSuccess(t);
+						String time3 = time + time4;
+						Electricity electricity = new Electricity();
+						electricity.setAmount(amount);
+						electricity.setTime(time3);
+						li.add(electricity);
+						JSONObject jsonOBJ = new JSONObject();
+						JSONObject jsonOBJ2 = new JSONObject();
+						b = Math.round(Float.parseFloat(li.get(i).getAmount()
+								.equals("") ? "0" : li.get(i).getAmount()));
+						;
+						a = a + b + 0f;
+						jsonOBJ.put("name", li.get(i).getTime());
+						jsonOBJ2.put(
+								"data",
+								li.get(i).getAmount().equals("") ? "" : Math
+										.round(Float.parseFloat(li.get(i)
+												.getAmount())));
+						jsonArray.put(jsonOBJ);
+						jsonArray2.put(jsonOBJ2);
 					}
+					// 赋值name
+					namelistjson = jsonArray.toString();
+					// 赋值data
+					datalistjson = jsonArray2.toString();
+					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
+					Long l = new Long(System.currentTimeMillis());
+					Date da = new Date(l);
+					lqtime.setText(sim.format(da));
+					// 设置使用的总电数
+					sumwater.setText(Math.round(a) + "L");
+					// 更换下方按钮
+					chart4Month();
+					// 刷新数据展示
+					webView.reload();
+					// 销毁等待
+					loadingDialog.dismiss();
 
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
-								.show();
-						loadingDialog.dismiss();
-					}
-				});
+				} catch (Exception e) {
+					// TODO Auto-generated catch blocks
+					e.printStackTrace();
+				}
+				super.onSuccess(t);
+			}
+
+			// 请求失败
+			@Override
+			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				super.onFailure(t, errorNo, strMsg);
+				Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG).show();
+				loadingDialog.dismiss();
+			}
+		});
 	}
 
 	public void getmessageyear(long da3) {
@@ -573,7 +567,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 								jsonOBJ.put("name", li.get(i).getTime());
 								jsonOBJ2.put(
 										"data",
-										li.get(i).getAmount().equals("") ? 0
+										li.get(i).getAmount().equals("") ? ""
 												: Math.round(Float
 														.parseFloat(li.get(i)
 																.getAmount())));

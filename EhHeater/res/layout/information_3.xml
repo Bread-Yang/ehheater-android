@@ -4,71 +4,79 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <View
+    <LinearLayout
+        android:id="@+id/llt_gas_heater"
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#80808080" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp" >
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#80808080" />
 
-        <TextView
-            android:id="@+id/TextView02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="实时热效率"
-            android:textColor="@color/appointment_text_color"
-            android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" >
 
-        <TextView
-            android:id="@+id/heatxiaolv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="70%"
-            android:textColor="#FFf86e00"
-            android:textSize="22sp" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="实时热效率"
+                android:textColor="@color/appointment_text_color"
+                android:textSize="20sp" />
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#80808080"
-        android:visibility="gone" />
+            <TextView
+                android:id="@+id/heatxiaolv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="0%"
+                android:textColor="#FFf86e00"
+                android:textSize="22sp" />
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:visibility="gone" >
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#80808080"
+            android:visibility="visible" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="总计使用次数"
-            android:textColor="@color/appointment_text_color"
-            android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:visibility="visible" >
 
-        <TextView
-            android:id="@+id/taptv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="0"
-            android:textColor="#FFf86e00"
-            android:textSize="22sp" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="总计使用次数"
+                android:textColor="@color/appointment_text_color"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/taptv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="0"
+                android:textColor="#FFf86e00"
+                android:textSize="22sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="fill_parent"
@@ -89,7 +97,7 @@
             android:layout_centerVertical="true"
             android:text="总计使用时长"
             android:textColor="@color/appointment_text_color"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/heattv"

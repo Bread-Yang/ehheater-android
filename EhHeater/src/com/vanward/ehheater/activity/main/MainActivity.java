@@ -495,6 +495,9 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (i == 0) {
 			ChangeStuteView.swichNight(stuteParent);
 		} else {
+			if (remainingTime == -1) {
+				remainingTime = 255;
+			}
 			ChangeStuteView.swichLeaveMinView(stuteParent, remainingTime);
 		}
 

@@ -202,7 +202,6 @@ public class PollingService extends Service {
 	class PollingThread extends Thread {
 		@Override
 		public void run() {
-			Log.e("Polling...", "Polling...");
 			Handler handler = new Handler(Looper.getMainLooper());
 			handler.post(new Runnable() {
 
