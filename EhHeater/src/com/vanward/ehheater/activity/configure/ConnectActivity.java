@@ -106,6 +106,11 @@ public class ConnectActivity extends GeneratedActivity {
 		helper1();
 	}
 	
+	@Override
+	public void onBackPressed() {
+		
+	};
+	
 	private void helper1() {
 
 //		mPbar.setVisibility(View.VISIBLE);
