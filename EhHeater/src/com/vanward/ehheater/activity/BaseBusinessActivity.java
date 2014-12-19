@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,8 +26,12 @@ import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
+import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
+import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
+import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
+import com.xtremeprog.xpgconnect.generated.generated;
 
 /**
  * 电热, 燃热, 壁挂炉三个MainActivity共用业务:
@@ -40,6 +45,8 @@ import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
  * 
  */
 public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
+
+	private static final String TAG = "BaseBusinessActivity";
 
 	abstract protected void changeToOfflineUI();
 
@@ -87,6 +94,62 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		}
 	};
 
+	private boolean stateQueried;
+
+	public static long connectTime = 10000;
+
+	@Override
+	public void onWriteEvent(int result, int connId) {
+		super.onWriteEvent(result, connId);
+		// Log.e("TAG", "onWriteEvent调用了");
+		// DialogUtil.instance().showLoadingDialog(this, "");
+		if (DialogUtil.instance().getIsShowing()) {
+			return;
+		}
+		generated.SendStateReq(Global.connectId);
+		stateQueried = false;
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if (!stateQueried) {
+					changeToOfflineUI();
+					DialogUtil.instance().showReconnectDialog(
+							BaseBusinessActivity.this);
+				}
+			}
+		}, connectTime);
+	}
+
+	@Override
+	public void OnStateResp(StateResp_t pResp, int nConnId) {
+		 stateQueried = true;
+		Log.e("TAG", "OnStateResp被调用了");
+		super.OnStateResp(pResp, nConnId);
+	}
+
+	@Override
+	public void onTcpPacket(byte[] data, int connId) {
+		stateQueried = true;
+		super.onTcpPacket(data, connId);
+		Log.e("TAG", "onTcpPacket被调用了");
+	}
+
+	@Override
+	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
+			int nConnId) {
+		stateQueried = true;
+		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
+		Log.e("TAG", "OnGasWaterHeaterStatusResp被调用了");
+	}
+
+	@Override
+	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
+		stateQueried = true;
+		super.OnDERYStatusResp(pResp, nConnId);
+		Log.e("TAG", "OnDERYStatusResp被调用了");
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -123,7 +186,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		if (shouldReconnect) {
 			shouldReconnect = false;
-			connectCurDevice("reconnect");
+			connectCurDevice("连接已断开, 正在重新连接...");
 		}
 
 	}
@@ -197,7 +260,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 				shouldReconnect = true;
 			} else {
 				// connectCurDevice();
-				connectCurDevice("reconnect");
+				connectCurDevice("连接已断开, 正在重新连接...");
 			}
 		}
 
@@ -220,7 +283,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			if (paused) {
 				shouldReconnect = true;
 			} else {
-				connectCurDevice("reconnect");
+				connectCurDevice("连接已断开, 正在重新连接...");
 			}
 
 		}

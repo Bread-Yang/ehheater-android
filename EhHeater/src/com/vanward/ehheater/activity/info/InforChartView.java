@@ -359,11 +359,12 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 						;
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						jsonOBJ2.put(
-								"data",
-								li.get(i).getAmount().equals("") ? "" : Math
-										.round(Float.parseFloat(li.get(i)
-												.getAmount())));
+						if(li.get(i).getAmount().equals("")||li.get(i).getAmount().substring(0, 1).equals("0")){
+							jsonOBJ2.put("data","");
+						}
+						else{
+							jsonOBJ2.put("data",Math.round(Float.parseFloat(li.get(i).getAmount())));
+						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
 					}
@@ -472,11 +473,12 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 						;
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						jsonOBJ2.put(
-								"data",
-								li.get(i).getAmount().equals("") ? "" : Math
-										.round(Float.parseFloat(li.get(i)
-												.getAmount())));
+						if(li.get(i).getAmount().equals("")||li.get(i).getAmount().substring(0, 1).equals("0")){
+							jsonOBJ2.put("data","");
+						}
+						else{
+							jsonOBJ2.put("data",Math.round(Float.parseFloat(li.get(i).getAmount())));
+						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
 					}
@@ -565,12 +567,12 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 								;
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put(
-										"data",
-										li.get(i).getAmount().equals("") ? ""
-												: Math.round(Float
-														.parseFloat(li.get(i)
-																.getAmount())));
+								if(li.get(i).getAmount().equals("")||li.get(i).getAmount().substring(0, 1).equals("0")){
+									jsonOBJ2.put("data","");
+								}
+								else{
+									jsonOBJ2.put("data",Math.round(Float.parseFloat(li.get(i).getAmount())));
+								}
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}

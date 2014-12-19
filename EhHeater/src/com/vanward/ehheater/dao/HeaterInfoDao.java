@@ -62,18 +62,14 @@ public class HeaterInfoDao extends BaseDao {
 		}
 	}
 
-	public List<String> getAllDeviceDidOfType(HeaterType type) {
+	public List<HeaterInfo> getAllDeviceOfType(HeaterType type) {
 		List<HeaterInfo> deviceList;
-		List<String> didList = new ArrayList<String>();
 		if (type == HeaterType.Unknown) {
 			return null;
 		} else {
 			deviceList = getDb().findAllByWhere(HeaterInfo.class,
 					" productKey = '" + type.pkey + "'");
-			for (int i = 0; i < deviceList.size(); i++) {
-				didList.add(deviceList.get(i).getDid());
-			}
-			return didList;
+			return deviceList;
 		}
 	}
 

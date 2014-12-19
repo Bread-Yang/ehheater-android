@@ -358,11 +358,14 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 						JSONObject jsonOBJ2 = new JSONObject();
 						//
 						jsonOBJ.put("name", li.get(i).getTime());
-						jsonOBJ2.put(
-								"data",
-								li.get(i).getAmount().equals("") ? "" : Math
-										.round(Float.parseFloat(li.get(i)
-												.getAmount())));
+						if (li.get(i).getAmount().equals("")
+								|| li.get(i).getAmount().substring(0, 1)
+										.equals("0")) {
+							jsonOBJ2.put("data", "");
+						} else {
+							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
+									.get(i).getAmount())));
+						}
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
 						a = a + b + 0f;
@@ -428,7 +431,8 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 
 					@Override
 					public void onSuccess(String t) {
-						Log.e("getmessagemonth返回的数据是 : ", "getmessagemonth返回的数据是 : " + t);
+						Log.e("getmessagemonth返回的数据是 : ",
+								"getmessagemonth返回的数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -478,12 +482,16 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 										i).getAmount()));
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put(
-										"data",
-										li.get(i).getAmount().equals("") ? ""
-												: Math.round(Float
-														.parseFloat(li.get(i)
-																.getAmount())));
+								if (li.get(i).getAmount().equals("")
+										|| li.get(i).getAmount()
+												.substring(0, 1).equals("0")) {
+									jsonOBJ2.put("data", "");
+								} else {
+									jsonOBJ2.put(
+											"data",
+											Math.round(Float.parseFloat(li.get(
+													i).getAmount())));
+								}
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
@@ -576,12 +584,16 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 										i).getAmount()));
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
-								jsonOBJ2.put(
-										"data",
-										li.get(i).getAmount().equals("") ? ""
-												: Math.round(Float
-														.parseFloat(li.get(i)
-																.getAmount())));
+								if (li.get(i).getAmount().equals("")
+										|| li.get(i).getAmount()
+												.substring(0, 1).equals("0")) {
+									jsonOBJ2.put("data", "");
+								} else {
+									jsonOBJ2.put(
+											"data",
+											Math.round(Float.parseFloat(li.get(
+													i).getAmount())));
+								}
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}

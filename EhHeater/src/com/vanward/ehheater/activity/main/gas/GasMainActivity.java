@@ -14,6 +14,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -75,15 +76,15 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	RelativeLayout rlt_start_device, content;
 
 	private Dialog deviceSwitchSuccessDialog;
-	
+
 	private boolean switchHintShowed;
-	
+
 	private View openView;
 
 	private Button rightButton;
 
 	private Animation operatingAnim;
-	
+
 	boolean firstShowSwitchSuccess = true;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
@@ -107,6 +108,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.e("GasMainActivity的onCreate执行了", "GasMainActivity的onCreate执行了");
 		initSlidingMenu();
 		setContentView(R.layout.main_gas_center_layout);
 		initView(savedInstanceState);
@@ -117,12 +119,51 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 
 		connectCurDevice();
-		
+
 		switchHintShowed = false;
-		
+
 		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		Log.e("GasMainActivity的onNewIntent执行了",
+				"GasMainActivity的onNewIntent执行了");
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.e("GasMainActivity的onResume调用了", "GasMainActivity的onResume调用了");
+		Log.e("gasIsFreezeProofingWarning : ", getIntent().getBooleanExtra("gasIsFreezeProofingWarning", false) + "");
+		if (getIntent().getBooleanExtra("gasIsFreezeProofingWarning", false))  {
+			showFreezeProofing();
+			getIntent().putExtra("gasIsFreezeProofingWarning", false);
+		}
+		
+		Log.e("gasIsOxygenWarning : ", getIntent().getBooleanExtra("gasIsOxygenWarning", false) + "");
+		if(getIntent().getBooleanExtra("gasIsOxygenWarning", false)) {
+			showOxygenWarning();
+			getIntent().putExtra("gasIsOxygenWarning", false);
+		}
+		
+		short errorCode = getIntent().getShortExtra("errorCode", (short)0);
+		Log.e("errorCode : ", errorCode + "");
+		if (errorCode != 0) {
+			showErrorWarning(errorCode);
+			getIntent().putExtra("errorCode", 0);
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.e("GasMainActivity的onPause调用了", "GasMainActivity的onPause调用了");
+		deviceSwitchSuccessDialog.dismiss();
 	}
 
 	@Override
@@ -137,9 +178,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 					Consts.INTENT_EXTRA_ISONLINE, true);
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
-			String conntext = data.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+			String conntext = data
+					.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 
-			final HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			final HeaterInfoService hser = new HeaterInfoService(
+					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
 			if (!TextUtils.isEmpty(passcode)) {
@@ -156,11 +199,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Global.checkOnlineConnId = -1;
 				boolean shouldExecuteBinding = HeaterInfoService
 						.shouldExecuteBinding(curHeater);
-				
-				if(ison) {
+
+				if (ison) {
 					rightButton.setBackgroundResource(R.drawable.icon_shut);
 				} else {
-					rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+					rightButton
+							.setBackgroundResource(R.drawable.icon_shut_enable);
 				}
 
 				if (shouldExecuteBinding) {
@@ -168,10 +212,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				} else {
 					queryState();
 				}
-				
-				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
+
+				if (getIntent().getBooleanExtra("switchSuccess", false)
+						&& firstShowSwitchSuccess) {
 					// 12月16日需求:去掉切换成功的提示
-					/*appointmentSwitchSuccessDialog.show();*/
+					/* appointmentSwitchSuccessDialog.show(); */
 					firstShowSwitchSuccess = false;
 				}
 
@@ -184,7 +229,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				DialogUtil.instance().showReconnectDialog(new Runnable() {
 					@Override
 					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext(), hser.getCurrentSelectedHeaterMac());
+						CheckOnlineUtil.ins().start(getBaseContext(),
+								hser.getCurrentSelectedHeaterMac());
 					}
 				}, this);
 			}
@@ -255,25 +301,15 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		deviceSwitchSuccessDialog.dismiss();
-	}
-
-	@Override
 	protected void onStop() {
 		super.onStop();
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(heaterNameChangeReceiver);
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				heaterNameChangeReceiver);
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -339,14 +375,13 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			mSlidingMenu.showMenu(true);
 			break;
 		case R.id.ivTitleBtnRigh:
-			
+
 			if (tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
-				DialogUtil.instance()
-						.showReconnectDialog(this);
+				DialogUtil.instance().showReconnectDialog(this);
 				return;
-				
+
 			}
 
 			if (ison) {
@@ -468,14 +503,13 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
 
-//		circularView.setVisibility(View.VISIBLE);
-		
-		
+		// circularView.setVisibility(View.VISIBLE);
+
 		// modeTv.setText("自定义模式");
 		// circularView.setOn(false);
 		// List<GasCustomSetVo> list = new
 		// BaseDao(this).getDb().findAll(GasCustomSetVo.class);
-		 circularView.setOn(false);
+		circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
 	}
@@ -572,7 +606,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		}
 		if (pResp.getCustomFunction() != 0) {
 			circularView.setOn(false);
-		} 
+		}
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 
@@ -777,48 +811,52 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		oxygenWarning(pResp);
 		System.out.println("错误码：" + pResp.getErrorCode());
 		if (pResp.getErrorCode() != 0) {
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setBackgroundResource(R.drawable.main_error);
-			AnimationDrawable drawable = (AnimationDrawable) tipsimg.getBackground();
-			drawable.start();
-			tipsimg.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					ErrorDialogUtil
-							.instance(GasMainActivity.this)
-							.initName(
-									Integer.toHexString(pResp.getErrorCode())
-											+ "")
-							.setNextButtonCall(new NextButtonCall() {
-								@Override
-								public void oncall(View v) {
-									Intent intent = new Intent();
-									// intent.putExtra("data", inforVo);
-									intent.setClass(GasMainActivity.this,
-											InfoErrorActivity.class);
-									intent.putExtra(
-											"name",
-											"机器故障("
-													+ Integer.toHexString(pResp
-															.getErrorCode())
-													+ ")");
-									intent.putExtra("time",
-											simpleDateFormat.format(new Date()));
-									intent.putExtra(
-											"detail",
-											"请先暂关闭水龙头再打开，或关/开显示器，再操作1-2次仍然显示故障，请务必关闭水阀和气阀，拔掉电源插头，请与售后服务联系。");
-									startActivity(intent);
-								}
-							}).showDialog();
-				}
-			});
+			showErrorWarning(pResp.getErrorCode());
 		} else {
-			if ( pResp.getFreezeProofingWarning()!=1&&pResp.getOxygenWarning()!=1) {
+			if (pResp.getFreezeProofingWarning() != 1
+					&& pResp.getOxygenWarning() != 1) {
 				tipsimg.setVisibility(View.GONE);
 				ErrorDialogUtil.instance(this).dissmiss();
 			}
 		}
+	}
+	
+	private void showErrorWarning(final short ErrorCode) {
+		tipsimg.setVisibility(View.VISIBLE);
+		tipsimg.setBackgroundResource(R.drawable.main_error);
+		AnimationDrawable drawable = (AnimationDrawable) tipsimg
+				.getBackground();
+		drawable.start();
+		tipsimg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				ErrorDialogUtil
+						.instance(GasMainActivity.this)
+						.initName(
+								Integer.toHexString(ErrorCode)
+										+ "")
+						.setNextButtonCall(new NextButtonCall() {
+							@Override
+							public void oncall(View v) {
+								Intent intent = new Intent();
+								// intent.putExtra("data", inforVo);
+								intent.setClass(GasMainActivity.this,
+										InfoErrorActivity.class);
+								intent.putExtra(
+										"name",
+										"机器故障("
+												+ Integer.toHexString(ErrorCode)
+												+ ")");
+								intent.putExtra("time",
+										simpleDateFormat.format(new Date()));
+								intent.putExtra("detail",
+										"请先暂关闭水龙头再打开，或关/开显示器，再操作1-2次仍然显示故障，请务必关闭水阀和气阀，拔掉电源插头，请与售后服务联系。");
+								startActivity(intent);
+							}
+						}).showDialog();
+			}
+		});
 	}
 
 	/**
@@ -829,28 +867,32 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void freezeProofing(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("防冻报警：" + pResp.getFreezeProofingWarning());
 		if (pResp.getFreezeProofingWarning() == 1) {
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setBackgroundResource(R.drawable.main_tip);
-			AnimationDrawable drawable = (AnimationDrawable) tipsimg.getBackground();
-			drawable.start();
-			tipsimg.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View arg0) {
-					// 提醒
-					// ErrorDialogUtil.instance(this).showDialog();
-					Intent intent = new Intent();
-					// intent.putExtra("data", inforVo);
-					intent.setClass(GasMainActivity.this, InfoTipActivity.class);
-					intent.putExtra("name", "防冻报警");
-					intent.putExtra("time", simpleDateFormat.format(new Date()));
-					intent.putExtra("detail",
-							"亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。");
-					startActivity(intent);
+			showFreezeProofing();
+		}
+	}
 
-				}
-			});
+	private void showFreezeProofing() {
+		tipsimg.setVisibility(View.VISIBLE);
+		tipsimg.setBackgroundResource(R.drawable.main_tip);
+		AnimationDrawable drawable = (AnimationDrawable) tipsimg
+				.getBackground();
+		drawable.start();
+		tipsimg.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// 提醒
+				// ErrorDialogUtil.instance(this).showDialog();
+				Intent intent = new Intent();
+				// intent.putExtra("data", inforVo);
+				intent.setClass(GasMainActivity.this, InfoTipActivity.class);
+				intent.putExtra("name", "防冻报警");
+				intent.putExtra("time", simpleDateFormat.format(new Date()));
+				intent.putExtra("detail",
+						"亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。");
+				startActivity(intent);
 
-		} 
+			}
+		});
 	}
 
 	/**
@@ -861,26 +903,31 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void oxygenWarning(GasWaterHeaterStatusResp_t pResp) {
 		System.out.println("氧护提示：" + pResp.getOxygenWarning());
 		if (pResp.getOxygenWarning() == 1) {
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setBackgroundResource(R.drawable.main_tip);
-			AnimationDrawable drawable = (AnimationDrawable) tipsimg.getBackground();
-			drawable.start();
-			tipsimg.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					// 提醒
-					Intent intent = new Intent();
-					// intent.putExtra("data", inforVo);
-					intent.setClass(GasMainActivity.this, InfoTipActivity.class);
-					intent.putExtra("name", "智能氧护");
-					intent.putExtra("time", simpleDateFormat.format(new Date()));
-					intent.putExtra("detail",
-							"亲，现检测到您热水器处于环境缺氧状态，机器已自动启动智能氧护措施，请确保您热水器处于通风环境下运行。");
-					startActivity(intent);
-				} 
-			});
+			showOxygenWarning();
 		}
+	}
+
+	private void showOxygenWarning() {
+		tipsimg.setVisibility(View.VISIBLE);
+		tipsimg.setBackgroundResource(R.drawable.main_tip);
+		AnimationDrawable drawable = (AnimationDrawable) tipsimg
+				.getBackground();
+		drawable.start();
+		tipsimg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// 提醒
+				Intent intent = new Intent();
+				// intent.putExtra("data", inforVo);
+				intent.setClass(GasMainActivity.this, InfoTipActivity.class);
+				intent.putExtra("name", "智能氧护");
+				intent.putExtra("time", simpleDateFormat.format(new Date()));
+				intent.putExtra("detail",
+						"亲，现检测到您热水器处于环境缺氧状态，机器已自动启动智能氧护措施，请确保您热水器处于通风环境下运行。");
+				startActivity(intent);
+			}
+		});
 	}
 
 	/**
@@ -933,8 +980,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// SendMsgModel.setTempter(outlevel);
 		// tempter.setText(outlevel + "");
 		// temptertitleTextView.setText("当前温度");
-//		hotImgeImageView.setVisibility(View.GONE);
-//		hotImgeImageView.clearAnimation();
+		// hotImgeImageView.setVisibility(View.GONE);
+		// hotImgeImageView.clearAnimation();
 	}
 
 	@Override

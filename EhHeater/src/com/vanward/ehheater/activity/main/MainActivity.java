@@ -126,6 +126,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.e("MainActivity的onCreate执行了", "MainActivity的onCreate执行了");
 		initSlidingMenu();
 		setContentView(R.layout.main_center_layout);
 		initView();
