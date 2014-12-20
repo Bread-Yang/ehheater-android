@@ -14,7 +14,11 @@ public class ChangeStuteView {
 		View view = LinearLayout.inflate(parent.getContext(),
 				R.layout.comment_statue_layout, null);
 		TextView textView = (TextView) view.findViewById(R.id.min);
-		textView.setText(min + "mins");
+		if (min == -1) {
+			textView.setText("--mins");
+		} else {
+			textView.setText(min + "mins");
+		}
 		parent.addView(view);
 	}
 

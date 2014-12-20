@@ -105,7 +105,7 @@
                     android:layout_height="fill_parent"
                     android:layout_marginBottom="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/main_fire"
+                    android:src="@drawable/main_fire_level_1"
                     android:visibility="invisible" />
 
                 <ImageView

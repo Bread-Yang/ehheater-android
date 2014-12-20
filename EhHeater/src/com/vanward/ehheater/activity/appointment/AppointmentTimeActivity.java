@@ -588,7 +588,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 			editModel = new AppointmentVo();
 			editModel.setWeek("0000000");
 			editModel.setPeopleNum("0");
-			editModel.setPower("1");
+			editModel.setPower("2");
 
 			Calendar c = Calendar.getInstance();
 			int currentHour = c.get(Calendar.HOUR_OF_DAY);

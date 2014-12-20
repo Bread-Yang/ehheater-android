@@ -49,15 +49,18 @@
                 android:id="@+id/wave_bg"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:scaleType="center"
-                android:src="@drawable/main_fire"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/main_fire_level_1"
                 android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/hotanimition"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:src="@drawable/hotani" />
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/anim_furmace_main_heating" />
 
             <LinearLayout
                 android:id="@+id/circle_llt"

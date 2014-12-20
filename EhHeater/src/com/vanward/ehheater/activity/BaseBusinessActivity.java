@@ -103,27 +103,27 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		super.onWriteEvent(result, connId);
 		// Log.e("TAG", "onWriteEvent调用了");
 		// DialogUtil.instance().showLoadingDialog(this, "");
-		if (DialogUtil.instance().getIsShowing()) {
-			return;
-		}
-		generated.SendStateReq(Global.connectId);
-		stateQueried = false;
-		Handler handler = new Handler(Looper.getMainLooper());
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (!stateQueried) {
-					changeToOfflineUI();
-					DialogUtil.instance().showReconnectDialog(
-							BaseBusinessActivity.this);
-				}
-			}
-		}, connectTime);
+//		if (DialogUtil.instance().getIsShowing()) {
+//			return;
+//		}
+//		generated.SendStateReq(Global.connectId);
+//		stateQueried = false;
+//		Handler handler = new Handler(Looper.getMainLooper());
+//		handler.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				if (!stateQueried) {
+//					changeToOfflineUI();
+//					DialogUtil.instance().showReconnectDialog(
+//							BaseBusinessActivity.this);
+//				}
+//			}
+//		}, connectTime);
 	}
 
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
-		 stateQueried = true;
+		stateQueried = true;
 		Log.e("TAG", "OnStateResp被调用了");
 		super.OnStateResp(pResp, nConnId);
 	}
@@ -320,11 +320,20 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	protected void connectCurDevice() {
 		connectCurDevice("");
 	}
-
+	
 	protected void connectCurDevice(String connectText) {
 
 		String mac = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeaterMac();
+		String userId = AccountService.getUserId(getBaseContext());
+		String userPsw = AccountService.getUserPsw(getBaseContext());
+
+		ConnectActivity.connectToDevice(this, mac, "", userId, userPsw,
+				connectText);
+	}
+	
+	protected void connectDevice(String connectText, String mac) {
+
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());
 

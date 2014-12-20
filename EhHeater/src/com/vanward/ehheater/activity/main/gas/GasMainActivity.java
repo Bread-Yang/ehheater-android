@@ -3,6 +3,7 @@ package com.vanward.ehheater.activity.main.gas;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,9 +43,13 @@ import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
+import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.ErrorUtils;
+import com.vanward.ehheater.util.SwitchDeviceUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
@@ -52,6 +57,7 @@ import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.FullWaterWarnDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
+import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -87,6 +93,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	boolean firstShowSwitchSuccess = true;
 
+	private Dialog fullWaterDialog;
+
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -113,10 +121,19 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		setContentView(R.layout.main_gas_center_layout);
 		initView(savedInstanceState);
 		initData();
+		init();
 
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver,
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
+
+		// if (getIntent().getBooleanExtra("newActivity", false)) {
+		// String gasMac = getIntent().getStringExtra("gasMac");
+		// Log.e("notification传过来的gasMac是", gasMac);
+		// connectDevice("", gasMac);
+		// } else {
+		// connectCurDevice();
+		// }
 
 		connectCurDevice();
 
@@ -138,32 +155,56 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		ErrorUtils.isGasMainActivityActive = true;
+
 		Log.e("GasMainActivity的onResume调用了", "GasMainActivity的onResume调用了");
-		Log.e("gasIsFreezeProofingWarning : ", getIntent().getBooleanExtra("gasIsFreezeProofingWarning", false) + "");
-		if (getIntent().getBooleanExtra("gasIsFreezeProofingWarning", false))  {
+		Log.e("gasIsFreezeProofingWarning : ",
+				getIntent()
+						.getBooleanExtra("gasIsFreezeProofingWarning", false)
+						+ "");
+		// if (getIntent().getBooleanExtra("swithchToElectic", false)) {
+		// SwitchDeviceUtil.switchDevice(mac, activity)
+		// }
+		if (getIntent().getBooleanExtra("gasIsFreezeProofingWarning", false)) {
 			showFreezeProofing();
 			getIntent().putExtra("gasIsFreezeProofingWarning", false);
 		}
-		
-		Log.e("gasIsOxygenWarning : ", getIntent().getBooleanExtra("gasIsOxygenWarning", false) + "");
-		if(getIntent().getBooleanExtra("gasIsOxygenWarning", false)) {
+
+		Log.e("gasIsOxygenWarning : ",
+				getIntent().getBooleanExtra("gasIsOxygenWarning", false) + "");
+		if (getIntent().getBooleanExtra("gasIsOxygenWarning", false)) {
 			showOxygenWarning();
 			getIntent().putExtra("gasIsOxygenWarning", false);
 		}
-		
-		short errorCode = getIntent().getShortExtra("errorCode", (short)0);
+
+		short errorCode = getIntent().getShortExtra("errorCode", (short) 0);
 		Log.e("errorCode : ", errorCode + "");
 		if (errorCode != 0) {
 			showErrorWarning(errorCode);
 			getIntent().putExtra("errorCode", 0);
 		}
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
+		ErrorUtils.isGasMainActivityActive = false;
 		Log.e("GasMainActivity的onPause调用了", "GasMainActivity的onPause调用了");
 		deviceSwitchSuccessDialog.dismiss();
+	}
+
+	private void init() {
+		fullWaterDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithTwoButton(R.string.full_water,
+						R.string.I_know, R.string.soft_mode, null,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								SendMsgModel.setToSolfMode();
+								fullWaterDialog.dismiss();
+							}
+						});
 	}
 
 	@Override
@@ -290,7 +331,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		stute.setText("不在线");
 		if (hotImgeImageView != null) {
 			hotImgeImageView.setVisibility(View.GONE);
-			hotImgeImageView.clearAnimation();
 			iv_wave.setVisibility(View.GONE);
 			if (animationDrawable != null) {
 				animationDrawable.stop();
@@ -323,7 +363,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		powerTv = (TextView) findViewById(R.id.power_tv);
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
-		hotImgeImageView.clearAnimation();
+		((AnimationDrawable) hotImgeImageView.getDrawable()).start();
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		settemper = (TextView) findViewById(R.id.settemper);
@@ -506,10 +546,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// circularView.setVisibility(View.VISIBLE);
 
 		// modeTv.setText("自定义模式");
-		// circularView.setOn(false);
+		circularView.setOn(true);
 		// List<GasCustomSetVo> list = new
 		// BaseDao(this).getDb().findAll(GasCustomSetVo.class);
-		circularView.setOn(false);
+		// circularView.setOn(false);
 		// 剩余加热时间 好像燃热没有这个状态
 
 	}
@@ -525,18 +565,38 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			stute.setText("加热中");
 
 			hotImgeImageView.setVisibility(View.VISIBLE);
-			operatingAnim = AnimationUtils.loadAnimation(GasMainActivity.this,
-					R.anim.tip_4500);
-			LinearInterpolator lin = new LinearInterpolator();
-			operatingAnim.setInterpolator(lin);
-			hotImgeImageView.startAnimation(operatingAnim);
-			animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
-			animationDrawable.start();
+
+			switch (pResp.getFirePower()) {
+			case 1:
+				iv_wave.setBackgroundResource(R.drawable.main_fire_level_1);
+				break;
+			case 2:
+				iv_wave.setBackgroundResource(R.drawable.main_fire_level_2);
+				break;
+			case 3:
+				iv_wave.setBackgroundResource(R.drawable.main_fire_level_3);
+				break;
+			case 4:
+				iv_wave.setBackgroundResource(R.drawable.main_fire_level_4);
+				break;
+			case 5:
+				iv_wave.setBackgroundResource(R.drawable.main_fire_level_5);
+				break;
+			}
+			
+			if (pResp.getFirePower() != 0) {
+				animationDrawable = (AnimationDrawable) iv_wave.getBackground();
+				animationDrawable.start();
+			}
+			
+			// animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
+			// animationDrawable.start();
 			setViewsAble(false, pResp);
 			/* rightButton.setEnabled(false); */// 所有模式在加热状态下, 都可以关机, 2014.11.7日
 			mode.setEnabled(false);
 			iv_wave.setVisibility(View.VISIBLE);
-			if (pResp.getFunction_state() == 1) {
+			if (pResp.getFunction_state() == 1
+					|| pResp.getFunction_state() == 3) {
 				rightButton.setEnabled(true);
 				mode.setEnabled(false);
 				circularView.setVisibility(View.VISIBLE);
@@ -547,7 +607,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			}
 		} else {
 			mode.setEnabled(true);
-			hotImgeImageView.clearAnimation();
 			hotImgeImageView.setVisibility(View.GONE);
 			setViewsAble(true, pResp);
 			rightButton.setEnabled(true);
@@ -605,7 +664,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			tipsimg.setVisibility(View.GONE);
 		}
 		if (pResp.getCustomFunction() != 0) {
-			circularView.setOn(false);
+			circularView.setOn(true);
 		}
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
@@ -745,13 +804,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		sumwater.setText(pResp.getSetWater_cumulative() + "L");
 
 		if (pResp.getSetWater_cumulative() == (pResp.getSetWater_power() * 10)) {
+			fullWaterDialog.show();
 
-			if (FullWaterWarnDialogUtil.instance(this).getDialog() == null
-					|| !FullWaterWarnDialogUtil.instance(this).getDialog()
-							.isShowing()) {
-				FullWaterWarnDialogUtil.instance(this).showDialog();
-			}
-
+		} else {
+			fullWaterDialog.dismiss();
 		}
 
 		// if (pResp.getFunction_state() == 3) {
@@ -820,7 +876,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			}
 		}
 	}
-	
+
 	private void showErrorWarning(final short ErrorCode) {
 		tipsimg.setVisibility(View.VISIBLE);
 		tipsimg.setBackgroundResource(R.drawable.main_error);
@@ -831,11 +887,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				ErrorDialogUtil
-						.instance(GasMainActivity.this)
-						.initName(
-								Integer.toHexString(ErrorCode)
-										+ "")
+				ErrorDialogUtil.instance(GasMainActivity.this)
+						.initName(Integer.toHexString(ErrorCode) + "")
 						.setNextButtonCall(new NextButtonCall() {
 							@Override
 							public void oncall(View v) {
@@ -846,7 +899,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 								intent.putExtra(
 										"name",
 										"机器故障("
-												+ Integer.toHexString(ErrorCode)
+												+ Integer
+														.toHexString(ErrorCode)
 												+ ")");
 								intent.putExtra("time",
 										simpleDateFormat.format(new Date()));
@@ -885,7 +939,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Intent intent = new Intent();
 				// intent.putExtra("data", inforVo);
 				intent.setClass(GasMainActivity.this, InfoTipActivity.class);
-				intent.putExtra("name", "防冻报警");
+				intent.putExtra("name", "防冻预警");
 				intent.putExtra("time", simpleDateFormat.format(new Date()));
 				intent.putExtra("detail",
 						"亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。");
@@ -981,7 +1035,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// tempter.setText(outlevel + "");
 		// temptertitleTextView.setText("当前温度");
 		// hotImgeImageView.setVisibility(View.GONE);
-		// hotImgeImageView.clearAnimation();
 	}
 
 	@Override

@@ -45,6 +45,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".util.ErrorUtils"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".activity.configure.ConnectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/custom_dialog2" >

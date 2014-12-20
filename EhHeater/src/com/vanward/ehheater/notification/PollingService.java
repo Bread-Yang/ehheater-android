@@ -27,6 +27,7 @@ import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
+import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.HttpFriend;
 
 public class PollingService extends Service {
@@ -37,8 +38,10 @@ public class PollingService extends Service {
 	private NotificationManager mManager;
 	private HttpFriend mHttpFriend;
 	private String uid;
-	private short errorCode = 0;
+	private short gasErrorCode = 0;
+	private short electicErrorCode = 0;
 	private boolean gasIsOxygenWarning, gasIsFreezeProofingWarning;
+	private String electicMac, gasMac;
 	private HeaterInfo electicHeaterInfo, gasHeaterInfo;
 
 	@Override
@@ -105,6 +108,7 @@ public class PollingService extends Service {
 		if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
+			electicMac = allDevices.get(0).getMac();
 			String requestURL = "uGasInfo/getNewestElData?did="
 					+ allDevices.get(0).getDid();
 			Log.e("checkElecticHeaterInfo的URL", requestURL);
@@ -124,7 +128,8 @@ public class PollingService extends Service {
 								if ("200".equals(responseCode)) {
 									JSONObject result = json
 											.getJSONObject("result");
-									int error = result.getInt("error");
+									electicErrorCode = (short) result
+											.getInt("error");
 									showNotification(0,
 											R.string.freezeProof_warn,
 											R.string.freezeProof_tips);
@@ -133,8 +138,9 @@ public class PollingService extends Service {
 								e.printStackTrace();
 								Log.e("checkElecticHeaterInfo解析json出错",
 										"checkElecticHeaterInfo解析json出错");
-								showNotification(0, R.string.freezeProof_warn,
-										R.string.freezeProof_tips);
+								// showNotification(0,
+								// R.string.freezeProof_warn,
+								// R.string.freezeProof_tips);
 							}
 
 						}
@@ -164,6 +170,7 @@ public class PollingService extends Service {
 		if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
+			gasMac = allDevices.get(0).getMac();
 			String requestURL = "uGasInfo/getNewestData?did="
 					+ allDevices.get(0).getDid();
 			Log.e("checkGasHeaterInfo的URL", requestURL);
@@ -186,9 +193,10 @@ public class PollingService extends Service {
 
 									// 故障
 									try {
-										errorCode = (short)result.getInt("errorCode");
+										gasErrorCode = (short) result
+												.getInt("errorCode");
 									} catch (Exception e) {
-										errorCode = 0;
+										gasErrorCode = 0;
 									}
 
 									// 防冻警报
@@ -209,16 +217,16 @@ public class PollingService extends Service {
 										gasIsOxygenWarning = false;
 									}
 
-									if (errorCode != 0) {
+									if (gasErrorCode != 0) {
 										showNotification(
 												1,
 												"机器故障("
 														+ Integer
-																.toHexString(errorCode)
+																.toHexString(gasErrorCode)
 														+ ")",
 												"机器故障("
 														+ Integer
-																.toHexString(errorCode)
+																.toHexString(gasErrorCode)
 														+ ")");
 									}
 
@@ -269,14 +277,19 @@ public class PollingService extends Service {
 		mNotification.when = System.currentTimeMillis();
 		// Navigator to the new activity when click the notification title
 		Intent intent = new Intent();
+		intent.setClass(this, ErrorUtils.class);
 		if (notifyId == 0) { // 电热水器
-			intent.setClass(this, MainActivity.class);
+			intent.putExtra("errorCode", electicErrorCode);
+			intent.putExtra("electicMac", electicMac);
+			// intent.setClass(this, MainActivity.class);
 		} else {
-			intent.setClass(this, GasMainActivity.class);
+			// intent.setClass(this, GasMainActivity.class);
+			intent.putExtra("isGas", true);
+			intent.putExtra("gasMac", gasMac);
 			intent.putExtra("gasIsFreezeProofingWarning",
 					gasIsFreezeProofingWarning);
 			intent.putExtra("gasIsOxygenWarning", gasIsOxygenWarning);
-			intent.putExtra("errorCode", errorCode);
+			intent.putExtra("errorCode", gasErrorCode);
 		}
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
