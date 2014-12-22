@@ -201,10 +201,11 @@
     <string name="add_power_larger_than_3">亲，剩余的加热时间无法保证您用水的温度。 请您降低水温或者延后用水时间</string>
     <string name="oxygen_warn">氧护报警</string>
     <string name="oxygen_tips">亲，现检测到您热水器处于环境缺氧状态，机器已自动启动智能氧护措施，请确保您热水器处于通风环境下运行。</string>
-    <string name="freezeProof_warn">防冻预警</string>
+    <string name="freezeProof_warn_title">防冻预警</string>
     <string name="freezeProof_tips">亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。</string>
     <string name="full_water">亲,水已注满,请立即关闭。</string>
     <string name="soft_mode">舒适模式</string>
+    <string name="magnesiarods_replace">镁棒更换</string>
     <string name="cannot_connect">无法连接设备，\n请注意设备与手机的网络状态</string>
     <string name="about_wanward">
         <![CDATA[ 

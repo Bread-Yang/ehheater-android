@@ -70,7 +70,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			shuiliuliangText;
 
 	View btn_power;
-	TextView tempter, leavewater, target_tem, settemper;
+	TextView tv_tempter, leavewater, target_tem, settemper;
 
 	LinearLayout llt_circle;
 	ViewGroup stuteParent;
@@ -127,15 +127,15 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				heaterNameChangeReceiver,
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 
-		// if (getIntent().getBooleanExtra("newActivity", false)) {
-		// String gasMac = getIntent().getStringExtra("gasMac");
-		// Log.e("notification传过来的gasMac是", gasMac);
-		// connectDevice("", gasMac);
-		// } else {
-		// connectCurDevice();
-		// }
+		if (getIntent().getBooleanExtra("newActivity", false)) {
+			String gasMac = getIntent().getStringExtra("mac");
+			Log.e("notification传过来的gasMac是", gasMac);
+			connectDevice("", gasMac);
+		} else {
+			connectCurDevice();
+		}
 
-		connectCurDevice();
+		// connectCurDevice();
 
 		switchHintShowed = false;
 
@@ -147,40 +147,44 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		setIntent(intent);
 		Log.e("GasMainActivity的onNewIntent执行了",
 				"GasMainActivity的onNewIntent执行了");
+		setIntent(intent);
 	}
-
+ 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		ErrorUtils.isGasMainActivityActive = true;
+		ErrorUtils.isMainActivityActive = false;
 
 		Log.e("GasMainActivity的onResume调用了", "GasMainActivity的onResume调用了");
 		Log.e("gasIsFreezeProofingWarning : ",
 				getIntent()
 						.getBooleanExtra("gasIsFreezeProofingWarning", false)
 						+ "");
-		// if (getIntent().getBooleanExtra("swithchToElectic", false)) {
-		// SwitchDeviceUtil.switchDevice(mac, activity)
-		// }
+		
+		String gasMac = getIntent().getStringExtra("mac");
+		if (gasMac != null && !getIntent().getBooleanExtra("newActivity", false)) {
+			SwitchDeviceUtil.switchDevice(gasMac, this);
+		}
+
 		if (getIntent().getBooleanExtra("gasIsFreezeProofingWarning", false)) {
-			showFreezeProofing();
+//			showFreezeProofing();
 			getIntent().putExtra("gasIsFreezeProofingWarning", false);
 		}
 
 		Log.e("gasIsOxygenWarning : ",
 				getIntent().getBooleanExtra("gasIsOxygenWarning", false) + "");
 		if (getIntent().getBooleanExtra("gasIsOxygenWarning", false)) {
-			showOxygenWarning();
+//			showOxygenWarning();
 			getIntent().putExtra("gasIsOxygenWarning", false);
 		}
 
 		short errorCode = getIntent().getShortExtra("errorCode", (short) 0);
 		Log.e("errorCode : ", errorCode + "");
 		if (errorCode != 0) {
-			showErrorWarning(errorCode);
+//			showErrorWarning(errorCode);
 			getIntent().putExtra("errorCode", 0);
 		}
 	}
@@ -188,7 +192,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		ErrorUtils.isGasMainActivityActive = false;
 		Log.e("GasMainActivity的onPause调用了", "GasMainActivity的onPause调用了");
 		deviceSwitchSuccessDialog.dismiss();
 	}
@@ -319,7 +322,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private boolean stateQueried;
 
 	public void dealDisConnect() {
-		tempter.setText("--");
+		tv_tempter.setText("--");
 		modeTv.setText("----");
 		leavewater.setText("--");
 		// powerTv.setText("--");
@@ -375,7 +378,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
 		iv_wave = (ImageView) findViewById(R.id.wave_bg);
 		modeimg = (ImageView) findViewById(R.id.modeimg);
-		tempter = (TextView) findViewById(R.id.tempter);
+		tv_tempter = (TextView) findViewById(R.id.tempter);
 		leavewater = (TextView) findViewById(R.id.shuiliuliang);
 		sumwater = (TextView) findViewById(R.id.zhushuiliang);
 		shuiliuliangText = (TextView) findViewById(R.id.shuiliuliangText);
@@ -416,7 +419,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 
-			if (tempter.getText().toString().contains("--")) {
+			if (tv_tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
 				DialogUtil.instance().showReconnectDialog(this);
@@ -474,7 +477,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		modeimg.setImageResource(R.drawable.gas_home_icon_comfort);
 		if (circularView != null) {
 			circularView.setVisibility(View.VISIBLE);
-			circularView.setEndangle(65);
+//			circularView.setEndangle(65);
 		}
 
 	}
@@ -531,7 +534,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		modeimg.setImageResource(R.drawable.gas_home_icon_bathtub);
 		if (circularView != null) {
 			circularView.setVisibility(View.VISIBLE);
-			circularView.setEndangle(65);
+//			circularView.setEndangle(48);
 		}
 	}
 
@@ -583,12 +586,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				iv_wave.setBackgroundResource(R.drawable.main_fire_level_5);
 				break;
 			}
-			
+
 			if (pResp.getFirePower() != 0) {
 				animationDrawable = (AnimationDrawable) iv_wave.getBackground();
 				animationDrawable.start();
 			}
-			
+
 			// animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 			// animationDrawable.start();
 			setViewsAble(false, pResp);
@@ -596,7 +599,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			mode.setEnabled(false);
 			iv_wave.setVisibility(View.VISIBLE);
 			if (pResp.getFunction_state() == 1
-					|| pResp.getFunction_state() == 3) {
+					|| pResp.getFunction_state() == 3 || pResp.getFunction_state() == 6) {
 				rightButton.setEnabled(true);
 				mode.setEnabled(false);
 				circularView.setVisibility(View.VISIBLE);
@@ -610,7 +613,13 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			hotImgeImageView.setVisibility(View.GONE);
 			setViewsAble(true, pResp);
 			rightButton.setEnabled(true);
+//			if (pResp.getFunction_state() == 3) {
+//				circularView.setEndangle(48);
+//			} else {
+//				circularView.setEndangle(65);
+//			}
 			circularView.setEndangle(65);
+			
 			iv_wave.setVisibility(View.GONE);
 		}
 	}
@@ -768,9 +777,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		target_tem.setText(pResp.getTargetTemperature() + "℃");
 		if (pResp.getTargetTemperature() < 25) {
 			circularView.setAngle(pResp.getTargetTemperature());
-			tempter.setText(pResp.getOutputTemperature() + "");
+			Log.e("pResp.getOutputTemperature()", pResp.getOutputTemperature() + "");
+			tv_tempter.setText(pResp.getOutputTemperature() + "");
 		} else {
 			circularView.setAngle(pResp.getTargetTemperature());
+			tv_tempter.setText(pResp.getTargetTemperature() + "");
 		}
 
 		circularView.setTargerdegree(pResp.getTargetTemperature());
@@ -1020,7 +1031,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				} else {
 					SendMsgModel.setTempter(value);
 				}
-				tempter.setText(value + "");
+				tv_tempter.setText(value + "");
 				Insetting = false;
 			}
 		};
@@ -1046,7 +1057,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// img.setBounds( 0, 0, dp32, dp32 );
 		// temptertitleTextView.setCompoundDrawables(img, null, null, null);
 
-		tempter.setText(outlevel + "");
+		Log.e("outlevel", outlevel + "");
+		tv_tempter.setText(outlevel + "");
 		if (outlevel >= 50) {
 			// 变小了
 			if (circularView.getTargerdegree() > outlevel) {
@@ -1075,7 +1087,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// img.setBounds( 0, 0, dp32, dp32 );
 		// temptertitleTextView.setCompoundDrawables(img, null, null, null);
 
-		tempter.setText(outlevel + "");
+		Log.e("outlevel", outlevel + "");
+//		tv_tempter.setText(outlevel + "");
 	}
 
 	@Override

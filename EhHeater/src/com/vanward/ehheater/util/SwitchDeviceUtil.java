@@ -1,13 +1,17 @@
 package com.vanward.ehheater.util;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.sax.StartElementListener;
+import android.util.Log;
+
+import com.vanward.ehheater.activity.WelcomeActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
-
-import android.app.Activity;
 
 public class SwitchDeviceUtil {
 
@@ -17,6 +21,18 @@ public class SwitchDeviceUtil {
 				.getHeaterByMac(mac);
 		HeaterInfo shareheaterInfo = new HeaterInfoService(activity)
 				.getCurrentSelectedHeater();
+		
+		Log.e("newHeaterInfo == null", (newHeaterInfo == null) + "");
+		Log.e("shareheaterInfo == null", (shareheaterInfo == null) + "");
+		
+		
+		if (newHeaterInfo == null || shareheaterInfo == null) {
+			Intent intent = new Intent(activity, WelcomeActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			activity.startActivity(intent);
+			activity.finish();
+			return;
+		}
 
 		if (newHeaterInfo.getMac().equals(shareheaterInfo.getMac())) {
 			return;

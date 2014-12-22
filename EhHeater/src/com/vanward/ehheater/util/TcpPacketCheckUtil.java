@@ -1,7 +1,6 @@
 package com.vanward.ehheater.util;
 
 public class TcpPacketCheckUtil {
-
 	
 	static byte xAA = (byte) 0xAA;
 	static byte x02 = (byte) 0x02;

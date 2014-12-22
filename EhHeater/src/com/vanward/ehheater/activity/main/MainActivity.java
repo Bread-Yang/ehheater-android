@@ -52,6 +52,7 @@ import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.IntelligentPatternUtil;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.PxUtil;
+import com.vanward.ehheater.util.SwitchDeviceUtil;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
@@ -77,7 +78,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private Button btn_info;
 	View btn_power;
-	TextView tempter, leavewater, target_tem;
+	TextView tv_tempter, leavewater, target_tem;
 
 	private Dialog dialog_power_setting;
 
@@ -139,15 +140,15 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		canupdateView = false;
 
-		// if (getIntent().getBooleanExtra("newActivity", false)) {
-		// String electicMac = getIntent().getStringExtra("electicMac");
-		// Log.e("notification传过来的gasMac是", electicMac);
-		// connectDevice("", electicMac);
-		// } else {
-		// connectCurDevice();
-		// }
+		if (getIntent().getBooleanExtra("newActivity", false)) {
+			String electicMac = getIntent().getStringExtra("mac");
+			Log.e("notification传过来的gasMac是", electicMac);
+			connectDevice("", electicMac);
+		} else {
+			connectCurDevice();
+		}
 
-		connectCurDevice();
+		// connectCurDevice();
 
 		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
@@ -181,7 +182,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			final HeaterInfoService hser = new HeaterInfoService(
 					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			if (curHeater == null) {
 				return;
 			}
@@ -283,16 +284,32 @@ public class MainActivity extends BaseBusinessActivity implements
 	private boolean stateQueried;
 
 	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+		Log.e("MainActivity的onNewIntent执行了",
+				"MainActivity的onNewIntent执行了");
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.e("MainActivity的onResume执行了", "MainActivity的onResume执行了");
 		ErrorUtils.isMainActivityActive = true;
+		ErrorUtils.isGasMainActivityActive = false;
 		canupdateView = true;
+
+		String eleticMac = getIntent().getStringExtra("mac");
+		if (eleticMac != null
+				&& !getIntent().getBooleanExtra("newActivity", false)) {
+			Log.e("MainActivity得到的mac是 : ", eleticMac);
+			SwitchDeviceUtil.switchDevice(eleticMac, this);
+		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		ErrorUtils.isMainActivityActive = false;
 		deviceSwitchSuccessDialog.dismiss();
 	}
 
@@ -329,7 +346,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		stuteParent = (ViewGroup) findViewById(R.id.stute);
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
 		iv_wave = (ImageView) findViewById(R.id.wave_bg);
-		tempter = (TextView) findViewById(R.id.tempter);
+		tv_tempter = (TextView) findViewById(R.id.tempter);
 		leavewater = (TextView) findViewById(R.id.leavewater);
 		content = (RelativeLayout) findViewById(R.id.content);
 		btn_appointment.setOnClickListener(this);
@@ -369,7 +386,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			@Override
 			public void onFinish() {
 				SendMsgModel.setTempter(value);
-				tempter.setText(value + "");
+				tv_tempter.setText(value + "");
 				if (currentModeCode == 7) { // 智能模式
 					IntelligentPatternUtil.addLastTemperature(
 							MainActivity.this, value);
@@ -399,7 +416,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				return;
 			}
 
-			if (tempter.getText().toString().contains("--")) {
+			if (tv_tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
 				DialogUtil.instance().showReconnectDialog(MainActivity.this);
@@ -543,7 +560,10 @@ public class MainActivity extends BaseBusinessActivity implements
 			}
 		});
 
-		circularView.setOn(true);
+		if (new EhState(data).getSystemRunningState() == 0) {
+			circularView.setOn(true);
+		}
+		
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		// powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
@@ -615,7 +635,10 @@ public class MainActivity extends BaseBusinessActivity implements
 		Log.e("防冻报警：", date.getError() + "");
 		if (date.getError() == 160) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setBackgroundResource(R.drawable.main_tip);
+			AnimationDrawable drawable = (AnimationDrawable) tipsimg
+					.getBackground();
+			drawable.start();
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -642,11 +665,14 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void meibangWran(final StateResp_t date) {
-		System.out.println("镁棒提示：" +  date.getHeating_tube_time() + "");
+		System.out.println("镁棒提示：" + date.getHeating_tube_time() + "");
 		Log.e("镁棒提示：", date.getHeating_tube_time() + "");
 		if (date.getHeating_tube_time() > 800 * 60) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setBackgroundResource(R.drawable.main_tip);
+			AnimationDrawable drawable = (AnimationDrawable) tipsimg
+					.getBackground();
+			drawable.start();
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -658,9 +684,11 @@ public class MainActivity extends BaseBusinessActivity implements
 					intent.setClass(MainActivity.this, InfoTipActivity.class);
 					intent.putExtra("name", "镁棒更换");
 					intent.putExtra("time", simpleDateFormat.format(new Date()));
-					intent.putExtra("detail", "亲，距离上次更换镁棒，您的热水器已经累计加热"
-							+ date.getHeating_tube_time() / 60
-							+ "个小时，为保证加热管能长期有效工作，建议您联系客服更换镁棒。");
+					intent.putExtra(
+							"detail",
+							"亲，距离上次更换镁棒，您的热水器已经累计加热"
+									+ date.getHeating_tube_time() / 60
+									+ "个小时，为保证加热管能长期有效工作，建议您联系客服更换镁棒。");
 					startActivity(intent);
 				}
 			});
@@ -674,9 +702,13 @@ public class MainActivity extends BaseBusinessActivity implements
 	 */
 	public void waterWran(final byte[] data) {
 		System.out.println("水质提醒：" + new EhState(data).getErrorCode());
-		if (new EhState(data).getHeating_tube_time() > 800 * 60) {
+		Log.e("水质提醒：", new EhState(data).getMachine_not_heating_time() + "");
+		if (new EhState(data).getMachine_not_heating_time() > 9 * 24 * 60) {
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_tip);
+			tipsimg.setBackgroundResource(R.drawable.main_tip);
+			AnimationDrawable drawable = (AnimationDrawable) tipsimg
+					.getBackground();
+			drawable.start();
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -707,10 +739,13 @@ public class MainActivity extends BaseBusinessActivity implements
 		// oxygenWarning(pResp);
 		System.out.println("错误码：" + date.getError() + "  ");
 		Log.e("错误码：", date.getError() + "  ");
-		if (date.getError() != 0 && date.getError() != 160) {  //不是防冻
+		if (date.getError() != 0 && date.getError() != 160) { // 不是防冻
 			isError = true;
 			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setImageResource(R.drawable.main_error);
+			tipsimg.setBackgroundResource(R.drawable.main_error);
+			AnimationDrawable drawable = (AnimationDrawable) tipsimg
+					.getBackground();
+			drawable.start();
 			tipsimg.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -745,7 +780,8 @@ public class MainActivity extends BaseBusinessActivity implements
 				}
 			});
 		} else {
-			if(date.getError() != 160 && date.getHeating_tube_time() <= 800 * 60) {
+			if (date.getError() != 160
+					&& date.getHeating_tube_time() <= 800 * 60) {
 				isError = false;
 				tipsimg.setVisibility(View.GONE);
 				ErrorDialogUtil.instance(this).dissmiss();
@@ -781,7 +817,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				+ new EhState(data).getRemainingHotWaterAmount());
 
 		// freezeProofing(data);
-//		meibangWran(data);
+		// meibangWran(data);
 		waterWran(data);
 
 		if (!canupdateView) {
@@ -852,7 +888,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (!Insetting && circularView != null) {
 			// circularView.setAngle(new EhState(b).getInnerTemp1());
 			circularView.setAngle(new EhState(b).getTargetTemperature());
-			tempter.setText(new EhState(b).getInnerTemp1() + "");
+			tv_tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
 
 		System.out.println("当前设置温度：" + new EhState(b).getTargetTemperature());
@@ -933,7 +969,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	public void dealDisConnect() {
-		tempter.setText("--");
+		tv_tempter.setText("--");
 		modeTv.setText("--模式");
 		leavewater.setText("--%");
 		powerTv.setText("--");
@@ -966,7 +1002,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		img.setBounds(0, 0, dp32, dp32);
 		temptertitleTextView.setCompoundDrawables(img, null, null, null);
 
-		tempter.setText(outlevel + "");
+		tv_tempter.setText(outlevel + "");
 		circularView.setTargerdegree(outlevel);
 		Insetting = true;
 	}
@@ -983,9 +1019,9 @@ public class MainActivity extends BaseBusinessActivity implements
 		temptertitleTextView.setCompoundDrawables(img, null, null, null);
 
 		if (isError) {
-			tempter.setText("--");
+			tv_tempter.setText("--");
 		} else {
-			tempter.setText(currentTemp + "");
+			tv_tempter.setText(currentTemp + "");
 		}
 	}
 

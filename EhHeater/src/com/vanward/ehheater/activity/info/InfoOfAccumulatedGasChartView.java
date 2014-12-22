@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
@@ -48,8 +49,10 @@ import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
 
-public class InforElChartView extends LinearLayout implements OnClickListener,
+public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnClickListener,
 		OnCheckedChangeListener {
+	
+	private final String TAG = "InfoOfAccumulatedGasChartView";
 
 	private ViewGroup layout;
 	Context context;
@@ -72,10 +75,10 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 	private Dialog loadingDialog;
 
-	public InforElChartView(Context context) {
+	public InfoOfAccumulatedGasChartView(Context context) {
 		super(context);
 		this.context = context;
-		layout = (ViewGroup) inflate(context, R.layout.infor_el_chart, null);
+		layout = (ViewGroup) inflate(context, R.layout.activity_info_of_accumulated_gas, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
 		radioGroup.setOnCheckedChangeListener(this);
@@ -384,7 +387,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		finalHttp.get(
-				"http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
+				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
 						+ adid + "&dateTime=" + da
 						+ "&resultType=1&expendType=1",
 				new AjaxCallBack<String>() {
@@ -400,6 +403,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 					@Override
 					public void onSuccess(String t) {
+						Log.e("InfoOfAccumulatedGasChartView", "getmessageweek返回的json数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -479,7 +483,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(
-				"http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
+				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
 						+ adid + "&dateTime=" + da2
 						+ "&resultType=2&expendType=1",
 				new AjaxCallBack<String>() {
@@ -496,7 +500,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 					@Override
 					public void onSuccess(String t) {
-						System.out.println("最后一个bug" + t);
+						Log.e("InfoOfAccumulatedGasChartView", "getmessagemonth返回的json数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -603,7 +607,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(
-				"http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
+				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
 						+ adid + "&dateTime=" + da3
 						+ "&resultType=3&expendType=1",
 				new AjaxCallBack<String>() {
@@ -619,6 +623,7 @@ public class InforElChartView extends LinearLayout implements OnClickListener,
 
 					@Override
 					public void onSuccess(String t) {
+						Log.e("InfoOfAccumulatedGasChartView", "getmessageyear返回的json数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");

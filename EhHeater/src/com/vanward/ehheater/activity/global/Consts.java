@@ -5,7 +5,7 @@ import com.vanward.ehheater.bean.HeaterInfo;
 public class Consts {
 	
 //	public static final String REQUEST_BASE_URL = "http://vanward.xtremeprog.com/EhHeaterWeb/";
-	public static final String REQUEST_BASE_URL = "http://122.10.94.216/EhHeaterWeb/";
+	public static final String REQUEST_BASE_URL = "http://122.10.94.216:8080/EhHeaterWeb/";
 	
 	public static final String INTENT_ACTION_LOGOUT = "logout";
 	

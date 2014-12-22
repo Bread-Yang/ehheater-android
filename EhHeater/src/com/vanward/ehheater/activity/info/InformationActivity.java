@@ -66,7 +66,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 		View view3 = LinearLayout.inflate(this, R.layout.information_3, null);
 		title.setText("信息");
 		InforChartView inforChartView = new InforChartView(this);
-		InforElChartView inforElChartView = new InforElChartView(this);
+		InfoOfAccumulatedGasChartView inforElChartView = new InfoOfAccumulatedGasChartView(this);
 		InfoElcChartView inforElcChartView = new InfoElcChartView(this);
 		isGas = getIntent().getBooleanExtra("isgas", false);
 		if (isGas) {
@@ -194,7 +194,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 		if (position == 1) {
 			if (isGas) {
 				try {
-					((InforElChartView) pageViews.get(1)).selectDefault();
+					((InfoOfAccumulatedGasChartView) pageViews.get(1)).selectDefault();
 				} catch (Exception e) {
 				}
 			} else {

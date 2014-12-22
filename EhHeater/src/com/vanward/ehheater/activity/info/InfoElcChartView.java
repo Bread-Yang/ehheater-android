@@ -43,6 +43,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
@@ -229,7 +230,6 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		@Override
 		protected void onPostExecute(String result) {
 
-			Log.d("emmm", "theString: " + result);
 			if (resultType.equals("1")) {
 				getmessageweek(dates);
 				// namelistjson =
@@ -312,10 +312,12 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 	}
 
 	public void getmessageweek(long da) {
+		Log.e("getmessageweek时间是 : ", da + "");
+		
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		String url = "http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
-				+ adid + "&dateTime=" + da + "&resultType=1&expendType=3";
+		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
+				+ "&dateTime=" + da + "&resultType=1&expendType=3";
 		Log.e("getmessageweek的连接是 : ", url);
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(url, new AjaxCallBack<String>() {
@@ -413,10 +415,8 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get(
-				"http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
-						+ adid + "&dateTime=" + da2
-						+ "&resultType=2&expendType=3",
+		finalHttp.get(Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
+				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=3",
 				new AjaxCallBack<String>() {
 					// 等待数据展示
 					@Override
@@ -539,10 +539,9 @@ public class InfoElcChartView extends LinearLayout implements OnClickListener,
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get(
-				"http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
-						+ adid + "&dateTime=" + da3
-						+ "&resultType=3&expendType=3",
+		finalHttp.get(Consts.REQUEST_BASE_URL
+				+ "EhHeaterWeb/GasInfo/getgasdata?did=" + adid + "&dateTime="
+				+ da3 + "&resultType=3&expendType=3",
 				new AjaxCallBack<String>() {
 					// 等待数据展示
 					@Override

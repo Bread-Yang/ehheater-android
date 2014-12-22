@@ -34,7 +34,7 @@ public class HttpConnectUtil {
 //			paras.setParameter("did", did2query);
 //			paras.setParameter("dateTime", dateTime2query);
 //			paras.setParameter("resultType", resultType);
-//			paras.setParameter("expendType", expendType);
+//			paras.setParameter("expendType", expendType); 
 			
 
 			Log.d("emmm", "queryParas: " + did2query + "-" + dateTime2query + "-" + resultType + "-" + expendType);

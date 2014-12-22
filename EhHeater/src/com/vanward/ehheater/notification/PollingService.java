@@ -42,7 +42,8 @@ public class PollingService extends Service {
 	private short electicErrorCode = 0;
 	private boolean gasIsOxygenWarning, gasIsFreezeProofingWarning;
 	private String electicMac, gasMac;
-	private HeaterInfo electicHeaterInfo, gasHeaterInfo;
+	private final int TYPE_ELECTIC = 0;
+	private final int TYPE_GAS = 1;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -98,6 +99,9 @@ public class PollingService extends Service {
 
 	/** 电热水器故障 */
 	private void checkElecticHeaterInfo() {
+		if (null != uid && !"".equals(uid)) { // 有uid的时候才请求
+
+		}
 		List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
 				.getAllDeviceOfType(HeaterType.Eh);
 		if (allDevices != null) {
@@ -109,7 +113,7 @@ public class PollingService extends Service {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
 			electicMac = allDevices.get(0).getMac();
-			String requestURL = "uGasInfo/getNewestElData?did="
+			String requestURL = "GasInfo/getNewestElData?did="
 					+ allDevices.get(0).getDid();
 			Log.e("checkElecticHeaterInfo的URL", requestURL);
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
@@ -118,8 +122,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							// Log.e("checkElecticHeaterInfo请求返回来的数据是 : ",
-							// jsonString);
+							Log.e("checkElecticHeaterInfo请求返回来的数据是 : ",
+									jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -128,11 +132,56 @@ public class PollingService extends Service {
 								if ("200".equals(responseCode)) {
 									JSONObject result = json
 											.getJSONObject("result");
-									electicErrorCode = (short) result
-											.getInt("error");
-									showNotification(0,
-											R.string.freezeProof_warn,
-											R.string.freezeProof_tips);
+									try {
+										electicErrorCode = (short) result
+												.getInt("error");
+
+										if (electicErrorCode == 160) { // 防冻
+											showNotification(
+													0,
+													R.string.freezeProof_warn_title,
+													R.string.freezeProof_tips);
+										} else if (electicErrorCode != 0) { // 机器故障
+											showNotification(
+													0,
+													"机器故障("
+															+ Integer
+																	.toHexString(electicErrorCode)
+															+ ")",
+													"机器故障("
+															+ Integer
+																	.toHexString(electicErrorCode)
+															+ ")");
+										}
+
+										int heating_tube_time = result
+												.getInt("heating_tube_time");
+										if (electicErrorCode > 800 * 60) {  // 镁棒
+											// 单位是分钟
+											showNotification(
+													0,
+													"镁棒更换",
+													"亲，距离上次更换镁棒，您的热水器已经累计加热"
+															+ heating_tube_time
+															+ "个小时，为保证加热管能长期有效工作，建议您联系客服更换镁棒。");
+										}
+
+										int machine_not_heating_time = result
+												.getInt("machine_not_heating_time");
+										if (machine_not_heating_time > 9 * 24 * 60) { // 单位是分钟
+											showNotification(0, "水质提醒",
+													"亲，我们发现您的热水器长时间没用了，为了您的健康，建议您排空污水后再使用。");
+										}
+
+									} catch (Exception e) {
+										electicErrorCode = 10;
+									}
+
+									if (electicErrorCode != 0) {
+										showNotification(0,
+												R.string.freezeProof_tips,
+												R.string.freezeProof_tips);
+									}
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -151,8 +200,8 @@ public class PollingService extends Service {
 							super.onFailure(t, errorNo, strMsg);
 							Log.e("checkElecticHeaterInfo请求故障接口出错",
 									"checkElecticHeaterInfo请求故障接口出错");
-							showNotification(0, R.string.freezeProof_warn,
-									R.string.freezeProof_tips);
+							// showNotification(0, R.string.freezeProof_warn,
+							// R.string.freezeProof_tips);
 						}
 					});
 		}
@@ -171,7 +220,9 @@ public class PollingService extends Service {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
 			gasMac = allDevices.get(0).getMac();
-			String requestURL = "uGasInfo/getNewestData?did="
+			Log.e("gasMac是 : ", gasMac);
+			Log.e("gas did是 : ", allDevices.get(0).getDid());
+			String requestURL = "GasInfo/getNewestData?did="
 					+ allDevices.get(0).getDid();
 			Log.e("checkGasHeaterInfo的URL", requestURL);
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
@@ -180,8 +231,7 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							// Log.e("checkGasHeaterInfo请求返回来的数据是 : ",
-							// jsonString);
+							Log.e("checkGasHeaterInfo请求返回来的数据是 : ", jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -231,8 +281,9 @@ public class PollingService extends Service {
 									}
 
 									if (gasIsFreezeProofingWarning) {
-										showNotification(1,
-												R.string.freezeProof_warn,
+										showNotification(
+												1,
+												R.string.freezeProof_warn_title,
 												R.string.freezeProof_tips);
 									}
 
@@ -253,9 +304,10 @@ public class PollingService extends Service {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
-							Log.e("请求故障接口出错", "请求故障接口出错");
-							showNotification(1, R.string.oxygen_warn,
-									R.string.oxygen_tips);
+							Log.e("checkGasHeaterInfo请求故障接口出错",
+									"checkGasHeaterInfo请求故障接口出错");
+							// showNotification(1, R.string.oxygen_warn,
+							// R.string.oxygen_tips);
 						}
 					});
 		}
@@ -280,12 +332,13 @@ public class PollingService extends Service {
 		intent.setClass(this, ErrorUtils.class);
 		if (notifyId == 0) { // 电热水器
 			intent.putExtra("errorCode", electicErrorCode);
-			intent.putExtra("electicMac", electicMac);
+			intent.putExtra("mac", electicMac);
+			intent.putExtra("isGas", false);
 			// intent.setClass(this, MainActivity.class);
 		} else {
 			// intent.setClass(this, GasMainActivity.class);
 			intent.putExtra("isGas", true);
-			intent.putExtra("gasMac", gasMac);
+			intent.putExtra("mac", gasMac);
 			intent.putExtra("gasIsFreezeProofingWarning",
 					gasIsFreezeProofingWarning);
 			intent.putExtra("gasIsOxygenWarning", gasIsOxygenWarning);
@@ -313,7 +366,7 @@ public class PollingService extends Service {
 				@Override
 				public void run() {
 					// checkAppointment();
-					// checkElecticHeaterInfo();
+					checkElecticHeaterInfo();
 					checkGasHeaterInfo();
 				}
 			});
@@ -323,7 +376,6 @@ public class PollingService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.e("Service:onDestroy", "Service:onDestroy");
 	}
 
 }

@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
@@ -312,7 +313,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	public void getmessageweek(long da) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		String url = "http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
+		String url = Consts.REQUEST_BASE_URL +  "GasInfo/getgasdata?did="
 				+ adid + "&dateTime=" + da + "&resultType=1&expendType=2";
 		System.out.println("当前设备的url" + url);
 		FinalHttp finalHttp = new FinalHttp();
@@ -406,7 +407,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 	public void getmessagemonth(long da2) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		String url = "http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
+		String url = Consts.REQUEST_BASE_URL +  "GasInfo/getgasdata?did="
 				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=2";
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(url, new AjaxCallBack<String>() {
@@ -522,7 +523,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
 		finalHttp.get(
-				"http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="
+				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
 						+ adid + "&dateTime=" + da3
 						+ "&resultType=3&expendType=2",
 				new AjaxCallBack<String>() {

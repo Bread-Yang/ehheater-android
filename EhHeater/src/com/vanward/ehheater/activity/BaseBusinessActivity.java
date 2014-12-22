@@ -102,7 +102,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	public void onWriteEvent(int result, int connId) {
 		super.onWriteEvent(result, connId);
 		// Log.e("TAG", "onWriteEvent调用了");
-		// DialogUtil.instance().showLoadingDialog(this, "");
+//		DialogUtil.instance().showLoadingDialog(this, "");
 //		if (DialogUtil.instance().getIsShowing()) {
 //			return;
 //		}
@@ -320,19 +320,24 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	protected void connectCurDevice() {
 		connectCurDevice("");
 	}
-	
+
 	protected void connectCurDevice(String connectText) {
 
 		String mac = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeaterMac();
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());
+		Log.e("从start进入的mac是 : ", mac);
+		Log.e("从start进入的userId是 : ", userId);
+		Log.e("从start进入的userPsw是 : ", userPsw);
 
 		ConnectActivity.connectToDevice(this, mac, "", userId, userPsw,
 				connectText);
 	}
-	
+
 	protected void connectDevice(String connectText, String mac) {
+
+		XPGConnectClient.initClient(this);
 
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());

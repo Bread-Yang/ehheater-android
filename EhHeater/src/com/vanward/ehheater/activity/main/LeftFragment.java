@@ -216,6 +216,9 @@ public class LeftFragment extends LinearLayout implements
 		HeaterInfo heaterInfo = objects.get(viewHolder.i);
 		HeaterInfo shareheaterInfo = new HeaterInfoService(getContext())
 				.getCurrentSelectedHeater();
+		if (heaterInfo == null || shareheaterInfo == null) {
+			return;
+		}
 		if (heaterInfo.getMac().equals(shareheaterInfo.getMac())) {
 			System.out.println("heaterInfo.getMac(): " + heaterInfo.getMac());
 			return;
