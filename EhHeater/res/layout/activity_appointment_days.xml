@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/home_bg"
     android:orientation="vertical" >
- <include
+
+    <include
         android:id="@+id/top_layout"
         layout="@layout/main_title"
         android:focusable="true" />
@@ -19,7 +20,8 @@
         android:drawableRight="@drawable/selector_appointment_days"
         android:onClick="onClick"
         android:text="@string/every_Monday"
-        android:textColor="@color/appointment_text_color" />
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="fill_parent"
@@ -36,7 +38,8 @@
         android:drawableRight="@drawable/selector_appointment_days"
         android:onClick="onClick"
         android:text="@string/every_Tuesday"
-        android:textColor="@color/appointment_text_color" />
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="fill_parent"
@@ -53,7 +56,8 @@
         android:drawableRight="@drawable/selector_appointment_days"
         android:onClick="onClick"
         android:text="@string/every_Wednesday"
-        android:textColor="@color/appointment_text_color" />
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="fill_parent"
@@ -70,7 +74,8 @@
         android:drawableRight="@drawable/selector_appointment_days"
         android:onClick="onClick"
         android:text="@string/every_Thursday"
-        android:textColor="@color/appointment_text_color" />
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="fill_parent"
@@ -87,7 +92,8 @@
         android:drawableRight="@drawable/selector_appointment_days"
         android:onClick="onClick"
         android:text="@string/every_Friday"
-        android:textColor="@color/appointment_text_color" />
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="fill_parent"
@@ -104,7 +110,8 @@
         android:drawableRight="@drawable/selector_appointment_days"
         android:onClick="onClick"
         android:text="@string/every_Saturday"
-        android:textColor="@color/appointment_text_color" />
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="fill_parent"
@@ -121,7 +128,8 @@
         android:drawableRight="@drawable/selector_appointment_days"
         android:onClick="onClick"
         android:text="@string/every_Sunday"
-        android:textColor="@color/appointment_text_color" />
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="fill_parent"

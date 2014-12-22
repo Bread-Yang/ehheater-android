@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">万和云智能</string>
-    <string name="version">版本：v 1.0.0 B 0.09</string>
+    <string name="version">版本：v 1.0.0 B 0.10</string>
     <string name="heater">热水器</string>
     <string name="account">用户名</string>
     <string name="password">密码</string>
@@ -124,6 +124,7 @@
     <string name="new_pwd_confirm">确认密码</string>
     <string name="new_pwd_error">两次密码不一致，请重新输入！</string>
     <string name="old_pwd_error">原密码不正确，请重新输入！</string>
+    <string name="input_name">请输入名称</string>
     <string name="success">成功</string>
     <string name="failure">失败</string>
     <string name="heater_wifi_ssid">XPG-GAgent</string>
@@ -196,6 +197,20 @@
     <string name="ewh_error_e2_title">机器故障(E2)</string>
     <string name="ewh_error_e2">热水器未注满水直接通电，发生干烧</string>
     <string name="change_success_relogin">密码修改成功，请重新登录</string>
+    <string name="add_power_less_than_3">亲，您需要增加功率才能保证您的用水。 </string>
+    <string name="add_power_larger_than_3">亲，剩余的加热时间无法保证您用水的温度。 请您降低水温或者延后用水时间</string>
+    <string name="oxygen_warn">氧护报警</string>
+    <string name="oxygen_tips">亲，现检测到您热水器处于环境缺氧状态，机器已自动启动智能氧护措施，请确保您热水器处于通风环境下运行。</string>
+    <string name="freezeProof_warn">防冻预警</string>
+    <string name="freezeProof_tips">亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。</string>
+    <string name="full_water">亲,水已注满,请立即关闭。</string>
+    <string name="soft_mode">舒适模式</string>
+    <string name="cannot_connect">无法连接设备，\n请注意设备与手机的网络状态</string>
+    <string name="about_wanward">
+        <![CDATA[ 
+        <font color=#FE6C18>&#160;&#160;&#160;&#160;&#160;&#160;&#160;广东万和新电气股份有限公司</font>成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。</string>
+    	]]> 
+    </string>
     
 
 </resources>

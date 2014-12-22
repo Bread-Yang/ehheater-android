@@ -2,7 +2,6 @@ package com.vanward.ehheater.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,20 +11,17 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.main.onDisConnect;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.LoadingDialog;
 import com.vanward.ehheater.util.UIUtil;
-import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
-import com.xtremeprog.xpgconnect.generated.StateResp_t;
 
 public class EhHeaterBaseActivity extends GeneratedActivity implements
-		OnClickListener{
+		OnClickListener {
 
 	protected Button btn_left, btn_right;
 	private TextView tv_center_title;
-	private RelativeLayout rlt_center, rlt_top, rlt_center_no_scrollview;
+	private RelativeLayout rlt_center, rlt_top,rlt_center_no_scrollview;
 	public Intent intent;
 	public LoadingDialog loadingDialog;
 
@@ -38,8 +34,6 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 		initData();
 
 	}
-
-
 
 	public void initUI() {
 		btn_left = (Button) findViewById(R.id.btn_left);
@@ -65,15 +59,15 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 		rlt_center.addView(addView, RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 	}
-
+	
 	public void setCenterViewWithNoScrollView(int resId) {
 		LayoutInflater inflater = getLayoutInflater();
 		View addView = inflater.inflate(resId, null);
-		rlt_center_no_scrollview.addView(addView,
-				RelativeLayout.LayoutParams.MATCH_PARENT,
+		rlt_center_no_scrollview.addView(addView, RelativeLayout.LayoutParams.MATCH_PARENT,
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		rlt_center_no_scrollview.setVisibility(View.VISIBLE);
 	}
+	
 
 	protected void setTopText(int resourceId) {
 		tv_center_title.setText(resourceId);
@@ -148,6 +142,4 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 		super.onPause();
 		MobclickAgent.onPause(this);
 	}
-
-
 }

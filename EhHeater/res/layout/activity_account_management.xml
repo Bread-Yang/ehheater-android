@@ -21,7 +21,7 @@
             android:layout_centerVertical="true"
             android:text="@string/account"
             android:textColor="@color/appointment_text_color"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_nickname"
@@ -30,10 +30,13 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="60dp"
             android:layout_centerVertical="true"
-            android:drawableRight="@drawable/right_arrow"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/icon_jian"
             android:singleLine="true"
             android:text="Tommy"
-            android:textColor="@color/appointment_text_color" />
+            android:textSize="18sp"
+            android:textColor="@color/detail" />
     </RelativeLayout>
 
     <View
@@ -45,7 +48,7 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="25dp"
         android:paddingBottom="5dp"
         android:paddingTop="5dp" >
 
@@ -56,7 +59,7 @@
             android:layout_centerVertical="true"
             android:text="@string/phone_number"
             android:textColor="@color/appointment_text_color"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tv_account"
@@ -64,7 +67,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/appointment_text_color" />
+            android:textSize="18sp"
+            android:textColor="@color/detail" />
     </RelativeLayout>
 
     <View
@@ -95,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/right_arrow" />
+            android:src="@drawable/icon_jian" />
     </RelativeLayout>
 
     <RelativeLayout

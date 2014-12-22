@@ -100,6 +100,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:text="(无线局域网默认为智能移动终端当前正在使用的无线局域网, 若需更改, 请先更改智能移动终端使用的网络配置)"
             android:textColor="@color/color2" />
 
@@ -109,6 +111,8 @@
             android:layout_marginTop="32dp"
             android:background="@drawable/login_input_bg"
             android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp" >
 

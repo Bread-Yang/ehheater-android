@@ -27,7 +27,7 @@
             android:layout_marginTop="10dp"
             android:singleLine="true"
             android:background="@drawable/white_button_bg"
-            android:hint="名称"
+            android:hint="@string/input_name"
             android:lines="1"
             android:maxLength="15" />
     </RelativeLayout>
@@ -182,11 +182,11 @@
                 android:minHeight="6dp"
                 android:paddingBottom="30dp"
                 android:paddingTop="30dp"
-                android:progress="0"
+                android:progress="15"
                 android:progressDrawable="@drawable/seekbarhint_style"
                 android:thumb="@drawable/seekbarhint_thumb"
                 android:thumbOffset="10dp"
-                app:minValueTips="35"
+                app:minValueTips="50"
                 app:popupStyle="follow"
                 app:popupWidth="100dp"
                 app:yOffset="-15dp" />
@@ -243,7 +243,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:checked="true"
                 android:tag="1"
                 android:text="1kw"
                 android:textColor="@drawable/selector_text_color_radiobutton"
@@ -254,6 +253,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:checked="true"
                 android:button="@drawable/radio_selector"
                 android:tag="2"
                 android:text="2kw"

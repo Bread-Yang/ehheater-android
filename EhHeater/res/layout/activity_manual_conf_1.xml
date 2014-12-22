@@ -84,5 +84,11 @@
         android:textSize="16dp"
         android:text="1. 请进入 设置 > Wifi, 选择XPG-GAgent\n\n2. 输入密码: 123456789 \n\n3. 完成后请返回此界面, 将自动跳转到下一步"
         />
+    
+     <ImageView 
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/settings_wifi"/>
 
 </LinearLayout>

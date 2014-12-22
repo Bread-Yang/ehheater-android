@@ -13,6 +13,7 @@
     <color name="transparent">#00000000</color>
     <color name="appointment_wheelview_color">#EEF2F3</color>
     <color name="appointment_text_color">#71878B</color>
+    <color name="detail">#C0C1C2</color>
     <color name="title_color">#ff6d19</color>
     <color name="an_hui">#696969</color>
     <color name="line">#44b2b2b2</color>

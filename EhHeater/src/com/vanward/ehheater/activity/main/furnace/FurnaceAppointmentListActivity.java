@@ -468,8 +468,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 											// adapter.notifyDataSetChanged();
 											requestHttpData();
 										} else if ("503".equals(responseCode)) {
-											adapter_data.clear();
-											lv_listview.setAdapter(new AppointmentListAdapter());
+											requestHttpData();
 										}
 									} catch (JSONException e) {
 										e.printStackTrace();

@@ -1,14 +1,11 @@
 package com.vanward.ehheater.activity.info;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
@@ -20,6 +17,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,14 +26,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.util.DialogUtil;
 
-public class InformationActivity extends Activity implements
+public class InformationActivity extends EhHeaterBaseActivity implements
 		OnPageChangeListener, OnClickListener {
 
 	private ImageView[] imageViews;
@@ -45,6 +41,8 @@ public class InformationActivity extends Activity implements
 	TextView title;
 	TextView heatxiaolv, taptv, heattv;
 	McuVo mcuVo;
+	private boolean isGas;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,7 +56,6 @@ public class InformationActivity extends Activity implements
 
 	private void initView(Context context) {
 
-		
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		leftbutton.setOnClickListener(this);
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
@@ -71,8 +68,8 @@ public class InformationActivity extends Activity implements
 		InforChartView inforChartView = new InforChartView(this);
 		InforElChartView inforElChartView = new InforElChartView(this);
 		InfoElcChartView inforElcChartView = new InfoElcChartView(this);
-		boolean isgas = getIntent().getBooleanExtra("isgas", false);
-		if (isgas) {
+		isGas = getIntent().getBooleanExtra("isgas", false);
+		if (isGas) {
 			pageViews.add(inforChartView);
 			pageViews.add(inforElChartView);
 		} else {
@@ -82,18 +79,21 @@ public class InformationActivity extends Activity implements
 		pageViews.add(view3);
 		pageViews.add(new InforHistoryView(this));
 		heattv = (TextView) view3.findViewById(R.id.heattv);
-		
+
 		sumwater = (TextView) inforChartView.findViewById(R.id.sumwater);
 		sumgas = (TextView) inforElChartView.findViewById(R.id.sumgas);
 		taptv = (TextView) view3.findViewById(R.id.taptv);
 		heatxiaolv = (TextView) view3.findViewById(R.id.heatxiaolv);
-		
-		if (isgas) {
-			((View) heatxiaolv.getParent()).setVisibility(View.VISIBLE);
+
+		LinearLayout llt_gas_heater = (LinearLayout) view3
+				.findViewById(R.id.llt_gas_heater);
+
+		if (isGas) {
+			llt_gas_heater.setVisibility(View.VISIBLE);
 		} else {
-			((View) heatxiaolv.getParent()).setVisibility(View.GONE);
+			llt_gas_heater.setVisibility(View.GONE);
 		}
-		
+
 		// 创建imageviews数组，大小是要显示的图片的数量
 		imageViews = new ImageView[pageViews.size()];
 		// 实例化小圆点的linearLayout和viewpager
@@ -123,9 +123,6 @@ public class InformationActivity extends Activity implements
 		// 设置viewpager的适配器和监听事件
 		mViewPager.setAdapter(new NavigationPageAdapter());
 		mViewPager.setOnPageChangeListener(InformationActivity.this);
-
-		// getdata();
-
 	}
 
 	// 设置要显示的pageradapter类
@@ -176,13 +173,11 @@ public class InformationActivity extends Activity implements
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -196,22 +191,20 @@ public class InformationActivity extends Activity implements
 			}
 		}
 
-		if (position == 1 && tempToken++ == 0) {
-			// load
-			try {
-				((InforElChartView) pageViews.get(1)).selectDefault();
-			} catch (Exception e) {
-				// TODO: handle exception
+		if (position == 1) {
+			if (isGas) {
+				try {
+					((InforElChartView) pageViews.get(1)).selectDefault();
+				} catch (Exception e) {
+				}
+			} else {
+				getdata();
 			}
-
 		}
-		if (position == 2) {
-			setViewData();
+		if (position == 2 && isGas) {
+			getdata();
 		}
-
 	}
-
-	private int tempToken = 0;
 
 	@Override
 	public void onClick(View arg0) {
@@ -230,66 +223,81 @@ public class InformationActivity extends Activity implements
 		FinalHttp finalHttp = new FinalHttp();
 		HeaterInfoService heaterInfoService = new HeaterInfoService(this);
 
-		System.out
-				.println("http://122.10.94.216:8080/EhHeaterWeb/userinfo/getNewData?did="
-						+ heaterInfoService.getCurrentSelectedHeater().getDid());
+		String url = "";
+		if (isGas) {
+			url = "GasInfo/getNewestData?did="
+					+ heaterInfoService.getCurrentSelectedHeater().getDid();
+		} else {
+			url = "GasInfo/getNewestElData?did="
+					+ heaterInfoService.getCurrentSelectedHeater().getDid();
+		}
 
-		finalHttp
-				.get("http://122.10.94.216:8080/EhHeaterWeb/userinfo/getNewData?did="
-						+ heaterInfoService.getCurrentSelectedHeater().getDid(),
-						new AjaxCallBack<String>() {
+		Log.e("信息请求的url是 : ", url);
+		
+		finalHttp.get(Consts.REQUEST_BASE_URL + url,
+				new AjaxCallBack<String>() {
 
-							@Override
-							public void onStart() {
-								DialogUtil.instance().showDialog();
-								super.onStart();
-							}
-									//请求成功
-							@Override
-							public void onSuccess(String t) {
+					@Override
+					public void onStart() {
+						super.onStart();
+						showRequestDialog();
+					}
 
-								try {
-									JSONObject jsonObject = new JSONObject(t);
-									t = jsonObject.getJSONObject("result")
-											.toString();
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+					// 请求成功
+					@Override
+					public void onSuccess(String t) {
+						super.onSuccess(t);
+						Log.e("信息请求返回的json是 : ", t);
+						try {
+							JSONObject json = new JSONObject(t);
+							String responseCode = json.getString("responseCode");
+							if ("200".equals(responseCode)) {
+								JSONObject result = json.getJSONObject("result");
+								if (isGas) {
+									int now_efficiency = result.getInt("now_efficiency");
+									heatxiaolv.setText(now_efficiency + "%");
+									
+									int curcumulativeOpenValveTimes = result.getInt("curcumulativeOpenValveTimes");
+									taptv.setText(curcumulativeOpenValveTimes + "");
+									
+									int cumulveUseTime = result.getInt("cumulveUseTime");
+									heattv.setText(cumulveUseTime + "mins");
+								} else {
+									int heating_tube_time = result.getInt("heating_tube_time");
+									int machine_not_heating_time = result.getInt("machine_not_heating_time");
+									int sum = heating_tube_time + machine_not_heating_time;
+									heattv.setText(sum + "mins");
 								}
-								Gson gson = new Gson();
-								System.out.println("tt:" + t);
-								mcuVo = gson.fromJson(t, McuVo.class);
-								setViewData();
-								DialogUtil.instance().dismissDialog();
-								super.onSuccess(t);
 							}
-							
-							@Override
-							public void onFailure(Throwable t, int errorNo,
-									String strMsg) {
-								// TODO Auto-generated method stub
-								DialogUtil.instance().dismissDialog();
-								super.onFailure(t, errorNo, strMsg);
-							}
-						});
+							dismissRequestDialog();
+						} catch (JSONException e) {
+							e.printStackTrace();
+							dismissRequestDialog();
+						}
+					}
+
+					@Override
+					public void onFailure(Throwable t, int errorNo,
+							String strMsg) {
+						super.onFailure(t, errorNo, strMsg);
+						dismissRequestDialog();
+					}
+				});
 	}
-	
-	
-	
-	
+
 	public void setViewData() {
-		// System.out.println(mcuVo.getCumulativeGas());
-		// // heatxiaolv.setText(mcuVo.get);
-		// taptv.setText(mcuVo.getCumulativeOpenValveTimes() + "");
-		// if (mcuVo != null && mcuVo.getCumulatUseTime() != null) {
-		// heattv.setText(mcuVo.getCumulatUseTime() + "mins");
-		// }
-		// if (mcuVo!=null&&mcuVo.getCumulativeVolume()!=null) {
-		// sumwater.setText(mcuVo.getCumulativeVolume() + "L");
-		// }
-		// if (mcuVo!=null&&mcuVo.getCumulativeGas()!=null) {
-		// sumgas.setText(mcuVo.getCumulativeGas() + "L");
-		// }
+		 System.out.println(mcuVo.getCumulativeGas());
+		 // heatxiaolv.setText(mcuVo.get);
+		 taptv.setText(mcuVo.getCumulativeOpenValveTimes() + "");
+		 if (mcuVo != null && mcuVo.getCumulatUseTime() != null) {
+		 heattv.setText(mcuVo.getCumulatUseTime() + "mins");
+		 }
+		 if (mcuVo!=null&&mcuVo.getCumulativeVolume()!=null) {
+		 sumwater.setText(mcuVo.getCumulativeVolume() + "L");
+		 }
+		 if (mcuVo!=null&&mcuVo.getCumulativeGas()!=null) {
+		 sumgas.setText(mcuVo.getCumulativeGas() + "L");
+		 }
 
 		heattv.setText("0mins");
 		sumwater.setText("0L");

@@ -2,6 +2,7 @@ package com.vanward.ehheater.activity.more;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -45,6 +46,8 @@ public class AboutActivity extends Activity {
 	}
 
 	private void init() {
+		TextView tv_about = (TextView) findViewById(R.id.tv_about);
+		tv_about.setText(Html.fromHtml(getString(R.string.about_wanward)));
 	}
 
 }

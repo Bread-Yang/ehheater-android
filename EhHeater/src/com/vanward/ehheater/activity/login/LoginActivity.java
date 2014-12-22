@@ -159,6 +159,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		Log.d("emmm", "login resumed");
 
 		et_user.setText(AccountService.getUserId(this));
+		et_pwd.setText("");
 		
 		XPGConnectClient.AddActivity(this);
 	}
@@ -239,8 +240,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 			// 0和1都是登录成功
 			SharedPreferUtils.saveUsername(this, et_user.getText().toString());
-			AccountService.setPendingUser(getBaseContext(), et_user.getText()
+			AccountService.setUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
+//			AccountService.setPendingUser(getBaseContext(), et_user.getText()
+//					.toString(), et_pwd.getText().toString());
 			generated.SendBindingGetV2Req(tempConnId);
 			onDeviceFoundTriggered = false;
 			new Timer().schedule(new TimerTask() {

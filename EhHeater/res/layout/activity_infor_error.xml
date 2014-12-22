@@ -19,7 +19,8 @@
         android:layout_centerHorizontal="true"
         android:text="设备故障"
         android:textColor="#FF2360a3"
-        android:textSize="30dp" />
+        android:textSize="30dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/time"

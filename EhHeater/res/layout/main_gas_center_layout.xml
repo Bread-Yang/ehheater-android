@@ -49,15 +49,18 @@
                 android:id="@+id/wave_bg"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:scaleType="center"
-                android:src="@drawable/main_fire"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/main_fire_level_1"
                 android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/hotanimition"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:src="@drawable/hotani" />
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/anim_furmace_main_heating" />
 
             <LinearLayout
                 android:id="@+id/circle_llt"
@@ -188,8 +191,6 @@
             android:layout_alignTop="@+id/llt_select"
             android:layout_marginRight="-40dp"
             android:orientation="horizontal" >
-
-         
         </LinearLayout>
 
         <LinearLayout
@@ -314,6 +315,7 @@
                     android:background="@color/transparent"
                     android:minHeight="20dp"
                     android:text="待机中"
+                    android:textColor="@color/appointment_text_color"
                     android:textSize="15dp" />
             </LinearLayout>
 
@@ -336,6 +338,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:text="实时注水量"
+                    android:textColor="@color/appointment_text_color"
                     android:textSize="15dp" />
 
                 <TextView
@@ -366,7 +369,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@color/white"
-            android:visibility="gone">
+            android:visibility="gone" >
         </RelativeLayout>
 
         <ImageView
@@ -374,8 +377,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignLeft="@+id/circle_bg"
-            android:layout_alignTop="@+id/mode_tv"
-          />
+            android:layout_alignTop="@+id/mode_tv" />
     </RelativeLayout>
 
 </RelativeLayout>

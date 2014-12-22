@@ -247,7 +247,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	/**
 	 * 多少秒后没有回调
 	 */
-	
+	public static long connectTime = 10000;
 
 	private void queryState() {
 		// DialogUtil.instance().showQueryingDialog(this);
@@ -976,6 +976,5 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
 
 }

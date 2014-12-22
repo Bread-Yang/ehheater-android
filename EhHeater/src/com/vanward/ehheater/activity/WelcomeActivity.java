@@ -69,8 +69,8 @@ public class WelcomeActivity extends GeneratedActivity {
 		MobclickAgent.updateOnlineConfig(this);
 
 		// 每5分钟请求一次
-//		PollingUtils.startPollingService(this, 5 * 60, PollingService.class,
-//				PollingService.ACTION);
+		PollingUtils.startPollingService(this, 15 , PollingService.class,
+				PollingService.ACTION);
 	}
 
 	public HeaterInfo getCurrentDevice() {

@@ -22,10 +22,10 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:background="@drawable/home_tip_bg"
+            android:ellipsize="end"
             android:gravity="center_horizontal"
             android:paddingTop="3dp"
             android:singleLine="true"
-            android:ellipsize="end"
             android:text="智能模式"
             android:textColor="@color/an_hui"
             android:textSize="23dp" />
@@ -50,6 +50,7 @@
             <ImageView
                 android:id="@+id/wave_bg"
                 android:layout_width="fill_parent"
+                android:layout_marginBottom="2dp"
                 android:layout_height="fill_parent"
                 android:scaleType="center"
                 android:src="@drawable/main_wave" />
@@ -58,7 +59,10 @@
                 android:id="@+id/hotanimition"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:src="@drawable/hotani" />
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="2dp"
+                android:background="@drawable/anim_furmace_main_heating"
+                />
 
             <LinearLayout
                 android:id="@+id/circle_llt"
@@ -87,6 +91,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
@@ -94,7 +99,7 @@
                         android:id="@+id/tempter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="35"
+                        android:text="36"
                         android:textColor="@color/title_color"
                         android:textSize="70dp" />
 
@@ -133,57 +138,56 @@
                         android:textSize="20dp" />
                 </LinearLayout>
             </LinearLayout>
-
         </RelativeLayout>
-        
-         <LinearLayout
-                android:layout_width="73dp"
-                android:layout_height="73dp"
-                android:layout_toRightOf="@+id/circle_bg"
-                android:layout_marginLeft="-55dp"
-                android:layout_marginTop="-60dp"
-                android:layout_below="@+id/circle_bg"
-                android:background="@drawable/set_temperature_bg1"
-                android:focusable="false"
-                android:orientation="vertical" >
 
-                <LinearLayout
+        <LinearLayout
+            android:layout_width="73dp"
+            android:layout_height="73dp"
+            android:layout_below="@+id/circle_bg"
+            android:layout_marginLeft="-55dp"
+            android:layout_marginTop="-60dp"
+            android:layout_toRightOf="@+id/circle_bg"
+            android:background="@drawable/set_temperature_bg1"
+            android:focusable="false"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:visibility="invisible" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
-                    android:visibility="invisible"
-                    android:layout_height="wrap_content" 
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:id="@+id/imageView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/up_round_1" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text="设定"
-                        android:textColor="@color/appointment_text_color" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="60dp"
-                    android:visibility="invisible"
-                    android:layout_height="1dp"
-                    android:background="#4471878B"
-                    android:gravity="center_horizontal" >
-                </View>
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/up_round_1" />
 
                 <TextView
-                    android:id="@+id/target_tem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="0℃"
-                    android:textColor="@color/title_color"
-                    android:textSize="20sp" />
+                    android:text="设定"
+                    android:textColor="@color/appointment_text_color" />
             </LinearLayout>
+
+            <View
+                android:layout_width="60dp"
+                android:layout_height="1dp"
+                android:background="#4471878B"
+                android:gravity="center_horizontal"
+                android:visibility="invisible" >
+            </View>
+
+            <TextView
+                android:id="@+id/target_tem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="0℃"
+                android:textColor="@color/title_color"
+                android:textSize="20sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -335,6 +339,7 @@
                     android:background="@color/transparent"
                     android:minHeight="20dp"
                     android:text="@string/current_power"
+                    android:textColor="@color/appointment_text_color"
                     android:textSize="15dp" />
 
                 <TextView
@@ -356,14 +361,13 @@
             android:background="@color/white"
             android:visibility="gone" >
         </RelativeLayout>
-        
+
         <ImageView
             android:id="@+id/infor_tip"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignLeft="@+id/circle_bg"
-            android:layout_alignTop="@+id/mode_tv"
-          />
+            android:layout_alignTop="@+id/mode_tv" />
     </RelativeLayout>
 
 </RelativeLayout>

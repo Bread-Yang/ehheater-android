@@ -2,9 +2,11 @@ package com.vanward.ehheater.util;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
@@ -32,6 +34,22 @@ public class BaoDialogShowUtil {
 
 	private BaoDialogShowUtil(Context context) {
 		this.mContext = context;
+	}
+	
+	public Dialog createLoadingDialog() {
+		LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+		RelativeLayout relativeLayout = (RelativeLayout) layoutInflater
+				.inflate(R.layout.loadingdialog, null);
+
+		TextView tvContent = (TextView) relativeLayout
+				.findViewById(R.id.tv_loading);
+		tvContent.setText("");
+		tvContent.setVisibility(View.VISIBLE);
+		Dialog dialog = new Dialog(mContext, R.style.dialogStyle);
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.setCancelable(false);
+		dialog.setContentView(relativeLayout);
+		return dialog;
 	}
 
 	public Dialog createDialogWithTwoButton(int contentResId,
