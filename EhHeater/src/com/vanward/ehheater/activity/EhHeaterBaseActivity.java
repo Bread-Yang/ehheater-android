@@ -1,6 +1,5 @@
 package com.vanward.ehheater.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,8 +11,8 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.LoadingDialog;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
@@ -24,7 +23,7 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 	private TextView tv_center_title;
 	private RelativeLayout rlt_center, rlt_top,rlt_center_no_scrollview;
 	public Intent intent;
-	public Dialog loadingDialog;
+	public LoadingDialog loadingDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,7 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 		rlt_center_no_scrollview = (RelativeLayout) findViewById(R.id.rlt_center_no_scrollview);
 		tv_center_title = (TextView) findViewById(R.id.tv_center_title);
 		rlt_top = (RelativeLayout) findViewById(R.id.rlt_title);
-		loadingDialog = BaoDialogShowUtil.getInstance(this).createLoadingDialog();
+		loadingDialog = new LoadingDialog();
 	}
 
 	public void initListener() {
@@ -117,11 +116,12 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 	}
 
 	public void showRequestDialog() {
-		loadingDialog.show();
+		DialogUtil.instance().showLoadingDialog(this,
+				getResources().getString(R.string.requesting_http));
 	}
 
 	public void dismissRequestDialog() {
-		loadingDialog.dismiss();
+		DialogUtil.dismissDialog();
 	}
 
 	@Override
