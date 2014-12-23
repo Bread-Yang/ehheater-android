@@ -46,8 +46,10 @@ import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
 
-public class InforChartView extends LinearLayout implements OnClickListener,
+public class InfoAccumulatedWaterChartView extends LinearLayout implements OnClickListener,
 		OnCheckedChangeListener {
+	
+	private final String TAG = "InfoAccumulatedWaterChartView";
 
 	private ViewGroup layout;
 	Context context;
@@ -71,10 +73,10 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 	private Dialog loadingDialog;
 
-	public InforChartView(Context context) {
+	public InfoAccumulatedWaterChartView(Context context) {
 		super(context);
 		this.context = context;
-		layout = (ViewGroup) inflate(context, R.layout.inforchart, null);
+		layout = (ViewGroup) inflate(context, R.layout.activity_info_accumulated_water, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
 		RadioButton radiobutton = (RadioButton) radioGroup
@@ -92,7 +94,7 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 
 		lqtime = (TextView) layout.findViewById(R.id.messagetime);
 
-		dates = System.currentTimeMillis();
+		dates = getTodayTime();
 		imageView1 = (ImageView) layout.findViewById(R.id.imageView1);
 		imageView1.setOnClickListener(this);
 		imageView2 = (ImageView) layout.findViewById(R.id.imageView2);
@@ -644,85 +646,123 @@ public class InforChartView extends LinearLayout implements OnClickListener,
 					}
 				});
 	}
+	
+	private long getTodayTime() {
+		Date date = new Date();
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+		long times = ca.getTime().getTime() / 1000 * 1000;
+		return times;
+	}
 
 	public long timechanged() {
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		ca.add(ca.DATE, -7);
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged2() {
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		ca.add(ca.MONTH, -1);
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged3() {
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		ca.add(ca.YEAR, -1);
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged4() {
 		Long l2 = new Long(System.currentTimeMillis());
 		Date t2 = new Date(l2);
+		t2.setHours(0);
+		t2.setMinutes(0);
+		t2.setSeconds(0);
 		Calendar ca2 = Calendar.getInstance();
 		ca2.setTime(t2);
 
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		if (ca.get(ca.WEEK_OF_MONTH) != ca2.get(ca2.WEEK_OF_MONTH)) {
 			ca.add(ca.DATE, 7);
 		}
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged5() {
 		Long l2 = new Long(System.currentTimeMillis());
 		Date t2 = new Date(l2);
+		t2.setHours(0);
+		t2.setMinutes(0);
+		t2.setSeconds(0);
 		Calendar ca2 = Calendar.getInstance();
 		ca2.setTime(t2);
 
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		if (ca.get(ca.MONTH) + 1 != ca2.get(ca2.MONTH) + 1) {
 			ca.add(ca.MONTH, 1);
 		}
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged6() {
 		Long l2 = new Long(System.currentTimeMillis());
 		Date t2 = new Date(l2);
+		t2.setHours(0);
+		t2.setMinutes(0);
+		t2.setSeconds(0);
 		Calendar ca2 = Calendar.getInstance();
 		ca2.setTime(t2);
 
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		if (ca.get(ca.YEAR) != ca2.get(ca2.YEAR)) {
 			ca.add(ca.YEAR, 1);
 		}
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 

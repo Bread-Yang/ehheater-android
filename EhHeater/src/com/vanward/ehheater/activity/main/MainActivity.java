@@ -67,6 +67,8 @@ import com.xtremeprog.xpgconnect.generated.generated;
 
 public class MainActivity extends BaseBusinessActivity implements
 		OnClickListener, CircleListener {
+	
+	private final String TAG = "MainActivity";
 
 	private static final byte E0 = 0;
 
@@ -128,9 +130,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e("MainActivity的onCreate执行了", "MainActivity的onCreate执行了");
 		initSlidingMenu();
-		setContentView(R.layout.main_center_layout);
+		setContentView(R.layout.activity_main);
 		initView();
 		initData();
 
@@ -142,7 +143,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		if (getIntent().getBooleanExtra("newActivity", false)) {
 			String electicMac = getIntent().getStringExtra("mac");
-			Log.e("notification传过来的gasMac是", electicMac);
 			connectDevice("", electicMac);
 		} else {
 			connectCurDevice();
@@ -287,14 +287,11 @@ public class MainActivity extends BaseBusinessActivity implements
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		Log.e("MainActivity的onNewIntent执行了",
-				"MainActivity的onNewIntent执行了");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e("MainActivity的onResume执行了", "MainActivity的onResume执行了");
 		ErrorUtils.isMainActivityActive = true;
 		ErrorUtils.isGasMainActivityActive = false;
 		canupdateView = true;
@@ -302,7 +299,6 @@ public class MainActivity extends BaseBusinessActivity implements
 		String eleticMac = getIntent().getStringExtra("mac");
 		if (eleticMac != null
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
-			Log.e("MainActivity得到的mac是 : ", eleticMac);
 			SwitchDeviceUtil.switchDevice(eleticMac, this);
 		}
 	}
@@ -518,7 +514,6 @@ public class MainActivity extends BaseBusinessActivity implements
 		ChangeStuteView.swichNight(stuteParent);
 		int i = new EhState(data).getSystemRunningState();
 		int remainingTime = new EhState(data).getRemainingHeatingTime();
-		Log.e("得到的剩余加热 时间是 : ", i + "");
 		if (i == 0) {
 			ChangeStuteView.swichNight(stuteParent);
 		} else {
@@ -793,7 +788,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
 		super.OnStateResp(pResp, nConnId);
 		pResp.getError();
-		Log.e("电热的OnStateResp()执行了", "电热的OnStateResp()执行了");
 
 		dealErrorWarnIcon(pResp);
 	}
@@ -994,7 +988,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void updateUIListener(int outlevel) {
-		Log.e("updateUIListener执行了", "updateUIListener执行了");
 		temptertitleTextView.setText("设置温度");
 		Drawable img = getBaseContext().getResources().getDrawable(
 				R.drawable.menu_icon_setting);
@@ -1009,8 +1002,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void updateUIWhenAferSetListener(final int outlevel) {
-		Log.e("updateUIWhenAferSetListener执行了",
-				"updateUIWhenAferSetListener执行了");
 		temptertitleTextView.setText("当前水温");
 		Drawable img = getBaseContext().getResources().getDrawable(
 				R.drawable.icon_temperature);

@@ -63,10 +63,12 @@ import com.xtremeprog.xpgconnect.generated.generated;
 
 public class GasMainActivity extends BaseBusinessActivity implements
 		OnClickListener, OnLongClickListener, CircleListener {
+	
+	private final String TAG = "GasMainActivity";
 
 	// protected SlidingMenu mSlidingMenu;
 
-	private TextView mTitleName, modeTv, temptertitleTextView, sumwater, stute,
+	private TextView mTitleName, tv_mode, temptertitleTextView, sumwater, stute,
 			shuiliuliangText;
 
 	View btn_power;
@@ -118,7 +120,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		super.onCreate(savedInstanceState);
 		Log.e("GasMainActivity的onCreate执行了", "GasMainActivity的onCreate执行了");
 		initSlidingMenu();
-		setContentView(R.layout.main_gas_center_layout);
+		setContentView(R.layout.activity_gas_main);
 		initView(savedInstanceState);
 		initData();
 		init();
@@ -213,6 +215,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		
+		Log.e(TAG, "重连之后onActivityResult调用了");
 
 		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
 				&& resultCode == RESULT_OK) {
@@ -323,7 +327,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	public void dealDisConnect() {
 		tv_tempter.setText("--");
-		modeTv.setText("----");
+		tv_mode.setText("----");
 		leavewater.setText("--");
 		// powerTv.setText("--");
 		target_tem.setText("--");
@@ -372,7 +376,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		settemper = (TextView) findViewById(R.id.settemper);
 		rlt_start_device = (RelativeLayout) findViewById(R.id.start_device_rlt);
 		btn_info = (Button) findViewById(R.id.btn_information);
-		modeTv = (TextView) findViewById(R.id.mode_tv);
+		tv_mode = (TextView) findViewById(R.id.tv_mode);
 		llt_circle = (LinearLayout) findViewById(R.id.circle_llt);
 		// stuteParent = (ViewGroup) findViewById(R.id.stute);
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
@@ -450,7 +454,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			break;
 		case R.id.pattern:
 			Intent intent2 = new Intent();
-			intent2.putExtra("name", modeTv.getText());
+			intent2.putExtra("name", tv_mode.getText());
 			intent2.setClass(this, PatternActivity.class);
 			startActivity(intent2);
 			break;
@@ -472,7 +476,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
-		modeTv.setText("舒适模式");
+		tv_mode.setText("舒适模式");
 		circularView.setOn(true);
 		modeimg.setImageResource(R.drawable.gas_home_icon_comfort);
 		if (circularView != null) {
@@ -488,7 +492,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void changetoKictienMode(GasWaterHeaterStatusResp_t pResp) {
-		modeTv.setText("厨房模式");
+		tv_mode.setText("厨房模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_kitchen);
 		if (circularView != null) {
 			circularView.setVisibility(View.GONE);
@@ -501,7 +505,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
-		modeTv.setText("节能模式");
+		tv_mode.setText("节能模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_energy);
 		if (circularView != null) {
 			circularView.setVisibility(View.GONE);
@@ -515,7 +519,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void changetoligenceMode(GasWaterHeaterStatusResp_t pResp) {
-		modeTv.setText("智能模式");
+		tv_mode.setText("智能模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_intelligence);
 		if (circularView != null) {
 			circularView.setVisibility(View.GONE);
@@ -528,7 +532,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
-		modeTv.setText("浴缸模式");
+		tv_mode.setText("浴缸模式");
 		circularView.setOn(true);
 		((View) sumwater.getParent()).setVisibility(View.VISIBLE);
 		modeimg.setImageResource(R.drawable.gas_home_icon_bathtub);
@@ -650,6 +654,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
+		
+		Log.e(TAG, "重连之后OnGasWaterHeaterStatusResp调用了");
 
 		if (nConnId != Global.connectId) {
 			return;
@@ -684,6 +690,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void modeDeal(GasWaterHeaterStatusResp_t pResp) {
+		
+		Log.e(TAG, "重连之后modeDeal调用了");
+		
 		((View) sumwater.getParent()).setVisibility(View.GONE);
 
 		// 模式切换的api 跟 那个需求有出入
@@ -856,7 +865,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 					.findById(pResp.getCustomFunction(), GasCustomSetVo.class);
 
 			if (curGasCustomVo != null) {
-				modeTv.setText(curGasCustomVo.getName());
+				tv_mode.setText(curGasCustomVo.getName());
 			}
 
 			modeimg.setVisibility(View.GONE);

@@ -44,6 +44,8 @@ import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
 
 public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
+	
+	private final String TAG = "AppointmentTimeActivity";
 
 	private WheelView wheelView1, wheelView2;
 
@@ -318,7 +320,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				Gson gson = new Gson();
 				String json = gson.toJson(editModel);
 
-				Log.e("提交的json数据是 : ", json);
+				Log.e(TAG, "提交的json数据是 : " + json);
 
 				AjaxParams params = new AjaxParams();
 				params.put("data", json);
@@ -333,7 +335,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 							@Override
 							public void onSuccess(String jsonString) {
 								super.onSuccess(jsonString);
-								Log.e("编辑或者保存返回的json数据是 : ", jsonString);
+								Log.e(TAG , "编辑或者保存返回的json数据是 : " + jsonString);
 								isOverride = false;
 								try {
 									JSONObject json = new JSONObject(jsonString);
@@ -363,7 +365,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																	String jsonString) {
 																super.onSuccess(jsonString);
 
-																Log.e("请求返回来的数据是 : ",
+																Log.e(TAG, "请求返回来的数据是 : " + 
 																		jsonString);
 																dismissRequestDialog();
 																try {

@@ -1,6 +1,6 @@
 package com.vanward.ehheater.activity.info;
 
-import java.io.Serializable;
+import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,11 +15,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import u.aly.x;
+import u.aly.w;
+import android.R.string;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Paint.FontMetrics;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -38,69 +41,76 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
-import com.vanward.ehheater.activity.info.InforChartView.Initobject;
-import com.vanward.ehheater.activity.info.InforChartView.LoadDataTask;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
 
-public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnClickListener,
+public class InfoAccumulatedElectricityChartView extends LinearLayout implements OnClickListener,
 		OnCheckedChangeListener {
 	
-	private final String TAG = "InfoOfAccumulatedGasChartView";
+	private final String TAG = "InfoAccumulatedElectricityChartView";
 
 	private ViewGroup layout;
 	Context context;
 	LinearLayout.LayoutParams lParams;
 	private SimpleDateFormat simpleDateFormat;
-	private WebView webView;
+	WebView webView;
 	ArrayList<Datavo> datalist = new ArrayList<Datavo>();
 	ArrayList<Xvo> namelist = new ArrayList<Xvo>();
 
 	String datalistjson = "";
 	String namelistjson = "";
 
+	private TextView last;
+	private TextView next, sumwater;
+	private TextView lqtime, sumwater2;
 	long dates, dtime;
-
+	// 上一年，下一年，等等
 	private ImageView imageView1;
 	private ImageView imageView2;
-
-	TextView last, next, sumgas;
-	private TextView lqtime;
+	public static Electricity electricity;
 
 	private Dialog loadingDialog;
 
-	public InfoOfAccumulatedGasChartView(Context context) {
+	public InfoAccumulatedElectricityChartView(Context context) {
 		super(context);
 		this.context = context;
-		layout = (ViewGroup) inflate(context, R.layout.activity_info_of_accumulated_gas, null);
+		layout = (ViewGroup) inflate(context, R.layout.activity_info_accumulated_electricity, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
+		RadioButton radiobutton = (RadioButton) radioGroup
+				.findViewById(R.id.radio0);
 		radioGroup.setOnCheckedChangeListener(this);
 
 		loadingDialog = BaoDialogShowUtil.getInstance(context)
 				.createLoadingDialog();
 
-		webView = (WebView) layout.findViewById(R.id.webView1);
-		webView.addJavascriptInterface(new Initobject(), "init");
 		last = (TextView) layout.findViewById(R.id.last);
-		((View) last.getParent()).setOnClickListener(this);
 		next = (TextView) layout.findViewById(R.id.next);
-		sumgas = (TextView) layout.findViewById(R.id.sumgas);
+		lqtime = (TextView) layout.findViewById(R.id.messagetime);
+		sumwater2 = (TextView) layout.findViewById(R.id.sumwater2);
 
-		dates = System.currentTimeMillis();
+		dates = getTodayTime();
 		imageView1 = (ImageView) layout.findViewById(R.id.imageView1);
 		imageView1.setOnClickListener(this);
 		imageView2 = (ImageView) layout.findViewById(R.id.imageView2);
 		imageView2.setOnClickListener(this);
-		lqtime = (TextView) layout.findViewById(R.id.messagetime);
 
+		sumwater = (TextView) layout.findViewById(R.id.sumwater);
+		((View) last.getParent()).setOnClickListener(this);
 		((View) next.getParent()).setOnClickListener(this);
+		webView = (WebView) layout.findViewById(R.id.webView1);
+		webView.addJavascriptInterface(new Initobject(), "init");
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.setVisibility(View.GONE);
+		webView.loadUrl("file:///android_asset/chart.html");
+
 		webView.setWebViewClient(new WebViewClient() {
 
 			@Override
@@ -118,21 +128,25 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 			}
 
 		});
-
+		webView.setClickable(false);
 		webView.setOnTouchListener(new OnTouchListener() {
+
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 
 				return true;
 			}
 		});
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.loadUrl("file:///android_asset/chart.html");
+		// chart4week();
+		// webView.reload();
 		lParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);
 		addView(layout, lParams);
-		// chart4week();
-		// webView.reload();
+		// initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
+		// initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
+
+		// radioGroup.check(R.id.radio0);
+		radiobutton.setChecked(true);
 	}
 
 	class Initobject {
@@ -150,89 +164,17 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 	public void chart4week() {
 		last.setText("上一周");
 		next.setText("下一周");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 7; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 7; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
 	}
 
 	public void chart4Month() {
 		last.setText("上一月");
 		next.setText("下一月");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 4; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 4; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
 	}
 
 	public void chart4Year() {
 		last.setText("上一年");
 		next.setText("下一年");
-		// datalist.clear();
-		// namelist.clear();
-		// namelist.clear();
-		// for (int i = 0; i < 12; i++) {
-		// Xvo xvo = new Xvo();
-		// xvo.setName("int" + i);
-		// namelist.add(xvo);
-		// }
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(namelist);
-		// System.out.println(namelistjson);
-		//
-		// for (int i = 0; i < 12; i++) {
-		// Datavo datavo = new Datavo();
-		// datavo.setData(i * 10);
-		// datalist.add(datavo);
-		//
-		// }
-		// datalistjson = gson.toJson(datalist);
-		// System.out.println(datalistjson);
 	}
-
-	// @Override
-	// public void onCheckedChanged(RadioGroup arg0, int arg1) {
-	// if (arg1 == R.id.radio0) {
-	// chart4week();
-	// } else if (arg1 == R.id.radio1) {
-	// chart4Month();
-	// } else if (arg1 == R.id.radio2) {
-	// chart4Year();
-	// }
-	// webView.reload();
-	// }
 
 	@Override
 	public void onCheckedChanged(RadioGroup arg0, final int arg1) {
@@ -241,13 +183,14 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 
 		if (arg1 == R.id.radio0) {
 			currentShowingPeriodType = "1";
+
 		} else if (arg1 == R.id.radio1) {
 			currentShowingPeriodType = "2";
 		} else if (arg1 == R.id.radio2) {
 			currentShowingPeriodType = "3";
 		}
 
-		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "3")
+		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
 				.execute();
 
 		// webView.reload();
@@ -256,12 +199,6 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 
 	long currentShowingTime;
 	String currentShowingPeriodType = "1";
-
-	public void selectDefault() {
-		currentShowingTime = Calendar.getInstance().getTimeInMillis();
-		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "3")
-				.execute();
-	}
 
 	class LoadDataTask extends AsyncTask<Void, Void, String> {
 
@@ -272,6 +209,7 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 
 		public LoadDataTask(long dateTime2query, String resultType,
 				String expendType) {
+			// this.did = "EohJ73eV37ABqVPm4jZcNT";
 			this.did = new HeaterInfoService(context)
 					.getCurrentSelectedHeater().getDid();
 			this.dateTime2query = dateTime2query;
@@ -285,31 +223,23 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 
 		@Override
 		protected String doInBackground(Void... params) {
-			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType,
-					expendType);
+			// return HttpConnectUtil.getGasDatas(did, dateTime2query,
+			// resultType,
+			// expendType);
+			return "";
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
-
-			// use result to form namelist and datalist
-
-			Log.d("emmm", "theString: " + result);
-
-			// try {
-			// dododo(resultType, result);
-			// } catch (JSONException e) {
-			// e.printStackTrace();
-			// }
 
 			if (resultType.equals("1")) {
 				getmessageweek(dates);
 				// namelistjson =
 				// "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
 				// datalistjson =
-				// "[{data:2},{data:5},{data:5},{data:3},{data:7},{data:4},{data:4},] ";
+				// "[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5},{data:5},] ";
 				// chart4week();
-				// sumgas.setText("50L");
+				// sumwater.setText("200度");
 			}
 
 			if (resultType.equals("2")) {
@@ -317,9 +247,9 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 				// namelistjson =
 				// "[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
 				// datalistjson =
-				// "[{data:30},{data:70},{data:50},{data:30},{data:20}] ";
+				// "[{data:25},{data:30},{data:24},{data:26},{data:25}] ";
 				// chart4Month();
-				// sumgas.setText("200L");
+				// sumwater.setText("80度");
 			}
 
 			if (resultType.equals("3")) {
@@ -327,18 +257,19 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 				// namelistjson =
 				// "[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
 				// datalistjson =
-				// "[{data:214.9},{data:310.5},{data:406.4},{data:506.4},{data:206.4},{data:106.4},{data:246.4},{data:266.4},{data:276.4},{data:166.4},{data:0},{data:0}] ";
+				// "[{data:130},{data:140},{data:120},{data:110},{data:100},{data:150},{data:115},{data:125},{data:114},{data:115},{data:0},{data:0}] ";
 				// chart4Year();
-				// sumgas.setText("2400L");
+				// sumwater.setText("960度");
 			}
 
 			// webView.reload();
-			// DialogUtil.dismissDialog();
+			//
 
 		}
 
 		// private void dododo(String resultType, String input)
 		// throws JSONException {
+		//
 		// JSONObject jsonObject = new JSONObject(input);
 		// JSONArray jr = jsonObject.getJSONArray("result");
 		// List<Xvo> nameLi = new ArrayList<Xvo>();
@@ -378,114 +309,116 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 		// Log.d("emmm", "namelistjson:" + namelistjson);
 		// Log.d("emmm", "datalistjson:" + datalistjson);
 		//
-		// }
-		//
+		// }http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=3
+
 	}
 
 	public void getmessageweek(long da) {
-		FinalHttp finalHttp = new FinalHttp();
+		Log.e("getmessageweek时间是 : ", da + "");
+		
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		finalHttp.get(
-				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
-						+ adid + "&dateTime=" + da
-						+ "&resultType=1&expendType=1",
-				new AjaxCallBack<String>() {
-					// 等待数据展示
-					@Override
-					public void onStart() {
-						loadingDialog.show();
-						super.onStart();
-					}
+		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
+				+ "&dateTime=" + da + "&resultType=1&expendType=3";
+		Log.e("getmessageweek的连接是 : ", url);
+		FinalHttp finalHttp = new FinalHttp();
+		finalHttp.get(url, new AjaxCallBack<String>() {
+			// 等待数据展示
+			@Override
+			public void onStart() {
+				loadingDialog.show();
+				super.onStart();
+			}
 
-					// 请求成功
-					SimpleDateFormat format = new SimpleDateFormat("MM/dd");
+			// 请求成功
+			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
 
-					@Override
-					public void onSuccess(String t) {
-						Log.e("InfoOfAccumulatedGasChartView", "getmessageweek返回的json数据是 : " + t);
-						try {
-							JSONObject jsonObject = new JSONObject(t);
-							JSONArray array = jsonObject.getJSONArray("result");
+			@Override
+			public void onSuccess(String t) {
+				Log.e("getmessageweek返回的数据是 : ", "getmessageweek返回的数据是 : " + t);
+				try {
+					JSONObject jsonObject = new JSONObject(t);
+					JSONArray array = jsonObject.getJSONArray("result");
 
-							JSONObject jb = (JSONObject) array.get(3);
-							dtime = Long.valueOf(jb.getString("time"));
+					JSONObject jb = (JSONObject) array.get(3);
+					dtime = Long.valueOf(jb.getString("time"));
 
-							JSONArray jsonArray = new JSONArray();
-							JSONArray jsonArray2 = new JSONArray();
-							List<Electricity> li = new ArrayList<Electricity>();
-							float a = 0;
-							for (int i = 0; i < array.length(); i++) {
-								float b = 0;
-								JSONObject jsonObj = array.getJSONObject(i);
-								String amount = jsonObj.getString("amount");
-								String time = format.format(new Long(jsonObj
-										.getString("time")));
-								// 格式化日期
-								Electricity electricity = new Electricity();
-								electricity.setAmount(amount);
-								electricity.setTime(time);
-								li.add(electricity);
-								JSONObject jsonOBJ = new JSONObject();
-								JSONObject jsonOBJ2 = new JSONObject();
-								b = Math.round(Float.parseFloat(li.get(i)
-										.getAmount().equals("") ? "0" : li.get(
-										i).getAmount()));
-								;
-								a = a + b + 0f;
-								jsonOBJ.put("name", li.get(i).getTime());
-								if (li.get(i).getAmount().equals("")
-										|| li.get(i).getAmount()
-												.substring(0, 1).equals("0")) {
-									jsonOBJ2.put("data", "");
-								} else {
-									jsonOBJ2.put(
-											"data",
-											Math.round(Float.parseFloat(li.get(
-													i).getAmount())));
-								}
-								jsonArray.put(jsonOBJ);
-								jsonArray2.put(jsonOBJ2);
-							}
-							namelistjson = jsonArray.toString();
-							datalistjson = jsonArray2.toString();
-							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-							Long l = new Long(System.currentTimeMillis());
-							Date da = new Date(l);
-							lqtime.setText(sim.format(da));
-							sumgas.setText(Math.round(a) + "㎥");
-							chart4week();
-							webView.reload();
-							// 销毁等待
-							loadingDialog.dismiss();
-
-						} catch (Exception e) {
-							// TODO Auto-generated catch blocks
-							e.printStackTrace();
+					JSONArray jsonArray = new JSONArray();
+					JSONArray jsonArray2 = new JSONArray();
+					List<Electricity> li = new ArrayList<Electricity>();
+					float a = 0;
+					for (int i = 0; i < array.length(); i++) {
+						float b = 0;
+						JSONObject jsonObj = array.getJSONObject(i);
+						String amount = jsonObj.getString("amount");
+						String time = format.format(new Long(jsonObj
+								.getString("time")));
+						// 格式化日期
+						Electricity electricity = new Electricity();
+						electricity.setAmount(amount);
+						electricity.setTime(time);
+						li.add(electricity);
+						JSONObject jsonOBJ = new JSONObject();
+						JSONObject jsonOBJ2 = new JSONObject();
+						//
+						jsonOBJ.put("name", li.get(i).getTime());
+						if (li.get(i).getAmount().equals("")
+								|| li.get(i).getAmount().substring(0, 1)
+										.equals("0")) {
+							jsonOBJ2.put("data", "");
+						} else {
+							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
+									.get(i).getAmount())));
 						}
-						super.onSuccess(t);
+						b = Math.round(Float.parseFloat(li.get(i).getAmount()
+								.equals("") ? "0" : li.get(i).getAmount()));
+						a = a + b + 0f;
+						jsonArray.put(jsonOBJ);
+						jsonArray2.put(jsonOBJ2);
 					}
+					System.out.println("gafdgfdffffffffffff" + a);
+					// 赋值namengh
+					namelistjson = jsonArray.toString();
+					// 赋值data
+					datalistjson = jsonArray2.toString();
+					// 设置使用的总电数
+					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
+					Long l = new Long(dtime);
+					Date da = new Date(l);
+					lqtime.setText(sim.format(da));
+					sumwater.setText(Math.round(a) + "");
+					sumwater2.setVisibility(VISIBLE);
+					// 更换下方按钮
+					chart4week();
+					// 刷新数据展示
+					webView.reload();
+					// 销毁等待
+					loadingDialog.dismiss();
 
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
-								.show();
-						loadingDialog.dismiss();
-					}
-				});
+				} catch (Exception e) {
+					// TODO Auto-generated catch blocks
+					e.printStackTrace();
+				}
+				super.onSuccess(t);
+			}
+
+			// 请求失败
+			@Override
+			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				// TODO Auto-generated method stub 请求失败
+				super.onFailure(t, errorNo, strMsg);
+				Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG).show();
+				loadingDialog.dismiss();
+			}
+		});
 	}
 
 	public void getmessagemonth(long da2) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get(
-				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
-						+ adid + "&dateTime=" + da2
-						+ "&resultType=2&expendType=1",
+		finalHttp.get(Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
+				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=3",
 				new AjaxCallBack<String>() {
 					// 等待数据展示
 					@Override
@@ -500,14 +433,14 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 
 					@Override
 					public void onSuccess(String t) {
-						Log.e("InfoOfAccumulatedGasChartView", "getmessagemonth返回的json数据是 : " + t);
+						Log.e("getmessagemonth返回的数据是 : ",
+								"getmessagemonth返回的数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
 
 							JSONObject jb = (JSONObject) array.get(0);
 							dtime = Long.valueOf(jb.getString("time"));
-
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
 							List<Electricity> li = new ArrayList<Electricity>();
@@ -518,10 +451,10 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 								String amount = jsonObj.getString("amount");
 								String time = format.format(new Long(jsonObj
 										.getString("time")));
-								// 格式化日期
-
+								// 格式化日期s
 								Long log = new Long(jsonObj.getString("time"));
 								Date time2 = new Date(log);
+
 								Calendar calendar = Calendar.getInstance();
 								calendar.setTime(time2);
 								calendar.set(calendar.DAY_OF_MONTH, 1);// 设置为1号,当前日期既为本月第一天
@@ -538,6 +471,7 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 									time4 = String.valueOf(format2
 											.format(calendar.getTime()));
 								}
+
 								String time3 = time + time4;
 								Electricity electricity = new Electricity();
 								electricity.setAmount(amount);
@@ -545,7 +479,7 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 								li.add(electricity);
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
-								b = (int) Math.floor(Float.parseFloat(li.get(i)
+								b = Math.round(Float.parseFloat(li.get(i)
 										.getAmount().equals("") ? "0" : li.get(
 										i).getAmount()));
 								a = a + b + 0f;
@@ -563,17 +497,18 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
-
 							// 赋值name
 							namelistjson = jsonArray.toString();
 							// 赋值data
 							datalistjson = jsonArray2.toString();
 							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-							Long l = new Long(System.currentTimeMillis());
+							Long l = new Long(dtime);
 							Date da = new Date(l);
 							lqtime.setText(sim.format(da));
 							// 设置使用的总电数
-							sumgas.setText(Math.round(a) + "㎥");
+
+							sumwater.setText(Math.round(a) + "");
+							sumwater2.setVisibility(VISIBLE);
 							// 更换下方按钮
 							chart4Month();
 							// 刷新数据展示
@@ -606,10 +541,9 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get(
-				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
-						+ adid + "&dateTime=" + da3
-						+ "&resultType=3&expendType=1",
+		finalHttp.get(Consts.REQUEST_BASE_URL
+				+ "EhHeaterWeb/GasInfo/getgasdata?did=" + adid + "&dateTime="
+				+ da3 + "&resultType=3&expendType=3",
 				new AjaxCallBack<String>() {
 					// 等待数据展示
 					@Override
@@ -623,13 +557,12 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 
 					@Override
 					public void onSuccess(String t) {
-						Log.e("InfoOfAccumulatedGasChartView", "getmessageyear返回的json数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
 
 							// JSONObject jb=(JSONObject) array.get(0);
-							// dtime=Long.valueOf(jb.getString("time"));
+							// dtime=Long.valueOf(jb.getString("time")).longValue();
 
 							JSONArray jsonArray = new JSONArray();
 							JSONArray jsonArray2 = new JSONArray();
@@ -669,12 +602,9 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 							namelistjson = jsonArray.toString();
 							// 赋值data
 							datalistjson = jsonArray2.toString();
-							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-							Long l = new Long(dtime);
-							Date da = new Date(l);
-							lqtime.setText(sim.format(da));
 							// 设置使用的总电数
-							sumgas.setText(Math.round(a) + "㎥");
+							sumwater.setText(Math.round(a) + "");
+							sumwater2.setVisibility(VISIBLE);
 							// 更换下方按钮
 							chart4Year();
 							// 刷新数据展示
@@ -693,6 +623,7 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 					@Override
 					public void onFailure(Throwable t, int errorNo,
 							String strMsg) {
+						// TODO Auto-generated method stub 请求失败
 						super.onFailure(t, errorNo, strMsg);
 						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
 								.show();
@@ -703,18 +634,22 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 
 	// 上下
 	// public void getall(){
+	//
 	// FinalHttp finalHttp = new FinalHttp();
 	// finalHttp.get("http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="+Global.connectId+"",
 	// new AjaxCallBack<String>(){
+	//
 	// @Override
 	// public void onSuccess(String t) {
 	// try {
 	// JSONObject jsonObject = new JSONObject(t);
 	// if(jsonObject.get("result").equals(null)){
-	// sumgas.setText("0㎥");
+	// sumwater2.setVisibility(VISIBLE);
+	// sumwater.setText("0");
 	// }
 	// else{
-	// sumgas.setText(jsonObject.get("result")+"㎥");
+	// sumwater2.setVisibility(VISIBLE);
+	// sumwater.setText(jsonObject.getString("result"));
 	// }
 	// } catch (Exception e) {
 	// e.printStackTrace();
@@ -731,85 +666,125 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 	// }
 	// });
 	// }
-
+	
+	private long getTodayTime() {
+		Date date = new Date();
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		Calendar ca = Calendar.getInstance();
+		ca.setTime(date);
+		long times = ca.getTime().getTime() / 1000 * 1000;
+		return times;
+	}
+	
 	public long timechanged() {
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		ca.add(ca.DATE, -7);
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged2() {
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		ca.add(ca.MONTH, -1);
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged3() {
-		Long l = new Long(dtime);
-		Date date = new Date(l);
+		System.out.println("赛月披星" + dtime);
+		// long l=new long(dtime);
+		Date date = new Date(dtime);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		ca.add(ca.YEAR, -1);
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged4() {
 		Long l2 = new Long(System.currentTimeMillis());
 		Date t2 = new Date(l2);
+		t2.setHours(0);
+		t2.setMinutes(0);
+		t2.setSeconds(0);
 		Calendar ca2 = Calendar.getInstance();
 		ca2.setTime(t2);
 
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		if (ca.get(ca.WEEK_OF_MONTH) != ca2.get(ca2.WEEK_OF_MONTH)) {
 			ca.add(ca.DATE, 7);
 		}
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
+
 	}
 
 	public long timechanged5() {
 		Long l2 = new Long(System.currentTimeMillis());
 		Date t2 = new Date(l2);
+		t2.setHours(0);
+		t2.setMinutes(0);
+		t2.setSeconds(0);
 		Calendar ca2 = Calendar.getInstance();
 		ca2.setTime(t2);
 
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		if (ca.get(ca.MONTH) + 1 != ca2.get(ca2.MONTH) + 1) {
 			ca.add(ca.MONTH, 1);
 		}
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
 	public long timechanged6() {
 		Long l2 = new Long(System.currentTimeMillis());
 		Date t2 = new Date(l2);
+		t2.setHours(0);
+		t2.setMinutes(0);
+		t2.setSeconds(0);
 		Calendar ca2 = Calendar.getInstance();
 		ca2.setTime(t2);
 
 		Long l = new Long(dtime);
 		Date date = new Date(l);
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		if (ca.get(ca.YEAR) != ca2.get(ca2.YEAR)) {
 			ca.add(ca.YEAR, 1);
 		}
-		long times = ca.getTime().getTime();
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
@@ -877,4 +852,5 @@ public class InfoOfAccumulatedGasChartView extends LinearLayout implements OnCli
 			break;
 		}
 	}
+
 }
