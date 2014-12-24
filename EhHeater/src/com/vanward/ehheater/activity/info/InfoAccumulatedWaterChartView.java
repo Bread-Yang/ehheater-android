@@ -319,13 +319,9 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 				+ adid + "&dateTime=" + da + "&resultType=1&expendType=2";
 		System.out.println("当前设备的url" + url);
 		FinalHttp finalHttp = new FinalHttp();
+		
+		loadingDialog.show();
 		finalHttp.get(url, new AjaxCallBack<String>() {
-			// 等待数据展示
-			@Override
-			public void onStart() {
-				loadingDialog.show();
-				super.onStart();
-			}
 
 			// 请求成功
 			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -412,13 +408,9 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 		String url = Consts.REQUEST_BASE_URL +  "GasInfo/getgasdata?did="
 				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=2";
 		FinalHttp finalHttp = new FinalHttp();
+		
+		loadingDialog.show();
 		finalHttp.get(url, new AjaxCallBack<String>() {
-			// 等待数据展示
-			@Override
-			public void onStart() {
-				loadingDialog.show();
-				super.onStart();
-			}
 
 			// 请求成功
 			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -524,17 +516,13 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
+		
+		loadingDialog.show();
 		finalHttp.get(
 				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
 						+ adid + "&dateTime=" + da3
 						+ "&resultType=3&expendType=2",
 				new AjaxCallBack<String>() {
-					// 等待数据展示
-					@Override
-					public void onStart() {
-						loadingDialog.show();
-						super.onStart();
-					}
 
 					// 请求成功
 					SimpleDateFormat format = new SimpleDateFormat("MM");

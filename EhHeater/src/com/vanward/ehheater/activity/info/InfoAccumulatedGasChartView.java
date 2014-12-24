@@ -391,13 +391,9 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
 				+ "&dateTime=" + da + "&resultType=1&expendType=1";
 		Log.e(TAG, "getmessageweek请求的url是 : " + url);
+		
+		loadingDialog.show();
 		finalHttp.get(url, new AjaxCallBack<String>() {
-			// 等待数据展示
-			@Override
-			public void onStart() {
-				loadingDialog.show();
-				super.onStart();
-			}
 
 			// 请求成功
 			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -479,15 +475,11 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
+		
+		loadingDialog.show();
 		finalHttp.get(Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
 				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=1",
 				new AjaxCallBack<String>() {
-					// 等待数据展示
-					@Override
-					public void onStart() {
-						loadingDialog.show();
-						super.onStart();
-					}
 
 					// 请求成功
 					SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -602,15 +594,11 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		FinalHttp finalHttp = new FinalHttp();
+		
+		loadingDialog.show();
 		finalHttp.get(Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
 				+ adid + "&dateTime=" + da3 + "&resultType=3&expendType=1",
 				new AjaxCallBack<String>() {
-					// 等待数据展示
-					@Override
-					public void onStart() {
-						loadingDialog.show();
-						super.onStart();
-					}
 
 					// 请求成功
 					SimpleDateFormat format = new SimpleDateFormat("MM");

@@ -42,6 +42,9 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 	TextView heatxiaolv, taptv, heattv;
 	McuVo mcuVo;
 	private boolean isGas;
+	ArrayList<View> pageViews = new ArrayList<View>();
+	private TextView sumwater;
+	private TextView sumgas;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 		initView(this);
 	}
 
-	ArrayList<View> pageViews = new ArrayList<View>();
-	private TextView sumwater;
-	private TextView sumgas;
-
 	private void initView(Context context) {
-
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		leftbutton.setOnClickListener(this);
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
@@ -234,15 +232,9 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 
 		Log.e("信息请求的url是 : ", url);
 		
+		showRequestDialog();
 		finalHttp.get(Consts.REQUEST_BASE_URL + url,
 				new AjaxCallBack<String>() {
-
-					@Override
-					public void onStart() {
-						super.onStart();
-						showRequestDialog();
-					}
-
 					// 请求成功
 					@Override
 					public void onSuccess(String t) {
@@ -257,11 +249,11 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 									int now_efficiency = result.getInt("now_efficiency");
 									heatxiaolv.setText(now_efficiency + "%");
 									
-									int curcumulativeOpenValveTimes = result.getInt("curcumulativeOpenValveTimes");
-									taptv.setText(curcumulativeOpenValveTimes + "");
+									long sumCumulativeOpenValveTimes = result.getLong("sumCumulativeOpenValveTimes");
+									taptv.setText(sumCumulativeOpenValveTimes + "");
 									
-									int cumulveUseTime = result.getInt("cumulveUseTime");
-									heattv.setText(cumulveUseTime + "mins");
+									long sumCumulveUseTime = result.getLong("sumCumulveUseTime");
+									heattv.setText(sumCumulveUseTime + "mins");
 								} else {
 									int heating_tube_time = result.getInt("heating_tube_time");
 									int machine_not_heating_time = result.getInt("machine_not_heating_time");
@@ -283,25 +275,5 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 						dismissRequestDialog();
 					}
 				});
-	}
-
-	public void setViewData() {
-		 System.out.println(mcuVo.getCumulativeGas());
-		 // heatxiaolv.setText(mcuVo.get);
-		 taptv.setText(mcuVo.getCumulativeOpenValveTimes() + "");
-		 if (mcuVo != null && mcuVo.getCumulatUseTime() != null) {
-		 heattv.setText(mcuVo.getCumulatUseTime() + "mins");
-		 }
-		 if (mcuVo!=null&&mcuVo.getCumulativeVolume()!=null) {
-		 sumwater.setText(mcuVo.getCumulativeVolume() + "L");
-		 }
-		 if (mcuVo!=null&&mcuVo.getCumulativeGas()!=null) {
-		 sumgas.setText(mcuVo.getCumulativeGas() + "L");
-		 }
-
-		heattv.setText("0mins");
-		sumwater.setText("0L");
-		sumgas.setText("0㎥");
-
 	}
 }

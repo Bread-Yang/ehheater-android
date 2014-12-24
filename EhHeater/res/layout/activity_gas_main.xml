@@ -32,7 +32,7 @@
             android:id="@+id/circle_bg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mode_tv"
+            android:layout_below="@+id/tv_mode"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:background="@drawable/home_yuan_bg" />
@@ -60,7 +60,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="2dp"
-                android:src="@drawable/anim_furmace_main_heating" />
+                android:layout_marginTop="2dp"
+                android:background="@drawable/anim_furmace_main_heating" />
 
             <LinearLayout
                 android:id="@+id/circle_llt"
@@ -377,7 +378,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignLeft="@+id/circle_bg"
-            android:layout_alignTop="@+id/mode_tv" />
+            android:layout_alignTop="@+id/tv_mode" />
     </RelativeLayout>
 
 </RelativeLayout>

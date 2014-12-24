@@ -244,6 +244,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					.toString(), et_pwd.getText().toString());
 //			AccountService.setPendingUser(getBaseContext(), et_user.getText()
 //					.toString(), et_pwd.getText().toString());
+			showRequestDialog();
 			generated.SendBindingGetV2Req(tempConnId);
 			onDeviceFoundTriggered = false;
 			new Timer().schedule(new TimerTask() {
@@ -269,9 +270,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
 
+		dismissRequestDialog();
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
-		Log.d("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);
+		Log.e("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);
 
 		if (!(hser.isValidDevice(hi))) {
 			// 非有效设备, 不予保存
@@ -311,7 +313,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			spu.put(ShareKey.CurDeviceMac, hi.getMac());
 		}
 	};
-
+	
 	int count;
 	boolean onDeviceFoundTriggered;
 	String preSelectedDeviceMac;

@@ -44,7 +44,7 @@ import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
 
 public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
-	
+
 	private final String TAG = "AppointmentTimeActivity";
 
 	private WheelView wheelView1, wheelView2;
@@ -187,16 +187,17 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				switch (checkedId) {
 				case R.id.rb_people_1:
 					// unLockTempAndPower();
+					peopleForTempAndPower(45, 3);
 					editModel.setPeopleNum("1");
 					break;
 				case R.id.rb_people_2:
 					// lockTempAndPower();
-					peopleForTempAndPower(45, 3);
+					peopleForTempAndPower(65, 3);
 					editModel.setPeopleNum("2");
 					break;
 				case R.id.rb_people_3:
 					// lockTempAndPower();
-					peopleForTempAndPower(65, 3);
+					peopleForTempAndPower(75, 3);
 					editModel.setPeopleNum("3");
 					break;
 				}
@@ -329,13 +330,14 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					params.put("ignoreConflict", "true");
 				}
 
+				Log.e(TAG, "提交URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 				mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 						.executePost(params, new AjaxCallBack<String>() {
 
 							@Override
 							public void onSuccess(String jsonString) {
 								super.onSuccess(jsonString);
-								Log.e(TAG , "编辑或者保存返回的json数据是 : " + jsonString);
+								Log.e(TAG, "编辑或者保存返回的json数据是 : " + jsonString);
 								isOverride = false;
 								try {
 									JSONObject json = new JSONObject(jsonString);
@@ -365,9 +367,9 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																	String jsonString) {
 																super.onSuccess(jsonString);
 
-																Log.e(TAG, "请求返回来的数据是 : " + 
-																		jsonString);
-																dismissRequestDialog();
+																Log.e(TAG,
+																		"功率需要增加的请求返回来的数据是 : "
+																				+ jsonString);
 																try {
 																	JSONObject json = new JSONObject(
 																			jsonString);
@@ -396,6 +398,8 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																					appointmentAddPowerLarger3Dailog
 																							.show();
 																				}
+																				editModel.setAppointmentId(Integer.valueOf(appointmentId));
+																				isEdit = true;
 																				break;
 																			}
 																		}
@@ -423,6 +427,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 									}
 								} catch (JSONException e) {
 									e.printStackTrace();
+									dismissRequestDialog();
 								}
 							}
 
@@ -473,7 +478,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 		appointmentAddPowerLess3Dailog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.add_power_less_than_3,
-						BaoDialogShowUtil.DEFAULT_RESID, new OnClickListener() {
+						R.string.ok, new OnClickListener() {
 
 							@Override
 							public void onClick(View v) {
@@ -484,7 +489,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 		appointmentAddPowerLarger3Dailog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.add_power_larger_than_3,
-						BaoDialogShowUtil.DEFAULT_RESID, new OnClickListener() {
+						R.string.ok, new OnClickListener() {
 
 							@Override
 							public void onClick(View v) {

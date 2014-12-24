@@ -30,6 +30,8 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
 public class WelcomeActivity extends GeneratedActivity {
+	
+	private final String TAG = "WelcomeActivity";
 
 	private TextView mTvInfo;
 
@@ -200,6 +202,7 @@ public class WelcomeActivity extends GeneratedActivity {
 				HeaterInfoService heaterService = new HeaterInfoService(
 						getBaseContext());
 				HeaterType type = heaterService.getCurHeaterType();
+				Log.e(TAG, "type == " + type);
 				switch (type) {
 				case Eh:
 					startActivity(new Intent(getBaseContext(),
@@ -219,9 +222,9 @@ public class WelcomeActivity extends GeneratedActivity {
 
 				default:
 					// 无法识别当前选择的设备, 请进入app删除此设备并选择其他设备
-					Toast.makeText(WelcomeActivity.this,
-							"下载到了无法识别的设备, 请进入app切换至别的设备", Toast.LENGTH_LONG)
-							.show();
+//					Toast.makeText(WelcomeActivity.this,
+//							"下载到了无法识别的设备, 请进入app切换至别的设备", Toast.LENGTH_LONG)
+//							.show();
 					startActivity(new Intent(getBaseContext(),
 							MainActivity.class));
 					finish();

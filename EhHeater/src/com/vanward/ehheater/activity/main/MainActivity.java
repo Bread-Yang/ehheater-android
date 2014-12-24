@@ -183,9 +183,9 @@ public class MainActivity extends BaseBusinessActivity implements
 					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
-			if (curHeater == null) {
-				return;
-			}
+//			if (curHeater == null) {
+//				return;
+//			}
 
 			if (!TextUtils.isEmpty(passcode)) {
 				curHeater.setPasscode(passcode);
@@ -780,7 +780,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				isError = false;
 				tipsimg.setVisibility(View.GONE);
 				ErrorDialogUtil.instance(this).dissmiss();
-			}
+			} 
 		}
 	}
 
@@ -972,6 +972,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		findViewById(R.id.pattern).setEnabled(false);
 		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 		circularView.setOn(false);
+		tipsimg.setVisibility(View.GONE);
 		hotImgeImageView.setVisibility(View.GONE);
 	}
 

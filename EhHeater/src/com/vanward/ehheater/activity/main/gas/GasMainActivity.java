@@ -232,6 +232,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			final HeaterInfoService hser = new HeaterInfoService(
 					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			
+//			if (curHeater == null) {
+//				return;
+//			}
 
 			if (!TextUtils.isEmpty(passcode)) {
 				curHeater.setPasscode(passcode);
@@ -326,6 +330,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private boolean stateQueried;
 
 	public void dealDisConnect() {
+		Log.e(TAG, "dealDisConnect被调用了");
 		tv_tempter.setText("--");
 		tv_mode.setText("----");
 		leavewater.setText("--");
@@ -336,6 +341,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		circularView.setOn(false);
 		mode.setEnabled(false);
 		stute.setText("不在线");
+		tipsimg.setVisibility(View.GONE);
 		if (hotImgeImageView != null) {
 			hotImgeImageView.setVisibility(View.GONE);
 			iv_wave.setVisibility(View.GONE);
@@ -370,7 +376,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		powerTv = (TextView) findViewById(R.id.power_tv);
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
-		((AnimationDrawable) hotImgeImageView.getDrawable()).start();
+		((AnimationDrawable) hotImgeImageView.getBackground()).start();
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		settemper = (TextView) findViewById(R.id.settemper);
@@ -695,9 +701,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		
 		((View) sumwater.getParent()).setVisibility(View.GONE);
 
-		// 模式切换的api 跟 那个需求有出入
-		System.out.println("当前模式： " + pResp.getFunction_state());
-
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
 		// 0x05（智能模式）、0x06（自定义模式）
 
@@ -746,8 +749,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	boolean ison = false;
 
 	public void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
-		System.out.println("开关： " + pResp.getOn_off());// 1为开机0为关机
-
 		if (pResp.getOn_off() == 0) {
 			setViewsAble(false, pResp);
 			stute.setText("关机中");
@@ -776,9 +777,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (circularView == null) {
 			return;
 		}
-		System.out.println("设置温度： " + pResp.getTargetTemperature());
-		System.out.println("进水温度： " + pResp.getIncomeTemperature());
-		System.out.println("出水温度： " + pResp.getOutputTemperature());
 		if (Insetting) {
 			circularView.setTargerdegree(pResp.getTargetTemperature());
 			return;
@@ -809,14 +807,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void waterDeal(GasWaterHeaterStatusResp_t pResp) {
-
-		System.out.println("当前水流量： " + pResp.getNowVolume());
-		System.out.println("当前设置水流量： " + pResp.getCustomWaterProportion());
-		System.out.println("当前累加注水量：" + pResp.getSetWater_cumulative());
-		System.out.println("设置注水量： " + pResp.getSetWater_power());
-
-		System.out.println("累计用水量：" + pResp.getCumulativeVolume());
-		System.out.println("累计燃气量：" + pResp.getCumulativeGas());
 		// 浴缸 设定注水量 累计注水量
 		shuiliuliangText.setText("实时水流量");
 		settemper.setText("/" + (pResp.getSetWater_power() * 10) + "L");
@@ -849,15 +839,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void warningDeal(GasWaterHeaterStatusResp_t pResp) {
-		System.out.println("防冻警告：" + pResp.getFreezeProofingWarning());
-		System.out.println("氧护提示：" + pResp.getOxygenWarning());
 	}
 
 	public void diyModeDeal(GasWaterHeaterStatusResp_t pResp) {
 		modeimg.setVisibility(View.VISIBLE);
-		System.out.println("自定义功能：" + pResp.getCustomFunction());
-		System.out.println("自定义设置水温：" + pResp.getCustomWaterTemperture());
-		System.out.println("自定义设置水流量比例：" + pResp.getCustomWaterProportion());
 
 		if (pResp.getCustomFunction() != 0) {
 
@@ -885,7 +870,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 		freezeProofing(pResp);
 		oxygenWarning(pResp);
-		System.out.println("错误码：" + pResp.getErrorCode());
 		if (pResp.getErrorCode() != 0) {
 			showErrorWarning(pResp.getErrorCode());
 		} else {
@@ -939,7 +923,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void freezeProofing(GasWaterHeaterStatusResp_t pResp) {
-		System.out.println("防冻报警：" + pResp.getFreezeProofingWarning());
 		if (pResp.getFreezeProofingWarning() == 1) {
 			showFreezeProofing();
 		}
@@ -975,7 +958,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void oxygenWarning(GasWaterHeaterStatusResp_t pResp) {
-		System.out.println("氧护提示：" + pResp.getOxygenWarning());
 		if (pResp.getOxygenWarning() == 1) {
 			showOxygenWarning();
 		}
@@ -1010,7 +992,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void flame(GasWaterHeaterStatusResp_t pResp) {
-		System.out.println("火焰：" + pResp.getFlame());
 	}
 
 	private boolean Insetting = false;
