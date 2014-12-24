@@ -35,7 +35,7 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 
 	}
 
-	public void initUI() { 
+	public void initUI() {	
 		btn_left = (Button) findViewById(R.id.btn_left);
 		btn_right = (Button) findViewById(R.id.btn_right);
 		rlt_center = (RelativeLayout) findViewById(R.id.rlt_center);

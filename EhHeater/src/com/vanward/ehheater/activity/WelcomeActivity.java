@@ -2,6 +2,7 @@ package com.vanward.ehheater.activity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.notification.PollingService;
 import com.vanward.ehheater.notification.PollingUtils;
 import com.vanward.ehheater.service.AccountService;
@@ -131,6 +133,25 @@ public class WelcomeActivity extends GeneratedActivity {
 			// 无当前设备, 跳转到选择/新增设备页面
 			// startActivity(new Intent(this, ShitActivity.class));
 			// return STATE_JUMPED_OUT;
+			HeaterInfoService hser = new HeaterInfoService(this);
+			
+			List<HeaterInfo> allEIDevices = new HeaterInfoDao(getBaseContext())
+			.getAllDeviceOfType(HeaterType.Eh);
+			if (allEIDevices != null & allEIDevices.size() > 0) {
+				hser.setCurrentSelectedHeater(allEIDevices.get(0).getMac());
+				flowHandler.sendEmptyMessage(STATE_NORMAL);
+				return;
+			} 
+			
+			List<HeaterInfo> allGasDevices = new HeaterInfoDao(getBaseContext())
+			.getAllDeviceOfType(HeaterType.ST);
+			
+			if (allGasDevices != null & allGasDevices.size() > 0)  {
+				hser.setCurrentSelectedHeater(allGasDevices.get(0).getMac());
+				flowHandler.sendEmptyMessage(STATE_NORMAL);
+				return;
+			}
+			
 			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
 			return;
 		}
@@ -222,9 +243,9 @@ public class WelcomeActivity extends GeneratedActivity {
 
 				default:
 					// 无法识别当前选择的设备, 请进入app删除此设备并选择其他设备
-//					Toast.makeText(WelcomeActivity.this,
-//							"下载到了无法识别的设备, 请进入app切换至别的设备", Toast.LENGTH_LONG)
-//							.show();
+					Toast.makeText(WelcomeActivity.this,
+							"下载到了无法识别的设备, 请进入app切换至别的设备", Toast.LENGTH_LONG)
+							.show();
 					startActivity(new Intent(getBaseContext(),
 							MainActivity.class));
 					finish();

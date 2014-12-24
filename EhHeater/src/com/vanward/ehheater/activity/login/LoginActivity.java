@@ -44,6 +44,9 @@ import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class LoginActivity extends EhHeaterBaseActivity {
+	
+	private static final String TAG = "LoginActivity";
+	
 	Button btn_new_device, btn_login;
 	EditText et_user, et_pwd;
 	TextView mTvReg;
@@ -271,12 +274,17 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		super.onDeviceFound(endpoint);
 
 		dismissRequestDialog();
+		if (endpoint == null) {
+			Log.e(TAG, "endpoint为null,返回");
+			return;
+		}
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
 		Log.e("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);
 
 		if (!(hser.isValidDevice(hi))) {
 			// 非有效设备, 不予保存
+			Log.e(TAG, "非有效设备, 不予保存");
 			return;
 		}
 

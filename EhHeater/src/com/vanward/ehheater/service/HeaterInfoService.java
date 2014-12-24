@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.vanward.ehheater.activity.configure.DummySendBindingReqActivity;
 import com.vanward.ehheater.activity.global.Consts;
@@ -13,6 +14,9 @@ import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 
 public class HeaterInfoService {
+	
+	private static final String TAG = "HeaterInfoService";
+	
 	Context context;
 
 	public HeaterInfoService(Context context) {
@@ -112,10 +116,12 @@ public class HeaterInfoService {
 	}
 
 	public HeaterType getHeaterType(HeaterInfo hinfo) {
-
+		
 		if (hinfo == null) {
+			Log.e(TAG, "getHeaterType的hinfo为null");
 			return HeaterType.Unknown;
 		}
+		Log.e(TAG, hinfo.getProductKey());
 		if (Consts.EH_P_KEY.equals(hinfo.getProductKey())) {
 			return HeaterType.Eh;
 		} else if (Consts.ST_P_KEY.equals(hinfo.getProductKey())) {

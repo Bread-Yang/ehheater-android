@@ -233,9 +233,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 			
-//			if (curHeater == null) {
-//				return;
-//			}
+			if (curHeater == null) {
+				return;
+			}
 
 			if (!TextUtils.isEmpty(passcode)) {
 				curHeater.setPasscode(passcode);
@@ -752,6 +752,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (pResp.getOn_off() == 0) {
 			setViewsAble(false, pResp);
 			stute.setText("关机中");
+			circularView.setOn(false);
 			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 			ison = false;
 		} else {

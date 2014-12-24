@@ -67,7 +67,7 @@ import com.xtremeprog.xpgconnect.generated.generated;
 
 public class MainActivity extends BaseBusinessActivity implements
 		OnClickListener, CircleListener {
-	
+
 	private final String TAG = "MainActivity";
 
 	private static final byte E0 = 0;
@@ -96,9 +96,11 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private View openView;
 
+	private LinearLayout llt_power;
+
 	// 主界面错误图标
 	Byte errors;
-	private ImageView tipsimg;
+	private ImageView iv_error;
 
 	private Button rightButton;
 
@@ -183,9 +185,9 @@ public class MainActivity extends BaseBusinessActivity implements
 					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
-//			if (curHeater == null) {
-//				return;
-//			}
+			 if (curHeater == null) {
+			 return;
+			 }
 
 			if (!TextUtils.isEmpty(passcode)) {
 				curHeater.setPasscode(passcode);
@@ -332,7 +334,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		((AnimationDrawable) hotImgeImageView.getBackground()).start();
 
 		// 主界面错误图标
-		tipsimg = (ImageView) findViewById(R.id.infor_tip);
+		iv_error = (ImageView) findViewById(R.id.infor_tip);
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		rlt_start_device = (RelativeLayout) findViewById(R.id.start_device_rlt);
@@ -348,7 +350,8 @@ public class MainActivity extends BaseBusinessActivity implements
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
 		rlt_start_device.setOnClickListener(this);
-		powerTv.setOnClickListener(this);
+		llt_power = (LinearLayout) findViewById(R.id.llt_power);
+		llt_power.setOnClickListener(this);
 
 		initopenView();
 		updateTitle(mTitleName);
@@ -465,9 +468,10 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			break;
 
-		case R.id.power_tv:
+		case R.id.llt_power:
 
-			if (currentModeCode == 7 || currentModeCode == 4) {
+			if (currentModeCode == 7 || currentModeCode == 4
+					|| currentModeCode == 6) {
 				setPower();
 			}
 			break;
@@ -558,7 +562,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (new EhState(data).getSystemRunningState() == 0) {
 			circularView.setOn(true);
 		}
-		
+
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		// powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
@@ -629,12 +633,12 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void freezeProofing(StateResp_t date) {
 		Log.e("防冻报警：", date.getError() + "");
 		if (date.getError() == 160) {
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setBackgroundResource(R.drawable.main_tip);
-			AnimationDrawable drawable = (AnimationDrawable) tipsimg
+			iv_error.setVisibility(View.VISIBLE);
+			iv_error.setBackgroundResource(R.drawable.main_tip);
+			AnimationDrawable drawable = (AnimationDrawable) iv_error
 					.getBackground();
 			drawable.start();
-			tipsimg.setOnClickListener(new OnClickListener() {
+			iv_error.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
@@ -663,12 +667,12 @@ public class MainActivity extends BaseBusinessActivity implements
 		System.out.println("镁棒提示：" + date.getHeating_tube_time() + "");
 		Log.e("镁棒提示：", date.getHeating_tube_time() + "");
 		if (date.getHeating_tube_time() > 800 * 60) {
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setBackgroundResource(R.drawable.main_tip);
-			AnimationDrawable drawable = (AnimationDrawable) tipsimg
+			iv_error.setVisibility(View.VISIBLE);
+			iv_error.setBackgroundResource(R.drawable.main_tip);
+			AnimationDrawable drawable = (AnimationDrawable) iv_error
 					.getBackground();
 			drawable.start();
-			tipsimg.setOnClickListener(new OnClickListener() {
+			iv_error.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
@@ -695,16 +699,15 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void waterWran(final byte[] data) {
-		System.out.println("水质提醒：" + new EhState(data).getErrorCode());
-		Log.e("水质提醒：", new EhState(data).getMachine_not_heating_time() + "");
-		if (new EhState(data).getMachine_not_heating_time() > 9 * 24 * 60) {
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setBackgroundResource(R.drawable.main_tip);
-			AnimationDrawable drawable = (AnimationDrawable) tipsimg
+	public void waterWarn(final StateResp_t date) {
+		Log.e("水质提醒：", date.getMachine_not_heating_time() + "");
+		if (date.getMachine_not_heating_time() > 9 * 24 * 60) {
+			iv_error.setVisibility(View.VISIBLE);
+			iv_error.setBackgroundResource(R.drawable.main_tip);
+			AnimationDrawable drawable = (AnimationDrawable) iv_error
 					.getBackground();
 			drawable.start();
-			tipsimg.setOnClickListener(new OnClickListener() {
+			iv_error.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
@@ -731,17 +734,18 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void dealErrorWarnIcon(final StateResp_t date) {
 		freezeProofing(date);
 		meibangWran(date);
+		waterWarn(date);
 		// oxygenWarning(pResp);
 		System.out.println("错误码：" + date.getError() + "  ");
 		Log.e("错误码：", date.getError() + "  ");
 		if (date.getError() != 0 && date.getError() != 160) { // 不是防冻
 			isError = true;
-			tipsimg.setVisibility(View.VISIBLE);
-			tipsimg.setBackgroundResource(R.drawable.main_error);
-			AnimationDrawable drawable = (AnimationDrawable) tipsimg
+			iv_error.setVisibility(View.VISIBLE);
+			iv_error.setBackgroundResource(R.drawable.main_error);
+			AnimationDrawable drawable = (AnimationDrawable) iv_error
 					.getBackground();
 			drawable.start();
-			tipsimg.setOnClickListener(new OnClickListener() {
+			iv_error.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
@@ -778,9 +782,9 @@ public class MainActivity extends BaseBusinessActivity implements
 			if (date.getError() != 160
 					&& date.getHeating_tube_time() <= 800 * 60) {
 				isError = false;
-				tipsimg.setVisibility(View.GONE);
+				iv_error.setVisibility(View.GONE);
 				ErrorDialogUtil.instance(this).dissmiss();
-			} 
+			}
 		}
 	}
 
@@ -812,7 +816,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		// freezeProofing(data);
 		// meibangWran(data);
-		waterWran(data);
 
 		if (!canupdateView) {
 			return;
@@ -821,6 +824,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			stateQueried = true;
 			DialogUtil.dismissDialog();
+//			llt_power.setEnabled(true);
 			btn_power.setSelected(false);
 			setTempture(data);
 			setLeaveWater(data);
@@ -832,7 +836,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			// 非常奇怪 智能模式设置成功，可是返回值 确实1 跟p0 文档不符合。设置进去的时候是2 ，晨浴模式成功。
 			int mode = new EhState(data).getFunctionState();
 			currentModeCode = mode;
-			if (mode == 1) {
+			if (mode == 1) { 
 				changeTojishiModeUpdateUI(data);
 			} else if (mode == 3) {
 				changeToMorningWashUpdateUI(data);
@@ -963,16 +967,18 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	public void dealDisConnect() {
+		currentModeCode = 0;
 		tv_tempter.setText("--");
 		modeTv.setText("--模式");
 		leavewater.setText("--%");
 		powerTv.setText("--");
 		target_tem.setText("--");
 		btn_power.setEnabled(false);
+//		llt_power.setEnabled(false);
 		findViewById(R.id.pattern).setEnabled(false);
 		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 		circularView.setOn(false);
-		tipsimg.setVisibility(View.GONE);
+		iv_error.setVisibility(View.GONE);
 		hotImgeImageView.setVisibility(View.GONE);
 	}
 

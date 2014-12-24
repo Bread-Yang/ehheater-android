@@ -1,5 +1,7 @@
 package com.vanward.ehheater.bean;
 
+import android.util.Log;
+
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 
 import net.tsz.afinal.annotation.sqlite.Id;
@@ -28,6 +30,11 @@ public class HeaterInfo {
 
 	public HeaterInfo(XpgEndpoint endpoint) {
 
+		Log.e("emmm", "返回的endpoint的mac是 " + endpoint.getSzMac());
+		Log.e("emmm", "返回的endpoint的did是 " + endpoint.getSzDid());
+		Log.e("emmm", "返回的endpoint的passcode是 " + endpoint.getSzPasscode());
+		Log.e("emmm", "返回的endpoint的productKey是 " + endpoint.getSzProductKey());
+		
 		setMac(endpoint.getSzMac());
 		setDid(endpoint.getSzDid());
 		setPasscode(endpoint.getSzPasscode());
