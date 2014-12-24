@@ -286,9 +286,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			AccountService.setUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
 			
-			if (TextUtils.isEmpty(preSelectedDeviceMac)) {
+//			if (TextUtils.isEmpty(preSelectedDeviceMac)) {
 				spu.put(ShareKey.CurDeviceMac, hi.getMac());
-			}
+//			}
 
 			new Timer().schedule(new TimerTask() {
 				@Override
