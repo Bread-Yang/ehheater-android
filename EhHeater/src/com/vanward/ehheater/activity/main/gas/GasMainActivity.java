@@ -661,6 +661,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
 		
+		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
+		
 		Log.e(TAG, "重连之后OnGasWaterHeaterStatusResp调用了");
 
 		if (nConnId != Global.connectId) {
@@ -687,7 +689,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (pResp.getCustomFunction() != 0) {
 			circularView.setOn(true);
 		}
-		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 	}
 
 	/**
@@ -708,6 +709,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// 0x05（智能模式）、0x06（自定义模式）
 
 		currentModeCode = pResp.getFunction_state();
+		
+		Log.e(TAG, "pResp.getFunction_state() == " + pResp.getFunction_state());
 
 		switch (pResp.getFunction_state()) {
 		case 1:
