@@ -235,8 +235,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
-//							Toast.makeText(LoginActivity.this, "服务器错误",
-//									Toast.LENGTH_LONG).show();
+							Toast.makeText(LoginActivity.this, "服务器错误",
+									Toast.LENGTH_LONG).show();
 							dismissRequestDialog();
 						}
 					});

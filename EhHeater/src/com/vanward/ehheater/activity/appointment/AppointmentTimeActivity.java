@@ -355,6 +355,9 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 										String requestURL = "userinfo/checkAppointmentStatue?uid="
 												+ AccountService
 														.getUserId(getBaseContext());
+										
+										Log.e(TAG, "查看是否需要增加功率的URL : " + Consts.REQUEST_BASE_URL
+														+ requestURL);
 
 										mHttpFriend
 												.toUrl(Consts.REQUEST_BASE_URL
@@ -390,6 +393,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																			if (appointmentId
 																					.equals(saveOrUpdateAppointmentId)
 																					&& needNotify) {
+																				dismissRequestDialog();
 																				if (!"3".equals(editModel
 																						.getPower())) {
 																					appointmentAddPowerLess3Dailog
@@ -398,7 +402,9 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																					appointmentAddPowerLarger3Dailog
 																							.show();
 																				}
-																				editModel.setAppointmentId(Integer.valueOf(appointmentId));
+																				editModel
+																						.setAppointmentId(Integer
+																								.valueOf(appointmentId));
 																				isEdit = true;
 																				break;
 																			}
@@ -411,6 +417,21 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																}
 
 															}
+
+															@Override
+															public void onFailure(
+																	Throwable t,
+																	int errorNo,
+																	String strMsg) {
+																super.onFailure(
+																		t,
+																		errorNo,
+																		strMsg);
+																Toast.makeText(AppointmentTimeActivity.this,
+																		"服务器错误", Toast.LENGTH_LONG).show();
+																dismissRequestDialog();
+															}
+
 														});
 
 									} else if ("501".equals(responseCode)) {

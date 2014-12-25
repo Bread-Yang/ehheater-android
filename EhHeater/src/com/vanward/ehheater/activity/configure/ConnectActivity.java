@@ -49,7 +49,7 @@ public class ConnectActivity extends GeneratedActivity {
 	private ProgressBar mPbar;
 	
 
-	/** 建立的连接类型, LAN / MQTT(大) */
+	/** 建立的连接类型, LAN / MQTT(大) */	
 	private int connType = Integer.MAX_VALUE;
 
 	/** 当前小循环搜索设备的状态, 同一时间点只可能有一个小循环搜索任务在执行 */

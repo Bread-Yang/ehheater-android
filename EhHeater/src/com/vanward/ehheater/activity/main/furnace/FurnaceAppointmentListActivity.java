@@ -457,7 +457,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 								@Override
 								public void onSuccess(String jsonString) {
 									super.onSuccess(jsonString);
-									Log.e("删除预约返回的json数据是 : ", jsonString);
+									Log.e(TAG, "删除预约返回的json数据是 : " + jsonString);
 									try {
 										JSONObject json;
 										json = new JSONObject(jsonString);
