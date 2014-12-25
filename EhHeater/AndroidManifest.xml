@@ -45,6 +45,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.main.TestActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".util.ErrorUtils"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >

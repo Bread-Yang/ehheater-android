@@ -315,7 +315,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		}
 	}
 
-	protected SlidingMenu mSlidingMenu;
+	public SlidingMenu mSlidingMenu;
 
 	protected void connectCurDevice() {
 		connectCurDevice("");

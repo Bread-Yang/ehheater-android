@@ -65,4 +65,14 @@ public class GasCustomSetVo {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	boolean isSet;
+
+	public boolean isSet() {
+		return isSet;
+	}
+
+	public void setSet(boolean isSet) {
+		this.isSet = isSet;
+	}
 }

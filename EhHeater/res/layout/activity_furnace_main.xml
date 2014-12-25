@@ -203,9 +203,6 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/llt_function"
-                android:layout_alignLeft="@+id/llt_function"
-                android:layout_alignTop="@+id/llt_function"
                 android:visibility="invisible" >
 
                 <ImageView

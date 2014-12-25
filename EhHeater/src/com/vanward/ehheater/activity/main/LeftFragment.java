@@ -3,14 +3,12 @@ package com.vanward.ehheater.activity.main;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -20,15 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.configure.ConnectActivity;
+import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceSeasonActivity;
-import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.activity.more.AboutActivity;
 import com.vanward.ehheater.activity.more.AccountManagementActivity;
 import com.vanward.ehheater.activity.more.HeaterManagementActivity2;
@@ -36,14 +32,11 @@ import com.vanward.ehheater.activity.more.HelpActivity;
 import com.vanward.ehheater.activity.more.RemindSettingActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
-import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.AlterDeviceHelper;
-import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
-import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
 public class LeftFragment extends LinearLayout implements
 		android.view.View.OnClickListener, OnItemClickListener {
@@ -224,7 +217,7 @@ public class LeftFragment extends LinearLayout implements
 			return;
 		} else {
 
-			Activity hostActivity = (Activity) getContext();
+			BaseBusinessActivity hostActivity = (BaseBusinessActivity) getContext();
 
 			HeaterInfoService hser = new HeaterInfoService(getContext());
 			HeaterType oriHeaterType = hser.getCurHeaterType();
@@ -235,6 +228,11 @@ public class LeftFragment extends LinearLayout implements
 			AlterDeviceHelper.newHeaterType = newHeaterType;
 			AlterDeviceHelper.typeChanged = !newHeaterType
 					.equals(oriHeaterType);
+
+			if (!AlterDeviceHelper.typeChanged) {
+				hostActivity.mSlidingMenu.showContent();
+			}
+
 			AlterDeviceHelper.hostActivity = hostActivity;
 
 			if (Global.connectId > 0) {

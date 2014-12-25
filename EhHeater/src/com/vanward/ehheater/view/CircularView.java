@@ -422,9 +422,9 @@ public class CircularView extends View {
 	}
 
 	public void setAngle(int level) {
-		if (level > endangle) {
-			level = endangle;
-		}
+//		if (level > endangle) {
+//			level = endangle;
+//		}
 		if (level == 0) {
 			degree = 0;
 		} else {

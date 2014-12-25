@@ -54,6 +54,7 @@ import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.util.SwitchDeviceUtil;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
+import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
@@ -79,6 +80,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	private TextView mTitleName, modeTv, powerTv, temptertitleTextView;
 
 	private Button btn_info;
+	CircularView circularView;
 	View btn_power;
 	TextView tv_tempter, leavewater, target_tem;
 
@@ -89,10 +91,9 @@ public class MainActivity extends BaseBusinessActivity implements
 	LinearLayout llt_circle;
 	ViewGroup stuteParent;
 	Button btn_appointment;
-	CircularView circularView;
 	ImageView iv_wave, hotImgeImageView;
 	AnimationDrawable animationDrawable;
-	RelativeLayout rlt_start_device, content;
+	RelativeLayout content;
 
 	private View openView;
 
@@ -332,15 +333,14 @@ public class MainActivity extends BaseBusinessActivity implements
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
 		((AnimationDrawable) hotImgeImageView.getBackground()).start();
+		llt_circle = (LinearLayout) findViewById(R.id.circle_llt);
 
 		// 主界面错误图标
 		iv_error = (ImageView) findViewById(R.id.infor_tip);
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
-		rlt_start_device = (RelativeLayout) findViewById(R.id.start_device_rlt);
 		btn_info = (Button) findViewById(R.id.btn_information);
 		modeTv = (TextView) findViewById(R.id.mode_tv);
-		llt_circle = (LinearLayout) findViewById(R.id.circle_llt);
 		stuteParent = (ViewGroup) findViewById(R.id.stute);
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
 		iv_wave = (ImageView) findViewById(R.id.wave_bg);
@@ -349,7 +349,6 @@ public class MainActivity extends BaseBusinessActivity implements
 		content = (RelativeLayout) findViewById(R.id.content);
 		btn_appointment.setOnClickListener(this);
 		btn_power.setOnClickListener(this);
-		rlt_start_device.setOnClickListener(this);
 		llt_power = (LinearLayout) findViewById(R.id.llt_power);
 		llt_power.setOnClickListener(this);
 
@@ -401,10 +400,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.start_device_rlt:
-			/* generated.SendOnOffReq(Global.connectId, (short) 1); */
-			rlt_start_device.setVisibility(View.GONE);
-			break;
 		case R.id.ivTitleBtnLeft:
 			mSlidingMenu.showMenu(true);
 			break;
@@ -527,7 +522,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void changeToCustomModeUpdateUI(byte[] data) {
-		modeTv.setText("自定义模式");
+//		modeTv.setText("自定义模式");
 		EhState ehState = new EhState(data);
 		setAppointmentButtonAble(true);
 		final int targetTemperature = ehState.getTargetTemperature();
@@ -540,6 +535,7 @@ public class MainActivity extends BaseBusinessActivity implements
 						.findAll(CustomSetVo.class);
 
 				if (list.size() > 0) {
+					Log.e(TAG, "设置自定义名字");
 					for (int i = 0; i < list.size(); i++) {
 						CustomSetVo customSetVo = list.get(i);
 
@@ -553,6 +549,7 @@ public class MainActivity extends BaseBusinessActivity implements
 						}
 					}
 				} else {
+					Log.e(TAG, "自定义模式");
 					modeTv.setText("自定义模式");
 				}
 

@@ -427,7 +427,14 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				// 清空其他的
 				setRadiocheck("", getWindow().getDecorView());
 				radioButton.setChecked(true);
-				System.out.println("id: " + customSetVo.getId());
+				for (GasCustomSetVo item : customSetVolist) {
+					item.setSet(false);
+					new BaseDao(PatternActivity.this).getDb().update(
+							item);
+				}
+				customSetVo.setSet(true);
+				new BaseDao(PatternActivity.this).getDb().update(
+						customSetVo);
 				SendMsgModel.setDIYModel(customSetVo.getId(), customSetVo);
 				finish();
 			}
