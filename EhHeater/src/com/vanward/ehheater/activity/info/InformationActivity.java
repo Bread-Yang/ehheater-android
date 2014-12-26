@@ -42,7 +42,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 	TextView heatxiaolv, taptv, heattv;
 	McuVo mcuVo;
 	private boolean isGas;
-	ArrayList<View> pageViews = new ArrayList<View>();
+	ArrayList<View> pageViews = new ArrayList<View>(); 
 	private TextView sumwater;
 	private TextView sumgas;
 

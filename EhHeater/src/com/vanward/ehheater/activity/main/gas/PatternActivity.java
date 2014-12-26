@@ -378,22 +378,28 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																							+ "'");
 																	if (customSetVolist
 																			.size() != 0) {
-																		GasCustomSetVo tempcustomSetVo = new BaseDao(
-																				PatternActivity.this)
-																				.getDb()
-																				.findById(
-																						customSetVo
-																								.getId() + 1,
-																						GasCustomSetVo.class);
-																		if (tempcustomSetVo == null) {
-																			tempcustomSetVo = customSetVolist
-																					.get(0);
+																		for (GasCustomSetVo item : customSetVolist) {
+																			item.setSet(false);
+																			new BaseDao(PatternActivity.this).getDb().update(
+																					item);
 																		}
+																		GasCustomSetVo tempcustomSetVo = customSetVolist
+																				.get(customSetVolist.size() - 1);
+																		tempcustomSetVo.setSet(true);
+																		new BaseDao(PatternActivity.this).getDb().update(
+																				tempcustomSetVo);
+//																		GasCustomSetVo tempcustomSetVo = new BaseDao(
+//																				PatternActivity.this)
+//																				.getDb()
+//																				.findById(
+//																						customSetVo
+//																								.getId() + 1,
+//																						GasCustomSetVo.class);
 																		SendMsgModel
 																				.setDIYModel(
-																						tempcustomSetVo
+																						customSetVo
 																								.getId(),
-																						tempcustomSetVo);
+																								tempcustomSetVo);
 																		finish();
 																	} else {
 																		SendMsgModel

@@ -289,7 +289,6 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 				CustomSetVo.class,
 				" uid = '" + AccountService.getUserId(PatternActivity.this)
 						+ "'");
-		;
 		addCustomView();
 		if (customSetVolist.size() >= 3) {
 			// ivTitleBtnRigh.setVisibility(View.GONE);
@@ -435,8 +434,22 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																	CustomSetVo customSetVo = null;
 																	if (customSetVolist
 																			.size() != 0) {
+																		for (CustomSetVo item : customSetVolist) {
+																			item.setSet(false);
+																			new BaseDao(
+																					PatternActivity.this)
+																					.getDb()
+																					.update(item);
+																		}
 																		customSetVo = customSetVolist
-																				.get(0);
+																				.get(customSetVolist
+																						.size() - 1);
+																		customSetVo
+																				.setSet(true);
+																		new BaseDao(
+																				PatternActivity.this)
+																				.getDb()
+																				.update(customSetVo);
 																		setToDIY(customSetVo);
 																		finish();
 																	} else {

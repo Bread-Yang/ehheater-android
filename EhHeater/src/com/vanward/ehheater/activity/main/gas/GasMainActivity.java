@@ -574,7 +574,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void dealInHeat(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getFlame() == 1) {
 			stute.setText("加热中");
-			circularView.setIsheating(true);
+//			circularView.setIsheating(true);
 			hotImgeImageView.setVisibility(View.VISIBLE);
 
 			switch (pResp.getFirePower()) {
@@ -618,7 +618,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				circularView.setEndangle(65);
 			}
 		} else {
-			circularView.setIsheating(false);
+//			circularView.setIsheating(false);
 			mode.setEnabled(true);
 			hotImgeImageView.setVisibility(View.GONE);
 			setViewsAble(true, pResp);
