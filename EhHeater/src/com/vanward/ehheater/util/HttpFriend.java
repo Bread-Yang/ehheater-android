@@ -7,6 +7,8 @@ import net.tsz.afinal.http.PreferencesCookieStore;
 
 import org.apache.http.cookie.Cookie;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,6 +34,10 @@ public class HttpFriend {
 	private PreferencesCookieStore pcs;
 
 	private Context mContext;
+
+	private Dialog loadingDialog;
+	
+	public boolean showTips = true;
 
 	/**
 	 * 
@@ -69,8 +75,10 @@ public class HttpFriend {
 
 	public HttpFriend executePost(AjaxParams params, AjaxCallBack callBack) {
 		if (!NetworkStatusUtil.isConnected(mContext)) {
-			Toast.makeText(mContext, "网络访问不了,确保打开GPRS或者WiFi网络",
-					Toast.LENGTH_LONG).show();
+			if (showTips) {
+				Toast.makeText(mContext, "网络访问不了,确保打开GPRS或者WiFi网络",
+						Toast.LENGTH_LONG).show();
+			}
 		} else {
 			if (bean != null) {
 				executePostJson(params, callBack);
@@ -98,17 +106,22 @@ public class HttpFriend {
 		// Log.e(TAG, "executePostJson发送过去的json数据是 : " + json);
 		// AjaxParams params = new AjaxParams();
 		// params.put("data", json);
+		showRequestDialog();
 		fh.post(url, params, new AjaxCallBack<String>() {
 
 			@Override
 			public void onSuccess(String jsonString) {
+				dismissRequestDialog();
 				callBack.onSuccess(jsonString);
-				Log.e(TAG, "添加成功返回的json : " + jsonString);
 			}
 
 			@Override
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
+				if (showTips) {
+				Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT).show();
+				}
 			}
 
 			@Override
@@ -148,18 +161,22 @@ public class HttpFriend {
 		FinalHttp fh = new FinalHttp();
 		fh.configCookieStore(pcs);
 
+		showRequestDialog();
 		fh.post(url, params, new AjaxCallBack<String>() {
 
 			@Override
 			public void onSuccess(String jsonString) {
+				dismissRequestDialog();
 				callBack.onSuccess(jsonString);
-				Log.e(TAG, "添加成功返回的json : " + jsonString);
 			}
 
 			@Override
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
-				Toast.makeText(mContext, "服务器错误", Toast.LENGTH_LONG).show();
+				if (showTips) {
+					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT).show();
+				}
 			}
 
 			@Override
@@ -193,13 +210,91 @@ public class HttpFriend {
 		return this;
 	}
 
-	public HttpFriend executeGet(AjaxParams params, AjaxCallBack callBack) {
-		FinalHttp fh = new FinalHttp();
-		if (params != null) {
-			fh.get(url, params, callBack);
+	public HttpFriend executeGet(AjaxParams params, final AjaxCallBack callBack) {
+		if (!NetworkStatusUtil.isConnected(mContext)) {
+			if (showTips) {
+				Toast.makeText(mContext, "网络访问不了,确保打开GPRS或者WiFi网络",
+						Toast.LENGTH_LONG).show();
+				}
+			
 		} else {
-			fh.get(this.url, callBack);
+			FinalHttp fh = new FinalHttp();
+			showRequestDialog();
+			AjaxCallBack ajaxCallBack = new AjaxCallBack<String>() {
+
+				@Override
+				public void onSuccess(String jsonString) {
+					dismissRequestDialog();
+					callBack.onSuccess(jsonString);
+				}
+
+				@Override
+				public void onFailure(Throwable t, int errorNo, String strMsg) {
+					dismissRequestDialog();
+					callBack.onFailure(t, errorNo, strMsg);
+					if (showTips) {
+						Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+						.show();
+						}
+					
+				}
+
+				@Override
+				public void onLoading(long count, long current) {
+					callBack.onLoading(count, current);
+				}
+
+				@Override
+				public void onStart() {
+					callBack.onStart();
+				}
+
+				@Override
+				public AjaxCallBack<String> progress(boolean progress, int rate) {
+					callBack.progress(progress, rate);
+					return super.progress(progress, rate);
+
+				}
+
+				@Override
+				public int getRate() {
+					return callBack.getRate();
+				}
+
+				@Override
+				public boolean isProgress() {
+					return callBack.isProgress();
+				}
+
+			};
+			if (params != null) {
+				fh.get(url, params, ajaxCallBack);
+			} else {
+				fh.get(this.url, ajaxCallBack);
+			}
 		}
 		return this;
+	}
+
+	private void showRequestDialog() {
+		if (mContext instanceof Activity) {
+			if (!((Activity) mContext).isFinishing()) {
+				if (loadingDialog == null) {
+					loadingDialog = BaoDialogShowUtil.getInstance(mContext)
+							.createLoadingDialog();
+				}
+				loadingDialog.show();
+			}
+		}
+	}
+
+	private void dismissRequestDialog() {
+		if (mContext instanceof Activity) {
+			if (!((Activity) mContext).isFinishing()) {
+				if (loadingDialog != null) {
+					loadingDialog.dismiss();
+				}
+			}
+		}
 	}
 }

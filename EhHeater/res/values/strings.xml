@@ -109,7 +109,8 @@
     <string name="about">关于</string>
     <string name="check_update">检查更新</string>
     <string name="current_temp">当前温度</string>
-    <string name="outwater_temp">出水温度</string>
+    <string name="outwater_temp">出水温度</string> 
+    <string name="setting_water_temperature">设置水温</string>
     <string name="water_amount">剩余热水量</string>
     <string name="heat_amount">剩余加热时间</string>
     <string name="device_configure">亲，电器正在配对中，请您耐心等待</string>

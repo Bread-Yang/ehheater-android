@@ -2,6 +2,7 @@ package com.vanward.ehheater.util;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,7 +37,7 @@ public class BaoDialogShowUtil {
 		this.mContext = context;
 	}
 	
-	public Dialog createLoadingDialog() {
+	public BaoTimeoutDailog createLoadingDialog() {
 		LayoutInflater layoutInflater = LayoutInflater.from(mContext);
 		RelativeLayout relativeLayout = (RelativeLayout) layoutInflater
 				.inflate(R.layout.loadingdialog, null);
@@ -45,18 +46,18 @@ public class BaoDialogShowUtil {
 				.findViewById(R.id.tv_loading);
 		tvContent.setText("");
 		tvContent.setVisibility(View.VISIBLE);
-		Dialog dialog = new Dialog(mContext, R.style.dialogStyle);
+		BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext, R.style.dialogStyle);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setCancelable(false);
 		dialog.setContentView(relativeLayout);
 		return dialog;
 	}
 
-	public Dialog createDialogWithTwoButton(int contentResId,
+	public BaoTimeoutDailog createDialogWithTwoButton(int contentResId,
 			int leftButtonResId, int rightButtonResId,
 			OnClickListener leftButtonClickListener,
 			OnClickListener rightButtonClickListener) {
-		final Dialog dialog = new Dialog(mContext, R.style.custom_dialog);
+		final BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext, R.style.custom_dialog);
 		dialog.setContentView(R.layout.dialog_common_two_button);
 
 		TextView tv_content = (TextView) dialog.findViewById(R.id.tv_content);
@@ -96,9 +97,9 @@ public class BaoDialogShowUtil {
 		return dialog;
 	}
 
-	public Dialog createDialogWithOneButton(int contentResId, int buttonResId,
+	public BaoTimeoutDailog createDialogWithOneButton(int contentResId, int buttonResId,
 			OnClickListener buttonClickListener) {
-		final Dialog dialog = new Dialog(mContext, R.style.custom_dialog);
+		final BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext, R.style.custom_dialog);
 		dialog.setContentView(R.layout.dialog_common_one_button);
 
 		TextView tv_content = (TextView) dialog.findViewById(R.id.tv_content);
@@ -122,4 +123,52 @@ public class BaoDialogShowUtil {
 
 		return dialog;
 	}
+	
+	static class BaoTimeoutDailog extends Dialog {
+		
+		private CountDownTimer countDown;
+		
+		public BaoTimeoutDailog(Context context) {
+			super(context);
+		}
+
+		public BaoTimeoutDailog(Context context, boolean cancelable,
+				OnCancelListener cancelListener) {
+			super(context, cancelable, cancelListener);
+		}
+
+		public BaoTimeoutDailog(Context context, int theme) {
+			super(context, theme);
+		}
+		
+		@Override
+		public void show() {
+			countDown = new CountDownTimer(30000, 1000) {
+
+				@Override
+				public void onTick(long millisUntilFinished) {
+
+				}
+
+				@Override
+				public void onFinish() {
+					dismiss();
+					countDown = null;
+				}
+			};
+			countDown.start();
+			super.show();
+		}
+		
+		@Override
+		public void dismiss() {
+			if (countDown != null) {
+				countDown.cancel();
+				countDown = null;
+			}
+			super.dismiss();
+		}
+	}
 }
+
+ 

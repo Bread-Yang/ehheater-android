@@ -24,8 +24,6 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 	private TextView tv_center_title;
 	private RelativeLayout rlt_center, rlt_top, rlt_center_no_scrollview;
 	public Intent intent;
-	public Dialog loadingDialog;
-	private CountDownTimer countDown;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +42,6 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 		rlt_center_no_scrollview = (RelativeLayout) findViewById(R.id.rlt_center_no_scrollview);
 		tv_center_title = (TextView) findViewById(R.id.tv_center_title);
 		rlt_top = (RelativeLayout) findViewById(R.id.rlt_title);
-		loadingDialog = BaoDialogShowUtil.getInstance(this)
-				.createLoadingDialog();
 	}
 
 	public void initListener() {
@@ -116,37 +112,6 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 
 	public void setTopDismiss() {
 		rlt_top.setVisibility(View.GONE);
-	}
-
-	public void showRequestDialog() {
-		if (!isFinishing()) {
-			loadingDialog.show();
-		}
-		countDown = new CountDownTimer(30000, 1000) {
-
-			@Override
-			public void onTick(long millisUntilFinished) {
-
-			}
-
-			@Override
-			public void onFinish() {
-				dismissRequestDialog();
-				countDown = null;
-			}
-		};
-		countDown.start();
-	}
-
-	public void dismissRequestDialog() {
-		if (!isFinishing()) {
-			if (countDown != null) {
-				countDown.cancel();
-				countDown = null;
-			}
-
-			loadingDialog.dismiss();
-		}
 	}
 
 	@Override

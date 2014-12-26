@@ -1,18 +1,14 @@
 package com.vanward.ehheater.activity.info;
 
-import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import u.aly.w;
@@ -50,10 +46,11 @@ import com.vanward.ehheater.activity.info.ChartVo.Xvo;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
+import com.vanward.ehheater.util.HttpFriend;
 
-public class InfoAccumulatedElectricityChartView extends LinearLayout implements OnClickListener,
-		OnCheckedChangeListener {
-	
+public class InfoAccumulatedElectricityChartView extends LinearLayout implements
+		OnClickListener, OnCheckedChangeListener {
+
 	private final String TAG = "InfoAccumulatedElectricityChartView";
 
 	private ViewGroup layout;
@@ -75,21 +72,19 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 	private ImageView imageView1;
 	private ImageView imageView2;
 	public static Electricity electricity;
-
-	private Dialog loadingDialog;
+	private HttpFriend mHttpFriend;
 
 	public InfoAccumulatedElectricityChartView(Context context) {
 		super(context);
 		this.context = context;
-		layout = (ViewGroup) inflate(context, R.layout.activity_info_accumulated_electricity, null);
+		mHttpFriend = HttpFriend.create(context);
+		layout = (ViewGroup) inflate(context,
+				R.layout.activity_info_accumulated_electricity, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
 		RadioButton radiobutton = (RadioButton) radioGroup
 				.findViewById(R.id.radio0);
 		radioGroup.setOnCheckedChangeListener(this);
-
-		loadingDialog = BaoDialogShowUtil.getInstance(context)
-				.createLoadingDialog();
 
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
@@ -315,16 +310,14 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 	public void getmessageweek(long da) {
 		Log.e("getmessageweek时间是 : ", da + "");
-		
+
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
 				+ "&dateTime=" + da + "&resultType=1&expendType=3";
 		Log.e("getmessageweek的连接是 : ", url);
-		FinalHttp finalHttp = new FinalHttp();
-		
-		loadingDialog.show();
-		finalHttp.get(url, new AjaxCallBack<String>() {
+
+		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
 
 			// 请求成功
 			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -389,7 +382,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 					// 刷新数据展示
 					webView.reload();
 					// 销毁等待
-					loadingDialog.dismiss();
 
 				} catch (Exception e) {
 					// TODO Auto-generated catch blocks
@@ -403,8 +395,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
 				// TODO Auto-generated method stub 请求失败
 				super.onFailure(t, errorNo, strMsg);
-				Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG).show();
-				loadingDialog.dismiss();
 			}
 		});
 	}
@@ -412,12 +402,11 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 	public void getmessagemonth(long da2) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		FinalHttp finalHttp = new FinalHttp();
-		
-		loadingDialog.show();
-		finalHttp.get(Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
-				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=3",
-				new AjaxCallBack<String>() {
+
+		mHttpFriend.toUrl(
+				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
+						+ "&dateTime=" + da2 + "&resultType=2&expendType=3")
+				.executeGet(null, new AjaxCallBack<String>() {
 
 					// 请求成功
 					SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -506,24 +495,11 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 							// 刷新数据展示
 							webView.reload();
 							// 销毁等待
-							loadingDialog.dismiss();
-
 						} catch (Exception e) {
 							// TODO Auto-generated catch blocks
 							e.printStackTrace();
 						}
 						super.onSuccess(t);
-					}
-
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						// TODO Auto-generated method stub 请求失败
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
-								.show();
-						loadingDialog.dismiss();
 					}
 				});
 	}
@@ -532,12 +508,11 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 		dtime = da3;
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		FinalHttp finalHttp = new FinalHttp();
 		
-		loadingDialog.show();
-		finalHttp.get(Consts.REQUEST_BASE_URL
-				+ "EhHeaterWeb/GasInfo/getgasdata?did=" + adid + "&dateTime="
-				+ da3 + "&resultType=3&expendType=3",
+		mHttpFriend.toUrl(
+				Consts.REQUEST_BASE_URL + "EhHeaterWeb/GasInfo/getgasdata?did="
+						+ adid + "&dateTime=" + da3
+						+ "&resultType=3&expendType=3").executeGet(null,
 				new AjaxCallBack<String>() {
 
 					// 请求成功
@@ -598,24 +573,11 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 							// 刷新数据展示
 							webView.reload();
 							// 销毁等待
-							loadingDialog.dismiss();
-
 						} catch (Exception e) {
 							// TODO Auto-generated catch blocks
 							e.printStackTrace();
 						}
 						super.onSuccess(t);
-					}
-
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						// TODO Auto-generated method stub 请求失败
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
-								.show();
-						loadingDialog.dismiss();
 					}
 				});
 	}
@@ -654,7 +616,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 	// }
 	// });
 	// }
-	
+
 	private long getTodayTime() {
 		Date date = new Date();
 		date.setHours(0);
@@ -665,7 +627,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
-	
+
 	public long timechanged() {
 		Long l = new Long(dtime);
 		Date date = new Date(l);

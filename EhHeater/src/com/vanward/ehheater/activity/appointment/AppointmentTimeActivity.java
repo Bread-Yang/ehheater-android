@@ -316,8 +316,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 					requestURL = "userinfo/saveAppointment";
 				}
 
-				showRequestDialog();
-
 				Gson gson = new Gson();
 				String json = gson.toJson(editModel);
 
@@ -393,7 +391,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																			if (appointmentId
 																					.equals(saveOrUpdateAppointmentId)
 																					&& needNotify) {
-																				dismissRequestDialog();
 																				if (!"3".equals(editModel
 																						.getPower())) {
 																					appointmentAddPowerLess3Dailog
@@ -417,21 +414,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																}
 
 															}
-
-															@Override
-															public void onFailure(
-																	Throwable t,
-																	int errorNo,
-																	String strMsg) {
-																super.onFailure(
-																		t,
-																		errorNo,
-																		strMsg);
-																Toast.makeText(AppointmentTimeActivity.this,
-																		"服务器错误", Toast.LENGTH_LONG).show();
-																dismissRequestDialog();
-															}
-
 														});
 
 									} else if ("501".equals(responseCode)) {
@@ -440,15 +422,12 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 										conflictName = result.getString("name");
 										conflictTime = result
 												.getLong("dateTime");
-										dismissRequestDialog();
 										tipsHandler.sendEmptyMessage(0);
 									} else if ("403".equals(responseCode)) { // 预约满了
-										dismissRequestDialog();
 										tipsHandler.sendEmptyMessage(1);
 									}
 								} catch (JSONException e) {
 									e.printStackTrace();
-									dismissRequestDialog();
 								}
 							}
 
@@ -457,9 +436,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 									String strMsg) {
 								super.onFailure(t, errorNo, strMsg);
 								isOverride = false;
-								Toast.makeText(AppointmentTimeActivity.this,
-										"服务器错误", Toast.LENGTH_LONG).show();
-								dismissRequestDialog();
 							}
 						});
 			}
@@ -544,15 +520,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 							e.printStackTrace();
 						}
 					};
-
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(AppointmentTimeActivity.this, "服务器错误",
-								Toast.LENGTH_LONG).show();
-						dismissRequestDialog();
-					}
 				});
 
 		wheelView1.setCyclic(true);

@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONArray;
@@ -45,10 +44,11 @@ import com.vanward.ehheater.activity.info.ChartVo.Xvo;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
+import com.vanward.ehheater.util.HttpFriend;
 
-public class InfoAccumulatedWaterChartView extends LinearLayout implements OnClickListener,
-		OnCheckedChangeListener {
-	
+public class InfoAccumulatedWaterChartView extends LinearLayout implements
+		OnClickListener, OnCheckedChangeListener {
+
 	private final String TAG = "InfoAccumulatedWaterChartView";
 
 	private ViewGroup layout;
@@ -70,21 +70,19 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 	// 上一年，下一年，等等
 	private ImageView imageView1;
 	private ImageView imageView2;
-
-	private Dialog loadingDialog;
+	private HttpFriend mHttpFriend;
 
 	public InfoAccumulatedWaterChartView(Context context) {
 		super(context);
 		this.context = context;
-		layout = (ViewGroup) inflate(context, R.layout.activity_info_accumulated_water, null);
+		mHttpFriend = HttpFriend.create(context);
+		layout = (ViewGroup) inflate(context,
+				R.layout.activity_info_accumulated_water, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
 		RadioButton radiobutton = (RadioButton) radioGroup
 				.findViewById(R.id.radio0);
 		radioGroup.setOnCheckedChangeListener(this);
-
-		loadingDialog = BaoDialogShowUtil.getInstance(context)
-				.createLoadingDialog();
 
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
@@ -109,7 +107,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 
 			@Override
 			public void onPageFinished(WebView view, String url) {
-				// TODO Auto-generated method stub
 				super.onPageFinished(view, url);
 				webView.setVisibility(view.VISIBLE);
 			}
@@ -315,13 +312,11 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 	public void getmessageweek(long da) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		String url = Consts.REQUEST_BASE_URL +  "GasInfo/getgasdata?did="
-				+ adid + "&dateTime=" + da + "&resultType=1&expendType=2";
+		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
+				+ "&dateTime=" + da + "&resultType=1&expendType=2";
 		System.out.println("当前设备的url" + url);
-		FinalHttp finalHttp = new FinalHttp();
-		
-		loadingDialog.show();
-		finalHttp.get(url, new AjaxCallBack<String>() {
+
+		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
 
 			// 请求成功
 			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -358,11 +353,13 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 						;
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						if(li.get(i).getAmount().equals("")||li.get(i).getAmount().substring(0, 1).equals("0")){
-							jsonOBJ2.put("data","");
-						}
-						else{
-							jsonOBJ2.put("data",Math.round(Float.parseFloat(li.get(i).getAmount())));
+						if (li.get(i).getAmount().equals("")
+								|| li.get(i).getAmount().substring(0, 1)
+										.equals("0")) {
+							jsonOBJ2.put("data", "");
+						} else {
+							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
+									.get(i).getAmount())));
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
@@ -382,22 +379,11 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 					// 刷新数据展示
 					webView.reload();
 					// 销毁等待
-					loadingDialog.dismiss();
-
 				} catch (Exception e) {
 					// TODO Auto-generated catch blocks
 					e.printStackTrace();
 				}
 				super.onSuccess(t);
-			}
-
-			// 请求失败
-			@Override
-			public void onFailure(Throwable t, int errorNo, String strMsg) {
-				// TODO Auto-generated method stub 请求失败
-				super.onFailure(t, errorNo, strMsg);
-				Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG).show();
-				loadingDialog.dismiss();
 			}
 		});
 	}
@@ -405,12 +391,10 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 	public void getmessagemonth(long da2) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		String url = Consts.REQUEST_BASE_URL +  "GasInfo/getgasdata?did="
-				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=2";
-		FinalHttp finalHttp = new FinalHttp();
-		
-		loadingDialog.show();
-		finalHttp.get(url, new AjaxCallBack<String>() {
+		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
+				+ "&dateTime=" + da2 + "&resultType=2&expendType=2";
+
+		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
 
 			// 请求成功
 			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -468,11 +452,13 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 						;
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						if(li.get(i).getAmount().equals("")||li.get(i).getAmount().substring(0, 1).equals("0")){
-							jsonOBJ2.put("data","");
-						}
-						else{
-							jsonOBJ2.put("data",Math.round(Float.parseFloat(li.get(i).getAmount())));
+						if (li.get(i).getAmount().equals("")
+								|| li.get(i).getAmount().substring(0, 1)
+										.equals("0")) {
+							jsonOBJ2.put("data", "");
+						} else {
+							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
+									.get(i).getAmount())));
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
@@ -492,10 +478,111 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 					// 刷新数据展示
 					webView.reload();
 					// 销毁等待
-					loadingDialog.dismiss();
-
 				} catch (Exception e) {
 					// TODO Auto-generated catch blocks
+					e.printStackTrace();
+				}
+				super.onSuccess(t);
+			}
+
+		});
+	}
+
+	public void getmessageyear(long da3) {
+		dtime = da3;
+		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
+				.getDid();
+
+		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
+				+ "&dateTime=" + da3 + "&resultType=3&expendType=2";
+
+		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
+
+			// 请求成功
+			SimpleDateFormat format = new SimpleDateFormat("MM");
+
+			@Override
+			public void onSuccess(String t) {
+				try {
+
+					JSONObject jsonObject = new JSONObject(t);
+					JSONArray array = jsonObject.getJSONArray("result");
+
+					// JSONObject jb=(JSONObject) array.get(0);
+					// dtime=Long.valueOf(jb.getString("time"));
+					JSONArray jsonArray = new JSONArray();
+					JSONArray jsonArray2 = new JSONArray();
+					List<Electricity> li = new ArrayList<Electricity>();
+					float a = 0;
+					for (int i = 0; i < array.length(); i++) {
+						float b = 0;
+						JSONObject jsonObj = array.getJSONObject(i);
+						String amount = jsonObj.getString("amount");
+						String time = format.format(new Long(jsonObj
+								.getString("time")));
+						Electricity electricity = new Electricity();
+						electricity.setAmount(amount);
+						electricity.setTime(time);
+						li.add(electricity);
+						JSONObject jsonOBJ = new JSONObject();
+						JSONObject jsonOBJ2 = new JSONObject();
+						b = Math.round(Float.parseFloat(li.get(i).getAmount()
+								.equals("") ? "0" : li.get(i).getAmount()));
+						;
+						a = a + b + 0f;
+						jsonOBJ.put("name", li.get(i).getTime());
+						if (li.get(i).getAmount().equals("")
+								|| li.get(i).getAmount().substring(0, 1)
+										.equals("0")) {
+							jsonOBJ2.put("data", "");
+						} else {
+							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
+									.get(i).getAmount())));
+						}
+						jsonArray.put(jsonOBJ);
+						jsonArray2.put(jsonOBJ2);
+					}
+					// 赋值name
+					namelistjson = jsonArray.toString();
+					// 赋值data
+					datalistjson = jsonArray2.toString();
+					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
+					Long l = new Long(dtime);
+					Date da = new Date(l);
+					lqtime.setText(sim.format(da));
+					// 设置使用的总电数
+					sumwater.setText(Math.round(a) + "L");
+					// 更换下方按钮
+					chart4Year();
+					// 刷新数据展示
+					webView.reload();
+					// 销毁等待
+				} catch (Exception e) {
+					// TODO Auto-generated catch blocks
+					e.printStackTrace();
+				}
+				super.onSuccess(t);
+			}
+
+		});
+	}
+
+	// 上下
+	public void getall() {
+		String url = Consts.REQUEST_BASE_URL + "getNewestElData?did="
+				+ Global.connectId;
+
+		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
+			@Override
+			public void onSuccess(String t) {
+				try {
+					JSONObject jsonObject = new JSONObject(t);
+					if (jsonObject.get("result").equals(null)) {
+						sumwater.setText("0L");
+					} else {
+						sumwater.setText(jsonObject.get("result") + "L");
+					}
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				super.onSuccess(t);
@@ -504,137 +591,12 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements OnCli
 			// 请求失败
 			@Override
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				// TODO Auto-generated method stub 请求失败
 				super.onFailure(t, errorNo, strMsg);
-				Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG).show();
-				loadingDialog.dismiss();
 			}
 		});
 	}
 
-	public void getmessageyear(long da3) {
-		dtime = da3;
-		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
-				.getDid();
-		FinalHttp finalHttp = new FinalHttp();
-		
-		loadingDialog.show();
-		finalHttp.get(
-				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
-						+ adid + "&dateTime=" + da3
-						+ "&resultType=3&expendType=2",
-				new AjaxCallBack<String>() {
-
-					// 请求成功
-					SimpleDateFormat format = new SimpleDateFormat("MM");
-
-					@Override
-					public void onSuccess(String t) {
-						try {
-
-							JSONObject jsonObject = new JSONObject(t);
-							JSONArray array = jsonObject.getJSONArray("result");
-
-							// JSONObject jb=(JSONObject) array.get(0);
-							// dtime=Long.valueOf(jb.getString("time"));
-							JSONArray jsonArray = new JSONArray();
-							JSONArray jsonArray2 = new JSONArray();
-							List<Electricity> li = new ArrayList<Electricity>();
-							float a = 0;
-							for (int i = 0; i < array.length(); i++) {
-								float b = 0;
-								JSONObject jsonObj = array.getJSONObject(i);
-								String amount = jsonObj.getString("amount");
-								String time = format.format(new Long(jsonObj
-										.getString("time")));
-								Electricity electricity = new Electricity();
-								electricity.setAmount(amount);
-								electricity.setTime(time);
-								li.add(electricity);
-								JSONObject jsonOBJ = new JSONObject();
-								JSONObject jsonOBJ2 = new JSONObject();
-								b = Math.round(Float.parseFloat(li.get(i)
-										.getAmount().equals("") ? "0" : li.get(
-										i).getAmount()));
-								;
-								a = a + b + 0f;
-								jsonOBJ.put("name", li.get(i).getTime());
-								if(li.get(i).getAmount().equals("")||li.get(i).getAmount().substring(0, 1).equals("0")){
-									jsonOBJ2.put("data","");
-								}
-								else{
-									jsonOBJ2.put("data",Math.round(Float.parseFloat(li.get(i).getAmount())));
-								}
-								jsonArray.put(jsonOBJ);
-								jsonArray2.put(jsonOBJ2);
-							}
-							// 赋值name
-							namelistjson = jsonArray.toString();
-							// 赋值data
-							datalistjson = jsonArray2.toString();
-							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-							Long l = new Long(dtime);
-							Date da = new Date(l);
-							lqtime.setText(sim.format(da));
-							// 设置使用的总电数
-							sumwater.setText(Math.round(a) + "L");
-							// 更换下方按钮
-							chart4Year();
-							// 刷新数据展示
-							webView.reload();
-							// 销毁等待
-							loadingDialog.dismiss();
-
-						} catch (Exception e) {
-							// TODO Auto-generated catch blocks
-							e.printStackTrace();
-						}
-						super.onSuccess(t);
-					}
-
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						// TODO Auto-generated method stub 请求失败
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
-								.show();
-						loadingDialog.dismiss();
-					}
-				});
-	}
-
-	// 上下
-	public void getall() {
-		FinalHttp finalHttp = new FinalHttp();
-		finalHttp.get(
-				"http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="
-						+ Global.connectId + "", new AjaxCallBack<String>() {
-					@Override
-					public void onSuccess(String t) {
-						try {
-							JSONObject jsonObject = new JSONObject(t);
-							if (jsonObject.get("result").equals(null)) {
-								sumwater.setText("0L");
-							} else {
-								sumwater.setText(jsonObject.get("result") + "L");
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						super.onSuccess(t);
-					}
-
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						// TODO Auto-generated method stub 请求失败
-						super.onFailure(t, errorNo, strMsg);
-					}
-				});
-	}
-	
 	private long getTodayTime() {
 		Date date = new Date();
 		date.setHours(0);

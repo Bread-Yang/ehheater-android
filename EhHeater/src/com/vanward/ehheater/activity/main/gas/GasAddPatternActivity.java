@@ -24,7 +24,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 
-public class AddPatternActivity extends EhHeaterBaseActivity implements
+public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
 	TextView ivTitleName;
@@ -113,7 +113,7 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 		if (gasVo != null) {
 			customSetVo = gasVo;
 		}
-		customSetVo.setUid(AccountService.getUserId(AddPatternActivity.this));
+		customSetVo.setUid(AccountService.getUserId(GasAddPatternActivity.this));
 		customSetVo.setConnid(Global.connectId);
 		String name = nameedittext.getText().toString().trim();
 		if ("".equals(name)) {
@@ -126,7 +126,7 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAllByWhere(
 				GasCustomSetVo.class,
 				" uid = '"
-						+ AccountService.getUserId(AddPatternActivity.this)
+						+ AccountService.getUserId(GasAddPatternActivity.this)
 						+ "'");
 
 		if (gasVo == null) {

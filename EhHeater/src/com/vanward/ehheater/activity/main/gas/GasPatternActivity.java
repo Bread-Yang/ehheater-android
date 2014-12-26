@@ -53,8 +53,10 @@ import com.vanward.ehheater.view.wheelview.WheelView;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
-public class PatternActivity extends EhHeaterBaseActivity implements
+public class GasPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnCheckedChangeListener {
+	
+	private static final String TAG = "PatternActivity";
 
 	@ViewInject(id = R.id.textView1, click = "onClick")
 	TextView textView1;
@@ -174,7 +176,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			break;
 		case R.id.btn_add_pattern:
 			Intent intent = new Intent();
-			intent.setClass(this, AddPatternActivity.class);
+			intent.setClass(this, GasAddPatternActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.radio3:
@@ -188,7 +190,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 						public void oncall(View v) {
 							if (radio3.isChecked()) {
 								SendMsgModel
-										.setToBathtubMode(PatternActivity.this);
+										.setToBathtubMode(GasPatternActivity.this);
 								finish();
 							}
 						}
@@ -200,7 +202,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 	public void initViewValue() {
 		customSetVolist = new BaseDao(this).getDb().findAllByWhere(
 				GasCustomSetVo.class,
-				" uid = '" + AccountService.getUserId(PatternActivity.this)
+				" uid = '" + AccountService.getUserId(GasPatternActivity.this)
 						+ "'");
 		name = getIntent().getStringExtra("name");
 		addCustomView();
@@ -292,14 +294,14 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
 						AddPatternButtonDialogUtil
-								.instance(PatternActivity.this)
+								.instance(GasPatternActivity.this)
 								.nextButtonCall(new NextButtonCall() {
 									@Override
 									public void oncall(View v) {
 										// 重命名
 										reNameCustom(customSetVo);
 										AddPatternButtonDialogUtil.instance(
-												PatternActivity.this)
+												GasPatternActivity.this)
 												.dissmiss();
 									}
 								}).editButtonCall(new NextButtonCall() {
@@ -332,15 +334,15 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 										 */
 
 										Intent intent = new Intent();
-										intent.setClass(PatternActivity.this,
-												AddPatternActivity.class);
+										intent.setClass(GasPatternActivity.this,
+												GasAddPatternActivity.class);
 										intent.putExtra("gasCusVoId",
 												customSetVo.getId());
 										intent.putExtra("ischeck", isCheck);
 										startActivity(intent);
 
 										AddPatternButtonDialogUtil.instance(
-												PatternActivity.this)
+												GasPatternActivity.this)
 												.dissmiss();
 										if (isCheck) {
 											finish();
@@ -354,10 +356,10 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 									@Override
 									public void oncall(View v) {
 										AddPatternButtonDialogUtil.instance(
-												PatternActivity.this)
+												GasPatternActivity.this)
 												.dissmiss();
 										SureDelDialogUtil
-												.instance(PatternActivity.this)
+												.instance(GasPatternActivity.this)
 												.setNextButtonCall(
 														new NextButtonCall() {
 															@Override
@@ -365,28 +367,28 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 																	View v) {
 																// 删除
 																new BaseDao(
-																		PatternActivity.this)
+																		GasPatternActivity.this)
 																		.getDb()
 																		.delete(customSetVo);
 																if (isCheck) {
 																	customSetVolist = new BaseDao(
-																			PatternActivity.this)
+																			GasPatternActivity.this)
 																			.getDb()
 																			.findAllByWhere(
 																					GasCustomSetVo.class,
-																					" uid = '" + AccountService.getUserId(PatternActivity.this)
+																					" uid = '" + AccountService.getUserId(GasPatternActivity.this)
 																							+ "'");
 																	if (customSetVolist
 																			.size() != 0) {
 																		for (GasCustomSetVo item : customSetVolist) {
 																			item.setSet(false);
-																			new BaseDao(PatternActivity.this).getDb().update(
+																			new BaseDao(GasPatternActivity.this).getDb().update(
 																					item);
 																		}
 																		GasCustomSetVo tempcustomSetVo = customSetVolist
 																				.get(customSetVolist.size() - 1);
 																		tempcustomSetVo.setSet(true);
-																		new BaseDao(PatternActivity.this).getDb().update(
+																		new BaseDao(GasPatternActivity.this).getDb().update(
 																				tempcustomSetVo);
 //																		GasCustomSetVo tempcustomSetVo = new BaseDao(
 //																				PatternActivity.this)
@@ -412,7 +414,7 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 
 																SureDelDialogUtil
 																		.instance(
-																				PatternActivity.this)
+																				GasPatternActivity.this)
 																		.dissmiss();
 															}
 														}).showDialog();
@@ -431,16 +433,19 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// 清空其他的
+				Log.e(TAG, "被点击了");
+				Log.e(TAG, "customSetVolist的大小是 : " + customSetVolist.size());
 				setRadiocheck("", getWindow().getDecorView());
 				radioButton.setChecked(true);
 				for (GasCustomSetVo item : customSetVolist) {
 					item.setSet(false);
-					new BaseDao(PatternActivity.this).getDb().update(
+					new BaseDao(GasPatternActivity.this).getDb().update(
 							item);
 				}
 				customSetVo.setSet(true);
-				new BaseDao(PatternActivity.this).getDb().update(
+				new BaseDao(GasPatternActivity.this).getDb().update(
 						customSetVo);
+				
 				SendMsgModel.setDIYModel(customSetVo.getId(), customSetVo);
 				finish();
 			}
@@ -462,32 +467,32 @@ public class PatternActivity extends EhHeaterBaseActivity implements
 					@Override
 					public void oncall(View v) {
 						String name = AddPatternNameDialogUtil.instance(
-								PatternActivity.this).getName();
+								GasPatternActivity.this).getName();
 
 						if (name != null && name.length() != 0) {
 							List<GasCustomSetVo> list = new BaseDao(
-									PatternActivity.this).getDb().findAllByWhere(
+									GasPatternActivity.this).getDb().findAllByWhere(
 											GasCustomSetVo.class,
-											" uid = '" + AccountService.getUserId(PatternActivity.this)
+											" uid = '" + AccountService.getUserId(GasPatternActivity.this)
 													+ "'");
 							for (int i = 0; i < list.size(); i++) {
 								GasCustomSetVo gasCustomSetVo = list.get(i);
 								if (gasCustomSetVo.getName().equals(name)) {
-									Toast.makeText(PatternActivity.this,
+									Toast.makeText(GasPatternActivity.this,
 											"请输入有效名字", Toast.LENGTH_SHORT)
 											.show();
 									return;
 								}
 							}
 							customSetVo.setName(name);
-							new BaseDao(PatternActivity.this).getDb().update(
+							new BaseDao(GasPatternActivity.this).getDb().update(
 									customSetVo);
 						} else {
-							Toast.makeText(PatternActivity.this, "请输入有效名字",
+							Toast.makeText(GasPatternActivity.this, "请输入有效名字",
 									Toast.LENGTH_SHORT).show();
 						}
 						initViewValue();
-						AddPatternNameDialogUtil.instance(PatternActivity.this)
+						AddPatternNameDialogUtil.instance(GasPatternActivity.this)
 								.dissmiss();
 					}
 				}).showDialog();

@@ -63,7 +63,6 @@ public class ChangeNicknameActivity extends EhHeaterBaseActivity {
 				params.put("uid", AccountService.getUserId(getBaseContext()));
 				params.put("userName", nickName);
 
-				showRequestDialog();
 				mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 						.executeGet(params, new AjaxCallBack<String>() {
 
@@ -87,8 +86,6 @@ public class ChangeNicknameActivity extends EhHeaterBaseActivity {
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
-
-								dismissRequestDialog();
 							}
 						});
 			}

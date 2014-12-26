@@ -136,19 +136,19 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.main.gas.AddPatternActivity"
+            android:name=".activity.main.gas.GasAddPatternActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.main.AddPatternActivity"
+            android:name=".activity.main.EIAddPatternActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.main.gas.PatternActivity"
+            android:name=".activity.main.gas.GasPatternActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.main.PatternActivity"
+            android:name=".activity.main.EIPatternActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity

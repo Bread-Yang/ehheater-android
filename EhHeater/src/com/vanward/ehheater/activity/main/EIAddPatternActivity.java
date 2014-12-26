@@ -28,7 +28,7 @@ import com.vanward.ehheater.util.db.DBService;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 
-public class AddPatternActivity extends EhHeaterBaseActivity implements
+public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
 
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
@@ -185,7 +185,7 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 
 	public CustomSetVo getData() {
 		CustomSetVo customSetVo = new CustomSetVo();
-		customSetVo.setUid(AccountService.getUserId(AddPatternActivity.this));
+		customSetVo.setUid(AccountService.getUserId(EIAddPatternActivity.this));
 		customSetVo.setConnid(Global.connectId);
 		String name = nameedittext.getText().toString().trim();
 		if ("".equals(name)) {
@@ -214,7 +214,7 @@ public class AddPatternActivity extends EhHeaterBaseActivity implements
 			List list = new BaseDao(this).getDb().findAllByWhere(
 					CustomSetVo.class,
 					" uid = '"
-							+ AccountService.getUserId(AddPatternActivity.this)
+							+ AccountService.getUserId(EIAddPatternActivity.this)
 							+ "'");
 			View view = null;
 			for (int i = 0; i < powerGroup.getChildCount(); i++) {

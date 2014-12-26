@@ -1,6 +1,7 @@
 package com.vanward.ehheater.activity.main.gas;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
@@ -8,6 +9,8 @@ import com.vanward.ehheater.view.BathSettingDialogUtil.BathSettingVo;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class SendMsgModel {
+
+	private static final String TAG = "SendMsgModel";
 
 	public static void setTempter(int i) {
 		generated.SendGasWaterHeaterTargetTemperatureReq(Global.connectId,
@@ -54,33 +57,35 @@ public class SendMsgModel {
 
 			@Override
 			public void run() {
-				
-				generated.SendGasWaterHeaterModelCommandReq(Global.connectId, (short) 3);
-				
-				BathSettingVo bathSettingVo = new BaseDao(context).getDb().findById("1", BathSettingVo.class);
-				
+
+				generated.SendGasWaterHeaterModelCommandReq(Global.connectId,
+						(short) 3);
+
+				BathSettingVo bathSettingVo = new BaseDao(context).getDb()
+						.findById("1", BathSettingVo.class);
+
 				if (bathSettingVo == null) {
-					bathSettingVo = new BathSettingVo("1", 50, 35);  
+					bathSettingVo = new BathSettingVo("1", 50, 35);
 				}
-				
-				try {
-					Thread.sleep(500);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-				generated.SendGasWaterHeaterTargetTemperatureReq(Global.connectId, (short) (bathSettingVo.getTem()));
 
 				try {
 					Thread.sleep(500);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				generated.SendGasWaterHeaterSetWaterInjectionReq(Global.connectId, (short) (bathSettingVo.getWater()));
 
-				
-				
+				generated.SendGasWaterHeaterTargetTemperatureReq(
+						Global.connectId, (short) (bathSettingVo.getTem()));
+
+				try {
+					Thread.sleep(500);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				generated.SendGasWaterHeaterSetWaterInjectionReq(
+						Global.connectId, (short) (bathSettingVo.getWater()));
+
 			}
 		}).start();
 
@@ -99,16 +104,16 @@ public class SendMsgModel {
 	// DIY设置指令下发
 
 	public static void setDIYModel(int i, final GasCustomSetVo gasCustomSetVo) {
-		System.out.println("SendMsgModel.setDIYModel()"
-				+ gasCustomSetVo.getTempter() + " :  "
-				+ gasCustomSetVo.getWaterval());
+		Log.e(TAG, "执行了");
+		Log.e(TAG, "SendMsgModel.setDIYModel()" + gasCustomSetVo.getTempter()
+				+ " :  " + gasCustomSetVo.getWaterval());
 		// generated.SendGasWaterHeaterDIYSettingReq(arg0, arg1, arg2, arg3,
 		// arg4)
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				setToDIYMode();
+				setToDIYMode(); 
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {

@@ -140,7 +140,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 //		Log.e("请求的地址是", requestURL);
 
-		showRequestDialog();
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 				null, new AjaxCallBack<String>() {
 					@Override
@@ -153,16 +152,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 						lv_listview.setAdapter(new AppointmentListAdapter());
 
-						dismissRequestDialog();
-					}
-
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(FurnaceAppointmentListActivity.this,
-								"服务器错误", Toast.LENGTH_LONG).show();
-						dismissRequestDialog();
 					}
 				});
 	}
@@ -373,8 +362,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					
 					String requestURL = "userinfo/updateAppointment";
 
-					showRequestDialog();
-
 					Gson gson = new Gson();
 					String json = gson.toJson(model);
 
@@ -401,18 +388,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 										model.setIsAppointmentOn(1);
 										view.setTag(1);
 									}
-
-									dismissRequestDialog();
-								}
-
-								@Override
-								public void onFailure(Throwable t, int errorNo,
-										String strMsg) {
-									super.onFailure(t, errorNo, strMsg);
-									Toast.makeText(
-											FurnaceAppointmentListActivity.this,
-											"服务器错误", Toast.LENGTH_LONG).show();
-									dismissRequestDialog();
 								}
 							});
 
@@ -450,7 +425,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					String requestURL = "userinfo/deleteAppointment?appointmentId="
 							+ model.getAppointmentId();
 
-					showRequestDialog();
 					mHttpFriend.clearParams()
 							.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 							.executeGet(null, new AjaxCallBack<String>() {
@@ -474,16 +448,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 										e.printStackTrace();
 									}
 
-								}
-
-								@Override
-								public void onFailure(Throwable t, int errorNo,
-										String strMsg) {
-									super.onFailure(t, errorNo, strMsg);
-									Toast.makeText(
-											FurnaceAppointmentListActivity.this,
-											"服务器错误", Toast.LENGTH_LONG).show();
-									dismissRequestDialog();
 								}
 							});
 				}

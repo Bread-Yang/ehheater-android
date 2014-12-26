@@ -569,6 +569,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			final boolean isBathMode) {
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
+			mCountDownTimer = null;
 		}
 		isSendingCommand = true;
 		mCountDownTimer = new CountDownTimer(3000, 1000) {

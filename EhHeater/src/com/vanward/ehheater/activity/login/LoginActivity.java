@@ -231,14 +231,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 							}
 						};
 
-						@Override
-						public void onFailure(Throwable t, int errorNo,
-								String strMsg) {
-							super.onFailure(t, errorNo, strMsg);
-							Toast.makeText(LoginActivity.this, "服务器错误",
-									Toast.LENGTH_LONG).show();
-							dismissRequestDialog();
-						}
 					});
 
 			// 0和1都是登录成功
@@ -247,7 +239,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					.toString(), et_pwd.getText().toString());
 //			AccountService.setPendingUser(getBaseContext(), et_user.getText()
 //					.toString(), et_pwd.getText().toString());
-			showRequestDialog();
 			generated.SendBindingGetV2Req(tempConnId);
 			onDeviceFoundTriggered = false;
 			new Timer().schedule(new TimerTask() {
@@ -273,7 +264,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
 
-		dismissRequestDialog();
 		if (endpoint == null) {
 			Log.e(TAG, "endpoint为null,返回");
 			return;

@@ -142,7 +142,6 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			params.put("uid", mEtPhone.getText().toString());
 			params.put("userName", et_nickname.getText().toString());
 
-			showRequestDialog();
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					params, new AjaxCallBack<String>() {
 						public void onSuccess(String jsonString) {

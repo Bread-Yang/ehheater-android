@@ -57,7 +57,6 @@ public class AlterDeviceHelper {
 							new Intent(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
 
 		} else {
-			Log.e(TAG, "typeChanged是true, 所以配置会不断跳转");
 			// 使前个activity停止接收回调
 			XPGConnectClient.RemoveActivity((GeneratedActivity) hostActivity);
 			Intent intent = new Intent();

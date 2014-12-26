@@ -21,9 +21,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +40,7 @@ import com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentListActivity
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
@@ -55,6 +53,7 @@ import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.util.SwitchDeviceUtil;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
+import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
 import com.vanward.ehheater.view.CircularView;
@@ -67,7 +66,7 @@ import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class MainActivity extends BaseBusinessActivity implements
-		OnClickListener, CircleListener {
+		OnClickListener, BaoCircleSliderListener {
 
 	private final String TAG = "MainActivity";
 
@@ -80,7 +79,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	private TextView mTitleName, modeTv, powerTv, temptertitleTextView;
 
 	private Button btn_info;
-	CircularView circularView;
 	View btn_power;
 	TextView tv_tempter, leavewater, target_tem;
 
@@ -88,7 +86,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private WheelView wheelView1, wheelView2;
 
-	LinearLayout llt_circle;
+	private BaoCircleSlider circle_slider;
+
 	ViewGroup stuteParent;
 	Button btn_appointment;
 	ImageView iv_wave, hotImgeImageView;
@@ -98,6 +97,9 @@ public class MainActivity extends BaseBusinessActivity implements
 	private View openView;
 
 	private LinearLayout llt_power;
+	
+	/** 指令正在发送中,三秒内不能改变CircleSlider滑动圆圈的位置 */
+	private boolean isSendingCommand = false;
 
 	// 主界面错误图标
 	Byte errors;
@@ -186,9 +188,9 @@ public class MainActivity extends BaseBusinessActivity implements
 					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
-			 if (curHeater == null) {
-			 return;
-			 }
+			if (curHeater == null) {
+				return;
+			}
 
 			if (!TextUtils.isEmpty(passcode)) {
 				curHeater.setPasscode(passcode);
@@ -333,7 +335,8 @@ public class MainActivity extends BaseBusinessActivity implements
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
 		((AnimationDrawable) hotImgeImageView.getBackground()).start();
-		llt_circle = (LinearLayout) findViewById(R.id.circle_llt);
+		circle_slider = (BaoCircleSlider) findViewById(R.id.circle_slider);
+		circle_slider.setCircleSliderListener(this);
 
 		// 主界面错误图标
 		iv_error = (ImageView) findViewById(R.id.infor_tip);
@@ -355,27 +358,31 @@ public class MainActivity extends BaseBusinessActivity implements
 		initopenView();
 		updateTitle(mTitleName);
 		boolean InSetting = false;
+		circle_slider.setValue(35);
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				circularView = new CircularView(MainActivity.this, llt_circle,
-						CircularView.CIRCULAR_SINGLE, 0);
-				circularView.setEndangle(75);
-				circularView.setAngle(35);
-				circularView.setOn(false);
+				// circularView = new CircularView(MainActivity.this,
+				// llt_circle,
+				// CircularView.CIRCULAR_SINGLE, 0);
+				// circularView.setEndangle(75);
+				// circularView.setAngle(35);
+				// circularView.setOn(false);
 				hotImgeImageView.setVisibility(View.GONE);
 				animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 				animationDrawable.start();
-				circularView.setCircularListener(MainActivity.this);
-				llt_circle.addView(circularView);
+				// circularView.setCircularListener(MainActivity.this);
+				// llt_circle.addView(circularView);
 			}
 		}, 100);
 	}
 
-	public void sentToMsgAfterSix(final int value) {
+	public void sendToMsgAfterThreeSeconds(final int value) {
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
+		
+		isSendingCommand = true;
 		mCountDownTimer = new CountDownTimer(3000, 1000) {
 			@Override
 			public void onTick(long arg0) {
@@ -389,7 +396,7 @@ public class MainActivity extends BaseBusinessActivity implements
 					IntelligentPatternUtil.addLastTemperature(
 							MainActivity.this, value);
 				}
-				Insetting = false;
+				isSendingCommand = false;
 			}
 		};
 		mCountDownTimer.start();
@@ -442,7 +449,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		case R.id.pattern:
 			Intent intent2 = new Intent();
 			intent2.putExtra("name", modeTv.getText());
-			intent2.setClass(this, PatternActivity.class);
+			intent2.setClass(this, EIPatternActivity.class);
 			startActivity(intent2);
 			break;
 		case R.id.power:
@@ -476,7 +483,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private void changeToIntelligenceModeUpdateUI(byte[] data) {
 		modeTv.setText("智能模式");
-		circularView.setOn(true);
+		circle_slider.setVisibility(View.VISIBLE);
+		// circularView.setOn(true);
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		btn_power.setOnClickListener(this);
@@ -491,7 +499,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private void changeTojishiModeUpdateUI(byte[] data) {
 		modeTv.setText("即时加热");
-		circularView.setOn(false);
+		circle_slider.setVisibility(View.GONE);
+		// circularView.setOn(false);
 		setAppointmentButtonAble(true);
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		btn_power.setOnClickListener(this);
@@ -508,7 +517,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private void changeToNightModeUpdateUI(byte[] data) {
 		modeTv.setText("夜电模式");
-		circularView.setOn(false);
+		circle_slider.setVisibility(View.GONE);
+		// circularView.setOn(false);
 		setAppointmentButtonAble(false);
 		ChangeStuteView.swichNight(stuteParent);
 		int i = new EhState(data).getSystemRunningState();
@@ -522,7 +532,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void changeToCustomModeUpdateUI(byte[] data) {
-//		modeTv.setText("自定义模式");
+		// modeTv.setText("自定义模式");
 		EhState ehState = new EhState(data);
 		setAppointmentButtonAble(true);
 		final int targetTemperature = ehState.getTargetTemperature();
@@ -532,7 +542,10 @@ public class MainActivity extends BaseBusinessActivity implements
 			@Override
 			public void run() {
 				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb()
-						.findAll(CustomSetVo.class);
+						.findAllByWhere(CustomSetVo.class, " uid = '"
+								+ AccountService
+								.getUserId(MainActivity.this)
+						+ "'");
 
 				if (list.size() > 0) {
 					Log.e(TAG, "设置自定义名字");
@@ -557,7 +570,8 @@ public class MainActivity extends BaseBusinessActivity implements
 		});
 
 		if (new EhState(data).getSystemRunningState() == 0) {
-			circularView.setOn(true);
+			circle_slider.setVisibility(View.VISIBLE);
+			// circularView.setOn(true);
 		}
 
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
@@ -608,7 +622,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * @param peopleNum
 	 */
 	private void changeToMorningWashUpdateUI(byte[] data) {
-		circularView.setOn(false);
+		circle_slider.setVisibility(View.GONE);
+		// circularView.setOn(false);
 		setAppointmentButtonAble(false);
 		modeTv.setText("晨浴模式");
 		ChangeStuteView.swichMorningWash(stuteParent);
@@ -821,7 +836,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			stateQueried = true;
 			DialogUtil.dismissDialog();
-//			llt_power.setEnabled(true);
+			// llt_power.setEnabled(true);
 			btn_power.setSelected(false);
 			setTempture(data);
 			setLeaveWater(data);
@@ -833,7 +848,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			// 非常奇怪 智能模式设置成功，可是返回值 确实1 跟p0 文档不符合。设置进去的时候是2 ，晨浴模式成功。
 			int mode = new EhState(data).getFunctionState();
 			currentModeCode = mode;
-			if (mode == 1) { 
+			if (mode == 1) {
 				changeTojishiModeUpdateUI(data);
 			} else if (mode == 3) {
 				changeToMorningWashUpdateUI(data);
@@ -850,7 +865,8 @@ public class MainActivity extends BaseBusinessActivity implements
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
-				circularView.setOn(false);
+				circle_slider.setVisibility(View.GONE);
+				// circularView.setOn(false);
 				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
@@ -880,9 +896,10 @@ public class MainActivity extends BaseBusinessActivity implements
 				+ new EhState(b).getInnerTemp3());
 		// tempter.setText(new EhState(b).getInnerTemp2() + "");
 		currentTemp = new EhState(b).getInnerTemp1();
-		if (!Insetting && circularView != null) {
+		if (!circle_slider.isDraging() && !isSendingCommand) {
 			// circularView.setAngle(new EhState(b).getInnerTemp1());
-			circularView.setAngle(new EhState(b).getTargetTemperature());
+			circle_slider.setValue(new EhState(b).getTargetTemperature());
+			// circularView.setAngle(new EhState(b).getTargetTemperature());
 			tv_tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
 
@@ -929,8 +946,10 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	public void setTargerTempertureUI(byte[] b) {
-		circularView.setTargerdegree(new EhState(b).getTargetTemperature());
+		if (!circle_slider.isDraging() && !isSendingCommand) {
+		circle_slider.setValue(new EhState(b).getTargetTemperature());
 		target_tem.setText(new EhState(b).getTargetTemperature() + "℃");
+		}
 	}
 
 	public void setAppointmentButtonAble(boolean isAble) {
@@ -971,59 +990,55 @@ public class MainActivity extends BaseBusinessActivity implements
 		powerTv.setText("--");
 		target_tem.setText("--");
 		btn_power.setEnabled(false);
-//		llt_power.setEnabled(false);
+		// llt_power.setEnabled(false);
 		findViewById(R.id.pattern).setEnabled(false);
 		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
-		circularView.setOn(false);
+		circle_slider.setVisibility(View.GONE);
+		// circularView.setOn(false);
 		iv_error.setVisibility(View.GONE);
 		hotImgeImageView.setVisibility(View.GONE);
 	}
 
-	boolean Insetting = false;
+	// @Override
+	// public void levelListener(final int outlevel) {
+	// sentToMsgAfterSix(outlevel);
+	// hotImgeImageView.setVisibility(View.GONE);
+	// }
 
-	@Override
-	public void levelListener(final int outlevel) {
-		// SendMsgModel.setTempter(outlevel);
-		// tempter.setText(outlevel + "");
-		sentToMsgAfterSix(outlevel);
-		// temptertitleTextView.setText("当前温度");
-		hotImgeImageView.setVisibility(View.GONE);
-	}
+	// @Override
+	// public void updateUIListener(int outlevel) {
+	// temptertitleTextView.setText("设置温度");
+	// Drawable img = getBaseContext().getResources().getDrawable(
+	// R.drawable.menu_icon_setting);
+	// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+	// img.setBounds(0, 0, dp32, dp32);
+	// temptertitleTextView.setCompoundDrawables(img, null, null, null);
+	//
+	// tv_tempter.setText(outlevel + "");
+	// circle_slider.setValue(outlevel);
+	// Insetting = true;
+	// }
 
-	@Override
-	public void updateUIListener(int outlevel) {
-		temptertitleTextView.setText("设置温度");
-		Drawable img = getBaseContext().getResources().getDrawable(
-				R.drawable.menu_icon_setting);
-		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-		img.setBounds(0, 0, dp32, dp32);
-		temptertitleTextView.setCompoundDrawables(img, null, null, null);
+	// @Override
+	// public void updateUIWhenAferSetListener(final int outlevel) {
+	// temptertitleTextView.setText("当前水温");
+	// Drawable img = getBaseContext().getResources().getDrawable(
+	// R.drawable.icon_temperature);
+	// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+	// img.setBounds(0, 0, dp32, dp32);
+	// temptertitleTextView.setCompoundDrawables(img, null, null, null);
+	//
+	// if (isError) {
+	// tv_tempter.setText("--");
+	// } else {
+	// tv_tempter.setText(currentTemp + "");
+	// }
+	// }
 
-		tv_tempter.setText(outlevel + "");
-		circularView.setTargerdegree(outlevel);
-		Insetting = true;
-	}
-
-	@Override
-	public void updateUIWhenAferSetListener(final int outlevel) {
-		temptertitleTextView.setText("当前水温");
-		Drawable img = getBaseContext().getResources().getDrawable(
-				R.drawable.icon_temperature);
-		int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-		img.setBounds(0, 0, dp32, dp32);
-		temptertitleTextView.setCompoundDrawables(img, null, null, null);
-
-		if (isError) {
-			tv_tempter.setText("--");
-		} else {
-			tv_tempter.setText(currentTemp + "");
-		}
-	}
-
-	@Override
-	public void updateLocalUIdifferent(int outlevel) {
-
-	}
+	// @Override
+	// public void updateLocalUIdifferent(int outlevel) {
+	//
+	// }
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -1032,6 +1047,32 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void didBeginTouchCircleSlider() {
+		
+	}
+
+	@Override
+	public void needChangeValue(int value, boolean isAdd) {
+		if (value >= 35 && value <= 75) {
+			circle_slider.setValue(value);
+			
+			 temptertitleTextView.setText("设置温度");
+			 Drawable img = getBaseContext().getResources().getDrawable(
+			 R.drawable.menu_icon_setting);
+			 int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+			 img.setBounds(0, 0, dp32, dp32);
+			 temptertitleTextView.setCompoundDrawables(img, null, null, null);
+			
+			 tv_tempter.setText(value + "");
+		}
+	}
+
+	@Override
+	public void didEndChangeValue() {
+		sendToMsgAfterThreeSeconds(circle_slider.getValue());  
 	}
 
 }

@@ -207,14 +207,6 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 						}
 					};
 
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(FurnaceAppointmentTimeActivity.this,
-								"服务器错误", Toast.LENGTH_LONG).show();
-						dismissRequestDialog();
-					}
 				});
 
 		wheelView1.setCyclic(true);
@@ -462,8 +454,6 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 					requestURL = "userinfo/saveAppointment";
 				}
 
-				showRequestDialog();
-
 				Gson gson = new Gson();
 				String json = gson.toJson(editModel);
 
@@ -502,9 +492,6 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 								} catch (JSONException e) {
 									e.printStackTrace();
 								}
-
-								dismissRequestDialog();
-
 							}
 
 							@Override
@@ -512,10 +499,6 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 									String strMsg) {
 								super.onFailure(t, errorNo, strMsg);
 								isOverride = false;
-								Toast.makeText(
-										FurnaceAppointmentTimeActivity.this,
-										"服务器错误", Toast.LENGTH_LONG).show();
-								dismissRequestDialog();
 							}
 						});
 			}

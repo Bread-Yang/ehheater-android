@@ -244,7 +244,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 		String requestURL = "";
 
-		showRequestDialog();
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 				null, new AjaxCallBack<String>() {
 					@Override
@@ -254,7 +253,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 						extractDataFromJson(jsonString);
 
-						dismissRequestDialog();
 					}
 				});
 	}

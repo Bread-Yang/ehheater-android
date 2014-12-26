@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,8 +21,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,32 +36,29 @@ import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InfoTipActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
-import com.vanward.ehheater.activity.main.CustomSetVo;
 import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.gas.GasPatternActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
-import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.SwitchDeviceUtil;
+import com.vanward.ehheater.view.BaoCircleSlider;
+import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
 import com.vanward.ehheater.view.ChangeStuteView;
-import com.vanward.ehheater.view.CircleListener;
-import com.vanward.ehheater.view.CircularView;
 import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.ErrorDialogUtil;
-import com.vanward.ehheater.view.FullWaterWarnDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
-import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class GasMainActivity extends BaseBusinessActivity implements
-		OnClickListener, OnLongClickListener, CircleListener {
+		OnClickListener, OnLongClickListener, BaoCircleSliderListener {
 
 	private final String TAG = "GasMainActivity";
 
@@ -76,10 +70,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	View btn_power;
 	TextView tv_tempter, leavewater, target_tem, settemper;
 
-	LinearLayout llt_circle;
 	ViewGroup stuteParent;
 	Button btn_appointment;
-	CircularView circularView;
+
+	private BaoCircleSlider circle_slider;
 
 	ImageView iv_wave, hotImgeImageView, modeimg;
 	AnimationDrawable animationDrawable;
@@ -98,6 +92,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	boolean firstShowSwitchSuccess = true;
 
 	private Dialog fullWaterDialog;
+
+	private int circle_max_value = 65;
+
+	/** 指令正在发送中,三秒内不能改变CircleSlider滑动圆圈的位置 */
+	private boolean isSendingCommand = false;
 
 	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
@@ -341,7 +340,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		target_tem.setText("--");
 		settemper.setText("--");
 		sumwater.setText(" ");
-		circularView.setOn(false);
+		circle_slider.setVisibility(View.GONE);
+		// circularView.setOn(false);
 		mode.setEnabled(false);
 		stute.setText("不在线");
 		tipsimg.setVisibility(View.GONE);
@@ -385,7 +385,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		settemper = (TextView) findViewById(R.id.settemper);
 		btn_info = (Button) findViewById(R.id.btn_information);
 		tv_mode = (TextView) findViewById(R.id.tv_mode);
-		llt_circle = (LinearLayout) findViewById(R.id.circle_llt);
+		circle_slider = (BaoCircleSlider) findViewById(R.id.circle_slider);
+		circle_slider.setCircleSliderListener(this);
+
 		// stuteParent = (ViewGroup) findViewById(R.id.stute);
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
 		iv_wave = (ImageView) findViewById(R.id.wave_bg);
@@ -402,19 +404,21 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		initopenView();
 		updateTitle(mTitleName);
 		mode.setOnLongClickListener(this);
+		circle_slider.setValue(35);
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				circularView = new CircularView(GasMainActivity.this,
-						llt_circle, CircularView.CIRCULAR_SINGLE, 0);
-				circularView.setHeat(true);
-				circularView.setEndangle(65);
-				circularView.setAngle(35);
-				circularView.setOn(true);
+				// circularView = new CircularView(GasMainActivity.this,
+				// llt_circle, CircularView.CIRCULAR_SINGLE, 0);
+				// circularView.setHeat(true);
+				// circularView.setEndangle(65);
+				// circularView.setAngle(35);
+				// circularView.setOn(true);
+				// circularView.setCircularListener(GasMainActivity.this);
+				// llt_circle.addView(circularView);
+				// circularView.setVisibility(View.VISIBLE);
+
 				hotImgeImageView.setVisibility(View.GONE);
-				circularView.setCircularListener(GasMainActivity.this);
-				llt_circle.addView(circularView);
-				circularView.setVisibility(View.VISIBLE);
 			}
 		}, 50);
 	}
@@ -459,7 +463,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		case R.id.pattern:
 			Intent intent2 = new Intent();
 			intent2.putExtra("name", tv_mode.getText());
-			intent2.setClass(this, PatternActivity.class);
+			intent2.setClass(this, GasPatternActivity.class);
 			startActivity(intent2);
 			break;
 		case R.id.btn_information:
@@ -481,12 +485,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 */
 	public void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("舒适模式");
-		circularView.setOn(true);
+		circle_slider.setVisibility(View.VISIBLE);
+		// circularView.setOn(true);
 		modeimg.setImageResource(R.drawable.gas_home_icon_comfort);
-		if (circularView != null) {
-			circularView.setVisibility(View.VISIBLE);
-			// circularView.setEndangle(65);
-		}
+		// if (circularView != null) {
+		// circularView.setVisibility(View.VISIBLE);
+		// }
 
 	}
 
@@ -498,9 +502,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void changetoKictienMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("厨房模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_kitchen);
-		if (circularView != null) {
-			circularView.setVisibility(View.GONE);
-		}
+		circle_slider.setVisibility(View.GONE);
+		// if (circularView != null) {
+		// circularView.setVisibility(View.GONE);
+		// }
 	}
 
 	/**
@@ -511,9 +516,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("节能模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_energy);
-		if (circularView != null) {
-			circularView.setVisibility(View.GONE);
-		}
+		circle_slider.setVisibility(View.GONE);
+		// if (circularView != null) {
+		// circularView.setVisibility(View.GONE);
+		// }
 
 	}
 
@@ -525,9 +531,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void changetoIntelligenceMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("智能模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_intelligence);
-		if (circularView != null) {
-			circularView.setVisibility(View.GONE);
-		}
+		circle_slider.setVisibility(View.GONE);
+		// if (circularView != null) {
+		// circularView.setVisibility(View.GONE);
+		// }
 	}
 
 	/**
@@ -537,13 +544,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 */
 	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("浴缸模式");
-		circularView.setOn(true);
+		circle_slider.setVisibility(View.VISIBLE);
+		// circularView.setOn(true);
 		((View) sumwater.getParent()).setVisibility(View.VISIBLE);
 		modeimg.setImageResource(R.drawable.gas_home_icon_bathtub);
-		if (circularView != null) {
-			circularView.setVisibility(View.VISIBLE);
-			// circularView.setEndangle(48);
-		}
 	}
 
 	/**
@@ -557,11 +561,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// circularView.setVisibility(View.VISIBLE);
 
 		tv_mode.setText("自定义模式");
-		circularView.setOn(true);
-		// List<GasCustomSetVo> list = new
-		// BaseDao(this).getDb().findAll(GasCustomSetVo.class);
-		// circularView.setOn(false);
-		// 剩余加热时间 好像燃热没有这个状态
+		circle_slider.setVisibility(View.VISIBLE);
+		// circularView.setOn(true);
 
 	}
 
@@ -574,7 +575,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void dealInHeat(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getFlame() == 1) {
 			stute.setText("加热中");
-//			circularView.setIsheating(true);
+			// circularView.setIsheating(true);
 			hotImgeImageView.setVisibility(View.VISIBLE);
 
 			switch (pResp.getFirePower()) {
@@ -611,14 +612,18 @@ public class GasMainActivity extends BaseBusinessActivity implements
 					|| pResp.getFunction_state() == 6) {
 				rightButton.setEnabled(true);
 				mode.setEnabled(false);
-				circularView.setVisibility(View.VISIBLE);
-				circularView.setEndangle(48);
+				circle_slider.setVisibility(View.VISIBLE);
+				// circularView.setVisibility(View.VISIBLE);
+				// circularView.setEndangle(48);
+				circle_max_value = 48;
 			} else {
-				circularView.setVisibility(View.GONE);
-				circularView.setEndangle(65);
+				circle_slider.setVisibility(View.GONE);
+				// circularView.setVisibility(View.GONE);
+				// circularView.setEndangle(65);
+				circle_max_value = 65;
 			}
 		} else {
-//			circularView.setIsheating(false);
+			// circularView.setIsheating(false);
 			mode.setEnabled(true);
 			hotImgeImageView.setVisibility(View.GONE);
 			setViewsAble(true, pResp);
@@ -628,7 +633,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			// } else {
 			// circularView.setEndangle(65);
 			// }
-			circularView.setEndangle(65);
+			// circularView.setEndangle(65);
+			circle_max_value = 65;
 
 			iv_wave.setVisibility(View.GONE);
 		}
@@ -687,7 +693,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			tipsimg.setVisibility(View.GONE);
 		}
 		if (pResp.getCustomFunction() != 0) {
-			circularView.setOn(true);
+			circle_slider.setVisibility(View.VISIBLE);
+			// circularView.setOn(true);
 		}
 	}
 
@@ -755,7 +762,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (pResp.getOn_off() == 0) {
 			setViewsAble(false, pResp);
 			stute.setText("关机中");
-			circularView.setOn(false);
+			circle_slider.setVisibility(View.GONE);
+			// circularView.setOn(false);
 			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 			ison = false;
 		} else {
@@ -778,33 +786,25 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 */
 	public void temptertureDeal(final GasWaterHeaterStatusResp_t pResp) {
 		Log.e(TAG, "返回的当前温度是 : " + pResp.getTargetTemperature());
-		if (circularView == null) {
-			return;
-		}
-		if (Insetting) {
-			
-			circularView.setTargerdegree(pResp.getTargetTemperature());
+		if (!circle_slider.isDraging() && !isSendingCommand) {
+			circle_slider.setValue(pResp.getTargetTemperature());
+			// circularView.setTargerdegree(pResp.getTargetTemperature());
 			return;
 		}
 		target_tem.setText(pResp.getTargetTemperature() + "℃");
 		if (pResp.getTargetTemperature() < 25) {
-			circularView.setAngle(pResp.getTargetTemperature());
+			circle_slider.setValue(pResp.getTargetTemperature());
+			// circularView.setAngle(pResp.getTargetTemperature());
 			Log.e("pResp.getOutputTemperature()", pResp.getOutputTemperature()
 					+ "");
 			tv_tempter.setText(pResp.getOutputTemperature() + "");
 		} else {
-			circularView.setAngle(pResp.getTargetTemperature());
+			circle_slider.setValue(pResp.getTargetTemperature());
+			// circularView.setAngle(pResp.getTargetTemperature());
 			tv_tempter.setText(pResp.getTargetTemperature() + "");
 		}
 
-		circularView.setTargerdegree(pResp.getTargetTemperature());
-		// tempter.postDelayed(new Runnable() {
-		// @Override
-		// public void run() {
-		// // 设置初始化设定温度
-		// tempter.setText(pResp.getOutputTemperature() + "℃");
-		// }
-		// }, 2000);
+		// circularView.setTargerdegree(pResp.getTargetTemperature());
 	}
 
 	/**
@@ -853,8 +853,13 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (pResp.getCustomFunction() != 0) {
 
 			List<GasCustomSetVo> list = new BaseDao(GasMainActivity.this)
-					.getDb().findAll(GasCustomSetVo.class);
-
+					.getDb().findAllByWhere(
+							GasCustomSetVo.class,
+							" uid = '"
+									+ AccountService
+											.getUserId(GasMainActivity.this)
+									+ "'");
+			Log.e(TAG, "GasCustomSetVo的大小是" + list.size());
 			if (list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					GasCustomSetVo customSetVo = list.get(i);
@@ -1017,18 +1022,19 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void flame(GasWaterHeaterStatusResp_t pResp) {
 	}
 
-	private boolean Insetting = false;
-
 	@Override
 	public boolean onLongClick(View arg0) {
 		SendMsgModel.setToSolfMode();
 		return true;
 	}
 
-	public void sentToMsgAfterSix(final int value) {
+	public void sendToMsgAfterThreeSeconds(final int value) {
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
+			mCountDownTimer = null;
 		}
+
+		isSendingCommand = true;
 		mCountDownTimer = new CountDownTimer(3000, 1000) {
 
 			@Override
@@ -1044,83 +1050,76 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				} else {
 					SendMsgModel.setTempter(value);
 				}
+				isSendingCommand = false;
 				tv_tempter.setText(value + "");
-				Insetting = false;
 			}
 		};
 		mCountDownTimer.start();
 	}
 
-	@Override
-	public void levelListener(final int outlevel) {
+	// @Override
+	// public void levelListener(final int outlevel) {
+	//
+	// sentToMsgAfterSix(outlevel);
+	// }
 
-		sentToMsgAfterSix(outlevel);
-		// SendMsgModel.setTempter(outlevel);
-		// tempter.setText(outlevel + "");
-		// temptertitleTextView.setText("当前温度");
-		// hotImgeImageView.setVisibility(View.GONE);
-	}
+	// @Override
+	// public void updateUIListener(int outlevel) {
+	// temptertitleTextView.setText("设置水温");
+	//
+	// Log.e("outlevel", outlevel + "");
+	// tv_tempter.setText(outlevel + "");
+	// if (outlevel >= 50) {
+	// // 变小了
+	// if (circularView.getTargerdegree() > outlevel) {
+	// if (outlevel == 50) {
+	// circularView.setTargerdegree(outlevel - 1);
+	// } else {
+	// circularView.setTargerdegree(outlevel - 3);
+	// }
+	//
+	// } else {
+	// circularView.setTargerdegree(outlevel + 3);
+	// }
+	//
+	// } else {
+	// circularView.setTargerdegree(outlevel);
+	// }
+	// Insetting = true;
+	// }
 
-	@Override
-	public void updateUIListener(int outlevel) {
-		temptertitleTextView.setText("设置水温");
-		// Drawable img =
-		// getBaseContext().getResources().getDrawable(R.drawable.menu_icon_setting);
-		// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-		// img.setBounds( 0, 0, dp32, dp32 );
-		// temptertitleTextView.setCompoundDrawables(img, null, null, null);
+	// @Override
+	// public void updateUIWhenAferSetListener(final int outlevel) {
+	// temptertitleTextView.setText("设置水温");
+	// Drawable img =
+	// getBaseContext().getResources().getDrawable(R.drawable.icon_temperature);
+	// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+	// img.setBounds( 0, 0, dp32, dp32 );
+	// temptertitleTextView.setCompoundDrawables(img, null, null, null);
 
-		Log.e("outlevel", outlevel + "");
-		tv_tempter.setText(outlevel + "");
-		if (outlevel >= 50) {
-			// 变小了
-			if (circularView.getTargerdegree() > outlevel) {
-				if (outlevel == 50) {
-					circularView.setTargerdegree(outlevel - 1);
-				} else {
-					circularView.setTargerdegree(outlevel - 3);
-				}
+	// Log.e("outlevel", outlevel + "");
+	// tv_tempter.setText(outlevel + "");
+	// }
 
-			} else {
-				circularView.setTargerdegree(outlevel + 3);
-			}
-
-		} else {
-			circularView.setTargerdegree(outlevel);
-		}
-		Insetting = true;
-	}
-
-	@Override
-	public void updateUIWhenAferSetListener(final int outlevel) {
-		temptertitleTextView.setText("设置水温");
-		// Drawable img =
-		// getBaseContext().getResources().getDrawable(R.drawable.icon_temperature);
-		// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-		// img.setBounds( 0, 0, dp32, dp32 );
-		// temptertitleTextView.setCompoundDrawables(img, null, null, null);
-
-		Log.e("outlevel", outlevel + "");
-		// tv_tempter.setText(outlevel + "");
-	}
-
-	@Override
-	public void updateLocalUIdifferent(int outlevel) {
-		temptertitleTextView.setText("设置水温");
-	}
+	// @Override
+	// public void updateLocalUIdifferent(int outlevel) {
+	// }
 
 	public void setViewsAble(boolean isAble, GasWaterHeaterStatusResp_t pResp) {
 		if (isAble) {
 			if (pResp.getFunction_state() == 3
 					|| pResp.getFunction_state() == 1
 					|| pResp.getFunction_state() == 6) {
-				circularView.setVisibility(View.VISIBLE);
+				circle_slider.setVisibility(View.VISIBLE);
+				// circularView.setVisibility(View.VISIBLE);
 			} else {
-				circularView.setVisibility(View.GONE);
+				circle_slider.setVisibility(View.GONE);
+				// circularView.setVisibility(View.GONE);
 			}
 
 		} else {
-			circularView.setVisibility(View.GONE);
+			circle_slider.setVisibility(View.GONE);
+			// circularView.setVisibility(View.GONE);
 		}
 		mode.setEnabled(isAble);
 		// rightButton.setEnabled(isAble);
@@ -1131,6 +1130,34 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		dealDisConnect();
 		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 		stute.setText("不在线");
+	}
+
+	@Override
+	public void didBeginTouchCircleSlider() {
+
+	}
+
+	@Override
+	public void needChangeValue(int value, boolean isAdd) {
+		boolean isLarger = value > circle_slider.getValue();
+		if (value >= 35 && value <= circle_max_value) {
+			if (value == 49) {
+				value = isLarger ? 50 : 48;
+			} else if (value > 50 && value < 55) {
+				value = isLarger ? 55 : 50;
+			} else if (value > 55 && value < 60) {
+				value = isLarger ? 60 : 55;
+			} else if (value > 60 && value < 65) {
+				value = isLarger ? 65 : 60;
+			}
+			tv_tempter.setText(value + "");
+			circle_slider.setValue(value);
+		}
+	}
+
+	@Override
+	public void didEndChangeValue() {
+		sendToMsgAfterThreeSeconds(circle_slider.getValue());
 	}
 
 }

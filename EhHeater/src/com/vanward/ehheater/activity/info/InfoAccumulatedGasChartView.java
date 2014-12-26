@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONArray;
@@ -48,6 +47,7 @@ import com.vanward.ehheater.activity.info.InfoAccumulatedWaterChartView.LoadData
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpConnectUtil;
+import com.vanward.ehheater.util.HttpFriend;
 
 public class InfoAccumulatedGasChartView extends LinearLayout implements
 		OnClickListener, OnCheckedChangeListener {
@@ -72,20 +72,17 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 	TextView last, next, sumgas;
 	private TextView lqtime;
-
-	private Dialog loadingDialog;
+	private HttpFriend mHttpFriend;
 
 	public InfoAccumulatedGasChartView(Context context) {
 		super(context);
 		this.context = context;
+		mHttpFriend = HttpFriend.create(context);
 		layout = (ViewGroup) inflate(context,
 				R.layout.activity_info_accumulated_gas, null);
 		RadioGroup radioGroup = (RadioGroup) layout
 				.findViewById(R.id.radioGroup1);
 		radioGroup.setOnCheckedChangeListener(this);
-
-		loadingDialog = BaoDialogShowUtil.getInstance(context)
-				.createLoadingDialog();
 
 		webView = (WebView) layout.findViewById(R.id.webView1);
 		webView.addJavascriptInterface(new Initobject(), "init");
@@ -385,15 +382,13 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 	public void getmessageweek(long da) {
 		Log.e(TAG, "getmessageweek返回的时间是 : " + da);
-		FinalHttp finalHttp = new FinalHttp();
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
 				+ "&dateTime=" + da + "&resultType=1&expendType=1";
 		Log.e(TAG, "getmessageweek请求的url是 : " + url);
-		
-		loadingDialog.show();
-		finalHttp.get(url, new AjaxCallBack<String>() {
+
+		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
 
 			// 请求成功
 			SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -451,21 +446,11 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 					chart4week();
 					webView.reload();
 					// 销毁等待
-					loadingDialog.dismiss();
-
 				} catch (Exception e) {
 					// TODO Auto-generated catch blocks
 					e.printStackTrace();
 				}
 				super.onSuccess(t);
-			}
-
-			// 请求失败
-			@Override
-			public void onFailure(Throwable t, int errorNo, String strMsg) {
-				super.onFailure(t, errorNo, strMsg);
-				Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG).show();
-				loadingDialog.dismiss();
 			}
 		});
 	}
@@ -474,12 +459,11 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		Log.e(TAG, "getmessagemonth返回的时间是 : " + da2);
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		FinalHttp finalHttp = new FinalHttp();
-		
-		loadingDialog.show();
-		finalHttp.get(Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
-				+ adid + "&dateTime=" + da2 + "&resultType=2&expendType=1",
-				new AjaxCallBack<String>() {
+
+		mHttpFriend.toUrl(
+				Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
+						+ "&dateTime=" + da2 + "&resultType=2&expendType=1")
+				.executeGet(null, new AjaxCallBack<String>() {
 
 					// 请求成功
 					SimpleDateFormat format = new SimpleDateFormat("MM/dd");
@@ -566,24 +550,11 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 							// 刷新数据展示
 							webView.reload();
 							// 销毁等待
-							loadingDialog.dismiss();
-
 						} catch (Exception e) {
 							// TODO Auto-generated catch blocks
 							e.printStackTrace();
 						}
 						super.onSuccess(t);
-					}
-
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						// TODO Auto-generated method stub 请求失败
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
-								.show();
-						loadingDialog.dismiss();
 					}
 				});
 	}
@@ -593,94 +564,78 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		dtime = da3;
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		FinalHttp finalHttp = new FinalHttp();
-		
-		loadingDialog.show();
-		finalHttp.get(Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did="
-				+ adid + "&dateTime=" + da3 + "&resultType=3&expendType=1",
-				new AjaxCallBack<String>() {
 
-					// 请求成功
-					SimpleDateFormat format = new SimpleDateFormat("MM");
+		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
+				+ "&dateTime=" + da3 + "&resultType=3&expendType=1";
 
-					@Override
-					public void onSuccess(String t) {
-						Log.e(TAG, "getmessageyear返回的json数据是 : " + t);
-						try {
-							JSONObject jsonObject = new JSONObject(t);
-							JSONArray array = jsonObject.getJSONArray("result");
+		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
 
-							// JSONObject jb=(JSONObject) array.get(0);
-							// dtime=Long.valueOf(jb.getString("time"));
+			// 请求成功
+			SimpleDateFormat format = new SimpleDateFormat("MM");
 
-							JSONArray jsonArray = new JSONArray();
-							JSONArray jsonArray2 = new JSONArray();
-							List<Electricity> li = new ArrayList<Electricity>();
-							float a = 0;
-							for (int i = 0; i < array.length(); i++) {
-								float b = 0;
-								JSONObject jsonObj = array.getJSONObject(i);
-								String amount = jsonObj.getString("amount");
-								String time = format.format(new Long(jsonObj
-										.getString("time")));
-								Electricity electricity = new Electricity();
-								electricity.setAmount(amount);
-								electricity.setTime(time);
-								li.add(electricity);
-								JSONObject jsonOBJ = new JSONObject();
-								JSONObject jsonOBJ2 = new JSONObject();
-								b = Math.round(Float.parseFloat(li.get(i)
-										.getAmount().equals("") ? "0" : li.get(
-										i).getAmount()));
-								a = a + b + 0f;
-								jsonOBJ.put("name", li.get(i).getTime());
-								if (li.get(i).getAmount().equals("")
-										|| li.get(i).getAmount()
-												.substring(0, 1).equals("0")) {
-									jsonOBJ2.put("data", "");
-								} else {
-									jsonOBJ2.put(
-											"data",
-											Math.round(Float.parseFloat(li.get(
-													i).getAmount())));
-								}
-								jsonArray.put(jsonOBJ);
-								jsonArray2.put(jsonOBJ2);
-							}
-							// 赋值name
-							namelistjson = jsonArray.toString();
-							// 赋值data
-							datalistjson = jsonArray2.toString();
-							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-							Long l = new Long(dtime);
-							Date da = new Date(l);
-							lqtime.setText(sim.format(da));
-							// 设置使用的总电数
-							sumgas.setText(Math.round(a) + "㎥");
-							// 更换下方按钮
-							chart4Year();
-							// 刷新数据展示
-							webView.reload();
-							// 销毁等待
-							loadingDialog.dismiss();
+			@Override
+			public void onSuccess(String t) {
+				Log.e(TAG, "getmessageyear返回的json数据是 : " + t);
+				try {
+					JSONObject jsonObject = new JSONObject(t);
+					JSONArray array = jsonObject.getJSONArray("result");
 
-						} catch (Exception e) {
-							// TODO Auto-generated catch blocks
-							e.printStackTrace();
+					// JSONObject jb=(JSONObject) array.get(0);
+					// dtime=Long.valueOf(jb.getString("time"));
+
+					JSONArray jsonArray = new JSONArray();
+					JSONArray jsonArray2 = new JSONArray();
+					List<Electricity> li = new ArrayList<Electricity>();
+					float a = 0;
+					for (int i = 0; i < array.length(); i++) {
+						float b = 0;
+						JSONObject jsonObj = array.getJSONObject(i);
+						String amount = jsonObj.getString("amount");
+						String time = format.format(new Long(jsonObj
+								.getString("time")));
+						Electricity electricity = new Electricity();
+						electricity.setAmount(amount);
+						electricity.setTime(time);
+						li.add(electricity);
+						JSONObject jsonOBJ = new JSONObject();
+						JSONObject jsonOBJ2 = new JSONObject();
+						b = Math.round(Float.parseFloat(li.get(i).getAmount()
+								.equals("") ? "0" : li.get(i).getAmount()));
+						a = a + b + 0f;
+						jsonOBJ.put("name", li.get(i).getTime());
+						if (li.get(i).getAmount().equals("")
+								|| li.get(i).getAmount().substring(0, 1)
+										.equals("0")) {
+							jsonOBJ2.put("data", "");
+						} else {
+							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
+									.get(i).getAmount())));
 						}
-						super.onSuccess(t);
+						jsonArray.put(jsonOBJ);
+						jsonArray2.put(jsonOBJ2);
 					}
-
-					// 请求失败
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						Toast.makeText(context, "服务器错误", Toast.LENGTH_LONG)
-								.show();
-						loadingDialog.dismiss();
-					}
-				});
+					// 赋值name
+					namelistjson = jsonArray.toString();
+					// 赋值data
+					datalistjson = jsonArray2.toString();
+					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
+					Long l = new Long(dtime);
+					Date da = new Date(l);
+					lqtime.setText(sim.format(da));
+					// 设置使用的总电数
+					sumgas.setText(Math.round(a) + "㎥");
+					// 更换下方按钮
+					chart4Year();
+					// 刷新数据展示
+					webView.reload();
+					// 销毁等待
+				} catch (Exception e) {
+					// TODO Auto-generated catch blocks
+					e.printStackTrace();
+				}
+				super.onSuccess(t);
+			}
+		});
 	}
 
 	// 上下
@@ -713,7 +668,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 	// }
 	// });
 	// }
-	
+
 	private long getTodayTime() {
 		Date date = new Date();
 		date.setHours(0);
@@ -734,9 +689,9 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		ca.add(ca.DATE, -7);
-		Log.e(TAG , "times钱 : " + ca.getTime().getTime());
-		long times = ((int)ca.getTime().getTime()) / 1000 * 1000;
-		Log.e(TAG , "times后 : " + times);
+		Log.e(TAG, "times钱 : " + ca.getTime().getTime());
+		long times = ((int) ca.getTime().getTime()) / 1000 * 1000;
+		Log.e(TAG, "times后 : " + times);
 		return times;
 	}
 

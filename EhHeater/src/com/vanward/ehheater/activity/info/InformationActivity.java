@@ -1,16 +1,12 @@
 package com.vanward.ehheater.activity.info;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -30,6 +26,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.util.HttpFriend;
 
 public class InformationActivity extends EhHeaterBaseActivity implements
 		OnPageChangeListener, OnClickListener {
@@ -42,9 +39,10 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 	TextView heatxiaolv, taptv, heattv;
 	McuVo mcuVo;
 	private boolean isGas;
-	ArrayList<View> pageViews = new ArrayList<View>(); 
+	ArrayList<View> pageViews = new ArrayList<View>();
 	private TextView sumwater;
 	private TextView sumgas;
+	private HttpFriend mHttpFriend;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +52,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 	}
 
 	private void initView(Context context) {
+		mHttpFriend = HttpFriend.create(this);
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		leftbutton.setOnClickListener(this);
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
@@ -63,9 +62,12 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 
 		View view3 = LinearLayout.inflate(this, R.layout.information_3, null);
 		title.setText("信息");
-		InfoAccumulatedWaterChartView inforChartView = new InfoAccumulatedWaterChartView(this);
-		InfoAccumulatedGasChartView inforElChartView = new InfoAccumulatedGasChartView(this);
-		InfoAccumulatedElectricityChartView inforElcChartView = new InfoAccumulatedElectricityChartView(this);
+		InfoAccumulatedWaterChartView inforChartView = new InfoAccumulatedWaterChartView(
+				this);
+		InfoAccumulatedGasChartView inforElChartView = new InfoAccumulatedGasChartView(
+				this);
+		InfoAccumulatedElectricityChartView inforElcChartView = new InfoAccumulatedElectricityChartView(
+				this);
 		isGas = getIntent().getBooleanExtra("isgas", false);
 		if (isGas) {
 			pageViews.add(inforChartView);
@@ -192,7 +194,8 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 		if (position == 1) {
 			if (isGas) {
 				try {
-					((InfoAccumulatedGasChartView) pageViews.get(1)).selectDefault();
+					((InfoAccumulatedGasChartView) pageViews.get(1))
+							.selectDefault();
 				} catch (Exception e) {
 				}
 			} else {
@@ -218,7 +221,6 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 	}
 
 	public void getdata() {
-		FinalHttp finalHttp = new FinalHttp();
 		HeaterInfoService heaterInfoService = new HeaterInfoService(this);
 
 		String url = "";
@@ -231,9 +233,8 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 		}
 
 		Log.e("信息请求的url是 : ", url);
-		
-		showRequestDialog();
-		finalHttp.get(Consts.REQUEST_BASE_URL + url,
+
+		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + url).executeGet(null,
 				new AjaxCallBack<String>() {
 					// 请求成功
 					@Override
@@ -242,37 +243,37 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 						Log.e("信息请求返回的json是 : ", t);
 						try {
 							JSONObject json = new JSONObject(t);
-							String responseCode = json.getString("responseCode");
+							String responseCode = json
+									.getString("responseCode");
 							if ("200".equals(responseCode)) {
-								JSONObject result = json.getJSONObject("result");
+								JSONObject result = json
+										.getJSONObject("result");
 								if (isGas) {
-									int now_efficiency = result.getInt("now_efficiency");
+									int now_efficiency = result
+											.getInt("now_efficiency");
 									heatxiaolv.setText(now_efficiency + "%");
-									
-									long sumCumulativeOpenValveTimes = result.getLong("sumCumulativeOpenValveTimes");
-									taptv.setText(sumCumulativeOpenValveTimes + "");
-									
-									long sumCumulveUseTime = result.getLong("sumCumulveUseTime");
+
+									long sumCumulativeOpenValveTimes = result
+											.getLong("sumCumulativeOpenValveTimes");
+									taptv.setText(sumCumulativeOpenValveTimes
+											+ "");
+
+									long sumCumulveUseTime = result
+											.getLong("sumCumulveUseTime");
 									heattv.setText(sumCumulveUseTime + "mins");
 								} else {
-									int heating_tube_time = result.getInt("heating_tube_time");
-									int machine_not_heating_time = result.getInt("machine_not_heating_time");
-									int sum = heating_tube_time + machine_not_heating_time;
+									int heating_tube_time = result
+											.getInt("heating_tube_time");
+									int machine_not_heating_time = result
+											.getInt("machine_not_heating_time");
+									int sum = heating_tube_time
+											+ machine_not_heating_time;
 									heattv.setText(sum + "mins");
 								}
 							}
-							dismissRequestDialog();
 						} catch (JSONException e) {
 							e.printStackTrace();
-							dismissRequestDialog();
 						}
-					}
-
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						dismissRequestDialog();
 					}
 				});
 	}
