@@ -36,7 +36,7 @@ public class BaoDialogShowUtil {
 	private BaoDialogShowUtil(Context context) {
 		this.mContext = context;
 	}
-	
+
 	public BaoTimeoutDailog createLoadingDialog() {
 		LayoutInflater layoutInflater = LayoutInflater.from(mContext);
 		RelativeLayout relativeLayout = (RelativeLayout) layoutInflater
@@ -46,7 +46,8 @@ public class BaoDialogShowUtil {
 				.findViewById(R.id.tv_loading);
 		tvContent.setText("");
 		tvContent.setVisibility(View.VISIBLE);
-		BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext, R.style.dialogStyle);
+		BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext,
+				R.style.dialogStyle);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setCancelable(false);
 		dialog.setContentView(relativeLayout);
@@ -57,7 +58,8 @@ public class BaoDialogShowUtil {
 			int leftButtonResId, int rightButtonResId,
 			OnClickListener leftButtonClickListener,
 			OnClickListener rightButtonClickListener) {
-		final BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext, R.style.custom_dialog);
+		final BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext,
+				R.style.custom_dialog);
 		dialog.setContentView(R.layout.dialog_common_two_button);
 
 		TextView tv_content = (TextView) dialog.findViewById(R.id.tv_content);
@@ -97,9 +99,10 @@ public class BaoDialogShowUtil {
 		return dialog;
 	}
 
-	public BaoTimeoutDailog createDialogWithOneButton(int contentResId, int buttonResId,
-			OnClickListener buttonClickListener) {
-		final BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext, R.style.custom_dialog);
+	public BaoTimeoutDailog createDialogWithOneButton(int contentResId,
+			int buttonResId, OnClickListener buttonClickListener) {
+		final BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext,
+				R.style.custom_dialog);
 		dialog.setContentView(R.layout.dialog_common_one_button);
 
 		TextView tv_content = (TextView) dialog.findViewById(R.id.tv_content);
@@ -123,11 +126,13 @@ public class BaoDialogShowUtil {
 
 		return dialog;
 	}
-	
+
 	static class BaoTimeoutDailog extends Dialog {
-		
+
 		private CountDownTimer countDown;
 		
+		private boolean isDetach = false;
+
 		public BaoTimeoutDailog(Context context) {
 			super(context);
 		}
@@ -140,7 +145,7 @@ public class BaoDialogShowUtil {
 		public BaoTimeoutDailog(Context context, int theme) {
 			super(context, theme);
 		}
-		
+
 		@Override
 		public void show() {
 			countDown = new CountDownTimer(30000, 1000) {
@@ -152,14 +157,16 @@ public class BaoDialogShowUtil {
 
 				@Override
 				public void onFinish() {
-					dismiss();
+					if (!isDetach) {
+						dismiss();
+					}
 					countDown = null;
 				}
 			};
 			countDown.start();
 			super.show();
 		}
-		
+
 		@Override
 		public void dismiss() {
 			if (countDown != null) {
@@ -168,7 +175,9 @@ public class BaoDialogShowUtil {
 			}
 			super.dismiss();
 		}
+
+		public void onDetachedFromWindow() {
+			isDetach = true;
+		};
 	}
 }
-
- 

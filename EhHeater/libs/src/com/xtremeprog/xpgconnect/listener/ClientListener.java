@@ -73,4 +73,49 @@ public interface ClientListener {
 	public void onTcpPacket(byte data[], int connId);
 	
 	public void onSendPacket(byte data[], int connId);
+
+	public void onHTTPResp(int result, String buffer);
+
+	public void onWanLoginResp(int result, int connId);
+
+
+// for V4 SDK
+	public void onV4Login(int errorCode, String uid,String token,String expire_at);
+
+	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint);
+
+	public void onV4QueryDevice(int errorCode, String did,String passcode);
+
+	public void onV4CreateUserByAnonymity(int errorCode, String uid,String token,String expire_at);
+
+	public void onV4CreateUserByName(int errorCode, String uid,String token,String expire_at);
+
+	public void onV4CreateUserByPhone(int errorCode, String uid,String token,String expire_at);
+
+	public void onV4CreateUserByMail(int errorCode, String uid,String token,String expire_at);
+
+	public void onV4UpdateUserName(int errorCode, String updatedAt);
+
+	public void onV4UpdatePhone(int errorCode, String updatedAt);
+
+	public void onV4ChangeUserPwd(int errorCode, String updatedAt);
+
+	public void onV4ChangeUserPhone(int errorCode, String updatedAt);
+
+	public void onV4ChangeUserMail(int errorCode, String updatedAt);
+
+	public void onV4GetDeviceInfo(int errorCode,XpgEndpoint endpoint);
+
+	public void onV4GetMobileAuthCode(int errorCode);
+
+	public void onV4VerifyMobileAuthCode(int errorCode);
+
+	public void onV4RecoverPwdByPhone(int errorCode);
+
+	public void onV4RecoverPwdByMail(int errorCode);
+
+	public void onV4BindDevce(int errorCode ,String successString,String failString);
+
+	public void onV4UnbindDevice(int errorCode ,String successString,String failString);
+
 }

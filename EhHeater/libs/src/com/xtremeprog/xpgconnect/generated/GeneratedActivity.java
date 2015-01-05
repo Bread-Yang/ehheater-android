@@ -59,6 +59,69 @@ public class GeneratedActivity extends Activity
     public void onSendPacket(byte[] data, int connId) { }
 
     @Override
+    public void onHTTPResp(int result, String buffer) { }
+
+    @Override
+    public void onWanLoginResp(int result, int connId) { }
+
+    @Override
+    public void onV4Login(int errorCode, String uid,String token,String expire_at) { }
+
+    @Override
+    public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) { }
+
+    @Override
+    public void onV4QueryDevice(int errorCode, String did,String passcode) { }
+
+    @Override
+    public void onV4CreateUserByAnonymity(int errorCode, String uid,String token,String expire_at) { }
+
+    @Override
+    public void onV4CreateUserByName(int errorCode, String uid,String token,String expire_at) { }
+
+    @Override
+    public void onV4CreateUserByPhone(int errorCode, String uid,String token,String expire_at) { }
+
+    @Override
+    public void onV4CreateUserByMail(int errorCode, String uid,String token,String expire_at) { }
+
+    @Override
+    public void onV4UpdateUserName(int errorCode, String updatedAt) { }
+
+    @Override
+    public void onV4UpdatePhone(int errorCode, String updatedAt) { }
+
+    @Override
+    public void onV4ChangeUserPwd(int errorCode, String updatedAt) { }
+
+    @Override
+    public void onV4ChangeUserPhone(int errorCode, String updatedAt) { }
+
+    @Override
+    public void onV4ChangeUserMail(int errorCode, String updatedAt) { }
+
+    @Override
+    public void onV4GetDeviceInfo(int errorCode,XpgEndpoint endpoint) { }
+
+    @Override
+    public void onV4GetMobileAuthCode(int errorCode) { }
+
+    @Override
+    public void onV4VerifyMobileAuthCode(int errorCode) { }
+
+    @Override
+    public void onV4RecoverPwdByPhone(int errorCode) { }
+
+    @Override
+    public void onV4RecoverPwdByMail(int errorCode) { }
+
+    @Override
+    public void onV4BindDevce(int errorCode ,String successString,String failString) { }
+
+    @Override
+    public void onV4UnbindDevice(int errorCode ,String successString,String failString) { }
+
+    @Override
     public void OnWriteWifiConfigResp(WriteWifiConfigResp_t pResp, int nConnId) {
         generated.DumpWriteWifiConfigResp(pResp);
     }
@@ -81,6 +144,11 @@ public class GeneratedActivity extends Activity
     @Override
     public void OnEasylinkResp(EasylinkResp_t pResp) {
         generated.DumpEasylinkResp(pResp);
+    }
+
+    @Override
+    public void OnEasylinkV3Resp(EasylinkV3Resp_t pResp) {
+        generated.DumpEasylinkV3Resp(pResp);
     }
 
     @Override

@@ -102,8 +102,8 @@
                 android:text="网络名称"
                 android:textColor="@color/color1" />
 
-            <TextView
-                android:id="@+id/amc2_tv_ssid"
+            <EditText
+                android:id="@+id/et_input_ssid"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:layout_weight="1"

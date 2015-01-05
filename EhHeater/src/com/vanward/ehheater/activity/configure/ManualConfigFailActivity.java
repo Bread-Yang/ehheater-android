@@ -20,7 +20,6 @@ public class ManualConfigFailActivity extends EhHeaterBaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getBaseContext(), ShitActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
 			}
 		});

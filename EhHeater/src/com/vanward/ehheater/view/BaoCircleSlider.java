@@ -16,6 +16,8 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.util.BitmapThumbUtil;
 
 public class BaoCircleSlider extends View {
+	
+	private static final String TAG = "BaoCircleSlider";
 
 	private float minValue; // 起始值 : 0
 	private float maxValue;
@@ -376,7 +378,11 @@ public class BaoCircleSlider extends View {
 				if (offset > 30) {
 					return true; // 控制值的变化，避免从最大值跳到最小值等情况
 				}
-				isAdd = (angle > preAngle);
+				Log.e(TAG, "angle - preAngle = " + (angle - preAngle));
+//				if (Math.abs(angle - preAngle) >= 4) {
+					isAdd = (angle > preAngle);
+//				}
+				
 				preAngle = angle;
 				setShowAddImageView(isAdd);
 				setShowMinusImageView(!isAdd);
@@ -401,7 +407,7 @@ public class BaoCircleSlider extends View {
 				if (circleSliderListener != null) {
 					circleSliderListener.needChangeValue(currentValue, isAdd);
 				}
-			} else if (isOnline) {
+			} else if (isOnline) { 
 				float angle = angleOfTouchPoint(touchPoint);
 				Rect hitRect = new Rect();
 				ctrlIconView.getHitRect(hitRect);
@@ -411,6 +417,7 @@ public class BaoCircleSlider extends View {
 				// Log.e("当前圆点的currentAngle : ", currentAngle + "");
 				boolean isAdd = angle > currentAngle;
 				int pad = isAdd ? +1 : -1;
+				Log.e(TAG, "ANGLE是 : " + isAdd);
 				currentValue = value + pad;
 				// setValue(currentValue); // 使ctrlIconView滚动, for test
 				changingValue = true;

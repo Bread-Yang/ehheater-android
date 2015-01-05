@@ -5,6 +5,7 @@ import com.xtremeprog.xpgconnect.generated.OnboardingSetResp_t;
 import com.xtremeprog.xpgconnect.generated.DiscoveryV1Resp_t;
 import com.xtremeprog.xpgconnect.generated.DiscoveryV3Resp_t;
 import com.xtremeprog.xpgconnect.generated.EasylinkResp_t;
+import com.xtremeprog.xpgconnect.generated.EasylinkV3Resp_t;
 import com.xtremeprog.xpgconnect.generated.BootstrapResp_t;
 import com.xtremeprog.xpgconnect.generated.PasscodeResp_t;
 import com.xtremeprog.xpgconnect.generated.LanLoginResp_t;
@@ -30,6 +31,7 @@ public interface GeneratedJniListener {
     public void OnDiscoveryV1Resp(DiscoveryV1Resp_t resp);
     public void OnDiscoveryV3Resp(DiscoveryV3Resp_t resp);
     public void OnEasylinkResp(EasylinkResp_t resp);
+    public void OnEasylinkV3Resp(EasylinkV3Resp_t resp);
     public void OnBootstrapResp(BootstrapResp_t resp);
     public void OnPasscodeResp(PasscodeResp_t resp, int nConnId);
     public void OnLanLoginResp(LanLoginResp_t resp, int nConnId);

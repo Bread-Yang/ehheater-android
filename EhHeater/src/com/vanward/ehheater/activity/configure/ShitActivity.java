@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -50,6 +51,8 @@ import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 public class ShitActivity extends EhHeaterBaseActivity implements
 		OnClickListener, FirstTimeConfigListener {
 
+	private static final String TAG = "ShitActivity";
+
 	private RelativeLayout mRlStepContainer;
 	private Button mBtnNextStep;
 	private TextView mTvWifiSsid;
@@ -76,6 +79,12 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			mType = HeaterType.Eh;
 			setTopText(R.string.setting_new_device);
 		}
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.e(TAG, "onCreate执行了");
 	}
 
 	@Override
@@ -114,6 +123,14 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				receiver, filter);
 
+		// new Handler().postDelayed(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// startActivity(new Intent(ShitActivity.this,
+		// ManualConfigFailActivity.class));
+		// }
+		// }, 5000);
 	}
 
 	@Override
@@ -123,14 +140,21 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 	}
 
 	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.e(TAG, "onNewIntent执行了");
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.e(TAG, "onResume执行了");
 		applyCurWifiSsid();
 
-//		if (curindex == 3 && !dialog_easylink.isShowing()) {
-//			mRlStepContainer.removeAllViews();
-//			mRlStepContainer.addView(getStepView(1));
-//		}
+		// if (curindex == 3 && !dialog_easylink.isShowing()) {
+		// mRlStepContainer.removeAllViews();
+		// mRlStepContainer.addView(getStepView(1));
+		// }
 		XPGConnectClient.AddActivity(this);
 	}
 
@@ -317,7 +341,6 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			break;
 		case R.id.btn_left:
 			onBackPressed();
-			;
 			break;
 		}
 	}
@@ -361,10 +384,30 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
-		if (easyLkRespCount++ == 0 && isWaitingCallback) {
+		if (isWaitingCallback) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
-			stopEasyLink();
 			tempEndpoint = endpoint;
+
+			Log.e(TAG, "打印productKey前");
+			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
+			Log.e(TAG, ("".equals(endpoint.getSzProductKey()) + ""));
+			if (endpoint.getSzProductKey() == null
+					|| "".equals(endpoint.getSzProductKey())) {
+				return;
+			}
+			if (endpoint.getSzMac() == null || "".equals(endpoint.getSzMac())) {
+				return;
+			}
+			// if (endpoint.getSzDid() == null ||
+			// "".equals(endpoint.getSzDid())) {
+			// return;
+			// }
+			// if (endpoint.getSzPasscode() == null ||
+			// "".equals(endpoint.getSzPasscode())) {
+			// return;
+			// }
+			isWaitingCallback = false;
+			stopEasyLink();
 			mEasyLinkTimeoutTimer.cancel();
 			dialog_easylink.dismiss();
 			XPGConnectClient.RemoveActivity(this);
@@ -379,7 +422,6 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 	}
 
 	XpgEndpoint tempEndpoint;
-	int easyLkRespCount;
 	boolean isWaitingCallback = false;
 
 	private void finishingConfig() {
@@ -503,6 +545,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 				intent.putExtra("isFurnace", true);
 			}
 			startActivity(intent);
+			onBackPressed();
 		}
 
 		@Override

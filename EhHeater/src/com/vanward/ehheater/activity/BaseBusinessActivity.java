@@ -337,7 +337,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	protected void connectDevice(String connectText, String mac) {
 
-		XPGConnectClient.initClient(this);
+//		XPGConnectClient.initClient(this);
 
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());

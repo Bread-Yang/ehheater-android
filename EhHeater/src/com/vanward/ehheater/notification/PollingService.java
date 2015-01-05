@@ -128,8 +128,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-//							Log.e(TAG, "checkElecticHeaterInfo请求返回来的数据是 : "
-//									+ jsonString);
+							Log.e(TAG, "checkElecticHeaterInfo请求返回来的数据是 : "
+									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -238,8 +238,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-//							Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
-//									+ jsonString);
+							Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
+									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);

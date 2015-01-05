@@ -6,6 +6,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,11 +30,12 @@ import com.vanward.ehheater.notification.PollingUtils;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
+import com.vanward.ehheater.util.wifi.WifiAdmin;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
 public class WelcomeActivity extends GeneratedActivity {
-	
+
 	private final String TAG = "WelcomeActivity";
 
 	private TextView mTvInfo;
@@ -49,7 +52,7 @@ public class WelcomeActivity extends GeneratedActivity {
 		boolean isReEnter = getIntent().getBooleanExtra(
 				Consts.INTENT_EXTRA_FLAG_REENTER, false);
 		if (!isReEnter) {
-			XPGConnectClient.initClient(this);
+			// XPGConnectClient.initClient(this);
 		}
 
 		boolean asDialog = getIntent().getBooleanExtra(
@@ -72,12 +75,12 @@ public class WelcomeActivity extends GeneratedActivity {
 
 		MobclickAgent.updateOnlineConfig(this);
 
-		// 每5分钟请求一次 
-		PollingUtils.startPollingService(this, 5 , PollingService.class,
+		// 每5分钟请求一次
+		PollingUtils.startPollingService(this, 5, PollingService.class,
 				PollingService.ACTION);
 	}
 
-	public HeaterInfo getCurrentDevice() {
+	public HeaterInfo getCurrentDevice() {    
 
 		if (curHeater == null) {
 			curHeater = new HeaterInfoService(getBaseContext())
@@ -134,24 +137,24 @@ public class WelcomeActivity extends GeneratedActivity {
 			// startActivity(new Intent(this, ShitActivity.class));
 			// return STATE_JUMPED_OUT;
 			HeaterInfoService hser = new HeaterInfoService(this);
-			
+
 			List<HeaterInfo> allEIDevices = new HeaterInfoDao(getBaseContext())
-			.getAllDeviceOfType(HeaterType.Eh);
+					.getAllDeviceOfType(HeaterType.Eh);
 			if (allEIDevices != null & allEIDevices.size() > 0) {
 				hser.setCurrentSelectedHeater(allEIDevices.get(0).getMac());
 				flowHandler.sendEmptyMessage(STATE_NORMAL);
 				return;
-			} 
-			
+			}
+
 			List<HeaterInfo> allGasDevices = new HeaterInfoDao(getBaseContext())
-			.getAllDeviceOfType(HeaterType.ST);
-			
-			if (allGasDevices != null & allGasDevices.size() > 0)  {
+					.getAllDeviceOfType(HeaterType.ST);
+
+			if (allGasDevices != null & allGasDevices.size() > 0) {
 				hser.setCurrentSelectedHeater(allGasDevices.get(0).getMac());
 				flowHandler.sendEmptyMessage(STATE_NORMAL);
 				return;
 			}
-			
+
 			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
 			return;
 		}

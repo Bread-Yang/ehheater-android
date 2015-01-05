@@ -94,6 +94,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private Dialog fullWaterDialog;
 
 	private int circle_max_value = 65;
+	
+	private boolean isHeating = false;
 
 	/** 指令正在发送中,三秒内不能改变CircleSlider滑动圆圈的位置 */
 	private boolean isSendingCommand = false;
@@ -333,6 +335,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	public void dealDisConnect() {
 		Log.e(TAG, "dealDisConnect被调用了");
+		isSendingCommand = false;
 		tv_tempter.setText("--");
 		tv_mode.setText("----");
 		leavewater.setText("--");
@@ -431,6 +434,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 
+			Log.e(TAG, "ivTitleBtnRigh执行了");
+			
 			if (tv_tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
@@ -574,6 +579,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	public void dealInHeat(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getFlame() == 1) {
+			isHeating = true;
 			stute.setText("加热中");
 			// circularView.setIsheating(true);
 			hotImgeImageView.setVisibility(View.VISIBLE);
@@ -624,6 +630,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			}
 		} else {
 			// circularView.setIsheating(false);
+			isHeating = false;
 			mode.setEnabled(true);
 			hotImgeImageView.setVisibility(View.GONE);
 			setViewsAble(true, pResp);
@@ -772,9 +779,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 			if (pResp.getFlame() != 1) {
 				setViewsAble(true, pResp);
-				ison = true;
 				stute.setText("待机中");
 			}
+			ison = true;
 			rightButton.setBackgroundResource(R.drawable.icon_shut);
 		}
 	}
@@ -789,17 +796,20 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (!circle_slider.isDraging() && !isSendingCommand) {
 			circle_slider.setValue(pResp.getTargetTemperature());
 			// circularView.setTargerdegree(pResp.getTargetTemperature());
-			return;
 		}
 		target_tem.setText(pResp.getTargetTemperature() + "℃");
 		if (pResp.getTargetTemperature() < 25) {
-			circle_slider.setValue(pResp.getTargetTemperature());
+			if (!circle_slider.isDraging() && !isSendingCommand) {
+				circle_slider.setValue(pResp.getTargetTemperature());
+			}
 			// circularView.setAngle(pResp.getTargetTemperature());
 			Log.e("pResp.getOutputTemperature()", pResp.getOutputTemperature()
 					+ "");
 			tv_tempter.setText(pResp.getOutputTemperature() + "");
 		} else {
-			circle_slider.setValue(pResp.getTargetTemperature());
+			if (!circle_slider.isDraging() && !isSendingCommand) {
+				circle_slider.setValue(pResp.getTargetTemperature());
+			}
 			// circularView.setAngle(pResp.getTargetTemperature());
 			tv_tempter.setText(pResp.getTargetTemperature() + "");
 		}
@@ -1139,20 +1149,35 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void needChangeValue(int value, boolean isAdd) {
+		Log.e(TAG, "isAdd : " + isAdd);
 		boolean isLarger = value > circle_slider.getValue();
-		if (value >= 35 && value <= circle_max_value) {
-			if (value == 49) {
-				value = isLarger ? 50 : 48;
-			} else if (value > 50 && value < 55) {
-				value = isLarger ? 55 : 50;
-			} else if (value > 55 && value < 60) {
-				value = isLarger ? 60 : 55;
-			} else if (value > 60 && value < 65) {
-				value = isLarger ? 65 : 60;
+		if (value > circle_max_value) {
+			if (isHeating) {
+				circle_slider.setValue(circle_max_value);
+				tv_tempter.setText(circle_max_value + "");
 			}
-			tv_tempter.setText(value + "");
-			circle_slider.setValue(value);
+		}  else {
+			if (value >= 35 && value <= circle_max_value) {
+				if (value == 49) {
+					value = isAdd ? 50 : 48;
+				} else if (value > 50 && value < 55) {
+					value = isAdd ? 55 : 50;
+				} else if (value > 55 && value < 60) {
+					value = isAdd ? 60 : 55;
+				} else if (value > 60 && value < 65) {
+					value = isAdd ? 65 : 60;
+				}
+				tv_tempter.setText(value + "");
+				circle_slider.setValue(value);
+			}
 		}
+//		if (!isHeating) {
+//			
+//		} else {
+//			if (value > circle_max_value) {
+//				circle_slider.setValue(circle_max_value);	
+//			}
+//		}
 	}
 
 	@Override

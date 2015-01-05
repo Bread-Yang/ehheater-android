@@ -900,6 +900,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			// circularView.setAngle(new EhState(b).getInnerTemp1());
 			circle_slider.setValue(new EhState(b).getTargetTemperature());
 			// circularView.setAngle(new EhState(b).getTargetTemperature());
+			temptertitleTextView.setText("当前水温");
 			tv_tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
 
@@ -984,6 +985,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	public void dealDisConnect() {
 		currentModeCode = 0;
+		isSendingCommand = false;
 		tv_tempter.setText("--");
 		modeTv.setText("--模式");
 		leavewater.setText("--%");
