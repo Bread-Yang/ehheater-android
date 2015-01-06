@@ -382,7 +382,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		powerTv = (TextView) findViewById(R.id.power_tv);
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
-		((AnimationDrawable) hotImgeImageView.getBackground()).start();
+//		((AnimationDrawable) hotImgeImageView.getBackground()).start();
+		((AnimationDrawable) hotImgeImageView.getDrawable()).start();
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		settemper = (TextView) findViewById(R.id.settemper);
@@ -603,7 +604,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			}
 
 			if (pResp.getFirePower() != 0) {
-				animationDrawable = (AnimationDrawable) iv_wave.getBackground();
+//				animationDrawable = (AnimationDrawable) iv_wave.getBackground();
+				animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
 				animationDrawable.start();
 			}
 
@@ -921,9 +923,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	private void showErrorWarning(final short ErrorCode) {
 		tipsimg.setVisibility(View.VISIBLE);
-		tipsimg.setBackgroundResource(R.drawable.main_error);
+//		tipsimg.setBackgroundResource(R.drawable.main_error);
+//		AnimationDrawable drawable = (AnimationDrawable) tipsimg
+//				.getBackground();
+		tipsimg.setImageResource(R.drawable.main_error);
 		AnimationDrawable drawable = (AnimationDrawable) tipsimg
-				.getBackground();
+				.getDrawable();
 		drawable.start();
 		tipsimg.setOnClickListener(new OnClickListener() {
 
@@ -968,9 +973,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	private void showFreezeProofing() {
 		tipsimg.setVisibility(View.VISIBLE);
-		tipsimg.setBackgroundResource(R.drawable.main_tip);
+//		tipsimg.setBackgroundResource(R.drawable.main_tip);
+//		AnimationDrawable drawable = (AnimationDrawable) tipsimg
+//				.getBackground();
+		tipsimg.setImageResource(R.drawable.main_tip);
 		AnimationDrawable drawable = (AnimationDrawable) tipsimg
-				.getBackground();
+				.getDrawable();
 		drawable.start();
 		tipsimg.setOnClickListener(new OnClickListener() {
 			@Override
@@ -1003,9 +1011,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	private void showOxygenWarning() {
 		tipsimg.setVisibility(View.VISIBLE);
-		tipsimg.setBackgroundResource(R.drawable.main_tip);
+//		tipsimg.setBackgroundResource(R.drawable.main_tip);
+//		AnimationDrawable drawable = (AnimationDrawable) tipsimg
+//				.getBackground();
+		tipsimg.setImageResource(R.drawable.main_tip);
 		AnimationDrawable drawable = (AnimationDrawable) tipsimg
-				.getBackground();
+				.getDrawable();
 		drawable.start();
 		tipsimg.setOnClickListener(new OnClickListener() {
 

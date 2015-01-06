@@ -334,7 +334,8 @@ public class MainActivity extends BaseBusinessActivity implements
 		powerTv = (TextView) findViewById(R.id.power_tv);
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
-		((AnimationDrawable) hotImgeImageView.getBackground()).start();
+//		((AnimationDrawable) hotImgeImageView.getBackground()).start();
+		((AnimationDrawable) hotImgeImageView.getDrawable()).start();
 		circle_slider = (BaoCircleSlider) findViewById(R.id.circle_slider);
 		circle_slider.setCircleSliderListener(this);
 
@@ -648,9 +649,12 @@ public class MainActivity extends BaseBusinessActivity implements
 		Log.e("防冻报警：", date.getError() + "");
 		if (date.getError() == 160) {
 			iv_error.setVisibility(View.VISIBLE);
-			iv_error.setBackgroundResource(R.drawable.main_tip);
+//			iv_error.setBackgroundResource(R.drawable.main_tip);
+//			AnimationDrawable drawable = (AnimationDrawable) iv_error
+//					.getBackground();
+			iv_error.setImageResource(R.drawable.main_tip);
 			AnimationDrawable drawable = (AnimationDrawable) iv_error
-					.getBackground();
+					.getDrawable();
 			drawable.start();
 			iv_error.setOnClickListener(new OnClickListener() {
 
@@ -682,9 +686,12 @@ public class MainActivity extends BaseBusinessActivity implements
 		Log.e("镁棒提示：", date.getHeating_tube_time() + "");
 		if (date.getHeating_tube_time() > 800 * 60) {
 			iv_error.setVisibility(View.VISIBLE);
-			iv_error.setBackgroundResource(R.drawable.main_tip);
+//			iv_error.setBackgroundResource(R.drawable.main_tip);
+//			AnimationDrawable drawable = (AnimationDrawable) iv_error
+//					.getBackground();
+			iv_error.setImageResource(R.drawable.main_tip);
 			AnimationDrawable drawable = (AnimationDrawable) iv_error
-					.getBackground();
+					.getDrawable();
 			drawable.start();
 			iv_error.setOnClickListener(new OnClickListener() {
 
@@ -717,9 +724,12 @@ public class MainActivity extends BaseBusinessActivity implements
 		Log.e("水质提醒：", date.getMachine_not_heating_time() + "");
 		if (date.getMachine_not_heating_time() > 9 * 24 * 60) {
 			iv_error.setVisibility(View.VISIBLE);
-			iv_error.setBackgroundResource(R.drawable.main_tip);
+//			iv_error.setBackgroundResource(R.drawable.main_tip);
+//			AnimationDrawable drawable = (AnimationDrawable) iv_error
+//					.getBackground();
+			iv_error.setImageResource(R.drawable.main_tip);
 			AnimationDrawable drawable = (AnimationDrawable) iv_error
-					.getBackground();
+					.getDrawable();
 			drawable.start();
 			iv_error.setOnClickListener(new OnClickListener() {
 
@@ -755,9 +765,12 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (date.getError() != 0 && date.getError() != 160) { // 不是防冻
 			isError = true;
 			iv_error.setVisibility(View.VISIBLE);
-			iv_error.setBackgroundResource(R.drawable.main_error);
+//			iv_error.setBackgroundResource(R.drawable.main_error);
+//			AnimationDrawable drawable = (AnimationDrawable) iv_error
+//					.getBackground();
+			iv_error.setImageResource(R.drawable.main_error);
 			AnimationDrawable drawable = (AnimationDrawable) iv_error
-					.getBackground();
+					.getDrawable();
 			drawable.start();
 			iv_error.setOnClickListener(new OnClickListener() {
 
@@ -938,7 +951,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				// operatingAnim = AnimationUtils.loadAnimation(this,
 				// R.anim.tip_2500);
 			}
-			((AnimationDrawable) hotImgeImageView.getBackground()).start();
+			((AnimationDrawable) hotImgeImageView.getDrawable()).start();
 		}
 	}
 
