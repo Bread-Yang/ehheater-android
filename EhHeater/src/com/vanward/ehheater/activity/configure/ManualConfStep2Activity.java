@@ -144,7 +144,10 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		if (dialog_easylink.isShowing()) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
 			tempEndpoint = endpoint;
-
+			
+			Log.e(TAG, "打印productKey前");
+			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
+			Log.e(TAG, ("".equals(endpoint.getSzProductKey()) + ""));
 			if (endpoint.getSzProductKey() == null
 					|| "".equals(endpoint.getSzProductKey())) {
 				return;
@@ -152,6 +155,10 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			if (endpoint.getSzMac() == null || "".equals(endpoint.getSzMac())) {
 				return;
 			}
+			
+			counter.cancel();
+			dialog_easylink.dismiss();
+			
 			finishingConfig();
 		}
 	}
@@ -159,10 +166,6 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 	XpgEndpoint tempEndpoint;
 
 	private void finishingConfig() {
-
-		counter.cancel();
-		dialog_easylink.dismiss();
-		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
 		Log.e("打印productKey前", "打印productKey前");
 		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
@@ -364,6 +367,9 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 					for (int j = 0; j < configuratedList.size(); j++) {
 						Log.e(TAG, "configuratedList" + j + "------->"
 								+ configuratedList.get(j).SSID);
+						if (configuratedList.get(j).SSID == null) {
+							continue;
+						}
 						if (configuratedList.get(j).SSID
 								.equals(lastConnectWifiConfigureSSID)) {
 							isConfigurated = true;

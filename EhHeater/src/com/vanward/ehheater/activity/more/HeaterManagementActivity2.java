@@ -46,6 +46,8 @@ import com.xtremeprog.xpgconnect.generated.generated;
 
 public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 
+	private static final String TAG = "HeaterManagementActivity2";
+
 	private ListView lv_listview;
 	private Button btn_add;
 	private HeaterAdapter adapter;
@@ -93,18 +95,18 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 								deleteHeater();
 							}
 						});
-		
+
 		deleteFurnaceConfirmDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.confirm_delete_furnace,
 						BaoDialogShowUtil.DEFAULT_RESID, -1, null,
 						new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						deleteFurnaceConfirmDialog.dismiss();
-						deleteHeater();
-					}
-				});
+
+							@Override
+							public void onClick(View v) {
+								deleteFurnaceConfirmDialog.dismiss();
+								deleteHeater();
+							}
+						});
 
 		adapter = new HeaterAdapter(
 				new HeaterInfoDao(getBaseContext()).getAll());

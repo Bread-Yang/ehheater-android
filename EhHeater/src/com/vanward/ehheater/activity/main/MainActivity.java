@@ -97,7 +97,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	private View openView;
 
 	private LinearLayout llt_power;
-	
+
 	/** 指令正在发送中,三秒内不能改变CircleSlider滑动圆圈的位置 */
 	private boolean isSendingCommand = false;
 
@@ -381,7 +381,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
-		
+
 		isSendingCommand = true;
 		mCountDownTimer = new CountDownTimer(3000, 1000) {
 			@Override
@@ -542,10 +542,12 @@ public class MainActivity extends BaseBusinessActivity implements
 			@Override
 			public void run() {
 				List<CustomSetVo> list = new BaseDao(MainActivity.this).getDb()
-						.findAllByWhere(CustomSetVo.class, " uid = '"
-								+ AccountService
-								.getUserId(MainActivity.this)
-						+ "'");
+						.findAllByWhere(
+								CustomSetVo.class,
+								" uid = '"
+										+ AccountService
+												.getUserId(MainActivity.this)
+										+ "'");
 
 				if (list.size() > 0) {
 					Log.e(TAG, "设置自定义名字");
@@ -900,6 +902,11 @@ public class MainActivity extends BaseBusinessActivity implements
 			// circularView.setAngle(new EhState(b).getInnerTemp1());
 			circle_slider.setValue(new EhState(b).getTargetTemperature());
 			// circularView.setAngle(new EhState(b).getTargetTemperature());
+			Drawable img = getBaseContext().getResources().getDrawable(
+					R.drawable.icon_temperature);
+			int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+			img.setBounds(0, 0, dp32, dp32);
+			temptertitleTextView.setCompoundDrawables(img, null, null, null);
 			temptertitleTextView.setText("当前水温");
 			tv_tempter.setText(new EhState(b).getInnerTemp1() + "");
 		}
@@ -948,8 +955,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	public void setTargerTempertureUI(byte[] b) {
 		if (!circle_slider.isDraging() && !isSendingCommand) {
-		circle_slider.setValue(new EhState(b).getTargetTemperature());
-		target_tem.setText(new EhState(b).getTargetTemperature() + "℃");
+			circle_slider.setValue(new EhState(b).getTargetTemperature());
+			target_tem.setText(new EhState(b).getTargetTemperature() + "℃");
 		}
 	}
 
@@ -1053,28 +1060,28 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void didBeginTouchCircleSlider() {
-		
+
 	}
 
 	@Override
 	public void needChangeValue(int value, boolean isAdd) {
 		if (value >= 35 && value <= 75) {
 			circle_slider.setValue(value);
-			
-			 temptertitleTextView.setText("设置温度");
-			 Drawable img = getBaseContext().getResources().getDrawable(
-			 R.drawable.menu_icon_setting);
-			 int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-			 img.setBounds(0, 0, dp32, dp32);
-			 temptertitleTextView.setCompoundDrawables(img, null, null, null);
-			
-			 tv_tempter.setText(value + "");
+
+			temptertitleTextView.setText("设置温度");
+			Drawable img = getBaseContext().getResources().getDrawable(
+					R.drawable.menu_icon_setting);
+			int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+			img.setBounds(0, 0, dp32, dp32);
+			temptertitleTextView.setCompoundDrawables(img, null, null, null);
+
+			tv_tempter.setText(value + "");
 		}
 	}
 
 	@Override
 	public void didEndChangeValue() {
-		sendToMsgAfterThreeSeconds(circle_slider.getValue());  
+		sendToMsgAfterThreeSeconds(circle_slider.getValue());
 	}
 
 }

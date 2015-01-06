@@ -48,7 +48,7 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 				getResources().getColor(R.color.title_color),
 				new String[] { heaterSsid });
 
-		XPGConnectClient.initClient(this);
+//		XPGConnectClient.initClient(this);
 
 	}
 
@@ -58,7 +58,7 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 
 		TimerTask timerTask = new TimerTask() {
 
-			@Override
+			@Override 
 			public void run() {
 				checkCurrentWifi();
 			}
@@ -80,6 +80,7 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 			// Log.e(TAG, "得到的wifi的level是 : " + item.level);
 			String ssid = item.SSID;
 			String mac = item.BSSID;
+			Log.e(TAG, "ssid是 : " + ssid);
 			if (!ssid.startsWith("XPG-GAgent")) {
 				continue;
 			}
@@ -94,10 +95,19 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 
 				WifiInfo info = wifiManager.getConnectionInfo();
 				String currentLinkSSID = info.getSSID();
+				if (currentLinkSSID == null) {
+					return;
+				}
 				Log.e(TAG, "当前已经连上的热点名称是 : " + currentLinkSSID);
-
-				Log.e(TAG, "currentLinkSSID : " + currentLinkSSID);
+				
+				Log.e(TAG, "改之前currentLinkSSID : " + currentLinkSSID);
+				
+				currentLinkSSID = currentLinkSSID.replace("\"", "");
+				
+				Log.e(TAG, "改之后currentLinkSSID : " + currentLinkSSID);
+				Log.e(TAG, "ssid : " + ssid);
 				Log.e(TAG, "targetSSID : " + targetSSID);
+				
 //				if (!currentLinkSSID.equals("\"" + targetSSID + "\"")) {
 				if (!currentLinkSSID.equals(ssid)) {
 					Log.e(TAG, "正在连上设备热点");
@@ -116,7 +126,7 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 							ManualConfStep2Activity.class));
 					finish();
 				}
-				break;
+//				break;
 //			}
 		}
 	

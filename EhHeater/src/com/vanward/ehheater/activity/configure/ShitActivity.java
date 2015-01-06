@@ -384,6 +384,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
+		Log.e(TAG, "onEasyLinkResp回调了");
 		if (isWaitingCallback) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
 			tempEndpoint = endpoint;

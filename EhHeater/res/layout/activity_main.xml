@@ -51,7 +51,7 @@
                 android:id="@+id/wave_bg"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginBottom="2dp"
+                android:layout_marginBottom="4dp"
                 android:scaleType="center"
                 android:src="@drawable/main_wave" />
 
@@ -60,7 +60,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
                 android:background="@drawable/anim_furmace_main_heating" />
             
             <com.vanward.ehheater.view.BaoCircleSlider
@@ -96,7 +95,7 @@
                         android:id="@+id/tempter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="36"
+                        android:text="--"
                         android:textColor="@color/title_color"
                         android:textSize="70dp" />
 
@@ -130,7 +129,7 @@
                         android:shadowDx="2"
                         android:shadowDy="2"
                         android:shadowRadius="2"
-                        android:text="40L"
+                        android:text="--L"
                         android:textColor="@color/white"
                         android:textSize="20dp" />
                 </LinearLayout>
@@ -352,7 +351,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:layout_marginLeft="10dp"
-                        android:text="3kw"
+                        android:text="--kw"
                         android:textColor="@color/title_color"
                         android:textSize="20dp" />
                 </LinearLayout>

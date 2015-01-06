@@ -6,7 +6,7 @@ public class Consts {
 	
 //	public static final String REQUEST_BASE_URL = "http://vanward.xtremeprog.com/EhHeaterWeb/";
 	public static final String REQUEST_BASE_URL = "http://122.10.94.216:8080/EhHeaterWeb/";
-	
+	 
 	public static final String INTENT_ACTION_LOGOUT = "logout";
 	
 	public static final String INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE = "alter_device_due_to_device";
@@ -41,6 +41,9 @@ public class Consts {
 	public static final String E_HEATER_DEFAULT_NAME = "电热水器";
 	public static final String ST_HEATER_DEFAULT_NAME = "燃气热水器";
 	public static final String EH_FURNACE_DEFAULT_NAME = "万和壁挂炉";
+	
+	public static final String EH_APPID = "dcea1850ec144673904b8adc6c326281";
+	public static final String GAS_APPID = "91cf43476f184c349b62bbd54a91e0b8";
 
 	public static final String EH_P_KEY = "c2db7fd028fd11e4b605001ec9b6dcfe";
 	public static final String ST_P_KEY = "b82d55ee2f3e11e488f7001ec9b6dcfe";
