@@ -1,0 +1,381 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_bg" >
+
+    <include
+        android:id="@+id/top_layout"
+        layout="@layout/main_title"
+        android:focusable="true" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/top_layout"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:id="@+id/content"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tv_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="40dp"
+                    android:background="@drawable/home_tip_bg"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="3dp"
+                    android:text="智能模式"
+                    android:textColor="@color/an_hui"
+                    android:textSize="23dp" />
+
+                <ImageView
+                    android:id="@+id/circle_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_mode"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/home_yuan_bg" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/circle_bg"
+                    android:layout_alignLeft="@+id/circle_bg"
+                    android:layout_alignRight="@+id/circle_bg"
+                    android:layout_alignTop="@+id/circle_bg" >
+
+                    <ImageView
+                        android:id="@+id/wave_bg"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="center"
+                        android:src="@drawable/main_fire_level_1"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/hotanimition"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginTop="2dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/anim_furmace_main_heating" />
+
+                    <com.vanward.ehheater.view.BaoCircleSlider
+                        android:id="@+id/circle_slider"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:id="@+id/temptertext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center_horizontal"
+                            android:drawableLeft="@drawable/icon_temperature"
+                            android:drawablePadding="2dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/setting_water_temperature"
+                            android:textColor="@color/an_hui"
+                            android:textSize="18dp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:id="@+id/modeimg"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="bottom"
+                                android:layout_marginBottom="15dp"
+                                android:src="@drawable/gas_home_icon_bathtub" />
+
+                            <TextView
+                                android:id="@+id/tempter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="--"
+                                android:textColor="@color/title_color"
+                                android:textSize="65dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="fill_parent"
+                                android:paddingTop="5dp"
+                                android:text="℃"
+                                android:textColor="@color/title_color"
+                                android:textSize="40dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                android:id="@+id/shuiliuliangText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:text="实时水流量"
+                                android:textColor="#87420d"
+                                android:textSize="15dp" />
+
+                            <TextView
+                                android:id="@+id/shuiliuliang"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:shadowColor="#87420d"
+                                android:shadowDx="2"
+                                android:shadowDy="2"
+                                android:shadowRadius="2"
+                                android:text="--L"
+                                android:textColor="#FFf46310"
+                                android:textSize="20dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="15dp"
+                        android:background="@drawable/setting_tempter_bg"
+                        android:focusable="false"
+                        android:orientation="vertical"
+                        android:visibility="gone" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="设定"
+                            android:textColor="@color/appointment_text_color" />
+
+                        <View
+                            android:layout_width="50dp"
+                            android:layout_height="1dp"
+                            android:background="#4471878B"
+                            android:gravity="center_horizontal" >
+                        </View>
+
+                        <TextView
+                            android:id="@+id/target_tem"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="0℃"
+                            android:textColor="@color/title_color"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/llt_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/circle_bg"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    android:visibility="visible" >
+
+                    <LinearLayout
+                        android:id="@+id/hotlayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/btn_power"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:background="@drawable/icon_timeing" />
+
+                        <TextView
+                            android:id="@+id/stute"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:background="@color/transparent"
+                            android:minHeight="20dp"
+                            android:text="待机中"
+                            android:textColor="@color/appointment_text_color"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/icon_w"
+                            android:src="@drawable/icon_liushuiliang" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:text="实时注水量"
+                            android:textColor="@color/appointment_text_color"
+                            android:textSize="15dp" />
+
+                        <TextView
+                            android:id="@+id/zhushuiliang"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="5dp"
+                            android:shadowColor="#87420d"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="2"
+                            android:text="--L"
+                            android:textColor="#FFf46310"
+                            android:textSize="20dp" />
+
+                        <TextView
+                            android:id="@+id/settemper"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="/--L" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llt_select"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llt_time"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp" >
+
+                    <LinearLayout
+                        android:id="@+id/rg_work_mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal" >
+
+                        <Button
+                            android:id="@+id/pattern"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:checked="true"
+                            android:drawablePadding="5dp"
+                            android:drawableTop="@drawable/pattern_button_selector"
+                            android:gravity="center"
+                            android:onClick="onClick"
+                            android:padding="0dp"
+                            android:text="模式"
+                            android:textColor="@color/an_hui" />
+
+                        <Button
+                            android:id="@+id/appointment_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:drawablePadding="5dp"
+                            android:drawableTop="@drawable/appation_button_selector"
+                            android:gravity="center"
+                            android:onClick="onClick"
+                            android:padding="0dp"
+                            android:text="预约"
+                            android:textColor="@color/an_hui"
+                            android:visibility="invisible" />
+
+                        <Button
+                            android:id="@+id/power"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:drawablePadding="5dp"
+                            android:drawableTop="@drawable/power_button_selector"
+                            android:gravity="center"
+                            android:onClick="onClick"
+                            android:padding="0dp"
+                            android:text="功率"
+                            android:textColor="@color/an_hui"
+                            android:visibility="gone" />
+
+                        <Button
+                            android:id="@+id/btn_information"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:background="@color/transparent"
+                            android:button="@null"
+                            android:drawablePadding="5dp"
+                            android:drawableTop="@drawable/main_select4"
+                            android:gravity="center"
+                            android:onClick="onClick"
+                            android:text="@string/information"
+                            android:textColor="@color/an_hui"
+                            android:textSize="15dp"
+                            android:visibility="visible" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/infor_tip"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignLeft="@+id/circle_bg"
+                    android:layout_alignTop="@+id/tv_mode" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

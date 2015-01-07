@@ -74,6 +74,11 @@ public class BaoCircleSlider extends View {
 
 	}
 
+	public BaoCircleSlider(Context context) {
+		super(context);
+		initRoutine();
+	}
+	
 	public BaoCircleSlider(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		initRoutine();
