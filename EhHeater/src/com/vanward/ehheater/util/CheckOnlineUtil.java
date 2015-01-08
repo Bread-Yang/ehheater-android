@@ -44,6 +44,9 @@ public class CheckOnlineUtil {
 	public void reset(String mac) {
 		this.curmac = mac;
 		paused = false;
+		for (XpgEndpoint item : bindList) {
+			item.delete();
+		}
 		bindList.clear();
 		
 		if (checkOnlineTimer != null) {
@@ -63,6 +66,9 @@ public class CheckOnlineUtil {
 		
 		checkOnlineTimer = new Timer();
 
+		for (XpgEndpoint item : bindList) {
+			item.delete();
+		}
 		bindList.clear();
 		
 		checkOnlineTimer.scheduleAtFixedRate(new TimerTask() {
@@ -98,6 +104,9 @@ public class CheckOnlineUtil {
 					}
 				}
 				
+				for (XpgEndpoint item : bindList) {
+					item.delete();
+				}
 				bindList.clear();
 				Log.d("emmm", "checking online: continue fetch binding");
 				generated.SendBindingGetV2Req(Global.checkOnlineConnId);

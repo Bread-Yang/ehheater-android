@@ -24,7 +24,7 @@
         android:background="@drawable/home_tip_bg"
         android:gravity="center_horizontal"
         android:paddingTop="3dp"
-        android:text="智能模式"
+        android:text="--模式"
         android:textColor="@color/an_hui"
         android:textSize="23dp" />
         

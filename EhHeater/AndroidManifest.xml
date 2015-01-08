@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vanward.ehheater"
     android:versionCode="1"
-    android:versionName="b011" >
+    android:versionName="b012" >
 
     <uses-sdk
         android:minSdkVersion="11"

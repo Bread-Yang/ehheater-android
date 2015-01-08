@@ -55,13 +55,12 @@ import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
 import com.vanward.ehheater.view.ChangeStuteView;
-import com.vanward.ehheater.view.CircleListener;
-import com.vanward.ehheater.view.CircularView;
 import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.wheelview.WheelView;
+import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -79,8 +78,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	private TextView mTitleName, modeTv, powerTv, temptertitleTextView;
 
 	private Button btn_info;
-	View btn_power;
-	TextView tv_tempter, leavewater, target_tem;
+	private View btn_power;
+	private TextView tv_tempter, leavewater, target_tem;
 
 	private Dialog dialog_power_setting;
 
@@ -88,11 +87,11 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private BaoCircleSlider circle_slider;
 
-	ViewGroup stuteParent;
-	Button btn_appointment;
-	ImageView iv_wave, hotImgeImageView;
-	AnimationDrawable animationDrawable;
-	RelativeLayout content;
+	private ViewGroup stuteParent;
+	private Button btn_appointment;
+	private ImageView iv_wave, hotImgeImageView;
+	private AnimationDrawable animationDrawable;
+	private RelativeLayout content;
 
 	private View openView;
 
@@ -113,7 +112,15 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private boolean isError;
 
-	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
+	private Dialog deviceSwitchSuccessDialog;
+
+	private CountDownTimer mCountDownTimer;
+
+	private boolean canupdateView = false;
+
+	private int currentTemp;
+	
+	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (isFinishing()) {
@@ -124,17 +131,10 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 	};
 
-	private Dialog deviceSwitchSuccessDialog;
-
-	private CountDownTimer mCountDownTimer;
-
-	private boolean canupdateView = false;
-
-	private int currentTemp;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.e(TAG, "onCreate执行了");
 		initSlidingMenu();
 		setContentView(R.layout.activity_main);
 		initView();
@@ -291,12 +291,14 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+		Log.e(TAG, "onNewIntent()");
 		setIntent(intent);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.e(TAG, "onResume()");
 		ErrorUtils.isMainActivityActive = true;
 		ErrorUtils.isGasMainActivityActive = false;
 		canupdateView = true;
@@ -335,7 +337,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
 		((AnimationDrawable) hotImgeImageView.getBackground()).start();
-//		((AnimationDrawable) hotImgeImageView.getDrawable()).start();
+		// ((AnimationDrawable) hotImgeImageView.getDrawable()).start();
 		circle_slider = (BaoCircleSlider) findViewById(R.id.circle_slider);
 		circle_slider.setCircleSliderListener(this);
 
@@ -655,9 +657,9 @@ public class MainActivity extends BaseBusinessActivity implements
 			iv_error.setBackgroundResource(R.drawable.main_tip);
 			AnimationDrawable drawable = (AnimationDrawable) iv_error
 					.getBackground();
-//			iv_error.setImageResource(R.drawable.main_tip);
-//			AnimationDrawable drawable = (AnimationDrawable) iv_error
-//					.getDrawable();
+			// iv_error.setImageResource(R.drawable.main_tip);
+			// AnimationDrawable drawable = (AnimationDrawable) iv_error
+			// .getDrawable();
 			drawable.start();
 			iv_error.setOnClickListener(new OnClickListener() {
 
@@ -692,9 +694,9 @@ public class MainActivity extends BaseBusinessActivity implements
 			iv_error.setBackgroundResource(R.drawable.main_tip);
 			AnimationDrawable drawable = (AnimationDrawable) iv_error
 					.getBackground();
-//			iv_error.setImageResource(R.drawable.main_tip);
-//			AnimationDrawable drawable = (AnimationDrawable) iv_error
-//					.getDrawable();
+			// iv_error.setImageResource(R.drawable.main_tip);
+			// AnimationDrawable drawable = (AnimationDrawable) iv_error
+			// .getDrawable();
 			drawable.start();
 			iv_error.setOnClickListener(new OnClickListener() {
 
@@ -730,9 +732,9 @@ public class MainActivity extends BaseBusinessActivity implements
 			iv_error.setBackgroundResource(R.drawable.main_tip);
 			AnimationDrawable drawable = (AnimationDrawable) iv_error
 					.getBackground();
-//			iv_error.setImageResource(R.drawable.main_tip);
-//			AnimationDrawable drawable = (AnimationDrawable) iv_error
-//					.getDrawable();
+			// iv_error.setImageResource(R.drawable.main_tip);
+			// AnimationDrawable drawable = (AnimationDrawable) iv_error
+			// .getDrawable();
 			drawable.start();
 			iv_error.setOnClickListener(new OnClickListener() {
 
@@ -771,9 +773,9 @@ public class MainActivity extends BaseBusinessActivity implements
 			iv_error.setBackgroundResource(R.drawable.main_error);
 			AnimationDrawable drawable = (AnimationDrawable) iv_error
 					.getBackground();
-//			iv_error.setImageResource(R.drawable.main_error);
-//			AnimationDrawable drawable = (AnimationDrawable) iv_error
-//					.getDrawable();
+			// iv_error.setImageResource(R.drawable.main_error);
+			// AnimationDrawable drawable = (AnimationDrawable) iv_error
+			// .getDrawable();
 			drawable.start();
 			iv_error.setOnClickListener(new OnClickListener() {
 
@@ -824,6 +826,18 @@ public class MainActivity extends BaseBusinessActivity implements
 		pResp.getError();
 
 		dealErrorWarnIcon(pResp);
+
+		// pResp.delete();
+	}
+
+	@Override
+	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp,
+			int nConnId) {
+		super.OnDeviceOnlineStateResp(pResp, nConnId);
+		Log.e(TAG, "OnDeviceOnlineStateResp isOnline == " + pResp.getIsOnline());
+		if (pResp.getIsOnline() == 0) {
+			onConnectEvent(Global.connectId, -7);
+		}
 	}
 
 	@Override
@@ -866,7 +880,10 @@ public class MainActivity extends BaseBusinessActivity implements
 			// 非常奇怪 智能模式设置成功，可是返回值 确实1 跟p0 文档不符合。设置进去的时候是2 ，晨浴模式成功。
 			int mode = new EhState(data).getFunctionState();
 			currentModeCode = mode;
+			Log.e(TAG, "打印前");
 			Log.e(TAG, "断线之后返回的mode是 : " + mode);
+			Log.e(TAG, "打印后");
+
 			if (mode == 1) {
 				changeTojishiModeUpdateUI(data);
 			} else if (mode == 3) {
@@ -925,7 +942,11 @@ public class MainActivity extends BaseBusinessActivity implements
 			img.setBounds(0, 0, dp32, dp32);
 			temptertitleTextView.setCompoundDrawables(img, null, null, null);
 			temptertitleTextView.setText("当前水温");
-			tv_tempter.setText(new EhState(b).getInnerTemp1() + "");
+			if (isError) {
+				tv_tempter.setText("--");
+			} else {
+				tv_tempter.setText(new EhState(b).getInnerTemp1() + "");
+			}
 		}
 
 		System.out.println("当前设置温度：" + new EhState(b).getTargetTemperature());
@@ -955,7 +976,8 @@ public class MainActivity extends BaseBusinessActivity implements
 				// operatingAnim = AnimationUtils.loadAnimation(this,
 				// R.anim.tip_2500);
 			}
-			((AnimationDrawable) hotImgeImageView.getDrawable()).start();
+			((AnimationDrawable) hotImgeImageView.getBackground()).start();
+			// ((AnimationDrawable) hotImgeImageView.getDrawable()).start();
 		}
 	}
 
@@ -1100,5 +1122,4 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void didEndChangeValue() {
 		sendToMsgAfterThreeSeconds(circle_slider.getValue());
 	}
-
 }

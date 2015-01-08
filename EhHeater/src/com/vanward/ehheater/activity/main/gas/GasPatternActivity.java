@@ -122,7 +122,6 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		initViewValue();
 
@@ -130,7 +129,6 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 
 	}
@@ -169,7 +167,6 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onClick(View v) {
 		System.out.println("view:" + v.getId());
-		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.ivTitleBtnLeft:
 			finish();

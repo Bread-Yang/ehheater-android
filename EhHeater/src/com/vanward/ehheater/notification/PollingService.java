@@ -109,9 +109,9 @@ public class PollingService extends Service {
 		List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
 				.getAllDeviceOfType(HeaterType.Eh);
 		if (allDevices != null) {
-			Log.e(TAG, "electicHeaterDids的大小是 : " + allDevices.size() + "");
+//			Log.e(TAG, "electicHeaterDids的大小是 : " + allDevices.size() + "");
 		} else {
-			Log.e(TAG, "electicHeaterDids为null : " + "electicHeaterDids为null");
+//			Log.e(TAG, "electicHeaterDids为null : " + "electicHeaterDids为null");
 		}
 		if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
@@ -121,7 +121,7 @@ public class PollingService extends Service {
 			Log.e(TAG, "electic did是 : " + allDevices.get(0).getDid());
 			String requestURL = "GasInfo/getNewestElData?did="
 					+ allDevices.get(0).getDid();
-			Log.e(TAG, "checkElecticHeaterInfo的URL" + requestURL);
+			Log.e(TAG, "checkElecticHeaterInfo的URL" + Consts.REQUEST_BASE_URL + requestURL);
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						@Override
@@ -219,27 +219,27 @@ public class PollingService extends Service {
 		List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
 				.getAllDeviceOfType(HeaterType.ST);
 		if (allDevices != null) {
-			Log.e(TAG, "gasHeaterDids的大小是 : " + allDevices.size() + "");
+//			Log.e(TAG, "gasHeaterDids的大小是 : " + allDevices.size() + "");
 		} else {
-			Log.e(TAG, "gasHeaterDids为null : " + "gasHeaterDids为null");
+//			Log.e(TAG, "gasHeaterDids为null : " + "gasHeaterDids为null");
 		}
 		if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
 			gasMac = allDevices.get(0).getMac();
-			Log.e(TAG, "gasMac是 : " + gasMac);
-			Log.e(TAG, "gas did是 : " + allDevices.get(0).getDid());
+//			Log.e(TAG, "gasMac是 : " + gasMac);
+//			Log.e(TAG, "gas did是 : " + allDevices.get(0).getDid());
 			String requestURL = "GasInfo/getNewestData?did="
 					+ allDevices.get(0).getDid();
-			Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);
+//			Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						@Override
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
-									+ jsonString);
+//							Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
+//									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);

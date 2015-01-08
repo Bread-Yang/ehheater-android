@@ -383,11 +383,10 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 	}
 
 	@Override
-	public void onEasyLinkResp(XpgEndpoint endpoint) {
+	public void onEasyLinkResp(final XpgEndpoint endpoint) {
 		Log.e(TAG, "onEasyLinkResp回调了");
 		if (isWaitingCallback) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
-			tempEndpoint = endpoint;
 
 			Log.e(TAG, "打印productKey前");
 			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
@@ -416,19 +415,19 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					finishingConfig();
+					finishingConfig(endpoint);
+					endpoint.delete();
 				}
 			}, 300);
 		}
 	}
 
-	XpgEndpoint tempEndpoint;
 	boolean isWaitingCallback = false;
 
-	private void finishingConfig() {
+	private void finishingConfig(XpgEndpoint endpoint) {
 
 		Log.e("打印productKey前", "打印productKey前");
-		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
+		HeaterInfo hinfo = new HeaterInfo(endpoint);
 		Log.e("productKey是 : ", hinfo.getProductKey());
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 

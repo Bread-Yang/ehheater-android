@@ -54,6 +54,7 @@ import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.DeviceOffUtil;
 import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
+import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -67,17 +68,17 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private TextView mTitleName, tv_mode, temptertitleTextView, sumwater,
 			stute, shuiliuliangText;
 
-	View btn_power;
-	TextView tv_tempter, leavewater, target_tem, settemper;
+	private View btn_power;
+	private TextView tv_tempter, leavewater, target_tem, settemper;
 
-	ViewGroup stuteParent;
-	Button btn_appointment;
+	private ViewGroup stuteParent;
+	private Button btn_appointment;
 
 	private BaoCircleSlider circle_slider;
 
-	ImageView iv_wave, hotImgeImageView, modeimg;
-	AnimationDrawable animationDrawable;
-	RelativeLayout content;
+	private ImageView iv_wave, hotImgeImageView, modeimg;
+	private AnimationDrawable animationDrawable;
+	private RelativeLayout content;
 
 	private Dialog deviceSwitchSuccessDialog;
 
@@ -94,13 +95,20 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private Dialog fullWaterDialog;
 
 	private int circle_max_value = 65;
-	
+
 	private boolean isHeating = false;
 
 	/** 指令正在发送中,三秒内不能改变CircleSlider滑动圆圈的位置 */
 	private boolean isSendingCommand = false;
 
-	BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
+	private TextView powerTv;
+	private ImageView tipsimg;
+	private Button btn_info;
+	private Button mode;
+
+	private CountDownTimer mCountDownTimer;
+
+	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (isFinishing()) {
@@ -111,17 +119,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		}
 	};
 
-	private TextView powerTv;
-	private ImageView tipsimg;
-	private Button btn_info;
-	private Button mode;
-
-	private CountDownTimer mCountDownTimer;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e("GasMainActivity的onCreate执行了", "GasMainActivity的onCreate执行了");
+		Log.e(TAG, "GasMainActivity的onCreate执行了");
 		initSlidingMenu();
 		setContentView(R.layout.activity_gas_main);
 		initView(savedInstanceState);
@@ -152,8 +153,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		Log.e("GasMainActivity的onNewIntent执行了",
-				"GasMainActivity的onNewIntent执行了");
+		Log.e(TAG, "GasMainActivity的onNewIntent执行了");
 		setIntent(intent);
 	}
 
@@ -163,7 +163,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		ErrorUtils.isGasMainActivityActive = true;
 		ErrorUtils.isMainActivityActive = false;
 
-		Log.e("GasMainActivity的onResume调用了", "GasMainActivity的onResume调用了");
+		Log.e(TAG, "GasMainActivity的onResume调用了");
 		Log.e("gasIsFreezeProofingWarning : ",
 				getIntent()
 						.getBooleanExtra("gasIsFreezeProofingWarning", false)
@@ -383,7 +383,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		btn_power = findViewById(R.id.power);
 		hotImgeImageView = (ImageView) findViewById(R.id.hotanimition);
 		((AnimationDrawable) hotImgeImageView.getBackground()).start();
-//		((AnimationDrawable) hotImgeImageView.getDrawable()).start();
+		// ((AnimationDrawable) hotImgeImageView.getDrawable()).start();
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		settemper = (TextView) findViewById(R.id.settemper);
@@ -436,7 +436,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		case R.id.ivTitleBtnRigh:
 
 			Log.e(TAG, "ivTitleBtnRigh执行了");
-			
+
 			if (tv_tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
@@ -605,8 +605,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 			if (pResp.getFirePower() != 0) {
 				animationDrawable = (AnimationDrawable) iv_wave.getBackground();
-//				animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
-//				animationDrawable.start();
+				// animationDrawable = (AnimationDrawable)
+				// iv_wave.getDrawable();
+				// animationDrawable.start();
 			}
 
 			// animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
@@ -704,6 +705,18 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (pResp.getCustomFunction() != 0) {
 			circle_slider.setVisibility(View.VISIBLE);
 			// circularView.setOn(true);
+		}
+
+		// pResp.delete();
+	}
+
+	@Override
+	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp,
+			int nConnId) {
+		super.OnDeviceOnlineStateResp(pResp, nConnId);
+		Log.e(TAG, "OnDeviceOnlineStateResp isOnline == " + pResp.getIsOnline());
+		if (pResp.getIsOnline() == 0) {
+			onConnectEvent(Global.connectId, -7);
 		}
 	}
 
@@ -875,9 +888,19 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			if (list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					GasCustomSetVo customSetVo = list.get(i);
-					if (customSetVo.isSet()) {
-						tv_mode.setText(customSetVo.getName());
-						break;
+					Log.e(TAG, "customSetVo.getWaterval() : " + customSetVo.getWaterval());
+					Log.e(TAG, "pResp.getSetWater_power() : " + pResp.getSetWater_power());
+					Log.e(TAG, "customSetVo.getTempter()  : " + customSetVo.getTempter() );
+					Log.e(TAG, "pResp.getTargetTemperature() : " + pResp.getTargetTemperature());
+					if (customSetVo.getTempter() == pResp
+									.getTargetTemperature()) {
+						if (customSetVo.isSet()) {
+							tv_mode.setText(customSetVo.getName());
+							break;
+						}
+					}
+					if (i == list.size() - 1) {
+						tv_mode.setText("自定义模式");
 					}
 				}
 			} else {
@@ -926,9 +949,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		tipsimg.setBackgroundResource(R.drawable.main_error);
 		AnimationDrawable drawable = (AnimationDrawable) tipsimg
 				.getBackground();
-//		tipsimg.setImageResource(R.drawable.main_error);
-//		AnimationDrawable drawable = (AnimationDrawable) tipsimg
-//				.getDrawable();
+		// tipsimg.setImageResource(R.drawable.main_error);
+		// AnimationDrawable drawable = (AnimationDrawable) tipsimg
+		// .getDrawable();
 		drawable.start();
 		tipsimg.setOnClickListener(new OnClickListener() {
 
@@ -976,9 +999,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		tipsimg.setBackgroundResource(R.drawable.main_tip);
 		AnimationDrawable drawable = (AnimationDrawable) tipsimg
 				.getBackground();
-//		tipsimg.setImageResource(R.drawable.main_tip);
-//		AnimationDrawable drawable = (AnimationDrawable) tipsimg
-//				.getDrawable();
+		// tipsimg.setImageResource(R.drawable.main_tip);
+		// AnimationDrawable drawable = (AnimationDrawable) tipsimg
+		// .getDrawable();
 		drawable.start();
 		tipsimg.setOnClickListener(new OnClickListener() {
 			@Override
@@ -1014,9 +1037,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		tipsimg.setBackgroundResource(R.drawable.main_tip);
 		AnimationDrawable drawable = (AnimationDrawable) tipsimg
 				.getBackground();
-//		tipsimg.setImageResource(R.drawable.main_tip);
-//		AnimationDrawable drawable = (AnimationDrawable) tipsimg
-//				.getDrawable();
+		// tipsimg.setImageResource(R.drawable.main_tip);
+		// AnimationDrawable drawable = (AnimationDrawable) tipsimg
+		// .getDrawable();
 		drawable.start();
 		tipsimg.setOnClickListener(new OnClickListener() {
 
@@ -1167,7 +1190,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				circle_slider.setValue(circle_max_value);
 				tv_tempter.setText(circle_max_value + "");
 			}
-		}  else {
+		} else {
 			if (value >= 35 && value <= circle_max_value) {
 				if (value == 49) {
 					value = isAdd ? 50 : 48;
@@ -1182,13 +1205,13 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				circle_slider.setValue(value);
 			}
 		}
-//		if (!isHeating) {
-//			
-//		} else {
-//			if (value > circle_max_value) {
-//				circle_slider.setValue(circle_max_value);	
-//			}
-//		}
+		// if (!isHeating) {
+		//
+		// } else {
+		// if (value > circle_max_value) {
+		// circle_slider.setValue(circle_max_value);
+		// }
+		// }
 	}
 
 	@Override

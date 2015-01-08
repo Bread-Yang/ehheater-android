@@ -5,20 +5,21 @@ import java.util.List;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.CustomSetVo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.view.SeekBarHint;
@@ -26,6 +27,9 @@ import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener
 
 public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
+	
+	private static final String TAG = "GasAddPatternActivity";
+	
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
 	TextView ivTitleName;
 	@ViewInject(id = R.id.ivTitleBtnLeft, click = "onClick")
@@ -45,7 +49,7 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_gas_pattern);
+		setContentView(R.layout.activity_gas_add_pattern);
 		FinalActivity.initInjectedView(this);
 		ivTitleBtnLeft.setBackgroundResource(R.drawable.icon_back);
 		ivTitleBtnRigh.setBackgroundResource(R.drawable.menu_icon_ye);
@@ -161,6 +165,8 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			final GasCustomSetVo customSetVo = getData();
+			Log.e(TAG, "提交的customSetVo.getWaterval() : " + customSetVo.getWaterval());
+			Log.e(TAG, "提交的customSetVo.getTempter() : " + customSetVo.getTempter());
 			if (customSetVo != null) {
 				if (gasVo != null) {
 					new BaseDao(this).getDb().delete(gasVo);

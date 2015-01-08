@@ -81,6 +81,9 @@ public class ConnectActivity extends GeneratedActivity {
 		didRetrieved = "";
 		onDeviceFoundCounter = 0;
 		jobDone = false;
+		for (XpgEndpoint item : tempEndpointList) {
+			item.delete();
+		}
 		tempEndpointList.clear();
 	}
 
@@ -201,6 +204,10 @@ public class ConnectActivity extends GeneratedActivity {
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
 		
+		if (null == endpoint) {
+			return;
+		}
+		
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
 
 			if (currentLanSearchingState == LAN_FOUND) {
@@ -280,6 +287,8 @@ public class ConnectActivity extends GeneratedActivity {
 
 		Log.d("emmm", "OnPasscodeResp: connecting by small");
 		XPGConnectClient.xpgcLogin(tempConnId, null, passcodeRetrieved);
+		
+		pResp.delete();
 	}
 
 	@Override
@@ -309,6 +318,7 @@ public class ConnectActivity extends GeneratedActivity {
 			setResult(RESULT_OK, data);
 			finish();
 		}
+		pResp.delete();
 	}
 
 	@Override

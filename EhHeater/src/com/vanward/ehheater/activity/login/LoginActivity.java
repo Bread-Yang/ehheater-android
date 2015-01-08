@@ -208,7 +208,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						public void onSuccess(String jsonString) {
-							Log.e("请求昵称返回的数据是 : ", jsonString);
+							Log.e(TAG, "请求昵称返回的数据是 : " + jsonString);
 							JSONObject json;
 							try {
 								json = new JSONObject(jsonString);
@@ -310,6 +310,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if (preSelectedDeviceMac.equals(hi.getMac())) {
 			spu.put(ShareKey.CurDeviceMac, hi.getMac());
 		}
+		endpoint.delete();
 	};
 	
 	int count;

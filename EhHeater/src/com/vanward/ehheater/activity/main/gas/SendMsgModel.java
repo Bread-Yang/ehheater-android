@@ -65,7 +65,7 @@ public class SendMsgModel {
 						.findById("1", BathSettingVo.class);
 
 				if (bathSettingVo == null) {
-					bathSettingVo = new BathSettingVo("1", 50, 35);
+					bathSettingVo = new BathSettingVo("1", 50, 48);
 				}
 
 				try {

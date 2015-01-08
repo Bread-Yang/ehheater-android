@@ -134,7 +134,7 @@ public class BaoCircleSlider extends View {
 					.decodeSampledBitmapFromResource(getResources(),
 							R.drawable.home_yuan_tiao_intact, 100, 100));
 		}
-		if (addImageView == null) {
+		if (addImageView == null) { 
 			addImageView = new ImageView(getContext());
 			addImageView.setImageBitmap(BitmapThumbUtil
 					.decodeSampledBitmapFromResource(getResources(),

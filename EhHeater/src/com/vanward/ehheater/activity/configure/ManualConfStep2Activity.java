@@ -143,7 +143,6 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		Log.e(TAG, TAG + "的onEasyLinkResp执行了");
 		if (dialog_easylink.isShowing()) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
-			tempEndpoint = endpoint;
 			
 			Log.e(TAG, "打印productKey前");
 			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
@@ -159,16 +158,16 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			counter.cancel();
 			dialog_easylink.dismiss();
 			
-			finishingConfig();
+			finishingConfig(endpoint);
+			
+			endpoint.delete();
 		}
 	}
 
-	XpgEndpoint tempEndpoint;
-
-	private void finishingConfig() {
+	private void finishingConfig(XpgEndpoint endpoint) {
 
 		Log.e("打印productKey前", "打印productKey前");
-		HeaterInfo hinfo = new HeaterInfo(tempEndpoint);
+		HeaterInfo hinfo = new HeaterInfo(endpoint);
 		Log.e("productKey是 : ", hinfo.getProductKey());
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 
@@ -335,6 +334,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		// wifiAdmin.openWifi();
 		// wifiAdmin.addNetwork(wifiAdmin.CreateWifiInfo(ssid, "123456789", 3));
 
+		pResp.delete();
 	}
 
 	private void linkLastConnectWifi() {

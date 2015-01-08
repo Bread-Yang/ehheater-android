@@ -268,13 +268,17 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		if (nConnId != Global.connectId) {
 			return;
 		} else {
+			if (statusResp != null) {
+				statusResp.delete();
+			}
 			statusResp = pResp;
 		}
 		stateQueried = true;
 		seasonAndModeDeal(pResp); // switch season and mode
 		onOffDeal(pResp);
 		gasConsumptionDeal(pResp);
-
+		
+//		pResp.delete();
 	}
 
 	@Override
