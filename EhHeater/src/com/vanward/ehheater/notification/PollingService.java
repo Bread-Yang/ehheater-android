@@ -227,8 +227,8 @@ public class PollingService extends Service {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
 			gasMac = allDevices.get(0).getMac();
-//			Log.e(TAG, "gasMac是 : " + gasMac);
-//			Log.e(TAG, "gas did是 : " + allDevices.get(0).getDid());
+			Log.e(TAG, "gasMac是 : " + gasMac);
+			Log.e(TAG, "gas did是 : " + allDevices.get(0).getDid());
 			String requestURL = "GasInfo/getNewestData?did="
 					+ allDevices.get(0).getDid();
 //			Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);

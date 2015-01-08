@@ -420,7 +420,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				return;
 			}
 
-			if (tv_tempter.getText().toString().contains("--")) {
+			if (target_tem.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
 				DialogUtil.instance().showReconnectDialog(MainActivity.this);

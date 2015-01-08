@@ -30,6 +30,8 @@ import com.vanward.ehheater.util.HttpFriend;
 
 public class InformationActivity extends EhHeaterBaseActivity implements
 		OnPageChangeListener, OnClickListener {
+	
+	private static final String TAG = "InformationActivity";
 
 	private ImageView[] imageViews;
 	private LinearLayout mViewPoints;
@@ -49,6 +51,16 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_information);
 		initView(this);
+		
+		if (isGas) {
+			try {
+				((InfoAccumulatedGasChartView) pageViews.get(1))
+						.selectDefault();
+			} catch (Exception e) {
+			}
+		}
+		
+		getdata(); 
 	}
 
 	private void initView(Context context) {
@@ -173,12 +185,10 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-
 	}
 
 	@Override
@@ -191,20 +201,20 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 			}
 		}
 
-		if (position == 1) {
-			if (isGas) {
-				try {
-					((InfoAccumulatedGasChartView) pageViews.get(1))
-							.selectDefault();
-				} catch (Exception e) {
-				}
-			} else {
-				getdata();
-			}
-		}
-		if (position == 2 && isGas) {
-			getdata();
-		}
+//		if (position == 1) {
+//			if (isGas) {
+//				try {
+//					((InfoAccumulatedGasChartView) pageViews.get(1))
+//							.selectDefault();
+//				} catch (Exception e) {
+//				}
+//			} else {
+//				getdata();
+//			}
+//		}
+//		if (position == 2 && isGas) {
+//			getdata();
+//		}
 	}
 
 	@Override
@@ -232,7 +242,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 					+ heaterInfoService.getCurrentSelectedHeater().getDid();
 		}
 
-		Log.e("信息请求的url是 : ", url);
+		Log.e(TAG , "信息请求的url是 : " + url);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + url).executeGet(null,
 				new AjaxCallBack<String>() {
@@ -240,7 +250,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 					@Override
 					public void onSuccess(String t) {
 						super.onSuccess(t);
-						Log.e("信息请求返回的json是 : ", t);
+						Log.e(TAG, "信息请求返回的json是 : " + t);
 						try {
 							JSONObject json = new JSONObject(t);
 							String responseCode = json

@@ -64,7 +64,7 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 	private TextView last;
 	private TextView next, sumwater;
 
-	private TextView lqtime;
+	private TextView tv_lqtime;
 	long dates, dtime;
 
 	// 上一年，下一年，等等
@@ -90,7 +90,7 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 		((View) last.getParent()).setOnClickListener(this);
 		((View) next.getParent()).setOnClickListener(this);
 
-		lqtime = (TextView) layout.findViewById(R.id.messagetime);
+		tv_lqtime = (TextView) layout.findViewById(R.id.messagetime);
 
 		dates = getTodayTime();
 		imageView1 = (ImageView) layout.findViewById(R.id.imageView1);
@@ -103,22 +103,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.loadUrl("file:///android_asset/chart.html");
 		webView.setClickable(false);
-		webView.setWebViewClient(new WebViewClient() {
-
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				super.onPageFinished(view, url);
-				webView.setVisibility(view.VISIBLE);
-			}
-
-			@Override
-			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-				// TODO Auto-generated method stub
-				super.onPageStarted(view, url, favicon);
-				webView.setVisibility(view.GONE);
-			}
-
-		});
 		webView.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -127,15 +111,9 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 				return true;
 			}
 		});
-		// chart4week();
-		// webView.reload();
 		lParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);
 		addView(layout, lParams);
-		// initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
-		// initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
-
-		// radioGroup.check(R.id.radio0);
 		radiobutton.setChecked(true);
 	}
 
@@ -185,8 +163,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
 				.execute();
 
-		// webView.reload();
-
 	}
 
 	long currentShowingTime;
@@ -201,7 +177,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 
 		public LoadDataTask(long dateTime2query, String resultType,
 				String expendType) {
-			// this.did = "EohJ73eV37ABqVPm4jZcNT";
 			this.did = new HeaterInfoService(context)
 					.getCurrentSelectedHeater().getDid();
 			this.dateTime2query = dateTime2query;
@@ -215,101 +190,28 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 
 		@Override
 		protected String doInBackground(Void... params) {
-			// return HttpConnectUtil.getGasDatas(did, dateTime2query,
-			// resultType,
-			// expendType);
 			return "";
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
 
-			// use result to form namelist and datalist
-
-			Log.d("emmm", "theString: " + result);
-
-			// try {
-			// dododo(resultType, result);
-			// } catch (JSONException e) {
-			// e.printStackTrace();
-			// }
 			if (resultType.equals("1")) {
 				getmessageweek(dates);
-				// namelistjson="[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
-				// datalistjson="[{data:55},{data:55},{data:65},{data:60},{data:70},{data:55},{data:55},] ";
-				// sumwater.setText("300L");
-				// chart4week();
 			}
 
 			if (resultType.equals("2")) {
 				getmessagemonth(dates);
-				// namelistjson="[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
-				// datalistjson="[{data:415},{data:440},{data:380},{data:330},{data:110}] ";
-				// sumwater.setText("2230L");
-				// chart4Month();
 			}
 
 			if (resultType.equals("3")) {
 				getmessageyear(dates);
-				// namelistjson="[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
-				// datalistjson="[{data:2100},{data:2100},{data:2130},{data:2345},{data:2367},{data:2354},{data:2456},{data:2309},{data:2357},{data:2451},{data:0},{data:0}] ";
-				// sumwater.setText("24330L");
-				// chart4Year();
 			}
 
-			// webView.reload();
-			//
-			// DialogUtil.dismissDialog();
-
 		}
-
-		// private void dododo(String resultType, String input)
-		// throws JSONException {
-		//
-		// JSONObject jsonObject = new JSONObject(input);
-		// JSONArray jr = jsonObject.getJSONArray("result");
-		// List<Xvo> nameLi = new ArrayList<Xvo>();
-		// List<Datavo> dataLi = new ArrayList<Datavo>();
-		//
-		// for (int i = 0; i < jr.length(); i++) {
-		// JSONObject jo = jr.getJSONObject(i);
-		//
-		// long timeStamp = jo.getLong("time");
-		// Calendar cal = Calendar.getInstance();
-		// cal.setTimeInMillis(timeStamp);
-		// String name = cal.getDisplayName(Calendar.MONTH,
-		// Calendar.SHORT, Locale.CHINA);
-		//
-		// if (!resultType.equals("3")) {
-		// name += cal.get(Calendar.DATE);
-		// }
-		//
-		// Xvo xvo = new Xvo();
-		// xvo.setName(name);
-		// nameLi.add(xvo);
-		//
-		// Datavo dvo = new Datavo();
-		// try {
-		// dvo.setData(Integer.parseInt(jo.getString("amount")));
-		// } catch (NumberFormatException e) {
-		// dvo.setData(0);
-		// }
-		// dataLi.add(dvo);
-		//
-		// }
-		//
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(nameLi);
-		// datalistjson = gson.toJson(dataLi);
-		//
-		// Log.d("emmm", "namelistjson:" + namelistjson);
-		// Log.d("emmm", "datalistjson:" + datalistjson);
-		//
-		// }
-
 	}
 
-	public void getmessageweek(long da) {
+	public void getmessageweek(final long da) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
@@ -368,11 +270,12 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					namelistjson = jsonArray.toString();
 					// 赋值data
 					datalistjson = jsonArray2.toString();
+					dtime = da;
 					// 设置使用的总电数
 					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-					Long l = new Long(System.currentTimeMillis());
+					Long l = new Long(da);
 					Date da = new Date(l);
-					lqtime.setText(sim.format(da));
+					tv_lqtime.setText(sim.format(da));
 					sumwater.setText(Math.round(a) + "L");
 					// 更换下方按钮
 					chart4week();
@@ -380,7 +283,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					webView.reload();
 					// 销毁等待
 				} catch (Exception e) {
-					// TODO Auto-generated catch blocks
 					e.printStackTrace();
 				}
 				super.onSuccess(t);
@@ -388,7 +290,7 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 		});
 	}
 
-	public void getmessagemonth(long da2) {
+	public void getmessagemonth(final long da2) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
@@ -467,10 +369,13 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					namelistjson = jsonArray.toString();
 					// 赋值data
 					datalistjson = jsonArray2.toString();
+					
+					dtime = da2;
+					
 					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-					Long l = new Long(System.currentTimeMillis());
+					Long l = new Long(da2);
 					Date da = new Date(l);
-					lqtime.setText(sim.format(da));
+					tv_lqtime.setText(sim.format(da));
 					// 设置使用的总电数
 					sumwater.setText(Math.round(a) + "L");
 					// 更换下方按钮
@@ -479,7 +384,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					webView.reload();
 					// 销毁等待
 				} catch (Exception e) {
-					// TODO Auto-generated catch blocks
 					e.printStackTrace();
 				}
 				super.onSuccess(t);
@@ -488,8 +392,7 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 		});
 	}
 
-	public void getmessageyear(long da3) {
-		dtime = da3;
+	public void getmessageyear(final long da3) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 
@@ -546,10 +449,13 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					namelistjson = jsonArray.toString();
 					// 赋值data
 					datalistjson = jsonArray2.toString();
+					
+					dtime = da3;
+					
 					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
 					Long l = new Long(dtime);
 					Date da = new Date(l);
-					lqtime.setText(sim.format(da));
+					tv_lqtime.setText(sim.format(da));
 					// 设置使用的总电数
 					sumwater.setText(Math.round(a) + "L");
 					// 更换下方按钮
@@ -558,7 +464,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					webView.reload();
 					// 销毁等待
 				} catch (Exception e) {
-					// TODO Auto-generated catch blocks
 					e.printStackTrace();
 				}
 				super.onSuccess(t);
@@ -591,7 +496,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 			// 请求失败
 			@Override
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
-				// TODO Auto-generated method stub 请求失败
 				super.onFailure(t, errorNo, strMsg);
 			}
 		});
@@ -736,7 +640,7 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 				SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
 				Long l = new Long(dates7);
 				Date da = new Date(l);
-				lqtime.setText(sim.format(da));
+				tv_lqtime.setText(sim.format(da));
 				getmessageyear(dates7);
 				break;
 
@@ -766,7 +670,7 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 				SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
 				Long l = new Long(dates4);
 				Date da = new Date(l);
-				lqtime.setText(sim.format(da));
+				tv_lqtime.setText(sim.format(da));
 				if (timechanged6() != dtime) {
 					getmessageyear(dates4);
 				}

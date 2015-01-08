@@ -180,7 +180,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="0℃"
+            android:text="--℃"
             android:textColor="@color/title_color"
             android:textSize="20sp" />
         </LinearLayout>

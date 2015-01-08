@@ -103,26 +103,8 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 		webView = (WebView) layout.findViewById(R.id.webView1);
 		webView.addJavascriptInterface(new Initobject(), "init");
 		webView.getSettings().setJavaScriptEnabled(true);
-		webView.setVisibility(View.GONE);
 		webView.loadUrl("file:///android_asset/chart.html");
 
-		webView.setWebViewClient(new WebViewClient() {
-
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				// TODO Auto-generated method stub
-				super.onPageFinished(view, url);
-				webView.setVisibility(view.VISIBLE);
-			}
-
-			@Override
-			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-				// TODO Auto-generated method stub
-				super.onPageStarted(view, url, favicon);
-				webView.setVisibility(view.GONE);
-			}
-
-		});
 		webView.setClickable(false);
 		webView.setOnTouchListener(new OnTouchListener() {
 
@@ -132,15 +114,9 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 				return true;
 			}
 		});
-		// chart4week();
-		// webView.reload();
 		lParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 				LayoutParams.FILL_PARENT);
 		addView(layout, lParams);
-		// initItemView(new InforVo("设备故障", new Date(2014, 10, 10, 11, 11), 1));
-		// initItemView(new InforVo("氧护提示", new Date(2014, 10, 10, 11, 11), 0));
-
-		// radioGroup.check(R.id.radio0);
 		radiobutton.setChecked(true);
 	}
 
@@ -188,8 +164,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 		new LoadDataTask(currentShowingTime, currentShowingPeriodType, "1")
 				.execute();
 
-		// webView.reload();
-
 	}
 
 	long currentShowingTime;
@@ -204,7 +178,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 		public LoadDataTask(long dateTime2query, String resultType,
 				String expendType) {
-			// this.did = "EohJ73eV37ABqVPm4jZcNT";
 			this.did = new HeaterInfoService(context)
 					.getCurrentSelectedHeater().getDid();
 			this.dateTime2query = dateTime2query;
@@ -218,9 +191,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 		@Override
 		protected String doInBackground(Void... params) {
-			// return HttpConnectUtil.getGasDatas(did, dateTime2query,
-			// resultType,
-			// expendType);
 			return "";
 		}
 
@@ -229,83 +199,17 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 			if (resultType.equals("1")) {
 				getmessageweek(dates);
-				// namelistjson =
-				// "[{name:'10.1'},{name:'10.2'},{name:'10.3'},{name:'10.4'},{name:'10.5'},{name:'10.6'},{name:'10.7'}] ";
-				// datalistjson =
-				// "[{data:2},{data:2},{data:3},{data:3},{data:5},{data:5},{data:5},] ";
-				// chart4week();
-				// sumwater.setText("200度");
 			}
 
 			if (resultType.equals("2")) {
 				getmessagemonth(dates);
-				// namelistjson =
-				// "[{name:'10.1-10.7'},{name:'10.8-10.14'},{name:'10.15-10.21'},{name:'10.22-10.28'},{name:'10.29-10.30'}] ";
-				// datalistjson =
-				// "[{data:25},{data:30},{data:24},{data:26},{data:25}] ";
-				// chart4Month();
-				// sumwater.setText("80度");
 			}
 
 			if (resultType.equals("3")) {
 				getmessageyear(dates);
-				// namelistjson =
-				// "[{name:'01'},{name:'02'},{name:'03'},{name:'04'},{name:'05'},{name:'06'},{name:'07'},{name:'08'},{name:'09'},{name:'10'},{name:'11'},{name:'12'}]";
-				// datalistjson =
-				// "[{data:130},{data:140},{data:120},{data:110},{data:100},{data:150},{data:115},{data:125},{data:114},{data:115},{data:0},{data:0}] ";
-				// chart4Year();
-				// sumwater.setText("960度");
 			}
 
-			// webView.reload();
-			//
-
 		}
-
-		// private void dododo(String resultType, String input)
-		// throws JSONException {
-		//
-		// JSONObject jsonObject = new JSONObject(input);
-		// JSONArray jr = jsonObject.getJSONArray("result");
-		// List<Xvo> nameLi = new ArrayList<Xvo>();
-		// List<Datavo> dataLi = new ArrayList<Datavo>();
-		//
-		// for (int i = 0; i < jr.length(); i++) {
-		// JSONObject jo = jr.getJSONObject(i);
-		//
-		// long timeStamp = jo.getLong("time");
-		// Calendar cal = Calendar.getInstance();
-		// cal.setTimeInMillis(timeStamp);
-		// String name = cal.getDisplayName(Calendar.MONTH,
-		// Calendar.SHORT, Locale.CHINA);
-		//
-		// if (!resultType.equals("3")) {
-		// name += cal.get(Calendar.DATE);
-		// }
-		//
-		// Xvo xvo = new Xvo();
-		// xvo.setName(name);
-		// nameLi.add(xvo);
-		//
-		// Datavo dvo = new Datavo();
-		// try {
-		// dvo.setData(Integer.parseInt(jo.getString("amount")));
-		// } catch (NumberFormatException e) {
-		// dvo.setData(0);
-		// }
-		// dataLi.add(dvo);
-		//
-		// }
-		//
-		// Gson gson = new Gson();
-		// namelistjson = gson.toJson(nameLi);
-		// datalistjson = gson.toJson(dataLi);
-		//
-		// Log.d("emmm", "namelistjson:" + namelistjson);
-		// Log.d("emmm", "datalistjson:" + datalistjson);
-		//
-		// }http://122.10.94.216:80/EhHeaterWeb/GasInfo/getgasdata?did="+Global.connectId+"&dateTime="+da+"&resultType=1&expendType=3
-
 	}
 
 	public void getmessageweek(long da) {
@@ -384,7 +288,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 					// 销毁等待
 
 				} catch (Exception e) {
-					// TODO Auto-generated catch blocks
 					e.printStackTrace();
 				}
 				super.onSuccess(t);
@@ -393,7 +296,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 			// 请求失败
 			@Override
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
-				// TODO Auto-generated method stub 请求失败
 				super.onFailure(t, errorNo, strMsg);
 			}
 		});
@@ -496,7 +398,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 							webView.reload();
 							// 销毁等待
 						} catch (Exception e) {
-							// TODO Auto-generated catch blocks
 							e.printStackTrace();
 						}
 						super.onSuccess(t);
@@ -574,48 +475,12 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 							webView.reload();
 							// 销毁等待
 						} catch (Exception e) {
-							// TODO Auto-generated catch blocks
 							e.printStackTrace();
 						}
 						super.onSuccess(t);
 					}
 				});
 	}
-
-	// 上下
-	// public void getall(){
-	//
-	// FinalHttp finalHttp = new FinalHttp();
-	// finalHttp.get("http://122.10.94.216/EhHeaterWeb/GasInfo/getNewestElData?did="+Global.connectId+"",
-	// new AjaxCallBack<String>(){
-	//
-	// @Override
-	// public void onSuccess(String t) {
-	// try {
-	// JSONObject jsonObject = new JSONObject(t);
-	// if(jsonObject.get("result").equals(null)){
-	// sumwater2.setVisibility(VISIBLE);
-	// sumwater.setText("0");
-	// }
-	// else{
-	// sumwater2.setVisibility(VISIBLE);
-	// sumwater.setText(jsonObject.getString("result"));
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// super.onSuccess(t);
-	// }
-	//
-	// //请求失败
-	// @Override
-	// public void onFailure(Throwable t, int errorNo,
-	// String strMsg) {
-	// // TODO Auto-generated method stub 请求失败
-	// super.onFailure(t, errorNo, strMsg);
-	// }
-	// });
-	// }
 
 	private long getTodayTime() {
 		Date date = new Date();

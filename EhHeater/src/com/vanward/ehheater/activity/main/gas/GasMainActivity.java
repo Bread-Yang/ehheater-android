@@ -607,7 +607,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				animationDrawable = (AnimationDrawable) iv_wave.getBackground();
 				// animationDrawable = (AnimationDrawable)
 				// iv_wave.getDrawable();
-				// animationDrawable.start();
+				animationDrawable.start();
 			}
 
 			// animationDrawable = (AnimationDrawable) iv_wave.getDrawable();
