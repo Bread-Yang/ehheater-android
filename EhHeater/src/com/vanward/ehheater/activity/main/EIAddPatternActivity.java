@@ -7,6 +7,7 @@ import java.util.Map;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,6 +31,8 @@ import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener
 
 public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
+	
+	private static final String TAG = "EIAddPatternActivity";
 
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
 	TextView ivTitleName;
@@ -223,7 +226,7 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 					view = powerGroup.getChildAt(i);
 				}
 			}
-			System.out.println("power:　" + view.getTag());
+			Log.e(TAG, "power:　" + view.getTag());
 			customSetVo.setPower(Integer.parseInt((String) view.getTag()));
 
 		}
@@ -249,24 +252,22 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 						@Override
 						public void run() {
 
-							System.out.println("自定义");
+							Log.e(TAG, "自定义");
 							SendMsgModel.changeToZidingyiMode();
 							try {
 								Thread.sleep(700);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							System.out.println("自定义 pow: "
+							Log.e(TAG, "自定义 pow: "
 									+ customSetVo.getPower());
 							SendMsgModel.setPower(customSetVo.getPower());
 							try {
 								Thread.sleep(700);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							System.out.println("自定义 Tem: "
+							Log.e(TAG, "自定义 Tem: "
 									+ customSetVo.getTempter());
 							SendMsgModel.setTempter(customSetVo.getTempter());
 

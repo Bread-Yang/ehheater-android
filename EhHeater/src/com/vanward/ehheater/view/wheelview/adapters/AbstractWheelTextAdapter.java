@@ -227,7 +227,6 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
 		if (index >= 0 && index < getItemsCount()) {
 			String text = (String) getItemText(index);
 			if (convertView == null) {
-				// Log.e("parent的宽度", parent.getWidth() + "");
 				// if (measurePaint.measureText(text) > parent.getWidth()) {
 				// convertView = getMarqueeView(itemResourceId, index, parent);
 				// } else {
@@ -313,7 +312,6 @@ public abstract class AbstractWheelTextAdapter extends AbstractWheelAdapter {
 		view.setGravity(Gravity.CENTER);
 		view.setTextSize(wheelView.getNormal_textSize());
 		view.setLines(1);
-		// Log.e("打印wheelview的text", view.getText().toString() + "string");
 	}
 
 	/**

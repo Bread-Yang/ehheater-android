@@ -213,13 +213,13 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 	}
 
 	public void getmessageweek(long da) {
-		Log.e("getmessageweek时间是 : ", da + "");
+		Log.e(TAG, "getmessageweek时间是 : " + da);
 
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
 				+ "&dateTime=" + da + "&resultType=1&expendType=3";
-		Log.e("getmessageweek的连接是 : ", url);
+		Log.e(TAG, "getmessageweek的连接是 : " + url);
 
 		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
 
@@ -228,7 +228,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 			@Override
 			public void onSuccess(String t) {
-				Log.e("getmessageweek返回的数据是 : ", "getmessageweek返回的数据是 : " + t);
+				Log.e(TAG, "getmessageweek返回的数据是 : " + t);
 				try {
 					JSONObject jsonObject = new JSONObject(t);
 					JSONArray array = jsonObject.getJSONArray("result");
@@ -316,7 +316,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 					@Override
 					public void onSuccess(String t) {
-						Log.e("getmessagemonth返回的数据是 : ",
+						Log.e(TAG, 
 								"getmessagemonth返回的数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);

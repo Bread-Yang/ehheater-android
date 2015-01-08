@@ -400,7 +400,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			}
 		} else if (pResp.getSeasonState() == 1) { // winner
 
-			// Log.e("冬季返回来的温度是 : ", pResp.getHeatingTemTarget() + "");
+			// Log.e(TAG, "冬季返回来的温度是 : " + pResp.getHeatingTemTarget());
 
 			if (pResp.getHeatingSend() == 0) { // 0 : 散热器
 				rb_supply_heating
@@ -553,8 +553,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		if (pResp.getOnOff() == 1) {
 			tv_gas_unit.setVisibility(View.VISIBLE);
 			tv_gas_consumption.setText(String.valueOf(pResp.getGasCountNow()));
-			Log.e("实时燃气量是 : ", String.valueOf(pResp.getGasCountNow()));
-			Log.e("累计燃气量是 : ", String.valueOf(pResp.getGasCount()));
+			Log.e(TAG, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
+			Log.e(TAG, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
 		} else {
 			tv_gas_unit.setVisibility(View.GONE);
 			tv_gas_consumption.setText(R.string.no_set);

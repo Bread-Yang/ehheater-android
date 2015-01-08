@@ -129,13 +129,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 			String data = json.getJSONArray("data").toString();
 
-			Log.e("转换前打印出来的字符串 : ", data);
-
 			highChar_data = gson.fromJson(data,
 					new TypeToken<ArrayList<int[]>>() {
 					}.getType());
-
-			Log.e("转换后打印出来的字符串 : ", gson.toJson(highChar_data));
 
 			loop = json.getString("loop");
 
@@ -268,9 +264,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 		public void updateYValue(int x, int newY) {
 			// x是从1开始,1到24小时
 			highChar_data.set(x - 1, new int[] { x, newY });
-			 Log.e("X值", "X的值是 : " + x);
-			 Log.e("更新了Y值", "Y的最新值是 : " + newY);
-			 Log.e("转换后打印出来的字符串 : ", gson.toJson(highChar_data));
 		}
 	}
 }

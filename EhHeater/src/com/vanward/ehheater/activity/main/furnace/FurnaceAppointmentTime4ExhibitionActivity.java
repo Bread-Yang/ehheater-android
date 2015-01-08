@@ -140,8 +140,8 @@ public class FurnaceAppointmentTime4ExhibitionActivity extends
 			String time = dateFormat.format(new Date(editModel.getDateTime()));
 			String[] times = time.split(":");
 
-			Log.e("getDateTime", editModel.getDateTime() + "");
-			Log.e("time : ", time);
+			Log.e(TAG, "getDateTime : " + editModel.getDateTime());
+			Log.e(TAG, "time : " + time);
 
 			wheelView1.setCurrentItem(Integer.valueOf(times[0]));
 			wheelView2.setCurrentItem(Integer.valueOf(times[1]));
@@ -277,9 +277,6 @@ public class FurnaceAppointmentTime4ExhibitionActivity extends
 
 				int setMinute = wheelView2.getCurrentItem();
 
-				// Log.e(TAG, "hour是 : " + hour);
-				// Log.e(TAG, "minute是 : " + minute);
-
 				Calendar c = Calendar.getInstance();
 				c.setTime(new Date());
 
@@ -297,30 +294,21 @@ public class FurnaceAppointmentTime4ExhibitionActivity extends
 				int day = c.get(Calendar.DAY_OF_MONTH);
 				int second = c.get(Calendar.SECOND);
 
-				Log.e("year : ", year + "");
-				Log.e("month : ", month + "");
-				Log.e("day : ", day + "");
-				Log.e("hour : ", currentHour + "");
-				Log.e("minute : ", currentMinute + "");
-				Log.e("second : ", second + "");
-				Log.e("timestamp: ", c.getTimeInMillis() + "");
+				Log.e(TAG, "year : " + year);
+				Log.e(TAG, "month : " + month);
+				Log.e(TAG, "day : " + day);
+				Log.e(TAG, "hour : " + currentHour);
+				Log.e(TAG, "minute : " + currentMinute);
+				Log.e(TAG, "second : " + second);
+				Log.e(TAG, "timestamp: " + c.getTimeInMillis());
 
 				c.set(year, month, day, setHour, setMinute);
-
-				// Date date = new Date();
-				// date.setHours(setHour);
-				// date.setMinutes(setMinute);
-				// long timestamp = date.getTime();
 
 				long timestamp = c.getTimeInMillis();
 
 				editModel.setDateTime(timestamp);
 
-				// Log.e(TAG, "timestamp是 : " + timestamp);
-				//
 				String time = dateFormat.format(new Date(timestamp));
-				//
-				// Log.e(TAG, "time 是 : " + time);
 
 				editModel.setTemper(String.valueOf(seekBar.getProgress() + 30));
 

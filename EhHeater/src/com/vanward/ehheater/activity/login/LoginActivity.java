@@ -270,7 +270,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
-		Log.e("emmm", "onDeviceFound:HeaterInfo Downloaded: " + hi);
+		Log.e(TAG, "onDeviceFound:HeaterInfo Downloaded: " + hi);
 
 		if (!(hser.isValidDevice(hi))) {
 			// 非有效设备, 不予保存

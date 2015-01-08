@@ -234,10 +234,10 @@ public class BaoCircleSlider extends View {
 		float angle = 360.0f * (value - this.minValue)
 				/ (this.maxValue - this.minValue); // 当前值所偏移的度数
 		ctrlIconViewCenterPoint = iconCenterOfAngle(angle);
-		// Log.e("FurnaceMainActivity : ctrlIconViewCenterPoint.x : ",
-		// ctrlIconViewCenterPoint.x + "");
-		// Log.e("FurnaceMainActivity : ctrlIconViewCenterPoint.y : ",
-		// ctrlIconViewCenterPoint.y + "");
+		// Log.e(TAG, "ctrlIconViewCenterPoint.x : " + 
+		// ctrlIconViewCenterPoint.x);
+		// Log.e(TAG, "ctrlIconViewCenterPoint.y : " + 
+		// ctrlIconViewCenterPoint.y);
 		updateDragingTipViewRotateOfValue(value);
 		ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
 				ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
@@ -255,8 +255,8 @@ public class BaoCircleSlider extends View {
 	private void dealWithTouchPoint(Point touchPoint) {
 		float angle = angleOfTouchPoint(touchPoint);
 		int value = valueOfAngle(angle);
-		// Log.e("dealWithTouchPoint : ", "angle : " + angle);
-		// Log.e("dealWithTouchPoint : ", "value : " + value);
+		// Log.e(TAG, "dealWithTouchPoint : " + "angle : " + angle);
+		// Log.e(TAG, "dealWithTouchPoint : " +  "value : " + value);
 		setCurrentValue(value);
 	}
 
@@ -277,25 +277,25 @@ public class BaoCircleSlider extends View {
 		float length = lengthOfTwoPoint(point, circleCenter);
 		boolean isOnline = (length < (radius + ctrlIconViewWidth))
 				&& (length > (radius - ctrlIconViewWidth));
-		// Log.e("是否在圆环线上 : ", isOnline + "");
+		// Log.e(TAG, "是否在圆环线上 : " + isOnline);
 		return isOnline;
 	}
 
 	private boolean isTouchInCtrlIconView(Point point) {
 		Rect hitRect = new Rect();
 		ctrlIconView.getHitRect(hitRect);
-		// Log.e("hitRect.left : ", hitRect.left + "");
-		// Log.e("hitRect.top : ", hitRect.top + "");
-		// Log.e("hitRect.right : ", hitRect.right + "");
-		// Log.e("hitRect.bottom : ", hitRect.bottom + "");
-		// Log.e("是否在Rect中 : ", hitRect.contains(point.x, point.y) + "");
+		// Log.e(TAG, "hitRect.left : " + hitRect.left);
+		// Log.e(TAG, "hitRect.top : " + hitRect.top);
+		// Log.e(TAG, "hitRect.right : " + hitRect.right);
+		// Log.e(TAG, "hitRect.bottom : " + hitRect.bottom);
+		// Log.e(TAG, "是否在Rect中 : " + hitRect.contains(point.x, point.y));
 		return hitRect.contains(point.x, point.y);
 	}
 
 	private int valueOfAngle(float angle) {
 		float valueRange = (this.maxValue - this.minValue);
 		int value = (int) (Math.floor(angle * valueRange / 360.0) + this.minValue);
-		// Log.e("valueOfAngle : ", value + "");
+		// Log.e(TAG, "valueOfAngle : " +  value);
 		return value;
 	}
 
@@ -318,7 +318,7 @@ public class BaoCircleSlider extends View {
 		if (point.x > circleCenter.x) {
 			angle = 360 - angle;
 		}
-		// Log.e("点击处的角度是 : ", angle + "");
+		// Log.e(TAG, "点击处的角度是 : " + angle);
 		return angle;
 
 	}
@@ -331,12 +331,12 @@ public class BaoCircleSlider extends View {
 		double radian = Math.toRadians(normalAngle);
 		int x1 = (int) (circleCenter.x + radius * Math.cos(radian));
 		int y1 = (int) (circleCenter.y + radius * Math.sin(radian));
-		// Log.e("FurnaceMainActivity : getWidth() : ", getWidth() + "");
-		// Log.e("FurnaceMainActivity : circleCenter.x : ", circleCenter.x +
+		// Log.e(TAG, "getWidth() : " + getWidth());
+		// Log.e(TAG, "circleCenter.x : " + circleCenter.x +
+		// );
+		// Log.e(TAG, "circleCenter.x : " + circleCenter.x +
 		// "");
-		// Log.e("FurnaceMainActivity : circleCenter.x : ", circleCenter.x +
-		// "");
-		// Log.e("FurnaceMainActivity : circleCenter.y : ", circleCenter.y +
+		// Log.e(TAG, "circleCenter.y : " + circleCenter.y +
 		// "");
 		Point point = new Point(x1, y1);
 		return point;
@@ -418,8 +418,8 @@ public class BaoCircleSlider extends View {
 				ctrlIconView.getHitRect(hitRect);
 				float currentAngle = angleOfTouchPoint(new Point(
 						hitRect.centerX(), hitRect.centerY()));
-				// Log.e("点击处的angle : ", angle + "");
-				// Log.e("当前圆点的currentAngle : ", currentAngle + "");
+				// Log.e(TAG, "点击处的angle : " + angle);
+				// Log.e(TAG, "当前圆点的currentAngle : " + currentAngle);
 				boolean isAdd = angle > currentAngle;
 				int pad = isAdd ? +1 : -1;
 				Log.e(TAG, "ANGLE是 : " + isAdd);

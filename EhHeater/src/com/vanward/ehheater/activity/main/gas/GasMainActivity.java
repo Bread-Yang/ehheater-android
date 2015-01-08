@@ -1111,7 +1111,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	// public void updateUIListener(int outlevel) {
 	// temptertitleTextView.setText("设置水温");
 	//
-	// Log.e("outlevel", outlevel + "");
 	// tv_tempter.setText(outlevel + "");
 	// if (outlevel >= 50) {
 	// // 变小了

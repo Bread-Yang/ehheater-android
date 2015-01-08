@@ -53,6 +53,8 @@ import com.xtremeprog.xpgconnect.generated.generated;
 public class EIPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnCheckedChangeListener {
 
+	private static final String TAG = "EIPatternActivity";
+
 	@ViewInject(id = R.id.textView1, click = "onClick")
 	TextView textView1;
 	@ViewInject(id = R.id.nopatterm, click = "onClick")
@@ -114,7 +116,6 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		initViewValue();
 
@@ -122,15 +123,12 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
-
 	}
 
 	@Override
 	public void onClick(View v) {
-		System.out.println("view:" + v.getId());
-		// TODO Auto-generated method stub
+		Log.e(TAG, "view:" + v.getId());
 		switch (v.getId()) {
 		case R.id.textradio0:
 			radio0.setChecked(true);
@@ -148,56 +146,9 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 			finish();
 			break;
 		case R.id.btn_add_pattern:
-
 			Intent intent = new Intent();
 			intent.setClass(this, EIAddPatternActivity.class);
 			startActivity(intent);
-
-			// AddPatternNameDialogUtil.instance(this)
-			// .setNextButtonCall(new NextButtonCall() {
-			// @Override
-			// public void oncall(View v) {
-			// final String name = AddPatternNameDialogUtil
-			// .instance(PatternActivity.this).getName();
-			// if (AddPatternNameDialogUtil.instance(
-			// PatternActivity.this).isNameExit()) {
-			// Toast.makeText(PatternActivity.this, "此名字已存在",
-			// Toast.LENGTH_SHORT).show();
-			// return;
-			// }
-			//
-			// if (name != null && name.length() > 0) {
-			// AddPatternSettingDialogUtil
-			// .instance(PatternActivity.this)
-			// .initName(name)
-			// .nextButtonCall(new NextButtonCall() {
-			//
-			// @Override
-			// public void oncall(View v) {
-			// // TODO Auto-generated method
-			// // stub
-			// CustomSetVo customSetVo = AddPatternSettingDialogUtil
-			// .instance(
-			// PatternActivity.this)
-			// .getData();
-			// customSetVo.setName(name);
-			// new BaseDao(
-			// PatternActivity.this)
-			// .getDb().save(
-			// customSetVo);
-			//
-			// initViewValue();
-			// AddPatternSettingDialogUtil
-			// .instance(
-			// PatternActivity.this)
-			// .dissmiss();
-			// }
-			// }).showDialog();
-			// }
-			// AddPatternNameDialogUtil.instance(
-			// PatternActivity.this).dissmiss();
-			// }
-			// }).showDialog();
 			break;
 
 		case R.id.mornongsetting:
@@ -206,7 +157,6 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 			} else {
 				setMorningWashPeople(false);
 			}
-
 			break;
 		}
 	}
@@ -291,10 +241,8 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 						+ "'");
 		addCustomView();
 		if (customSetVolist.size() >= 3) {
-			// ivTitleBtnRigh.setVisibility(View.GONE);
 			btn_add_pattern.setVisibility(View.GONE);
 		} else {
-			// ivTitleBtnRigh.setVisibility(View.VISIBLE);
 			btn_add_pattern.setVisibility(View.VISIBLE);
 		}
 		name = getIntent().getStringExtra("name");
@@ -311,7 +259,6 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 				}
 			} else if (root instanceof RadioButton) {
 				RadioButton radioButton = ((RadioButton) root);
-				System.out.println(radioButton.getText());
 				if (radioButton.getTag().equals(name)) {
 					group.setOnCheckedChangeListener(null);
 					radioButton.setChecked(true);
@@ -326,7 +273,6 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 
 			e.printStackTrace();
 		}
-
 	}
 
 	public void addCustomView() {
@@ -366,7 +312,6 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 				new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						AddPatternButtonDialogUtil
 								.instance(EIPatternActivity.this)
 								.nextButtonCall(new NextButtonCall() {
@@ -406,7 +351,8 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 												EIPatternActivity.this)
 												.dissmiss();
 										SureDelDialogUtil
-												.instance(EIPatternActivity.this)
+												.instance(
+														EIPatternActivity.this)
 												.setNextButtonCall(
 														new NextButtonCall() {
 															@Override
@@ -417,9 +363,6 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 																		EIPatternActivity.this)
 																		.getDb()
 																		.delete(customSetVo);
-																System.out
-																		.println("isCheck: "
-																				+ isCheck);
 																if (radioButton
 																		.isChecked()) {
 																	customSetVolist = new BaseDao(
@@ -507,26 +450,24 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 
 	public void setToDIY(CustomSetVo customSetVo) {
 		try {
-
 			int persons = customSetVo.getPeoplenum();
 
-			if (persons >= 1 && persons <= 3) {
-				generated.SendPatternSettingReq(Global.connectId,
-						(short) (persons + 4));
-				return;
-			}
+//			if (persons >= 1 && persons <= 3) {
+//				generated.SendPatternSettingReq(Global.connectId,
+//						(short) (persons + 4));
+//				return;
+//			}
 
-			System.out.println("自定义");
+			Log.e(TAG, "自定义");
 			SendMsgModel.changeToZidingyiMode();
 			Thread.sleep(700);
-			System.out.println("自定义 pow: " + customSetVo.getPower());
+			Log.e(TAG, "自定义 pow: " + customSetVo.getPower());
 			SendMsgModel.setPower(customSetVo.getPower());
 			Thread.sleep(700);
-			System.out.println("自定义 Tem: " + customSetVo.getTempter());
+			Log.e(TAG, "自定义 Tem: " + customSetVo.getTempter());
 			SendMsgModel.setTempter(customSetVo.getTempter());
 
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -554,8 +495,8 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 									Toast.LENGTH_SHORT).show();
 						}
 						initViewValue();
-						AddPatternNameDialogUtil.instance(EIPatternActivity.this)
-								.dissmiss();
+						AddPatternNameDialogUtil.instance(
+								EIPatternActivity.this).dissmiss();
 					}
 				}).showDialog();
 

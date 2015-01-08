@@ -40,9 +40,6 @@ public class EhState {
 
 	public EhState(byte[] data) {
 		try {
-			for (int i = 0; i < data.length - 1; i++) {
-				Log.e(TAG, "data[" + i + "] : " + String.valueOf(data[i]));
-			}
 			setHeader(new byte[] { data[0], data[1] });
 			setP0Version(data[2]);
 			setRespAddress(data[3]);

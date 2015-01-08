@@ -243,8 +243,6 @@ public class MarqueeView extends LinearLayout {
 		final float scale = context.getResources().getDisplayMetrics().density;
 		float mTextDifference_DP = (mTextDifference / scale + 0.5f);
 
-		Log.e("mTextDifference_DP : ", String.valueOf(mTextDifference_DP));
-
 		final int duration = (int) (mTextDifference_DP * mSpeed);
 
 		mMoveTextOut = new TranslateAnimation(0, -mTextDifference, 0, 0);

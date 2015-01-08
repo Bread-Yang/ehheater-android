@@ -32,6 +32,8 @@ import com.xtremeprog.xpgconnect.generated.generated;
 
 public class FeedbackActivity extends EhHeaterBaseActivity {
 
+	private static final String TAG = "FeedbackActivity";
+
 	private HeaterDevice device = Global.device;
 
 	@Override
@@ -113,21 +115,21 @@ public class FeedbackActivity extends EhHeaterBaseActivity {
 
 		// 第13位 : "设置功率"
 		device.setSetupPower(data[13]);
-		
+
 		// 第14位 : "剩余加热时间"
 		device.setResidualHeatTime(data[14]);
-		
+
 		// 第15位 : "剩余热水量"
 		device.setResidualHotWater(data[15]);
-		
-		Log.e("开关机状态 : ", device.isPowerOn() ? "开机" : "关机");
-		Log.e("加热状态 : ", device.isHeating() ? "加热" : "未加热");
-		Log.e("预约状态 : ", device.isAppointment() ? "预约" : "未预约");
-		Log.e("内胆水温 : ", device.getInnerTemp() + "");
-		Log.e("设置水温 : ", device.getSetupTemp() + "");
-		Log.e("设置功率 : ", device.getSetupPower() + "");
-		Log.e("剩余加热时间 : ", device.getResidualHeatTime() + "");
-		Log.e("剩余热水量 : ", device.getResidualHotWater() + "");
+
+		Log.e(TAG, "开关机状态 : " + (device.isPowerOn() ? "开机" : "关机"));
+		Log.e(TAG, "加热状态 : " + (device.isHeating() ? "加热" : "未加热"));
+		Log.e(TAG, "预约状态 : " + (device.isAppointment() ? "预约" : "未预约"));
+		Log.e(TAG, "内胆水温 : " + (device.getInnerTemp() + ""));
+		Log.e(TAG, "设置水温 : " + (device.getSetupTemp() + ""));
+		Log.e(TAG, "设置功率 : " + (device.getSetupPower() + ""));
+		Log.e(TAG, "剩余加热时间 : " + (device.getResidualHeatTime() + ""));
+		Log.e(TAG, "剩余热水量 : " + (device.getResidualHotWater() + ""));
 	}
 
 	@Override

@@ -651,7 +651,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void freezeProofing(StateResp_t date) {
-		Log.e("防冻报警：", date.getError() + "");
+		Log.e(TAG, "防冻报警 : " + date.getError());
 		if (date.getError() == 160) {
 			iv_error.setVisibility(View.VISIBLE);
 			iv_error.setBackgroundResource(R.drawable.main_tip);
@@ -687,8 +687,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void meibangWran(final StateResp_t date) {
-		System.out.println("镁棒提示：" + date.getHeating_tube_time() + "");
-		Log.e("镁棒提示：", date.getHeating_tube_time() + "");
+		Log.e(TAG, "镁棒提示 : " + date.getHeating_tube_time());
 		if (date.getHeating_tube_time() > 800 * 60) {
 			iv_error.setVisibility(View.VISIBLE);
 			iv_error.setBackgroundResource(R.drawable.main_tip);
@@ -726,7 +725,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	public void waterWarn(final StateResp_t date) {
-		Log.e("水质提醒：", date.getMachine_not_heating_time() + "");
+		Log.e(TAG, "水质提醒：" + date.getMachine_not_heating_time());
 		if (date.getMachine_not_heating_time() > 9 * 24 * 60) {
 			iv_error.setVisibility(View.VISIBLE);
 			iv_error.setBackgroundResource(R.drawable.main_tip);
@@ -766,7 +765,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		waterWarn(date);
 		// oxygenWarning(pResp);
 		System.out.println("错误码：" + date.getError() + "  ");
-		Log.e("错误码：", date.getError() + "  ");
+		Log.e(TAG , "错误码：" + date.getError());
 		if (date.getError() != 0 && date.getError() != 160) { // 不是防冻
 			isError = true;
 			iv_error.setVisibility(View.VISIBLE);
@@ -843,8 +842,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
-		Log.e("电热的onTcpPacket()执行了", "电热的onTcpPacket()执行了");
-		Log.e("剩余热水百分比", new EhState(data).getRemainingHotWaterAmount() + "");
+		Log.e(TAG, "电热的onTcpPacket()执行了");
+		Log.e(TAG, "剩余热水百分比" + new EhState(data).getRemainingHotWaterAmount());
 		if (connId != Global.connectId) {
 			return;
 		}

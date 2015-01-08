@@ -251,13 +251,13 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				int day = c.get(Calendar.DAY_OF_MONTH);
 				int second = c.get(Calendar.SECOND);
 
-				Log.e("year : ", year + "");
-				Log.e("month : ", month + "");
-				Log.e("day : ", day + "");
-				Log.e("hour : ", currentHour + "");
-				Log.e("minute : ", currentMinute + "");
-				Log.e("second : ", second + "");
-				Log.e("timestamp: ", c.getTimeInMillis() + "");
+				Log.e(TAG, "year : " + year);
+				Log.e(TAG, "month : " + month);
+				Log.e(TAG, "day : " + day);
+				Log.e(TAG, "hour : " + currentHour);
+				Log.e(TAG, "minute : " + currentMinute);
+				Log.e(TAG, "second : " + second );
+				Log.e(TAG, "timestamp: " + c.getTimeInMillis());
 
 				c.set(year, month, day, setHour, setMinute, 0);
 
@@ -323,7 +323,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 				AjaxParams params = new AjaxParams();
 				params.put("data", json);
-				Log.e("isOverride : ", isOverride + "");
+				Log.e(TAG, "isOverride : " +  isOverride);
 				if (isOverride) {
 					params.put("ignoreConflict", "true");
 				}
@@ -546,7 +546,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				for (int i = 1; i < editModel.getWeek().length(); i++) {
 					int flag = Integer.valueOf(editModel.getWeek().substring(i,
 							i + 1));
-					Log.e("flag", flag + "");
 					days[i - 1] = flag;
 				}
 				days[6] = Integer.valueOf(editModel.getWeek().substring(0, 1));
@@ -667,7 +666,6 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.e("onActivityResult", "onActivityResult");
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case TO_APPOINTMENT_DAYS:

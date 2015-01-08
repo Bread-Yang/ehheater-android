@@ -183,7 +183,6 @@ public class FurnaceAppointmentList4ExhibitionActivity extends
 			// 将字节流编码成base64的字符窜
 			String data_Base64 = new String(Base64.encodeToString(
 					baos.toByteArray(), Base64.DEFAULT));
-			Log.e("data_base64是 : ", data_Base64);
 			Editor editor = preferences.edit();
 			editor.putString("data", data_Base64);
 

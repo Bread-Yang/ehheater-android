@@ -17,13 +17,13 @@ public class ErrorUtils extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e("ErrorUtils的onCreate()执行了", "ErrorUtils的onCreate()执行了");
+		Log.e(TAG,  "ErrorUtils的onCreate()执行了");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e("ErrorUtils的onResume()执行了", "ErrorUtils的onResume()执行了");
+		Log.e(TAG, "ErrorUtils的onResume()执行了");
 		Intent originalIntent = getIntent();
 		boolean isGas = originalIntent.getBooleanExtra("isGas", false);
 

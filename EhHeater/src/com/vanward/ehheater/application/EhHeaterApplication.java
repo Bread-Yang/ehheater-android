@@ -4,6 +4,7 @@ import android.app.Application;
 import android.graphics.Typeface;
 
 import com.vanward.ehheater.statedata.EhState;
+import com.vanward.ehheater.util.LogcatFileManager;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
@@ -24,6 +25,8 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 		super.onCreate();
 		
 		XPGConnectClient.initClient(this);
+		
+		LogcatFileManager.getInstance().startLogcatManager(getBaseContext());
 
 //		EhHeaterApplication.number_tf = Typeface.createFromAsset(getAssets(),
 //				"fonts/number.otf");

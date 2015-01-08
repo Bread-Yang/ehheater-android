@@ -130,11 +130,6 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 		// IntelligentPatternUtil.addLastPower(this, 3);
 		// IntelligentPatternUtil.addLastPower(this, 3);
 		// IntelligentPatternUtil.addLastPower(this, 3);
-		//
-		// Log.e("最近的温度 : ", IntelligentPatternUtil.getMostSetTemperature(this)
-		// + "");
-		// Log.e("最近的功率", IntelligentPatternUtil.getMostSetPower(this) + "");
-
 	}
 
 	private void findViewById() {
@@ -224,8 +219,8 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 			String time = dateFormat.format(new Date(editModel.getDateTime()));
 			String[] times = time.split(":");
 
-			Log.e("getDateTime", editModel.getDateTime() + "");
-			Log.e("time : ", time);
+			Log.e(TAG, "getDateTime : " +  editModel.getDateTime());
+			Log.e(TAG, "time : " + time);
 
 			wheelView1.setCurrentItem(Integer.valueOf(times[0]));
 			wheelView2.setCurrentItem(Integer.valueOf(times[1]));

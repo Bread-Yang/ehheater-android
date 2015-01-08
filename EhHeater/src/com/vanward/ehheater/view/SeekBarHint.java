@@ -126,13 +126,8 @@ public class SeekBarHint extends SeekBar implements
 	private void showPopup() {
 
 		if (mPopupStyle == POPUP_FOLLOW) {
-			// Log.e("this.getY()是 : ", this.getY() + "");
-			// Log.e("this.getX()是 : ", this.getX() + "");
-			// Log.e("getXPosition是 : ", getXPosition(this) + "");
 			int[] location = new int[2];
 			getLocationOnScreen(location);
-			Log.e("location[0]", location[0] + "");
-			Log.e("location[1]", location[1] + "");
 			mPopup.showAtLocation(this, Gravity.NO_GRAVITY,
 					(int) (this.getX() + (int) getXPosition(this)),
 					(int) (location[1] + mYLocationOffset));

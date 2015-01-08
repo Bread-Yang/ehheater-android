@@ -426,9 +426,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	private void finishingConfig(XpgEndpoint endpoint) {
 
-		Log.e("打印productKey前", "打印productKey前");
 		HeaterInfo hinfo = new HeaterInfo(endpoint);
-		Log.e("productKey是 : ", hinfo.getProductKey());
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 
 		if (!hser.isValidDevice(hinfo)) {
