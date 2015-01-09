@@ -45,7 +45,7 @@ public class CheckOnlineUtil {
 		this.curmac = mac;
 		paused = false;
 		for (XpgEndpoint item : bindList) {
-			item.delete();
+//			item.delete();
 		}
 		bindList.clear();
 		
@@ -67,7 +67,7 @@ public class CheckOnlineUtil {
 		checkOnlineTimer = new Timer();
 
 		for (XpgEndpoint item : bindList) {
-			item.delete();
+//			item.delete();
 		}
 		bindList.clear();
 		
@@ -105,7 +105,7 @@ public class CheckOnlineUtil {
 				}
 				
 				for (XpgEndpoint item : bindList) {
-					item.delete();
+//					item.delete();
 				}
 				bindList.clear();
 				Log.d("emmm", "checking online: continue fetch binding");

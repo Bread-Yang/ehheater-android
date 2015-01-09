@@ -34,6 +34,8 @@ import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class ConnectActivity extends GeneratedActivity {
+	
+	private static final String TAG = "ConnectActivity";
 
 	/** 小循环扫描设备周期,ms */
 	private final static int defaultScanInterval = 2000;
@@ -57,9 +59,9 @@ public class ConnectActivity extends GeneratedActivity {
 	
 	private int tempConnId = -1;
 
-	private String mac = "";
+	private String mMac = "";
 	
-	private String passcode = "";
+	private String mPasscode = "";
 
 	private String passcodeRetrieved = "";
 
@@ -75,14 +77,14 @@ public class ConnectActivity extends GeneratedActivity {
 		connType = Integer.MAX_VALUE;
 		currentLanSearchingState = LAN_NONE;
 		tempConnId = -1;
-		mac = "";
-		passcode = "";
+		mMac = "";
+		mPasscode = "";
 		passcodeRetrieved = "";
 		didRetrieved = "";
 		onDeviceFoundCounter = 0;
 		jobDone = false;
 		for (XpgEndpoint item : tempEndpointList) {
-			item.delete();
+//			item.delete();
 		}
 		tempEndpointList.clear();
 	}
@@ -177,7 +179,7 @@ public class ConnectActivity extends GeneratedActivity {
 		startFind = new Timer();
 		startFind.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
-				Log.d("emmm", "finding device");
+				Log.e(TAG, "finding device");
 				XPGConnectClient.xpgcFindDevice();
 			}
 		}, 0, scanInterval);
@@ -214,15 +216,21 @@ public class ConnectActivity extends GeneratedActivity {
 				return;
 			}
 			
-			Log.d("emmm", "onDeviceFound@ConnectActivity(SMALL): " + endpoint.getSzMac() + "-" + 
+			Log.e(TAG, "onDeviceFound@ConnectActivity(SMALL): " + endpoint.getSzMac() + "-" + 
 					endpoint.getSzDid() + "-" + endpoint.getIsOnline());
 
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();
+			
+			Log.e(TAG, "endpoint.getSzDid() : " + endpoint.getSzDid());
+			
+			Log.e(TAG, "mMac : " + mMac.toLowerCase());
+			Log.e(TAG, "endpoint.getSzMac().toLowerCase() : " + endpoint.getSzMac().toLowerCase());
+			Log.e(TAG, "endpoint.getSzDid(): " +  endpoint.getSzDid());
 
-			if (!TextUtils.isEmpty(macFound) && macFound.equals(mac.toLowerCase())) {
+			if (!TextUtils.isEmpty(macFound) && macFound.equals(mMac.toLowerCase())) {
 				didRetrieved = didFound;
-				Log.d("emmm", "onDeviceFound:found target, connecting by small");
+				Log.e(TAG, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 				currentLanSearchingState = LAN_FOUND;
@@ -236,7 +244,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
 			
-			Log.d("emmm", "onDeviceFound@ConnectActivity(BIG): " + endpoint.getSzMac() + "-" + 
+			Log.e(TAG, "onDeviceFound@ConnectActivity(BIG): " + endpoint.getSzMac() + "-" + 
 					endpoint.getSzDid() + "-" + endpoint.getIsOnline());
 			
 			if (onDeviceFoundCounter++ == 0) {
@@ -260,22 +268,22 @@ public class ConnectActivity extends GeneratedActivity {
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		tempConnId = connId;
-		Log.d("emmm", "onConnectEvent@ConnectActivity" + connId + "-" + event);
+		Log.e(TAG, "onConnectEvent@ConnectActivity" + connId + "-" + event);
 
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
 			
-			if (TextUtils.isEmpty(passcode)) {
+			if (TextUtils.isEmpty(mPasscode)) {
 				generated.SendPasscodeReq(tempConnId);
-				Log.d("emmm", "onConnectEvent:requesting passcode");
+				Log.e(TAG, "onConnectEvent:requesting passcode");
 			} else {
-				XPGConnectClient.xpgcLogin(tempConnId, null, passcode);
+				XPGConnectClient.xpgcLogin(tempConnId, null, mPasscode);
 			}
 			
 		}
 
 		if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
 			XPGConnectClient.xpgcLogin(tempConnId, getUserId(), getUserPsw());
-			Log.d("emmm", "onConnectEvent:connecting by big");
+			Log.e(TAG, "onConnectEvent:connecting by big");
 		}
 	}
 
@@ -285,16 +293,16 @@ public class ConnectActivity extends GeneratedActivity {
 
 		passcodeRetrieved = generated.XpgData2String(pResp.getPasscode());
 
-		Log.d("emmm", "OnPasscodeResp: connecting by small");
 		XPGConnectClient.xpgcLogin(tempConnId, null, passcodeRetrieved);
+		Log.e(TAG, "OnPasscodeResp: connecting by small");
 		
-		pResp.delete();
+//		pResp.delete();
 	}
 
 	@Override
 	public void OnLanLoginResp(LanLoginResp_t pResp, int nConnId) {
 		super.OnLanLoginResp(pResp, nConnId);
-		Log.d("emmm", "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
+		Log.e(TAG, "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
 
 		if (pResp.getResult() == 0) {
 			mTvInfo.setText("设备已连接!");
@@ -305,7 +313,7 @@ public class ConnectActivity extends GeneratedActivity {
 			data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
 			data.putExtra(Consts.INTENT_EXTRA_ISONLINE, true);
 			
-			data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
+			data.putExtra(Consts.INTENT_EXTRA_MAC, mMac);
 			data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
 			data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
 			
@@ -318,13 +326,13 @@ public class ConnectActivity extends GeneratedActivity {
 			setResult(RESULT_OK, data);
 			finish();
 		}
-		pResp.delete();
+//		pResp.delete();
 	}
 
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.d("emmm", "onLoginCloudResp@ConnectActivity: " + result);
+		Log.e(TAG, "onLoginCloudResp@ConnectActivity: " + result);
 		switch (result) {
 		case 0: // 可以控制
 			mTvInfo.setText("设备已连接!");
@@ -360,11 +368,11 @@ public class ConnectActivity extends GeneratedActivity {
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
 		jobDone = true;
 		for (XpgEndpoint ep : devList) {
-			if (ep.getSzMac().toLowerCase().equals(mac.toLowerCase())) {
+			if (ep.getSzMac().toLowerCase().equals(mMac.toLowerCase())) {
 				
 				passcodeRetrieved = ep.getSzPasscode();
 				didRetrieved = ep.getSzDid();
-				Log.d("emmm", mac + " isOnline? " + ep.getIsOnline());
+				Log.e(TAG, mMac + " isOnline? " + ep.getIsOnline());
 				
 				if (ep.getIsOnline() == 1) {
 					// is online
@@ -380,7 +388,7 @@ public class ConnectActivity extends GeneratedActivity {
 		
 		// is offline
 		setOfflineResult();
-		Log.d("emmm", mac + " isOnline? " + "未绑定此设备");
+		Log.e(TAG, mMac + " isOnline? " + "未绑定此设备");
 	}
 	
 	private void setOfflineResult() {
@@ -389,7 +397,7 @@ public class ConnectActivity extends GeneratedActivity {
 		data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
 		data.putExtra(Consts.INTENT_EXTRA_ISONLINE, false);
 
-		data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
+		data.putExtra(Consts.INTENT_EXTRA_MAC, mMac);
 		data.putExtra(Consts.INTENT_EXTRA_PASSCODE, "");
 		data.putExtra(Consts.INTENT_EXTRA_DID, "");
 		
@@ -412,12 +420,12 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 	
 	private void initTargetDeviceInfo() {
-		mac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
-		if (TextUtils.isEmpty(mac)) {
+		mMac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
+		if (TextUtils.isEmpty(mMac)) {
 			setOfflineResult();
 		}
 		
-		passcode = passcodeRetrieved = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+		mPasscode = passcodeRetrieved = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
 		String connectText = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 //		if (!TextUtils.isEmpty(connectText)) {
 //			mTvInfo2.setText(connectText);

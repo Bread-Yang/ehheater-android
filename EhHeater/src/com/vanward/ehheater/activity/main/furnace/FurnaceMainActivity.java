@@ -269,7 +269,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			return;
 		} else {
 			if (statusResp != null) {
-				statusResp.delete();
+//				statusResp.delete();
 			}
 			statusResp = pResp;
 		}

@@ -56,11 +56,12 @@
         android:layout_height="1dp"
         android:background="#dddddd"/>
     
-    <Button android:visibility="gone"
+    <Button
         android:id="@+id/awad_btn_retry"
         android:layout_width="180dp"
         android:layout_height="44dp"
         android:background="@null"
-        android:text="重试"/>
+        android:text="重试"
+        android:visibility="gone" />
 
 </LinearLayout>

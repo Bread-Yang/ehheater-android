@@ -147,11 +147,6 @@ public class GeneratedActivity extends Activity
     }
 
     @Override
-    public void OnEasylinkV3Resp(EasylinkV3Resp_t pResp) {
-        generated.DumpEasylinkV3Resp(pResp);
-    }
-
-    @Override
     public void OnBootstrapResp(BootstrapResp_t pResp) {
         generated.DumpBootstrapResp(pResp);
     }

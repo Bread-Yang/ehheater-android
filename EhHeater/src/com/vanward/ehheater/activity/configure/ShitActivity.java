@@ -397,8 +397,8 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 //			Log.e(TAG, "null == endpoint.getSzDid() : " + (null == endpoint.getSzDid()));
 //			Log.e(TAG, ("endpoint.getSzDid()为空字符串 : " + "".equals(endpoint.getSzDid())));
 			
-			Log.e(TAG, "null == endpoint.getSzPasscode() : " + (null == endpoint.getSzPasscode()));
-			Log.e(TAG, ("endpoint.getSzPasscode()为空字符串 : " + "".equals(endpoint.getSzPasscode())));
+//			Log.e(TAG, "null == endpoint.getSzPasscode() : " + (null == endpoint.getSzPasscode()));
+//			Log.e(TAG, ("endpoint.getSzPasscode()为空字符串 : " + "".equals(endpoint.getSzPasscode())));
 			
 			if (endpoint.getSzProductKey() == null
 					|| "".equals(endpoint.getSzProductKey())) {
@@ -407,13 +407,9 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			if (endpoint.getSzMac() == null || "".equals(endpoint.getSzMac())) {
 				return;
 			}
-//			if (endpoint.getSzDid() == null || "".equals(endpoint.getSzDid())) {
-//				return;
-//			}
-//			if (endpoint.getSzPasscode() == null
-//					|| "".equals(endpoint.getSzPasscode())) {
-//				return;
-//			}
+			if (endpoint.getSzDid() == null || "".equals(endpoint.getSzDid())) {
+				return;
+			}
 			Log.e(TAG, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
 			Log.e(TAG, "endpoint.getSzMac() : " + endpoint.getSzMac());
 			Log.e(TAG, "endpoint.getSzDid() : " + endpoint.getSzDid());
@@ -437,7 +433,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 				@Override
 				public void run() {
 					finishingConfig(endpoint);
-					endpoint.delete();
+//					endpoint.delete();
 				}
 			}, 300);
 		}
@@ -455,6 +451,8 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 					.show();
 			return;
 		}
+		
+		Log.e(TAG, "hinfo.getProductKey() : " + hinfo.getProductKey());
 
 		if (!mType.pkey.equals(hinfo.getProductKey())) {
 

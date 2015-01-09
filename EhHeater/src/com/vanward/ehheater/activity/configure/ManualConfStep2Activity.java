@@ -160,7 +160,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			
 			finishingConfig(endpoint);
 			
-			endpoint.delete();
+//			endpoint.delete();
 		}
 	}
 
@@ -304,7 +304,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		// wifiAdmin.openWifi();
 		// wifiAdmin.addNetwork(wifiAdmin.CreateWifiInfo(ssid, "123456789", 3));
 
-		pResp.delete();
+//		pResp.delete();
 	}
 
 	private void linkLastConnectWifi() {

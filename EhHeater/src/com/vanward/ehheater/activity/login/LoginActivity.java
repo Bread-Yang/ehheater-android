@@ -310,7 +310,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if (preSelectedDeviceMac.equals(hi.getMac())) {
 			spu.put(ShareKey.CurDeviceMac, hi.getMac());
 		}
-		endpoint.delete();
+//		endpoint.delete();
 	};
 	
 	int count;
