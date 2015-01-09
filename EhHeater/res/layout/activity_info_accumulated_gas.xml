@@ -154,6 +154,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/buttonrela"
         android:layout_below="@+id/radioGroup1"
+        android:background="@android:color/transparent"
         android:layout_centerHorizontal="true"
         android:focusable="false" />
 

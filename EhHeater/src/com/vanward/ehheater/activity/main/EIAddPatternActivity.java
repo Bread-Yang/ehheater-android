@@ -245,13 +245,17 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 				if (oldcustomSetVo != null) {
 					new BaseDao(this).getDb().delete(oldcustomSetVo);
 				}
+				
+				boolean isCheck = getIntent().getBooleanExtra("ischeck", false);
+				customSetVo.setSet(isCheck);
+				
 				new BaseDao(this).getDb().replace(customSetVo);
-				if (getIntent().getBooleanExtra("ischeck", false)) {
+				if (isCheck) {
 					new Thread(new Runnable() {
 
 						@Override
 						public void run() {
-
+							
 							Log.e(TAG, "自定义");
 							SendMsgModel.changeToZidingyiMode();
 							try {

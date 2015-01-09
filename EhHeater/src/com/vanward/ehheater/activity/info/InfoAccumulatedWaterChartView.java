@@ -99,6 +99,8 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 		imageView2.setOnClickListener(this);
 
 		webView = (WebView) layout.findViewById(R.id.webView1);
+		webView.setBackgroundColor(0); // 设置背景色
+		webView.getBackground().setAlpha(0); // 设置填充透明度 范围：0-255
 		webView.addJavascriptInterface(new Initobject(), "init");
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.loadUrl("file:///android_asset/chart.html");
@@ -252,7 +254,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 						JSONObject jsonOBJ2 = new JSONObject();
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
-						;
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
 						if (li.get(i).getAmount().equals("")
@@ -637,10 +638,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 
 			case "上一年":
 				long dates7 = timechanged3();
-				SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-				Long l = new Long(dates7);
-				Date da = new Date(l);
-				tv_lqtime.setText(sim.format(da));
 				getmessageyear(dates7);
 				break;
 
@@ -667,10 +664,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 
 			case "下一年":
 				long dates4 = timechanged6();
-				SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-				Long l = new Long(dates4);
-				Date da = new Date(l);
-				tv_lqtime.setText(sim.format(da));
 				if (timechanged6() != dtime) {
 					getmessageyear(dates4);
 				}

@@ -66,7 +66,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 	private TextView last;
 	private TextView next, sumwater;
-	private TextView lqtime, sumwater2;
+	private TextView tv_lqtime, sumwater2;
 	long dates, dtime;
 	// 上一年，下一年，等等
 	private ImageView imageView1;
@@ -88,7 +88,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 		last = (TextView) layout.findViewById(R.id.last);
 		next = (TextView) layout.findViewById(R.id.next);
-		lqtime = (TextView) layout.findViewById(R.id.messagetime);
+		tv_lqtime = (TextView) layout.findViewById(R.id.messagetime);
 		sumwater2 = (TextView) layout.findViewById(R.id.sumwater2);
 
 		dates = getTodayTime();
@@ -101,6 +101,8 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 		((View) last.getParent()).setOnClickListener(this);
 		((View) next.getParent()).setOnClickListener(this);
 		webView = (WebView) layout.findViewById(R.id.webView1);
+		webView.setBackgroundColor(0); // 设置背景色
+		webView.getBackground().setAlpha(0); // 设置填充透明度 范围：0-255
 		webView.addJavascriptInterface(new Initobject(), "init");
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.loadUrl("file:///android_asset/chart.html");
@@ -278,7 +280,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
 					Long l = new Long(dtime);
 					Date da = new Date(l);
-					lqtime.setText(sim.format(da));
+					tv_lqtime.setText(sim.format(da));
 					sumwater.setText(Math.round(a) + "");
 					sumwater2.setVisibility(VISIBLE);
 					// 更换下方按钮
@@ -387,7 +389,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
 							Long l = new Long(dtime);
 							Date da = new Date(l);
-							lqtime.setText(sim.format(da));
+							tv_lqtime.setText(sim.format(da));
 							// 设置使用的总电数
 
 							sumwater.setText(Math.round(a) + "");
@@ -405,8 +407,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 				});
 	}
 
-	public void getmessageyear(long da3) {
-		dtime = da3;
+	public void getmessageyear(final long da3) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		
@@ -466,6 +467,11 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 							namelistjson = jsonArray.toString();
 							// 赋值data
 							datalistjson = jsonArray2.toString();
+							dtime = da3;
+							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
+							Long l = new Long(dtime);
+							Date da = new Date(l);
+							tv_lqtime.setText(sim.format(da));
 							// 设置使用的总电数
 							sumwater.setText(Math.round(a) + "");
 							sumwater2.setVisibility(VISIBLE);
@@ -620,10 +626,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 			case "上一年":
 				long dates7 = timechanged3();
-				SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-				Long l = new Long(dates7);
-				Date da = new Date(l);
-				lqtime.setText(sim.format(da));
 				getmessageyear(dates7);
 				break;
 
@@ -650,10 +652,6 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 			case "下一年":
 				long dates4 = timechanged6();
-				SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-				Long l = new Long(dates4);
-				Date da = new Date(l);
-				lqtime.setText(sim.format(da));
 				if (timechanged6() != dtime) {
 					getmessageyear(dates4);
 				}

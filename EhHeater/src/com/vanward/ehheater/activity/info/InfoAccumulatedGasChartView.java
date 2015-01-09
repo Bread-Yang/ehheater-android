@@ -38,7 +38,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		OnClickListener, OnCheckedChangeListener {
 
 	private final String TAG = "InfoOfAccumulatedGasChartView";
-	
+
 	private ViewGroup layout;
 	private Context context;
 	private LinearLayout.LayoutParams llt_Params;
@@ -67,6 +67,8 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		radioGroup.setOnCheckedChangeListener(this);
 
 		webView = (WebView) layout.findViewById(R.id.webView1);
+		webView.setBackgroundColor(0); // 设置背景色
+		webView.getBackground().setAlpha(0); // 设置填充透明度 范围：0-255
 		webView.addJavascriptInterface(new Initobject(), "init");
 		tv_last = (TextView) layout.findViewById(R.id.last);
 		((View) tv_last.getParent()).setOnClickListener(this);
@@ -89,7 +91,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 				return true;
 			}
 		});
-		
+
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.loadUrl("file:///android_asset/chart.html");
 		llt_Params = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
@@ -172,14 +174,15 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 		@Override
 		protected String doInBackground(Void... params) {
-//			return HttpConnectUtil.getGasDatas(did, dateTime2query, resultType,
-//					expendType);
+			// return HttpConnectUtil.getGasDatas(did, dateTime2query,
+			// resultType,
+			// expendType);
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(String result) {
-			
+
 			if (resultType.equals("1")) {
 				getmessageweek(dates);
 			}
@@ -194,7 +197,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		}
 	}
 
-	public void getmessageweek(long da) {
+	public void getmessageweek(final long da) {
 		Log.e(TAG, "getmessageweek返回的时间是 : " + da);
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
@@ -236,24 +239,28 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 						JSONObject jsonOBJ2 = new JSONObject();
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
-						;
+						Log.e(TAG, "li.get(i).getAmount() : " + li.get(i).getAmount());
+						Log.e(TAG, "b : " + b);
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						if (li.get(i).getAmount().equals("")
-								|| li.get(i).getAmount().substring(0, 1)
-										.equals("0")) {
+						if (li.get(i).getAmount().equals("")) {
 							jsonOBJ2.put("data", "");
 						} else {
-							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
-									.get(i).getAmount())));
+							if (Float.valueOf(li.get(i).getAmount()) == 0) {
+								jsonOBJ2.put("data", "");
+							} else {
+								jsonOBJ2.put("data", Math.round(Float.parseFloat(li
+										.get(i).getAmount())));
+							}
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
 					}
 					namelistjson = jsonArray.toString();
 					datalistjson = jsonArray2.toString();
+					dtime = da;
 					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-					Long l = new Long(System.currentTimeMillis());
+					Long l = new Long(dtime);
 					Date da = new Date(l);
 					tv_lqtime.setText(sim.format(da));
 					tv_sumgas.setText(Math.round(a) + "㎥");
@@ -268,7 +275,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		});
 	}
 
-	public void getmessagemonth(long da2) {
+	public void getmessagemonth(final long da2) {
 		Log.e(TAG, "getmessagemonth返回的时间是 : " + da2);
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
@@ -324,25 +331,29 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 								}
 								String time3 = time + time4;
 								Electricity electricity = new Electricity();
+
 								electricity.setAmount(amount);
 								electricity.setTime(time3);
 								li.add(electricity);
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
-								b = (int) Math.floor(Float.parseFloat(li.get(i)
-										.getAmount().equals("") ? "0" : li.get(
-										i).getAmount()));
+								b = Math.round(Float.parseFloat(li.get(i).getAmount()
+										.equals("") ? "0" : li.get(i).getAmount()));
+								Log.e(TAG, "li.get(i).getAmount() : " + li.get(i).getAmount());
+								Log.e(TAG, "b : " + b);
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
-								if (li.get(i).getAmount().equals("")
-										|| li.get(i).getAmount()
-												.substring(0, 1).equals("0")) {
+								if (li.get(i).getAmount().equals("")) {
 									jsonOBJ2.put("data", "");
 								} else {
-									jsonOBJ2.put(
-											"data",
-											Math.round(Float.parseFloat(li.get(
-													i).getAmount())));
+									if (Float.valueOf(li.get(i).getAmount()) == 0) {
+										jsonOBJ2.put("data", "");
+									} else {
+										jsonOBJ2.put(
+												"data",
+												Math.round(Float.parseFloat(li.get(
+														i).getAmount())));
+									}
 								}
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
@@ -352,8 +363,9 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 							namelistjson = jsonArray.toString();
 							// 赋值data
 							datalistjson = jsonArray2.toString();
+							dtime = da2;
 							SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-							Long l = new Long(System.currentTimeMillis());
+							Long l = new Long(dtime);
 							Date da = new Date(l);
 							tv_lqtime.setText(sim.format(da));
 							// 设置使用的总电数
@@ -372,9 +384,8 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 				});
 	}
 
-	public void getmessageyear(long da3) {
+	public void getmessageyear(final long da3) {
 		Log.e(TAG, "getmessageyear返回的时间是 : " + da3);
-		dtime = da3;
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 
@@ -414,15 +425,19 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 						JSONObject jsonOBJ2 = new JSONObject();
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
+						Log.e(TAG, "li.get(i).getAmount() : " + li.get(i).getAmount());
+						Log.e(TAG, "b : " + b);
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						if (li.get(i).getAmount().equals("")
-								|| li.get(i).getAmount().substring(0, 1)
-										.equals("0")) {
+						if (li.get(i).getAmount().equals("")) {
 							jsonOBJ2.put("data", "");
 						} else {
-							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
-									.get(i).getAmount())));
+							if (Float.valueOf(li.get(i).getAmount()) == 0) {
+								jsonOBJ2.put("data", "");
+							} else {
+								jsonOBJ2.put("data", Math.round(Float.parseFloat(li
+										.get(i).getAmount())));
+							}
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
@@ -431,6 +446,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 					namelistjson = jsonArray.toString();
 					// 赋值data
 					datalistjson = jsonArray2.toString();
+					dtime = da3;
 					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
 					Long l = new Long(dtime);
 					Date da = new Date(l);
@@ -471,7 +487,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 		Calendar ca = Calendar.getInstance();
 		ca.setTime(date);
 		ca.add(ca.DATE, -7);
-		long times = ((int) ca.getTime().getTime()) / 1000 * 1000;
+		long times = ca.getTime().getTime() / 1000 * 1000;
 		return times;
 	}
 
@@ -587,10 +603,6 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 			case "上一年":
 				long dates7 = timechanged3();
-				SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-				Long l = new Long(dates7);
-				Date da = new Date(l);
-				tv_lqtime.setText(sim.format(da));
 				getmessageyear(dates7);
 				break;
 
@@ -617,10 +629,6 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 			case "下一年":
 				long dates4 = timechanged6();
-				SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
-				Long l = new Long(dates4);
-				Date da = new Date(l);
-				tv_lqtime.setText(sim.format(da));
 				if (timechanged6() != dtime) {
 					getmessageyear(dates4);
 				}

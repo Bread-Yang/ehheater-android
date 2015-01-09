@@ -14,11 +14,11 @@
         android:padding="30dp" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/textView1" 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentTop="true" 
             android:text="累计用水量"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/appointment_text_color" />
@@ -155,6 +155,7 @@
         android:layout_above="@+id/buttonrela"
         android:layout_below="@+id/radioGroup1"
         android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
         android:focusable="false"
         android:focusableInTouchMode="false" />
 

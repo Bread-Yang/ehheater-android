@@ -90,7 +90,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	private Animation operatingAnim;
 
-	boolean firstShowSwitchSuccess = true;
+	private boolean firstShowSwitchSuccess = true;
 
 	private Dialog fullWaterDialog;
 
@@ -337,7 +337,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		Log.e(TAG, "dealDisConnect被调用了");
 		isSendingCommand = false;
 		tv_tempter.setText("--");
-		tv_mode.setText("----");
+		tv_mode.setText("--模式");
 		leavewater.setText("--");
 		// powerTv.setText("--");
 		target_tem.setText("--");

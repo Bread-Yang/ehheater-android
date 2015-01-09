@@ -388,9 +388,18 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		if (isWaitingCallback) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
 
-			Log.e(TAG, "打印productKey前");
-			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
-			Log.e(TAG, ("".equals(endpoint.getSzProductKey()) + ""));
+//			Log.e(TAG, "null == endpoint.getSzProductKey() : " + (null == endpoint.getSzProductKey()));
+//			Log.e(TAG, ("endpoint.getSzProductKey()为空字符串 : " + "".equals(endpoint.getSzProductKey())));
+//			
+//			Log.e(TAG, "null == endpoint.getSzMac() : " + (null == endpoint.getSzMac()));
+//			Log.e(TAG, ("endpoint.getSzMac()为空字符串 : " + "".equals(endpoint.getSzMac())));
+//			
+//			Log.e(TAG, "null == endpoint.getSzDid() : " + (null == endpoint.getSzDid()));
+//			Log.e(TAG, ("endpoint.getSzDid()为空字符串 : " + "".equals(endpoint.getSzDid())));
+			
+			Log.e(TAG, "null == endpoint.getSzPasscode() : " + (null == endpoint.getSzPasscode()));
+			Log.e(TAG, ("endpoint.getSzPasscode()为空字符串 : " + "".equals(endpoint.getSzPasscode())));
+			
 			if (endpoint.getSzProductKey() == null
 					|| "".equals(endpoint.getSzProductKey())) {
 				return;
@@ -398,6 +407,18 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			if (endpoint.getSzMac() == null || "".equals(endpoint.getSzMac())) {
 				return;
 			}
+//			if (endpoint.getSzDid() == null || "".equals(endpoint.getSzDid())) {
+//				return;
+//			}
+//			if (endpoint.getSzPasscode() == null
+//					|| "".equals(endpoint.getSzPasscode())) {
+//				return;
+//			}
+			Log.e(TAG, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
+			Log.e(TAG, "endpoint.getSzMac() : " + endpoint.getSzMac());
+			Log.e(TAG, "endpoint.getSzDid() : " + endpoint.getSzDid());
+			Log.e(TAG, "endpoint.getSzPasscode() : " + endpoint.getSzPasscode());
+			
 			// if (endpoint.getSzDid() == null ||
 			// "".equals(endpoint.getSzDid())) {
 			// return;

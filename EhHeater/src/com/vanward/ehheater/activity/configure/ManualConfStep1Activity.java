@@ -9,6 +9,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -56,18 +57,20 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 	protected void onResume() {
 		super.onResume();
 
-		TimerTask timerTask = new TimerTask() {
-
-			@Override 
-			public void run() {
-				checkCurrentWifi();
-			}
-		};
-
-		if (mTimer == null) {
-			mTimer = new Timer();
-		}
-		mTimer.schedule(timerTask, 0, 5000);
+//		TimerTask timerTask = new TimerTask() {
+//
+//			@Override 
+//			public void run() {
+//				checkCurrentWifi();
+//			}
+//		};
+//
+//		if (mTimer == null) {
+//			mTimer = new Timer();
+//		}
+//		mTimer.schedule(timerTask, 0, 5000);
+		
+		checkCurrentWifi();
 	}
 	
 	private void checkCurrentWifi() {
@@ -122,9 +125,15 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 						mTimer = null;
 					}
 
-					startActivity(new Intent(getBaseContext(),
-							ManualConfStep2Activity.class));
-					finish();
+					new Handler().postDelayed(new Runnable() {
+						
+						@Override
+						public void run() {
+							startActivity(new Intent(getBaseContext(),
+									ManualConfStep2Activity.class));
+							finish();
+						}
+					}, 5000);
 				}
 //				break;
 //			}

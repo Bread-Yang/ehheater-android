@@ -36,7 +36,7 @@ public class HttpFriend {
 	private Context mContext;
 
 	private Dialog loadingDialog;
-	
+
 	public boolean showTips = true;
 
 	/**
@@ -120,7 +120,8 @@ public class HttpFriend {
 				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
 				if (showTips) {
-				Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+							.show();
 				}
 			}
 
@@ -175,7 +176,8 @@ public class HttpFriend {
 				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
 				if (showTips) {
-					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+							.show();
 				}
 			}
 
@@ -215,8 +217,8 @@ public class HttpFriend {
 			if (showTips) {
 				Toast.makeText(mContext, "网络访问不了,确保打开GPRS或者WiFi网络",
 						Toast.LENGTH_LONG).show();
-				}
-			
+			}
+
 		} else {
 			FinalHttp fh = new FinalHttp();
 			showRequestDialog();
@@ -234,9 +236,9 @@ public class HttpFriend {
 					callBack.onFailure(t, errorNo, strMsg);
 					if (showTips) {
 						Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
-						.show();
-						}
-					
+								.show();
+					}
+
 				}
 
 				@Override
