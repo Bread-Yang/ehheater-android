@@ -1,2 +1,3 @@
 set solib-search-path ./obj/local/armeabi
-directory D:/adt-bundle-windows-x86_64-20131030/android-ndk-r10/platforms/android-19/arch-arm/usr/include D:/adt-bundle-windows-x86_64-20131030/android-ndk-r10/sources/cxx-stl/system jni/../../c jni/../../../3rd jni/../../products/vanward
+source /Applications/adt-bundle-mac-x86_64/android-ndk-r10d/prebuilt/common/gdb/common.setup
+directory /Applications/adt-bundle-mac-x86_64/android-ndk-r10d/platforms/android-19/arch-arm/usr/include /Applications/adt-bundle-mac-x86_64/android-ndk-r10d/sources/cxx-stl/system jni/../../c jni/../../../3rd jni/../../products/vanward

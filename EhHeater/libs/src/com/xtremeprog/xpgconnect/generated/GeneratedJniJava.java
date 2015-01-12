@@ -98,6 +98,24 @@ public class GeneratedJniJava {
         }
     }
 
+    public static void OnEasylinkV3Resp(long cPtr) {
+        EasylinkV3Resp_t obj = new EasylinkV3Resp_t(cPtr, false);
+        EasylinkV3Resp_t resp = new EasylinkV3Resp_t();
+        resp.setDid(obj.getDid());
+        resp.setMac(obj.getMac());
+        resp.setFwVer(obj.getFwVer());
+        resp.setProductKey(obj.getProductKey());
+        for (Handler handler : lstHandlers)
+        {
+            Message msg = handler.obtainMessage(5, 0, 0, resp);
+            handler.sendMessage(msg);
+        }
+        for (GeneratedJniListener listener : lstListeners)
+        {
+            listener.OnEasylinkV3Resp(resp);
+        }
+    }
+
     public static void OnBootstrapResp(long cPtr) {
         BootstrapResp_t obj = new BootstrapResp_t(cPtr, false);
         BootstrapResp_t resp = new BootstrapResp_t();
@@ -107,7 +125,7 @@ public class GeneratedJniJava {
         resp.setProductKey(obj.getProductKey());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(5, 0, 0, resp);
+            Message msg = handler.obtainMessage(6, 0, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -122,7 +140,7 @@ public class GeneratedJniJava {
         resp.setPasscode(obj.getPasscode());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(6, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(7, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -137,7 +155,7 @@ public class GeneratedJniJava {
         resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(7, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(8, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -153,7 +171,7 @@ public class GeneratedJniJava {
         resp.setP0Version(obj.getP0Version());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(8, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(9, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -169,7 +187,7 @@ public class GeneratedJniJava {
         resp.setSignalIntensity(obj.getSignalIntensity());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(9, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(10, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -184,7 +202,7 @@ public class GeneratedJniJava {
         resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(10, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(11, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -199,7 +217,7 @@ public class GeneratedJniJava {
         resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(11, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(12, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -214,7 +232,7 @@ public class GeneratedJniJava {
         resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(12, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(13, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -234,7 +252,7 @@ public class GeneratedJniJava {
         resp.setP0Version(obj.getP0Version());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(13, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(14, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -255,7 +273,7 @@ public class GeneratedJniJava {
         resp.setP0Version(obj.getP0Version());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(14, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(15, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -270,7 +288,7 @@ public class GeneratedJniJava {
         resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(15, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(16, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -285,7 +303,7 @@ public class GeneratedJniJava {
         resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(16, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(17, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -303,7 +321,7 @@ public class GeneratedJniJava {
         resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(17, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(18, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -322,7 +340,7 @@ public class GeneratedJniJava {
         resp.setP0Version(obj.getP0Version());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(18, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(19, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -356,7 +374,7 @@ public class GeneratedJniJava {
         resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(19, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(20, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -412,7 +430,7 @@ public class GeneratedJniJava {
         resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(20, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(21, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -463,7 +481,7 @@ public class GeneratedJniJava {
         resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(21, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(22, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -482,7 +500,7 @@ public class GeneratedJniJava {
         resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(22, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(23, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
