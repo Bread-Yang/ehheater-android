@@ -257,14 +257,20 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 						JSONObject jsonOBJ2 = new JSONObject();
 						//
 						jsonOBJ.put("name", li.get(i).getTime());
-						if (li.get(i).getAmount().equals("")
-								|| li.get(i).getAmount().substring(0, 1)
-										.equals("0")) {
+
+						if (li.get(i).getAmount().equals("")) {
 							jsonOBJ2.put("data", "");
 						} else {
-							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
-									.get(i).getAmount())));
+							int round = Math.round(Float.parseFloat(li.get(i)
+									.getAmount()));
+							if (Float.valueOf(li.get(i).getAmount()) == 0
+									|| round == 0) {
+								jsonOBJ2.put("data", "");
+							} else {
+								jsonOBJ2.put("data", round);
+							}
 						}
+						
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
 						a = a + b + 0f;
@@ -369,16 +375,20 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 										i).getAmount()));
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
-								if (li.get(i).getAmount().equals("")
-										|| li.get(i).getAmount()
-												.substring(0, 1).equals("0")) {
+
+								if (li.get(i).getAmount().equals("")) {
 									jsonOBJ2.put("data", "");
 								} else {
-									jsonOBJ2.put(
-											"data",
-											Math.round(Float.parseFloat(li.get(
-													i).getAmount())));
+									int round = Math.round(Float.parseFloat(li.get(i)
+											.getAmount()));
+									if (Float.valueOf(li.get(i).getAmount()) == 0
+											|| round == 0) {
+										jsonOBJ2.put("data", "");
+									} else {
+										jsonOBJ2.put("data", round);
+									}
 								}
+							
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
@@ -450,16 +460,20 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 										i).getAmount()));
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
-								if (li.get(i).getAmount().equals("")
-										|| li.get(i).getAmount()
-												.substring(0, 1).equals("0")) {
+
+								if (li.get(i).getAmount().equals("")) {
 									jsonOBJ2.put("data", "");
 								} else {
-									jsonOBJ2.put(
-											"data",
-											Math.round(Float.parseFloat(li.get(
-													i).getAmount())));
+									int round = Math.round(Float.parseFloat(li.get(i)
+											.getAmount()));
+									if (Float.valueOf(li.get(i).getAmount()) == 0
+											|| round == 0) {
+										jsonOBJ2.put("data", "");
+									} else {
+										jsonOBJ2.put("data", round);
+									}
 								}
+							
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}

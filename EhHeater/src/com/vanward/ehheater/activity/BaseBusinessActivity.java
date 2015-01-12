@@ -23,6 +23,7 @@ import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.wifi.WifiChangeReceiver;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -52,6 +53,15 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	private boolean shouldReconnect = false;
 	private boolean paused = false;
+	
+	BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.e(TAG, "wifiConnectedReceiver的onReceive()执行了");
+			connectCurDevice();
+		}
+	};
 
 	BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
 		@Override
@@ -157,6 +167,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		shouldReconnect = false;
 		paused = false;
 
+		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
+				wifiConnectedReceiver,
+				new IntentFilter(WifiChangeReceiver.WIFI_CONNECTED));
+		
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				deviceOnlineReceiver,
 				new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));

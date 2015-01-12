@@ -18,9 +18,9 @@ public class GeneratedJniJava {
     public static void OnWriteWifiConfigResp(long cPtr, int nConnId) {
         WriteWifiConfigResp_t obj = new WriteWifiConfigResp_t(cPtr, false);
         WriteWifiConfigResp_t resp = new WriteWifiConfigResp_t();
-        resp.setCommand(obj.getCommand());
-        resp.setResult(obj.getResult());
-        resp.setChecksum(obj.getChecksum());
+ 		resp.setCommand(obj.getCommand());
+ 		resp.setResult(obj.getResult());
+ 		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
             Message msg = handler.obtainMessage(0, nConnId, 0, resp);
@@ -49,9 +49,9 @@ public class GeneratedJniJava {
     public static void OnDiscoveryV1Resp(long cPtr) {
         DiscoveryV1Resp_t obj = new DiscoveryV1Resp_t(cPtr, false);
         DiscoveryV1Resp_t resp = new DiscoveryV1Resp_t();
-        resp.setCommand(obj.getCommand());
-        resp.setMAC(obj.getMAC());
-        resp.setVersion(obj.getVersion());
+ 		resp.setCommand(obj.getCommand());
+ 		resp.setMAC(obj.getMAC());
+ 		resp.setVersion(obj.getVersion());
         for (Handler handler : lstHandlers)
         {
             Message msg = handler.obtainMessage(2, 0, 0, resp);
@@ -66,10 +66,18 @@ public class GeneratedJniJava {
     public static void OnDiscoveryV3Resp(long cPtr) {
         DiscoveryV3Resp_t obj = new DiscoveryV3Resp_t(cPtr, false);
         DiscoveryV3Resp_t resp = new DiscoveryV3Resp_t();
-        resp.setDid(obj.getDid());
-        resp.setMac(obj.getMac());
-        resp.setFwVer(obj.getFwVer());
-        resp.setProductKey(obj.getProductKey());
+		XpgDataField copy_Did = generated.XpgData2Copy(obj.getDid());
+ 		resp.setDid(copy_Did);
+		generated.XpgData2Free(obj.getDid(),0);
+		XpgDataField copy_Mac = generated.XpgData2Copy(obj.getMac());
+ 		resp.setMac(copy_Mac);
+		generated.XpgData2Free(obj.getMac(),0);
+		XpgDataField copy_FwVer = generated.XpgData2Copy(obj.getFwVer());
+ 		resp.setFwVer(copy_FwVer);
+		generated.XpgData2Free(obj.getFwVer(),0);
+		XpgDataField copy_ProductKey = generated.XpgData2Copy(obj.getProductKey());
+ 		resp.setProductKey(copy_ProductKey);
+		generated.XpgData2Free(obj.getProductKey(),0);
         for (Handler handler : lstHandlers)
         {
             Message msg = handler.obtainMessage(3, 0, 0, resp);
@@ -84,9 +92,9 @@ public class GeneratedJniJava {
     public static void OnEasylinkResp(long cPtr) {
         EasylinkResp_t obj = new EasylinkResp_t(cPtr, false);
         EasylinkResp_t resp = new EasylinkResp_t();
-        resp.setCommand(obj.getCommand());
-        resp.setMAC(obj.getMAC());
-        resp.setVersion(obj.getVersion());
+ 		resp.setCommand(obj.getCommand());
+ 		resp.setMAC(obj.getMAC());
+ 		resp.setVersion(obj.getVersion());
         for (Handler handler : lstHandlers)
         {
             Message msg = handler.obtainMessage(4, 0, 0, resp);
@@ -98,34 +106,24 @@ public class GeneratedJniJava {
         }
     }
 
-    public static void OnEasylinkV3Resp(long cPtr) {
-        EasylinkV3Resp_t obj = new EasylinkV3Resp_t(cPtr, false);
-        EasylinkV3Resp_t resp = new EasylinkV3Resp_t();
-        resp.setDid(obj.getDid());
-        resp.setMac(obj.getMac());
-        resp.setFwVer(obj.getFwVer());
-        resp.setProductKey(obj.getProductKey());
-        for (Handler handler : lstHandlers)
-        {
-            Message msg = handler.obtainMessage(5, 0, 0, resp);
-            handler.sendMessage(msg);
-        }
-        for (GeneratedJniListener listener : lstListeners)
-        {
-            listener.OnEasylinkV3Resp(resp);
-        }
-    }
-
     public static void OnBootstrapResp(long cPtr) {
         BootstrapResp_t obj = new BootstrapResp_t(cPtr, false);
         BootstrapResp_t resp = new BootstrapResp_t();
-        resp.setDid(obj.getDid());
-        resp.setMac(obj.getMac());
-        resp.setFwVer(obj.getFwVer());
-        resp.setProductKey(obj.getProductKey());
+		XpgDataField copy_Did = generated.XpgData2Copy(obj.getDid());
+ 		resp.setDid(copy_Did);
+		generated.XpgData2Free(obj.getDid(),0);
+		XpgDataField copy_Mac = generated.XpgData2Copy(obj.getMac());
+ 		resp.setMac(copy_Mac);
+		generated.XpgData2Free(obj.getMac(),0);
+		XpgDataField copy_FwVer = generated.XpgData2Copy(obj.getFwVer());
+ 		resp.setFwVer(copy_FwVer);
+		generated.XpgData2Free(obj.getFwVer(),0);
+		XpgDataField copy_ProductKey = generated.XpgData2Copy(obj.getProductKey());
+ 		resp.setProductKey(copy_ProductKey);
+		generated.XpgData2Free(obj.getProductKey(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(6, 0, 0, resp);
+            Message msg = handler.obtainMessage(5, 0, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -137,10 +135,12 @@ public class GeneratedJniJava {
     public static void OnPasscodeResp(long cPtr, int nConnId) {
         PasscodeResp_t obj = new PasscodeResp_t(cPtr, false);
         PasscodeResp_t resp = new PasscodeResp_t();
-        resp.setPasscode(obj.getPasscode());
+		XpgDataField copy_Passcode = generated.XpgData2Copy(obj.getPasscode());
+ 		resp.setPasscode(copy_Passcode);
+		generated.XpgData2Free(obj.getPasscode(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(7, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(6, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -152,10 +152,10 @@ public class GeneratedJniJava {
     public static void OnLanLoginResp(long cPtr, int nConnId) {
         LanLoginResp_t obj = new LanLoginResp_t(cPtr, false);
         LanLoginResp_t resp = new LanLoginResp_t();
-        resp.setResult(obj.getResult());
+ 		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(8, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(7, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -167,11 +167,13 @@ public class GeneratedJniJava {
     public static void OnModuleVersionResp(long cPtr, int nConnId) {
         ModuleVersionResp_t obj = new ModuleVersionResp_t(cPtr, false);
         ModuleVersionResp_t resp = new ModuleVersionResp_t();
-        resp.setPiVersion(obj.getPiVersion());
-        resp.setP0Version(obj.getP0Version());
+ 		resp.setPiVersion(obj.getPiVersion());
+		XpgDataField copy_P0Version = generated.XpgData2Copy(obj.getP0Version());
+ 		resp.setP0Version(copy_P0Version);
+		generated.XpgData2Free(obj.getP0Version(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(9, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(8, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -183,11 +185,13 @@ public class GeneratedJniJava {
     public static void OnWifiListResp(long cPtr, int nConnId) {
         WifiListResp_t obj = new WifiListResp_t(cPtr, false);
         WifiListResp_t resp = new WifiListResp_t();
-        resp.setSsid(obj.getSsid());
-        resp.setSignalIntensity(obj.getSignalIntensity());
+		XpgDataField copy_Ssid = generated.XpgData2Copy(obj.getSsid());
+ 		resp.setSsid(copy_Ssid);
+		generated.XpgData2Free(obj.getSsid(),0);
+ 		resp.setSignalIntensity(obj.getSignalIntensity());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(10, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(9, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -199,10 +203,10 @@ public class GeneratedJniJava {
     public static void OnSerialPortConfigResp(long cPtr, int nConnId) {
         SerialPortConfigResp_t obj = new SerialPortConfigResp_t(cPtr, false);
         SerialPortConfigResp_t resp = new SerialPortConfigResp_t();
-        resp.setResult(obj.getResult());
+ 		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(11, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(10, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -214,10 +218,10 @@ public class GeneratedJniJava {
     public static void OnUserRegisterResp(long cPtr, int nConnId) {
         UserRegisterResp_t obj = new UserRegisterResp_t(cPtr, false);
         UserRegisterResp_t resp = new UserRegisterResp_t();
-        resp.setResult(obj.getResult());
+ 		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(12, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(11, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -229,10 +233,10 @@ public class GeneratedJniJava {
     public static void OnBindingSetResp(long cPtr, int nConnId) {
         BindingSetResp_t obj = new BindingSetResp_t(cPtr, false);
         BindingSetResp_t resp = new BindingSetResp_t();
-        resp.setResult(obj.getResult());
+ 		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(13, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(12, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -244,15 +248,23 @@ public class GeneratedJniJava {
     public static void OnBindingGetResp(long cPtr, int nConnId) {
         BindingGetResp_t obj = new BindingGetResp_t(cPtr, false);
         BindingGetResp_t resp = new BindingGetResp_t();
-        resp.setDid(obj.getDid());
-        resp.setMac(obj.getMac());
-        resp.setPasscode(obj.getPasscode());
-        resp.setIsOnline(obj.getIsOnline());
-        resp.setPiVersion(obj.getPiVersion());
-        resp.setP0Version(obj.getP0Version());
+		XpgDataField copy_Did = generated.XpgData2Copy(obj.getDid());
+ 		resp.setDid(copy_Did);
+		generated.XpgData2Free(obj.getDid(),0);
+		XpgDataField copy_Mac = generated.XpgData2Copy(obj.getMac());
+ 		resp.setMac(copy_Mac);
+		generated.XpgData2Free(obj.getMac(),0);
+		XpgDataField copy_Passcode = generated.XpgData2Copy(obj.getPasscode());
+ 		resp.setPasscode(copy_Passcode);
+		generated.XpgData2Free(obj.getPasscode(),0);
+ 		resp.setIsOnline(obj.getIsOnline());
+ 		resp.setPiVersion(obj.getPiVersion());
+		XpgDataField copy_P0Version = generated.XpgData2Copy(obj.getP0Version());
+ 		resp.setP0Version(copy_P0Version);
+		generated.XpgData2Free(obj.getP0Version(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(14, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(13, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -264,16 +276,26 @@ public class GeneratedJniJava {
     public static void OnBindingGetV2Resp(long cPtr, int nConnId) {
         BindingGetV2Resp_t obj = new BindingGetV2Resp_t(cPtr, false);
         BindingGetV2Resp_t resp = new BindingGetV2Resp_t();
-        resp.setDid(obj.getDid());
-        resp.setMac(obj.getMac());
-        resp.setPasscode(obj.getPasscode());
-        resp.setProductKey(obj.getProductKey());
-        resp.setIsOnline(obj.getIsOnline());
-        resp.setPiVersion(obj.getPiVersion());
-        resp.setP0Version(obj.getP0Version());
+		XpgDataField copy_Did = generated.XpgData2Copy(obj.getDid());
+ 		resp.setDid(copy_Did);
+		generated.XpgData2Free(obj.getDid(),0);
+		XpgDataField copy_Mac = generated.XpgData2Copy(obj.getMac());
+ 		resp.setMac(copy_Mac);
+		generated.XpgData2Free(obj.getMac(),0);
+		XpgDataField copy_Passcode = generated.XpgData2Copy(obj.getPasscode());
+ 		resp.setPasscode(copy_Passcode);
+		generated.XpgData2Free(obj.getPasscode(),0);
+		XpgDataField copy_ProductKey = generated.XpgData2Copy(obj.getProductKey());
+ 		resp.setProductKey(copy_ProductKey);
+		generated.XpgData2Free(obj.getProductKey(),0);
+ 		resp.setIsOnline(obj.getIsOnline());
+ 		resp.setPiVersion(obj.getPiVersion());
+		XpgDataField copy_P0Version = generated.XpgData2Copy(obj.getP0Version());
+ 		resp.setP0Version(copy_P0Version);
+		generated.XpgData2Free(obj.getP0Version(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(15, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(14, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -285,10 +307,10 @@ public class GeneratedJniJava {
     public static void OnUserPwdChangeResp(long cPtr, int nConnId) {
         UserPwdChangeResp_t obj = new UserPwdChangeResp_t(cPtr, false);
         UserPwdChangeResp_t resp = new UserPwdChangeResp_t();
-        resp.setResult(obj.getResult());
+ 		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(16, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(15, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -300,10 +322,10 @@ public class GeneratedJniJava {
     public static void OnBindingDelResp(long cPtr, int nConnId) {
         BindingDelResp_t obj = new BindingDelResp_t(cPtr, false);
         BindingDelResp_t resp = new BindingDelResp_t();
-        resp.setResult(obj.getResult());
+ 		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(17, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(16, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -315,13 +337,13 @@ public class GeneratedJniJava {
     public static void OnReadWifiConfigResp(long cPtr, int nConnId) {
         ReadWifiConfigResp_t obj = new ReadWifiConfigResp_t(cPtr, false);
         ReadWifiConfigResp_t resp = new ReadWifiConfigResp_t();
-        resp.setCommand(obj.getCommand());
-        resp.setSsid(obj.getSsid());
-        resp.setKey(obj.getKey());
-        resp.setChecksum(obj.getChecksum());
+ 		resp.setCommand(obj.getCommand());
+ 		resp.setSsid(obj.getSsid());
+ 		resp.setKey(obj.getKey());
+ 		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(18, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(17, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -333,14 +355,20 @@ public class GeneratedJniJava {
     public static void OnDeviceOnlineStateResp(long cPtr, int nConnId) {
         DeviceOnlineStateResp_t obj = new DeviceOnlineStateResp_t(cPtr, false);
         DeviceOnlineStateResp_t resp = new DeviceOnlineStateResp_t();
-        resp.setMac(obj.getMac());
-        resp.setPasscode(obj.getPasscode());
-        resp.setIsOnline(obj.getIsOnline());
-        resp.setPiVersion(obj.getPiVersion());
-        resp.setP0Version(obj.getP0Version());
+		XpgDataField copy_Mac = generated.XpgData2Copy(obj.getMac());
+ 		resp.setMac(copy_Mac);
+		generated.XpgData2Free(obj.getMac(),0);
+		XpgDataField copy_Passcode = generated.XpgData2Copy(obj.getPasscode());
+ 		resp.setPasscode(copy_Passcode);
+		generated.XpgData2Free(obj.getPasscode(),0);
+ 		resp.setIsOnline(obj.getIsOnline());
+ 		resp.setPiVersion(obj.getPiVersion());
+		XpgDataField copy_P0Version = generated.XpgData2Copy(obj.getP0Version());
+ 		resp.setP0Version(copy_P0Version);
+		generated.XpgData2Free(obj.getP0Version(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(19, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(18, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -352,29 +380,29 @@ public class GeneratedJniJava {
     public static void OnStateResp(long cPtr, int nConnId) {
         StateResp_t obj = new StateResp_t(cPtr, false);
         StateResp_t resp = new StateResp_t();
-        resp.setHeader(obj.getHeader());
-        resp.setP0_version(obj.getP0_version());
-        resp.setResp_address(obj.getResp_address());
-        resp.setCommand(obj.getCommand());
-        resp.setOn_off(obj.getOn_off());
-        resp.setSystem_running_state(obj.getSystem_running_state());
-        resp.setFunction_state(obj.getFunction_state());
-        resp.setOrder_state(obj.getOrder_state());
-        resp.setInner1_temp(obj.getInner1_temp());
-        resp.setBook_time_hour(obj.getBook_time_hour());
-        resp.setBook_time_min(obj.getBook_time_min());
-        resp.setSetting_temp(obj.getSetting_temp());
-        resp.setSetting_power(obj.getSetting_power());
-        resp.setRemaining_heating_time(obj.getRemaining_heating_time());
-        resp.setRemaining_hot_water(obj.getRemaining_hot_water());
-        resp.setError(obj.getError());
-        resp.setPower_consumption(obj.getPower_consumption());
-        resp.setHeating_tube_time(obj.getHeating_tube_time());
-        resp.setMachine_not_heating_time(obj.getMachine_not_heating_time());
-        resp.setChecksum(obj.getChecksum());
+ 		resp.setHeader(obj.getHeader());
+ 		resp.setP0_version(obj.getP0_version());
+ 		resp.setResp_address(obj.getResp_address());
+ 		resp.setCommand(obj.getCommand());
+ 		resp.setOn_off(obj.getOn_off());
+ 		resp.setSystem_running_state(obj.getSystem_running_state());
+ 		resp.setFunction_state(obj.getFunction_state());
+ 		resp.setOrder_state(obj.getOrder_state());
+ 		resp.setInner1_temp(obj.getInner1_temp());
+ 		resp.setBook_time_hour(obj.getBook_time_hour());
+ 		resp.setBook_time_min(obj.getBook_time_min());
+ 		resp.setSetting_temp(obj.getSetting_temp());
+ 		resp.setSetting_power(obj.getSetting_power());
+ 		resp.setRemaining_heating_time(obj.getRemaining_heating_time());
+ 		resp.setRemaining_hot_water(obj.getRemaining_hot_water());
+ 		resp.setError(obj.getError());
+ 		resp.setPower_consumption(obj.getPower_consumption());
+ 		resp.setHeating_tube_time(obj.getHeating_tube_time());
+ 		resp.setMachine_not_heating_time(obj.getMachine_not_heating_time());
+ 		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(20, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(19, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -386,51 +414,51 @@ public class GeneratedJniJava {
     public static void OnGasWaterHeaterStatusResp(long cPtr, int nConnId) {
         GasWaterHeaterStatusResp_t obj = new GasWaterHeaterStatusResp_t(cPtr, false);
         GasWaterHeaterStatusResp_t resp = new GasWaterHeaterStatusResp_t();
-        resp.setHeader(obj.getHeader());
-        resp.setP0_version(obj.getP0_version());
-        resp.setResp_address(obj.getResp_address());
-        resp.setCommand(obj.getCommand());
-        resp.setOn_off(obj.getOn_off());
-        resp.setPriority(obj.getPriority());
-        resp.setFunction_state(obj.getFunction_state());
-        resp.setWater_function(obj.getWater_function());
-        resp.setSetWater_power(obj.getSetWater_power());
-        resp.setSetWater_cumulative(obj.getSetWater_cumulative());
-        resp.setCustomFunction(obj.getCustomFunction());
-        resp.setCustomWaterTemperture(obj.getCustomWaterTemperture());
-        resp.setCustomWaterProportion(obj.getCustomWaterProportion());
-        resp.setCallingDisp(obj.getCallingDisp());
-        resp.setSprinkler(obj.getSprinkler());
-        resp.setFlame(obj.getFlame());
-        resp.setAirFan(obj.getAirFan());
-        resp.setFirePower(obj.getFirePower());
-        resp.setErrorCode(obj.getErrorCode());
-        resp.setOxygenWarning(obj.getOxygenWarning());
-        resp.setCoOverproofWarning(obj.getCoOverproofWarning());
-        resp.setTargetTemperature(obj.getTargetTemperature());
-        resp.setIncomeTemperature(obj.getIncomeTemperature());
-        resp.setOutputTemperature(obj.getOutputTemperature());
-        resp.setNowVolume(obj.getNowVolume());
-        resp.setCumulativeVolume(obj.getCumulativeVolume());
-        resp.setCumulativeGas(obj.getCumulativeGas());
-        resp.setCumulativeUseTime(obj.getCumulativeUseTime());
-        resp.setCumulativeOpenValveTimes(obj.getCumulativeOpenValveTimes());
-        resp.setNow_efficiency(obj.getNow_efficiency());
-        resp.setPreheatingModel(obj.getPreheatingModel());
-        resp.setPresetTemperature(obj.getPresetTemperature());
-        resp.setPreheatingOneHour(obj.getPreheatingOneHour());
-        resp.setPreheatingOneMin(obj.getPreheatingOneMin());
-        resp.setPreheatingTwoHour(obj.getPreheatingTwoHour());
-        resp.setPreheatingTwoMin(obj.getPreheatingTwoMin());
-        resp.setFreezeProofingWarning(obj.getFreezeProofingWarning());
-        resp.setMercurycontent(obj.getMercurycontent());
-        resp.setReturn_water_temperature(obj.getReturn_water_temperature());
-        resp.setReservation_one(obj.getReservation_one());
-        resp.setReservation_two(obj.getReservation_two());
-        resp.setChecksum(obj.getChecksum());
+ 		resp.setHeader(obj.getHeader());
+ 		resp.setP0_version(obj.getP0_version());
+ 		resp.setResp_address(obj.getResp_address());
+ 		resp.setCommand(obj.getCommand());
+ 		resp.setOn_off(obj.getOn_off());
+ 		resp.setPriority(obj.getPriority());
+ 		resp.setFunction_state(obj.getFunction_state());
+ 		resp.setWater_function(obj.getWater_function());
+ 		resp.setSetWater_power(obj.getSetWater_power());
+ 		resp.setSetWater_cumulative(obj.getSetWater_cumulative());
+ 		resp.setCustomFunction(obj.getCustomFunction());
+ 		resp.setCustomWaterTemperture(obj.getCustomWaterTemperture());
+ 		resp.setCustomWaterProportion(obj.getCustomWaterProportion());
+ 		resp.setCallingDisp(obj.getCallingDisp());
+ 		resp.setSprinkler(obj.getSprinkler());
+ 		resp.setFlame(obj.getFlame());
+ 		resp.setAirFan(obj.getAirFan());
+ 		resp.setFirePower(obj.getFirePower());
+ 		resp.setErrorCode(obj.getErrorCode());
+ 		resp.setOxygenWarning(obj.getOxygenWarning());
+ 		resp.setCoOverproofWarning(obj.getCoOverproofWarning());
+ 		resp.setTargetTemperature(obj.getTargetTemperature());
+ 		resp.setIncomeTemperature(obj.getIncomeTemperature());
+ 		resp.setOutputTemperature(obj.getOutputTemperature());
+ 		resp.setNowVolume(obj.getNowVolume());
+ 		resp.setCumulativeVolume(obj.getCumulativeVolume());
+ 		resp.setCumulativeGas(obj.getCumulativeGas());
+ 		resp.setCumulativeUseTime(obj.getCumulativeUseTime());
+ 		resp.setCumulativeOpenValveTimes(obj.getCumulativeOpenValveTimes());
+ 		resp.setNow_efficiency(obj.getNow_efficiency());
+ 		resp.setPreheatingModel(obj.getPreheatingModel());
+ 		resp.setPresetTemperature(obj.getPresetTemperature());
+ 		resp.setPreheatingOneHour(obj.getPreheatingOneHour());
+ 		resp.setPreheatingOneMin(obj.getPreheatingOneMin());
+ 		resp.setPreheatingTwoHour(obj.getPreheatingTwoHour());
+ 		resp.setPreheatingTwoMin(obj.getPreheatingTwoMin());
+ 		resp.setFreezeProofingWarning(obj.getFreezeProofingWarning());
+ 		resp.setMercurycontent(obj.getMercurycontent());
+ 		resp.setReturn_water_temperature(obj.getReturn_water_temperature());
+ 		resp.setReservation_one(obj.getReservation_one());
+ 		resp.setReservation_two(obj.getReservation_two());
+ 		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(21, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(20, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -442,46 +470,46 @@ public class GeneratedJniJava {
     public static void OnDERYStatusResp(long cPtr, int nConnId) {
         DERYStatusResp_t obj = new DERYStatusResp_t(cPtr, false);
         DERYStatusResp_t resp = new DERYStatusResp_t();
-        resp.setHeader(obj.getHeader());
-        resp.setP0_version(obj.getP0_version());
-        resp.setResp_address(obj.getResp_address());
-        resp.setCommand(obj.getCommand());
-        resp.setOnOff(obj.getOnOff());
-        resp.setSafeLight(obj.getSafeLight());
-        resp.setError(obj.getError());
-        resp.setSeasonState(obj.getSeasonState());
-        resp.setFireState(obj.getFireState());
-        resp.setBathWater(obj.getBathWater());
-        resp.setHeatingSend(obj.getHeatingSend());
-        resp.setBathMode(obj.getBathMode());
-        resp.setMachineType(obj.getMachineType());
-        resp.setDraughtState(obj.getDraughtState());
-        resp.setWaterPumpState(obj.getWaterPumpState());
-        resp.setTeeValState(obj.getTeeValState());
-        resp.setCDIState(obj.getCDIState());
-        resp.setAutifreezeState(obj.getAutifreezeState());
-        resp.setAutifreezeState_rp(obj.getAutifreezeState_rp());
-        resp.setOpenHeating(obj.getOpenHeating());
-        resp.setPressureVal(obj.getPressureVal());
-        resp.setBathTemTarget(obj.getBathTemTarget());
-        resp.setBathTemNow(obj.getBathTemNow());
-        resp.setHeatingTemTarget(obj.getHeatingTemTarget());
-        resp.setBothTemTarget(obj.getBothTemTarget());
-        resp.setOutDoorTem(obj.getOutDoorTem());
-        resp.setHeatingMode(obj.getHeatingMode());
-        resp.setGasCount(obj.getGasCount());
-        resp.setGasCountNow(obj.getGasCountNow());
-        resp.setSerial(obj.getSerial());
-        resp.setReservation_one(obj.getReservation_one());
-        resp.setReservation_two(obj.getReservation_two());
-        resp.setReservation_three(obj.getReservation_three());
-        resp.setReservation_four(obj.getReservation_four());
-        resp.setReservation_five(obj.getReservation_five());
-        resp.setReservation_six(obj.getReservation_six());
-        resp.setChecksum(obj.getChecksum());
+ 		resp.setHeader(obj.getHeader());
+ 		resp.setP0_version(obj.getP0_version());
+ 		resp.setResp_address(obj.getResp_address());
+ 		resp.setCommand(obj.getCommand());
+ 		resp.setOnOff(obj.getOnOff());
+ 		resp.setSafeLight(obj.getSafeLight());
+ 		resp.setError(obj.getError());
+ 		resp.setSeasonState(obj.getSeasonState());
+ 		resp.setFireState(obj.getFireState());
+ 		resp.setBathWater(obj.getBathWater());
+ 		resp.setHeatingSend(obj.getHeatingSend());
+ 		resp.setBathMode(obj.getBathMode());
+ 		resp.setMachineType(obj.getMachineType());
+ 		resp.setDraughtState(obj.getDraughtState());
+ 		resp.setWaterPumpState(obj.getWaterPumpState());
+ 		resp.setTeeValState(obj.getTeeValState());
+ 		resp.setCDIState(obj.getCDIState());
+ 		resp.setAutifreezeState(obj.getAutifreezeState());
+ 		resp.setAutifreezeState_rp(obj.getAutifreezeState_rp());
+ 		resp.setOpenHeating(obj.getOpenHeating());
+ 		resp.setPressureVal(obj.getPressureVal());
+ 		resp.setBathTemTarget(obj.getBathTemTarget());
+ 		resp.setBathTemNow(obj.getBathTemNow());
+ 		resp.setHeatingTemTarget(obj.getHeatingTemTarget());
+ 		resp.setBothTemTarget(obj.getBothTemTarget());
+ 		resp.setOutDoorTem(obj.getOutDoorTem());
+ 		resp.setHeatingMode(obj.getHeatingMode());
+ 		resp.setGasCount(obj.getGasCount());
+ 		resp.setGasCountNow(obj.getGasCountNow());
+ 		resp.setSerial(obj.getSerial());
+ 		resp.setReservation_one(obj.getReservation_one());
+ 		resp.setReservation_two(obj.getReservation_two());
+ 		resp.setReservation_three(obj.getReservation_three());
+ 		resp.setReservation_four(obj.getReservation_four());
+ 		resp.setReservation_five(obj.getReservation_five());
+ 		resp.setReservation_six(obj.getReservation_six());
+ 		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(22, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(21, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -493,14 +521,14 @@ public class GeneratedJniJava {
     public static void OnHeartbeatResp(long cPtr, int nConnId) {
         HeartbeatResp_t obj = new HeartbeatResp_t(cPtr, false);
         HeartbeatResp_t resp = new HeartbeatResp_t();
-        resp.setHeader(obj.getHeader());
-        resp.setP0_version(obj.getP0_version());
-        resp.setResp_address(obj.getResp_address());
-        resp.setCommand(obj.getCommand());
-        resp.setChecksum(obj.getChecksum());
+ 		resp.setHeader(obj.getHeader());
+ 		resp.setP0_version(obj.getP0_version());
+ 		resp.setResp_address(obj.getResp_address());
+ 		resp.setCommand(obj.getCommand());
+ 		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(23, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(22, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)

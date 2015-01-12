@@ -31,7 +31,7 @@ import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener
 
 public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
-	
+
 	private static final String TAG = "EIAddPatternActivity";
 
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
@@ -190,12 +190,30 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 		CustomSetVo customSetVo = new CustomSetVo();
 		customSetVo.setUid(AccountService.getUserId(EIAddPatternActivity.this));
 		customSetVo.setConnid(Global.connectId);
-		String name = nameedittext.getText().toString().trim();
-		if ("".equals(name)) {
-			Toast.makeText(this, "请输入名字", Toast.LENGTH_SHORT).show();
+		String modeName = nameedittext.getText().toString().trim();
+		if ("".equals(modeName)) {
+			Toast.makeText(this, R.string.input_mode_name, Toast.LENGTH_SHORT)
+					.show();
 			return null;
 		}
-		customSetVo.setName(nameedittext.getText().toString());
+		
+		if (modeName.equals("晨浴") || modeName.equals("夜电")
+				|| modeName.equals("智能")) {
+			Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
+					.show();
+			return null;
+		}
+
+		List items = new BaseDao(this).getDb().findAllByWhere(
+				CustomSetVo.class, " name = '" + modeName + "'");
+
+		if (items.size() != 0) {
+			Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
+					.show();
+			return null;
+		}
+		
+		customSetVo.setName(modeName);
 
 		if (swich.getTag() != null
 				&& Integer.parseInt(swich.getTag().toString()) == 0) {
@@ -214,11 +232,14 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 			customSetVo.setPower(3);
 		} else {
 			customSetVo.setTempter(seekBar.getProgress() + 35);
-			List list = new BaseDao(this).getDb().findAllByWhere(
-					CustomSetVo.class,
-					" uid = '"
-							+ AccountService.getUserId(EIAddPatternActivity.this)
-							+ "'");
+			List list = new BaseDao(this)
+					.getDb()
+					.findAllByWhere(
+							CustomSetVo.class,
+							" uid = '"
+									+ AccountService
+											.getUserId(EIAddPatternActivity.this)
+									+ "'");
 			View view = null;
 			for (int i = 0; i < powerGroup.getChildCount(); i++) {
 				if (powerGroup.getCheckedRadioButtonId() == powerGroup
@@ -245,17 +266,17 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 				if (oldcustomSetVo != null) {
 					new BaseDao(this).getDb().delete(oldcustomSetVo);
 				}
-				
+
 				boolean isCheck = getIntent().getBooleanExtra("ischeck", false);
 				customSetVo.setSet(isCheck);
-				
+
 				new BaseDao(this).getDb().replace(customSetVo);
 				if (isCheck) {
 					new Thread(new Runnable() {
 
 						@Override
 						public void run() {
-							
+
 							Log.e(TAG, "自定义");
 							SendMsgModel.changeToZidingyiMode();
 							try {
@@ -263,16 +284,14 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
-							Log.e(TAG, "自定义 pow: "
-									+ customSetVo.getPower());
+							Log.e(TAG, "自定义 pow: " + customSetVo.getPower());
 							SendMsgModel.setPower(customSetVo.getPower());
 							try {
 								Thread.sleep(700);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
-							Log.e(TAG, "自定义 Tem: "
-									+ customSetVo.getTempter());
+							Log.e(TAG, "自定义 Tem: " + customSetVo.getTempter());
 							SendMsgModel.setTempter(customSetVo.getTempter());
 
 						}

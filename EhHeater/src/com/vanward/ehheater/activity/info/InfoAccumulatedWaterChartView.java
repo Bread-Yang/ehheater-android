@@ -256,13 +256,17 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 								.equals("") ? "0" : li.get(i).getAmount()));
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						if (li.get(i).getAmount().equals("")
-								|| li.get(i).getAmount().substring(0, 1)
-										.equals("0")) {
+						if (li.get(i).getAmount().equals("")) {
 							jsonOBJ2.put("data", "");
 						} else {
-							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
-									.get(i).getAmount())));
+							int round = Math.round(Float.parseFloat(li.get(i)
+									.getAmount()));
+							if (Float.valueOf(li.get(i).getAmount()) == 0
+									|| round == 0) {
+								jsonOBJ2.put("data", "");
+							} else {
+								jsonOBJ2.put("data", round);
+							}
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
@@ -355,13 +359,17 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 						;
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						if (li.get(i).getAmount().equals("")
-								|| li.get(i).getAmount().substring(0, 1)
-										.equals("0")) {
+						if (li.get(i).getAmount().equals("")) {
 							jsonOBJ2.put("data", "");
 						} else {
-							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
-									.get(i).getAmount())));
+							int round = Math.round(Float.parseFloat(li.get(i)
+									.getAmount()));
+							if (Float.valueOf(li.get(i).getAmount()) == 0
+									|| round == 0) {
+								jsonOBJ2.put("data", "");
+							} else {
+								jsonOBJ2.put("data", round);
+							}
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
@@ -412,8 +420,6 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					JSONObject jsonObject = new JSONObject(t);
 					JSONArray array = jsonObject.getJSONArray("result");
 
-					// JSONObject jb=(JSONObject) array.get(0);
-					// dtime=Long.valueOf(jb.getString("time"));
 					JSONArray jsonArray = new JSONArray();
 					JSONArray jsonArray2 = new JSONArray();
 					List<Electricity> li = new ArrayList<Electricity>();
@@ -435,16 +441,21 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 						;
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
-						if (li.get(i).getAmount().equals("")
-								|| li.get(i).getAmount().substring(0, 1)
-										.equals("0")) {
+						if (li.get(i).getAmount().equals("")) {
 							jsonOBJ2.put("data", "");
 						} else {
-							jsonOBJ2.put("data", Math.round(Float.parseFloat(li
-									.get(i).getAmount())));
+							int round = Math.round(Float.parseFloat(li.get(i)
+									.getAmount()));
+							if (Float.valueOf(li.get(i).getAmount()) == 0
+									|| round == 0) {
+								jsonOBJ2.put("data", "");
+							} else {
+								jsonOBJ2.put("data", round);
+							}
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
+						Log.e(TAG, "JSON是 : " + jsonArray2.toString());
 					}
 					// 赋值name
 					namelistjson = jsonArray.toString();

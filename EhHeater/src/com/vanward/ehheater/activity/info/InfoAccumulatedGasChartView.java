@@ -239,18 +239,21 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 						JSONObject jsonOBJ2 = new JSONObject();
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
-						Log.e(TAG, "li.get(i).getAmount() : " + li.get(i).getAmount());
+						Log.e(TAG, "li.get(i).getAmount() : "
+								+ li.get(i).getAmount());
 						Log.e(TAG, "b : " + b);
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
 						if (li.get(i).getAmount().equals("")) {
 							jsonOBJ2.put("data", "");
 						} else {
-							if (Float.valueOf(li.get(i).getAmount()) == 0) {
+							int round = Math.round(Float.parseFloat(li.get(i)
+									.getAmount()));
+							if (Float.valueOf(li.get(i).getAmount()) == 0
+									|| round == 0) {
 								jsonOBJ2.put("data", "");
 							} else {
-								jsonOBJ2.put("data", Math.round(Float.parseFloat(li
-										.get(i).getAmount())));
+								jsonOBJ2.put("data", round);
 							}
 						}
 						jsonArray.put(jsonOBJ);
@@ -337,22 +340,25 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 								li.add(electricity);
 								JSONObject jsonOBJ = new JSONObject();
 								JSONObject jsonOBJ2 = new JSONObject();
-								b = Math.round(Float.parseFloat(li.get(i).getAmount()
-										.equals("") ? "0" : li.get(i).getAmount()));
-								Log.e(TAG, "li.get(i).getAmount() : " + li.get(i).getAmount());
+								b = Math.round(Float.parseFloat(li.get(i)
+										.getAmount().equals("") ? "0" : li.get(
+										i).getAmount()));
+								Log.e(TAG,
+										"li.get(i).getAmount() : "
+												+ li.get(i).getAmount());
 								Log.e(TAG, "b : " + b);
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								if (li.get(i).getAmount().equals("")) {
 									jsonOBJ2.put("data", "");
 								} else {
-									if (Float.valueOf(li.get(i).getAmount()) == 0) {
+									int round = Math.round(Float.parseFloat(li.get(i)
+											.getAmount()));
+									if (Float.valueOf(li.get(i).getAmount()) == 0
+											|| round == 0) {
 										jsonOBJ2.put("data", "");
 									} else {
-										jsonOBJ2.put(
-												"data",
-												Math.round(Float.parseFloat(li.get(
-														i).getAmount())));
+										jsonOBJ2.put("data", round);
 									}
 								}
 								jsonArray.put(jsonOBJ);
@@ -385,7 +391,6 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 	}
 
 	public void getmessageyear(final long da3) {
-		Log.e(TAG, "getmessageyear返回的时间是 : " + da3);
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 
@@ -403,9 +408,6 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 				try {
 					JSONObject jsonObject = new JSONObject(t);
 					JSONArray array = jsonObject.getJSONArray("result");
-
-					// JSONObject jb=(JSONObject) array.get(0);
-					// dtime=Long.valueOf(jb.getString("time"));
 
 					JSONArray jsonArray = new JSONArray();
 					JSONArray jsonArray2 = new JSONArray();
@@ -425,22 +427,23 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 						JSONObject jsonOBJ2 = new JSONObject();
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
-						Log.e(TAG, "li.get(i).getAmount() : " + li.get(i).getAmount());
-						Log.e(TAG, "b : " + b);
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
 						if (li.get(i).getAmount().equals("")) {
 							jsonOBJ2.put("data", "");
 						} else {
-							if (Float.valueOf(li.get(i).getAmount()) == 0) {
+							int round = Math.round(Float.parseFloat(li.get(i)
+									.getAmount()));
+							if (Float.valueOf(li.get(i).getAmount()) == 0
+									|| round == 0) {
 								jsonOBJ2.put("data", "");
 							} else {
-								jsonOBJ2.put("data", Math.round(Float.parseFloat(li
-										.get(i).getAmount())));
+								jsonOBJ2.put("data", round);
 							}
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
+						Log.e(TAG, "JSON是 : " + jsonArray2.toString());
 					}
 					// 赋值name
 					namelistjson = jsonArray.toString();
@@ -459,7 +462,6 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 					webView.reload();
 					// 销毁等待
 				} catch (Exception e) {
-					// TODO Auto-generated catch blocks
 					e.printStackTrace();
 				}
 				super.onSuccess(t);

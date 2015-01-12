@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -27,9 +26,9 @@ import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener
 
 public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
-	
+
 	private static final String TAG = "GasAddPatternActivity";
-	
+
 	@ViewInject(id = R.id.ivTitleName, click = "onClick")
 	TextView ivTitleName;
 	@ViewInject(id = R.id.ivTitleBtnLeft, click = "onClick")
@@ -63,7 +62,7 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 		} else {
 			ivTitleName.setText("添加模式");
 		}
-		
+
 		seekBar.setOnProgressChangeListener(new OnSeekBarHintProgressChangeListener() {
 
 			@Override
@@ -84,8 +83,8 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 					temp = 60;
 				else if (63 <= temp && 65 >= temp)
 					temp = 65;
-				
-				return String.format("%s℃",temp);
+
+				return String.format("%s℃", temp);
 			}
 		});
 	}
@@ -117,11 +116,30 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 		if (gasVo != null) {
 			customSetVo = gasVo;
 		}
-		customSetVo.setUid(AccountService.getUserId(GasAddPatternActivity.this));
+		customSetVo
+				.setUid(AccountService.getUserId(GasAddPatternActivity.this));
 		customSetVo.setConnid(Global.connectId);
-		String name = nameedittext.getText().toString().trim();
-		if ("".equals(name)) {
-			Toast.makeText(this, "请输入名字", Toast.LENGTH_SHORT).show();
+		String modeName = nameedittext.getText().toString().trim();
+		if ("".equals(modeName)) {
+			Toast.makeText(this, R.string.input_mode_name, Toast.LENGTH_SHORT)
+					.show();
+			return null;
+		}
+
+		if (modeName.equals("舒适") || modeName.equals("厨房")
+				|| modeName.equals("浴缸") || modeName.equals("节能")
+				|| modeName.equals("智能")) {
+			Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
+					.show();
+			return null;
+		}
+
+		List items = new BaseDao(this).getDb().findAllByWhere(
+				GasCustomSetVo.class, " name = '" + modeName + "'");
+
+		if (items.size() != 0) {
+			Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
+					.show();
 			return null;
 		}
 
@@ -137,8 +155,7 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 			for (int i = 0; i < list.size(); i++) {
 				if (nameedittext.getText().toString()
 						.equals(list.get(i).getName())) {
-					Toast.makeText(this, "请输入有效名字！", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(this, "请输入有效名字！", Toast.LENGTH_SHORT).show();
 					return null;
 				}
 			}
@@ -165,16 +182,19 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			final GasCustomSetVo customSetVo = getData();
-			Log.e(TAG, "提交的customSetVo.getWaterval() : " + customSetVo.getWaterval());
-			Log.e(TAG, "提交的customSetVo.getTempter() : " + customSetVo.getTempter());
+			Log.e(TAG,
+					"提交的customSetVo.getWaterval() : "
+							+ customSetVo.getWaterval());
+			Log.e(TAG,
+					"提交的customSetVo.getTempter() : " + customSetVo.getTempter());
 			if (customSetVo != null) {
 				if (gasVo != null) {
 					new BaseDao(this).getDb().delete(gasVo);
 				}
-				
+
 				boolean isCheck = getIntent().getBooleanExtra("ischeck", false);
 				customSetVo.setSet(isCheck);
-				
+
 				new BaseDao(this).getDb().replace(customSetVo);
 
 				if (isCheck) {
@@ -183,19 +203,16 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 						@Override
 						public void run() {
 
-							SendMsgModel
-							.setDIYModel(
-									customSetVo
-											.getId(),
-											customSetVo);
+							SendMsgModel.setDIYModel(customSetVo.getId(),
+									customSetVo);
 
 						}
 					}).start();
-				
+
 				}
 				finish();
 			}
-			
+
 			break;
 
 		default:

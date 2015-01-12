@@ -416,7 +416,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		case R.id.ivTitleBtnRigh:
 			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
 			if (!NetworkStatusUtil.isConnected(getBaseContext())) {
-				Toast.makeText(this, "无网络连接", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.check_network, Toast.LENGTH_SHORT).show();
 				return;
 			}
 

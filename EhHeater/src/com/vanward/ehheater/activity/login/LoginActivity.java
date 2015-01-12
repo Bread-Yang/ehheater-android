@@ -112,7 +112,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		case R.id.login_btn:
 
 			if (!NetworkStatusUtil.isConnected(this)) {
-				Toast.makeText(this, "无网络连接", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.check_network, Toast.LENGTH_LONG).show();
 				return;
 			}
 

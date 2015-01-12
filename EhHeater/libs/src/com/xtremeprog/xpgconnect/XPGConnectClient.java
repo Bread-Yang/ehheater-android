@@ -8,10 +8,16 @@ import android.os.Handler;
 import android.os.Message;
 
 import android.util.Log;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.xtremeprog.xpgconnect.generated.*;
 import com.xtremeprog.xpgconnect.listener.ClientListener;
@@ -218,6 +224,46 @@ public class XPGConnectClient {
 	public static native void xpgcLogin2Wan(String uid,String password,String did,String passcode);
 	public static native void xpgcLogin2Lan(String ip,String passcode);
 
+	private static native void xpgcSetLogPath(String filePath);
+	public static void xpgcInitLogPath(Context ctx)
+	{	
+
+		String directory = android.os.Environment.getExternalStorageDirectory()
+				.getAbsolutePath()
+				+ "/"
+				+ XPGConnectClient.getApplicationName(ctx)
+				+ "/logs/";
+		File tempFile = new File( directory );
+			if ( !tempFile.exists() )
+				tempFile.mkdirs();
+
+		directory=directory+XPGConnectClient.getStrDate()+"-log.txt";
+		xpgcSetLogPath(directory);
+	}
+
+	//获取应用程序的名称
+	private static String getApplicationName(Context ctx) { 
+		PackageManager packageManager = null; 
+		ApplicationInfo applicationInfo = null; 
+		try 
+		{ 
+		packageManager = ctx.getApplicationContext().getPackageManager(); 
+		applicationInfo = packageManager.getApplicationInfo(ctx.getPackageName(), 0); 
+		} catch (PackageManager.NameNotFoundException e) { 
+		applicationInfo = null; 
+		}
+		String applicationName = 
+		(String) packageManager.getApplicationLabel(applicationInfo); 
+		
+		return applicationName; 
+	} 
+
+	/** 返回当前日期的格式化（yyyy-MM-dd）表示 */
+	public static String getStrDate() {
+		SimpleDateFormat dd = new SimpleDateFormat("yyyy-MM-dd");
+		return dd.format(new Date());
+	}
+
 	private static native long GetEndpointPtr(int connId);
 	public static XpgEndpoint GetEndpoint(int connId)
 	{
@@ -285,7 +331,6 @@ public class XPGConnectClient {
 		if (activity == null) return -1;
 
 		AddActivity(activity);
-			
 
 		byte[] clientId = Coding.EncodeUUID(UUID.randomUUID());
 		return xpgcInit(clientId);
@@ -360,33 +405,30 @@ public class XPGConnectClient {
 	 * @param macStr
 	 */
 	public static void onDeviceFound(long cPtr) {
-		Log.i(TAG, String.format("%s", Utils.GetFileLineMethod()));
-		// TODO: check if memory leak of the endpoint
+		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, true);
+		Log.i(TAG, String.format("%s, mac = %s", Utils.GetFileLineMethod(), res.getSzMac()));
         for (GeneratedActivity activity : lstActivities)
         {
-			XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, false);
             Message msg = activity.handler.obtainMessage(ON_DEVICE_FOUND, 0, 0, res);
             activity.handler.sendMessage(msg);
         }
 		for (ClientListener listener : lstClientListeners)
 		{
-			XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, false);
 			listener.onDeviceFound(res);
 		}
 	}
 
 	public static void onEasyLinkResp(long cPtr) {
-		Log.i(TAG, String.format("%s", Utils.GetFileLineMethod()));
-		// TODO: check if memory leak of the endpoint
+		// TODO: should be GetXpgEndpoint(cPtr, true)?
+		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, false);
+		Log.i(TAG, String.format("%s, mac = %s", Utils.GetFileLineMethod(), res.getSzMac()));
         for (GeneratedActivity activity : lstActivities)
         {
-			XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, false);
             Message msg = activity.handler.obtainMessage(ON_EASYLINK_RESP, 0, 0, res);
             activity.handler.sendMessage(msg);
         }
 		for (ClientListener listener : lstClientListeners)
 		{
-			XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, false);
 			listener.onEasyLinkResp(res);
 		}
 	}
@@ -506,7 +548,7 @@ public class XPGConnectClient {
 	public static void onV4GetMyBindings(int errorCode, long cPtr) {
 		Log.i(TAG, String.format("%s, errorCode = %d, cPtr = %d",
 			Utils.GetFileLineMethod(), errorCode, cPtr));
-		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, false);
+		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, true);
         for (GeneratedActivity activity : lstActivities)
         {
             Message msg = activity.handler.obtainMessage(ON_V4_GET_MY_BINDINGS, errorCode, 0, res);
@@ -714,7 +756,7 @@ public class XPGConnectClient {
 	public static void onV4GetDeviceInfo(int errorCode, long cPtr) {
 		Log.i(TAG, String.format("%s, errorCode = %d, cPtr = %d",
 			Utils.GetFileLineMethod(), errorCode, cPtr));
-		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, false);
+		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, true);
         for (GeneratedActivity activity : lstActivities)
         {
             Message msg = activity.handler.obtainMessage(ON_V4_GET_DEVICE_INFO , errorCode, 0, res);

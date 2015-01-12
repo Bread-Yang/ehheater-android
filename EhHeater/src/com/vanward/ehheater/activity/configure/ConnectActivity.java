@@ -123,8 +123,8 @@ public class ConnectActivity extends GeneratedActivity {
 		// mTvInfo2.setText("连接中...");
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
 			// 无任何网络连接
-			// mTvInfo.setText("无网络连接");
-			// mTvInfo2.setText("无网络连接");
+			// mTvInfo.setText(R.string.check_network);
+			// mTvInfo2.setText(R.string.check_network);
 			// mBtnRetry.setVisibility(View.VISIBLE);
 			// mPbar.setVisibility(View.GONE);
 

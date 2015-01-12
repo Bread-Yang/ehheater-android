@@ -121,124 +121,211 @@ public class GeneratedActivity extends Activity
     @Override
     public void onV4UnbindDevice(int errorCode ,String successString,String failString) { }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpWriteWifiConfigResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnWriteWifiConfigResp(WriteWifiConfigResp_t pResp, int nConnId) {
-        generated.DumpWriteWifiConfigResp(pResp);
+        // generated.DumpWriteWifiConfigResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpOnboardingSetResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnOnboardingSetResp(OnboardingSetResp_t pResp) {
-        generated.DumpOnboardingSetResp(pResp);
+        // generated.DumpOnboardingSetResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpDiscoveryV1Resp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnDiscoveryV1Resp(DiscoveryV1Resp_t pResp) {
-        generated.DumpDiscoveryV1Resp(pResp);
+        // generated.DumpDiscoveryV1Resp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpDiscoveryV3Resp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnDiscoveryV3Resp(DiscoveryV3Resp_t pResp) {
-        generated.DumpDiscoveryV3Resp(pResp);
+        // generated.DumpDiscoveryV3Resp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpEasylinkResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnEasylinkResp(EasylinkResp_t pResp) {
-        generated.DumpEasylinkResp(pResp);
+        // generated.DumpEasylinkResp(pResp);
     }
 
-    @Override
-    public void OnEasylinkV3Resp(EasylinkV3Resp_t pResp) {
-        generated.DumpEasylinkV3Resp(pResp);
-    }
-
+    /**
+    * @param pResp
+    *            可调用 generated.DumpBootstrapResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnBootstrapResp(BootstrapResp_t pResp) {
-        generated.DumpBootstrapResp(pResp);
+        // generated.DumpBootstrapResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpPasscodeResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnPasscodeResp(PasscodeResp_t pResp, int nConnId) {
-        generated.DumpPasscodeResp(pResp);
+        // generated.DumpPasscodeResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpLanLoginResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnLanLoginResp(LanLoginResp_t pResp, int nConnId) {
-        generated.DumpLanLoginResp(pResp);
+        // generated.DumpLanLoginResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpModuleVersionResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnModuleVersionResp(ModuleVersionResp_t pResp, int nConnId) {
-        generated.DumpModuleVersionResp(pResp);
+        // generated.DumpModuleVersionResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpWifiListResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnWifiListResp(WifiListResp_t pResp, int nConnId) {
-        generated.DumpWifiListResp(pResp);
+        // generated.DumpWifiListResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpSerialPortConfigResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnSerialPortConfigResp(SerialPortConfigResp_t pResp, int nConnId) {
-        generated.DumpSerialPortConfigResp(pResp);
+        // generated.DumpSerialPortConfigResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpUserRegisterResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnUserRegisterResp(UserRegisterResp_t pResp, int nConnId) {
-        generated.DumpUserRegisterResp(pResp);
+        // generated.DumpUserRegisterResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpBindingSetResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnBindingSetResp(BindingSetResp_t pResp, int nConnId) {
-        generated.DumpBindingSetResp(pResp);
+        // generated.DumpBindingSetResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpBindingGetResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnBindingGetResp(BindingGetResp_t pResp, int nConnId) {
-        generated.DumpBindingGetResp(pResp);
+        // generated.DumpBindingGetResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpBindingGetV2Resp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnBindingGetV2Resp(BindingGetV2Resp_t pResp, int nConnId) {
-        generated.DumpBindingGetV2Resp(pResp);
+        // generated.DumpBindingGetV2Resp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpUserPwdChangeResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnUserPwdChangeResp(UserPwdChangeResp_t pResp, int nConnId) {
-        generated.DumpUserPwdChangeResp(pResp);
+        // generated.DumpUserPwdChangeResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpBindingDelResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnBindingDelResp(BindingDelResp_t pResp, int nConnId) {
-        generated.DumpBindingDelResp(pResp);
+        // generated.DumpBindingDelResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpReadWifiConfigResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnReadWifiConfigResp(ReadWifiConfigResp_t pResp, int nConnId) {
-        generated.DumpReadWifiConfigResp(pResp);
+        // generated.DumpReadWifiConfigResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpDeviceOnlineStateResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp, int nConnId) {
-        generated.DumpDeviceOnlineStateResp(pResp);
+        // generated.DumpDeviceOnlineStateResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpStateResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnStateResp(StateResp_t pResp, int nConnId) {
-        generated.DumpStateResp(pResp);
+        // generated.DumpStateResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpGasWaterHeaterStatusResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp, int nConnId) {
-        generated.DumpGasWaterHeaterStatusResp(pResp);
+        // generated.DumpGasWaterHeaterStatusResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpDERYStatusResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
-        generated.DumpDERYStatusResp(pResp);
+        // generated.DumpDERYStatusResp(pResp);
     }
 
+    /**
+    * @param pResp
+    *            可调用 generated.DumpHeartbeatResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
     @Override
     public void OnHeartbeatResp(HeartbeatResp_t pResp, int nConnId) {
-        generated.DumpHeartbeatResp(pResp);
+        // generated.DumpHeartbeatResp(pResp);
     }
 
 }

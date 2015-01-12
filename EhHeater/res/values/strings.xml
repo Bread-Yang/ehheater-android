@@ -93,6 +93,7 @@
     <string name="set_device_tip5">请长按电源键<font color="#ff0000">3秒</font>，听到<font color="#ff0000">三声</font>蜂鸣后松手，点击下一步</string>
     <string name="setup_step3_eh_furnace">长按壁挂炉冬夏季键<font color="#ff0000">3秒</font>，蜂鸣器<font color="#ff0000">响一声</font>之后松手，并点击下一步</string>
     <string name="wifi_name">网络名称</string>
+    <string name="check_network">网络连接已断开，请检查！</string>
     <string name="set_fail_tip1">无法连接热水器，请检查</string>
     <string name="setup_furnace_fail_title">无法连接壁挂炉，请检查</string>
     <string name="set_fail_tip2">1.热水器是否正常运行;\n2.无线局域网名称和密码是否修改过,如是,则需删除热水器重新添加。</string>
@@ -126,6 +127,8 @@
     <string name="new_pwd_error">两次密码不一致，请重新输入！</string>
     <string name="old_pwd_error">原密码不正确，请重新输入！</string>
     <string name="input_name">请输入名称</string>
+    <string name="input_mode_name">请输入模式名称！</string>
+    <string name="mode_name_exist">该模式名称已存在！</string>
     <string name="success">成功</string>
     <string name="failure">失败</string>
     <string name="heater_wifi_ssid">XPG-GAgent</string>
