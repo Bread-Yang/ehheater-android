@@ -19,7 +19,7 @@ public class ManualConfigFailActivity extends EhHeaterBaseActivity {
 		findViewById(R.id.amf_btn_retry).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getBaseContext(), ShitActivity.class);
+				Intent intent = new Intent(getBaseContext(), EasyLinkConfigureActivity.class);
 				startActivity(intent);
 			}
 		});

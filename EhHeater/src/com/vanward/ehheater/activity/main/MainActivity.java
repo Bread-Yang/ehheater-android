@@ -119,7 +119,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	private boolean canupdateView = false;
 
 	private int currentTemp;
-	
+
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -477,7 +477,9 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			if (currentModeCode == 7 || currentModeCode == 4
 					|| currentModeCode == 6) {
-				setPower();
+				if (ison) {
+					setPower();
+				}
 			}
 			break;
 
@@ -706,7 +708,7 @@ public class MainActivity extends BaseBusinessActivity implements
 					Intent intent = new Intent();
 					// intent.putExtra("data", inforVo);
 					intent.setClass(MainActivity.this, InfoTipActivity.class);
-					intent.putExtra("name", "镁棒更换");
+					intent.putExtra("name", "镁棒更换提醒");
 					intent.putExtra("time", simpleDateFormat.format(new Date()));
 					intent.putExtra(
 							"detail",
@@ -765,7 +767,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		waterWarn(date);
 		// oxygenWarning(pResp);
 		System.out.println("错误码：" + date.getError() + "  ");
-		Log.e(TAG , "错误码：" + date.getError());
+		Log.e(TAG, "错误码：" + date.getError());
 		if (date.getError() != 0 && date.getError() != 160) { // 不是防冻
 			isError = true;
 			iv_error.setVisibility(View.VISIBLE);
@@ -1029,6 +1031,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	public void dealDisConnect() {
+		ison = false;
 		currentModeCode = 0;
 		isSendingCommand = false;
 		tv_tempter.setText("--");

@@ -37,6 +37,7 @@ import com.vanward.ehheater.util.wifi.WifiAdmin;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.EasylinkResp_t;
 import com.xtremeprog.xpgconnect.generated.OnboardingSetResp_t;
+import com.xtremeprog.xpgconnect.generated.WifiListResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -135,9 +136,8 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 
 			break;
 		}
-
 	}
-
+	
 	@Override
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
 		Log.e(TAG, TAG + "的onEasyLinkResp执行了");

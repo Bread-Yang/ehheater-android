@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.configure.ShitActivity;
+import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentTimeActivity;

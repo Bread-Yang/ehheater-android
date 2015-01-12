@@ -48,10 +48,10 @@ import com.vanward.ehheater.util.TextStyleUtil;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 
-public class ShitActivity extends EhHeaterBaseActivity implements
+public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		OnClickListener, FirstTimeConfigListener {
 
-	private static final String TAG = "ShitActivity";
+	private static final String TAG = "EasyLinkConfigureActivity";
 
 	private RelativeLayout mRlStepContainer;
 	private Button mBtnNextStep;
@@ -127,7 +127,7 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 		//
 		// @Override
 		// public void run() {
-		// startActivity(new Intent(ShitActivity.this,
+		// startActivity(new Intent(EasyLinkConfigureActivity.this,
 		// ManualConfigFailActivity.class));
 		// }
 		// }, 5000);
@@ -384,13 +384,30 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onEasyLinkResp(final XpgEndpoint endpoint) {
-		Log.e(TAG, "onEasyLinkResp回调了");
+		Log.e(TAG, "onEasyLinkResp()回调了");
 		if (isWaitingCallback) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
 
-			Log.e(TAG, "打印productKey前");
-			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
-			Log.e(TAG, ("".equals(endpoint.getSzProductKey()) + ""));
+			// Log.e(TAG, "null == endpoint.getSzProductKey() : " + (null ==
+			// endpoint.getSzProductKey()));
+			// Log.e(TAG, ("endpoint.getSzProductKey()为空字符串 : " +
+			// "".equals(endpoint.getSzProductKey())));
+			//
+			// Log.e(TAG, "null == endpoint.getSzMac() : " + (null ==
+			// endpoint.getSzMac()));
+			// Log.e(TAG, ("endpoint.getSzMac()为空字符串 : " +
+			// "".equals(endpoint.getSzMac())));
+			//
+			// Log.e(TAG, "null == endpoint.getSzDid() : " + (null ==
+			// endpoint.getSzDid()));
+			// Log.e(TAG, ("endpoint.getSzDid()为空字符串 : " +
+			// "".equals(endpoint.getSzDid())));
+
+			// Log.e(TAG, "null == endpoint.getSzPasscode() : " + (null ==
+			// endpoint.getSzPasscode()));
+			// Log.e(TAG, ("endpoint.getSzPasscode()为空字符串 : " +
+			// "".equals(endpoint.getSzPasscode())));
+
 			if (endpoint.getSzProductKey() == null
 					|| "".equals(endpoint.getSzProductKey())) {
 				return;
@@ -398,6 +415,25 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 			if (endpoint.getSzMac() == null || "".equals(endpoint.getSzMac())) {
 				return;
 			}
+			// if (endpoint.getSzDid() == null ||
+			// "".equals(endpoint.getSzDid())) {
+			// return;
+			// }
+			// if (endpoint.getSzPasscode() == null
+			// || "".equals(endpoint.getSzPasscode())) {
+			// return;
+			// }
+			Log.e(TAG, "onEasyLinkResp()返回的endpoint.getSzProductKey() : "
+					+ endpoint.getSzProductKey());
+			Log.e(TAG,
+					"onEasyLinkResp()返回的endpoint.getSzMac() : "
+							+ endpoint.getSzMac());
+			Log.e(TAG,
+					"onEasyLinkResp()返回的endpoint.getSzDid() : "
+							+ endpoint.getSzDid());
+			// Log.e(TAG, "onEasyLinkResp()返回的endpoint.getSzPasscode() : " +
+			// endpoint.getSzPasscode());
+
 			// if (endpoint.getSzDid() == null ||
 			// "".equals(endpoint.getSzDid())) {
 			// return;
@@ -462,6 +498,8 @@ public class ShitActivity extends EhHeaterBaseActivity implements
 
 		Log.d("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
 				+ "-" + hinfo.getPasscode());
+
+		Log.e(TAG, "成功通过easylink将电器连上wifi");
 
 		String username = AccountService.getPendingUserId(getBaseContext());
 		String userpsw = AccountService.getPendingUserPsw(getBaseContext());

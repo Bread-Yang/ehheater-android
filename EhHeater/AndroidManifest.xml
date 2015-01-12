@@ -184,7 +184,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.configure.ShitActivity"
+            android:name=".activity.configure.EasyLinkConfigureActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateUnspecified|adjustResize" >

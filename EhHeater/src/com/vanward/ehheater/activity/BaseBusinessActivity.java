@@ -327,9 +327,9 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 				.getCurrentSelectedHeaterMac();
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());
-		Log.e("从start进入的mac是 : ", mac);
-		Log.e("从start进入的userId是 : ", userId);
-		Log.e("从start进入的userPsw是 : ", userPsw);
+		Log.e(TAG, "从start进入的mac是 : " + mac);
+		Log.e(TAG, "从start进入的userId是 : " + userId);
+		Log.e(TAG, "从start进入的userPsw是 : " + userPsw);
 
 		ConnectActivity.connectToDevice(this, mac, "", userId, userPsw,
 				connectText);

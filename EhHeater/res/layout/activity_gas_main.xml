@@ -313,7 +313,7 @@
                 android:layout_marginLeft="5dp"
                 android:background="@color/transparent"
                 android:minHeight="20dp"
-                android:text="待机中"
+                android:text="@string/offline"
                 android:textColor="@color/appointment_text_color"
                 android:textSize="15dp" />
             </LinearLayout>

@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.CloudBaseActivity;
-import com.vanward.ehheater.activity.configure.ShitActivity;
+import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -86,7 +86,7 @@ public class HeaterManagementActivity extends CloudBaseActivity {
 		}
 		
 		if( view == btn_add ){
-			startActivity(new Intent(getBaseContext(), ShitActivity.class));
+			startActivity(new Intent(getBaseContext(), EasyLinkConfigureActivity.class));
 		}
 	}
 	

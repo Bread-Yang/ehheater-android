@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.configure.ShitActivity;
+import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 
 public class SelectDeviceActivity extends Activity implements OnClickListener {
@@ -47,17 +47,17 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 		if (arg0.getId() == R.id.ivTitleBtnLeft) {
 			onBackPressed();
 		} else if (arg0.getId() == R.id.elect) {
-			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
+			Intent intent = new Intent(getBaseContext(), EasyLinkConfigureActivity.class);
 			intent.putExtra("type", "elect");
 			startActivity(intent);
 		
 		} else if (arg0.getId() == R.id.gas) {
-			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
+			Intent intent = new Intent(getBaseContext(), EasyLinkConfigureActivity.class);
 			intent.putExtra("type", "gas");
 			startActivity(intent);
 			
 		} else if (arg0.getId() == R.id.rlt_furnace) {
-			Intent intent = new Intent(getBaseContext(), ShitActivity.class);
+			Intent intent = new Intent(getBaseContext(), EasyLinkConfigureActivity.class);
 			intent.putExtra("type", "furnace");
 			startActivity(intent);
 		

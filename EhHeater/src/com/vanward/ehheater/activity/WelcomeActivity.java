@@ -134,7 +134,7 @@ public class WelcomeActivity extends GeneratedActivity {
 
 		if (getCurrentDevice() == null) {
 			// 无当前设备, 跳转到选择/新增设备页面
-			// startActivity(new Intent(this, ShitActivity.class));
+			// startActivity(new Intent(this, EasyLinkConfigureActivity.class));
 			// return STATE_JUMPED_OUT;
 			HeaterInfoService hser = new HeaterInfoService(this);
 

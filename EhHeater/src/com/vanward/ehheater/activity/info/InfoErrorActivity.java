@@ -17,9 +17,10 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 
 	private Button leftbutton;
 	private Button rightbButton;
-	TextView name, time, detail;
+	private TextView name, time, detail;
 	private Dialog dialog_dial;
-private Button btn_contact;
+	private Button btn_contact;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,11 +29,11 @@ private Button btn_contact;
 	}
 
 	public void initview() {
-		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));  
+		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		leftbutton.setOnClickListener(this);
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightbButton.setVisibility(View.GONE);
-		btn_contact= (Button)findViewById(R.id.btn_contact);
+		btn_contact = (Button) findViewById(R.id.btn_contact);
 		btn_contact.setOnClickListener(this);
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		TextView title = (TextView) findViewById(R.id.ivTitleName);

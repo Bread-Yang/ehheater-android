@@ -35,48 +35,51 @@ import com.xtremeprog.xpgconnect.generated.generated;
 
 public class ConnectActivity extends GeneratedActivity {
 
+	private static final String TAG = "EasyLinkConfigureActivity";
+
 	/** 小循环扫描设备周期,ms */
 	private final static int defaultScanInterval = 2000;
+
+	private final static int defaultScanTimeout = 8000;
 
 	private final static int LAN_NONE = 0;
 	private final static int LAN_SEARCHING = 1;
 	private final static int LAN_FOUND = 2;
 
 	private TextView mTvInfo, mTvInfo2;
-	
-	private Button mBtnRetry;
-	
-	private ProgressBar mPbar;
-	
 
-	/** 建立的连接类型, LAN / MQTT(大) */	
+	private Button mBtnRetry;
+
+	private ProgressBar mPbar;
+
+	/** 建立的连接类型, LAN / MQTT(大) */
 	private int connType = Integer.MAX_VALUE;
 
 	/** 当前小循环搜索设备的状态, 同一时间点只可能有一个小循环搜索任务在执行 */
 	private int currentLanSearchingState = LAN_NONE;
-	
+
 	private int tempConnId = -1;
 
-	private String mac = "";
-	
-	private String passcode = "";
+	private String mMac = "";
+
+	private String mPasscode = "";
 
 	private String passcodeRetrieved = "";
 
 	private String didRetrieved = "";
 
 	private boolean jobDone = false;
-	
+
 	private int onDeviceFoundCounter;
-	
+
 	private List<XpgEndpoint> tempEndpointList = new ArrayList<XpgEndpoint>();
-	
+
 	private void initTemporaryFields() {
 		connType = Integer.MAX_VALUE;
 		currentLanSearchingState = LAN_NONE;
 		tempConnId = -1;
-		mac = "";
-		passcode = "";
+		mMac = "";
+		mPasscode = "";
 		passcodeRetrieved = "";
 		didRetrieved = "";
 		onDeviceFoundCounter = 0;
@@ -90,7 +93,7 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.activity_connect_as_dialog);
 		mTvInfo = (TextView) findViewById(R.id.awad_tv);
 		mTvInfo2 = (TextView) findViewById(R.id.awad_tv_2);
@@ -98,38 +101,37 @@ public class ConnectActivity extends GeneratedActivity {
 		mPbar = (ProgressBar) findViewById(R.id.acad_pbar);
 
 		mBtnRetry.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				helper1();
 			}
 		});
-		
-		
+
 		helper1();
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-		
+
 	};
-	
+
 	private void helper1() {
 
-//		mPbar.setVisibility(View.VISIBLE);
-//		mBtnRetry.setVisibility(View.GONE);
-//		mTvInfo2.setText("连接中...");
+		// mPbar.setVisibility(View.VISIBLE);
+		// mBtnRetry.setVisibility(View.GONE);
+		// mTvInfo2.setText("连接中...");
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
 			// 无任何网络连接
-//			mTvInfo.setText("无网络连接");
-//			mTvInfo2.setText("无网络连接");
-//			mBtnRetry.setVisibility(View.VISIBLE);
-//			mPbar.setVisibility(View.GONE);
+			// mTvInfo.setText("无网络连接");
+			// mTvInfo2.setText("无网络连接");
+			// mBtnRetry.setVisibility(View.VISIBLE);
+			// mPbar.setVisibility(View.GONE);
 
 			setOfflineResult();
 			return;
 		}
-		
+
 		initTemporaryFields();
 		initTargetDeviceInfo();
 
@@ -138,7 +140,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private void tryConnectByBigCycle() {
 
-		XPGConnShortCuts.connect2big();  
+		XPGConnShortCuts.connect2big();
 
 		connType = XPG_WAN_LAN.MQTT.swigValue();
 
@@ -147,13 +149,13 @@ public class ConnectActivity extends GeneratedActivity {
 				mTvInfo.setText("通过云端连接中...");
 			};
 		});
-		
+
 		timeoutHandler.sendEmptyMessageDelayed(0, 45000);
 
 	}
-	
+
 	private Handler timeoutHandler = new Handler(new Handler.Callback() {
-		
+
 		@Override
 		public boolean handleMessage(Message msg) {
 			if (!jobDone) {
@@ -175,16 +177,19 @@ public class ConnectActivity extends GeneratedActivity {
 			final TimerTask t) {
 
 		startFind = new Timer();
+		 XPGConnectClient.xpgcStartDiscovery();
 		startFind.scheduleAtFixedRate(new TimerTask() {
 			public void run() {
-				Log.d("emmm", "finding device");
-				XPGConnectClient.xpgcFindDevice();
+				Log.e(TAG,
+						"XPGConnectClient.xpgcFindDevice()执行了,每隔两秒再执行一次,10秒超时,一共执行5次");
+//				XPGConnectClient.xpgcFindDevice();
 			}
 		}, 0, scanInterval);
 
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
+				 XPGConnectClient.xpgcStopDiscovery();
 				if (startFind != null) {
 					startFind.cancel();
 				}
@@ -198,31 +203,47 @@ public class ConnectActivity extends GeneratedActivity {
 		connType = XPG_WAN_LAN.LAN.swigValue();
 
 	}
+
 	Timer startFind;
 
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
-		
 		if (null == endpoint) {
 			return;
 		}
-		
+
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
 
-			if (currentLanSearchingState == LAN_FOUND) {
-				return;
-			}
-			
-			Log.d("emmm", "onDeviceFound@ConnectActivity(SMALL): " + endpoint.getSzMac() + "-" + 
-					endpoint.getSzDid() + "-" + endpoint.getIsOnline());
+			// if (currentLanSearchingState == LAN_FOUND) {
+			// return;
+			// }
+
+			Log.e(TAG, "onDeviceFound()回调了");
+
+			Log.e(TAG,
+					"onDeviceFound@ConnectActivity(SMALL): "
+							+ endpoint.getSzMac() + "-" + endpoint.getSzDid()
+							+ "-" + endpoint.getIsOnline());
 
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();
 
-			if (!TextUtils.isEmpty(macFound) && macFound.equals(mac.toLowerCase())) {
+			Log.e(TAG, "返回的endpoint.getSzMac()是否为null : " + (null == macFound));
+			Log.e(TAG,
+					"返回的endpoint.getSzMac()是否为空字符串 : " + ("".equals(macFound)));
+
+			Log.e(TAG, "endpoint.getSzDid() : " + endpoint.getSzDid());
+
+			Log.e(TAG, "mMac : " + mMac.toLowerCase());
+			Log.e(TAG, "endpoint.getSzMac().toLowerCase() : "
+					+ endpoint.getSzMac().toLowerCase());
+			Log.e(TAG, "endpoint.getSzDid(): " + endpoint.getSzDid());
+
+			if (!TextUtils.isEmpty(macFound)
+					&& macFound.equals(mMac.toLowerCase())) {
 				didRetrieved = didFound;
-				Log.d("emmm", "onDeviceFound:found target, connecting by small");
+				Log.e("TAG", "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 				currentLanSearchingState = LAN_FOUND;
@@ -230,17 +251,16 @@ public class ConnectActivity extends GeneratedActivity {
 					startFind.cancel();
 				}
 			}
-			
-		}
-		
 
-		if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
-			
-			Log.d("emmm", "onDeviceFound@ConnectActivity(BIG): " + endpoint.getSzMac() + "-" + 
-					endpoint.getSzDid() + "-" + endpoint.getIsOnline());
-			
+		} else if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
+
+			Log.e("emmm",
+					"onDeviceFound@ConnectActivity(BIG): "
+							+ endpoint.getSzMac() + "-" + endpoint.getSzDid()
+							+ "-" + endpoint.getIsOnline());
+
 			if (onDeviceFoundCounter++ == 0) {
-				
+
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -248,9 +268,9 @@ public class ConnectActivity extends GeneratedActivity {
 						doAfterBindingDevicesReceivedFromMQTT(tempEndpointList);
 					}
 				}, 8000);
-				
+
 			}
-			
+
 			tempEndpointList.add(endpoint);
 		}
 
@@ -260,22 +280,22 @@ public class ConnectActivity extends GeneratedActivity {
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		tempConnId = connId;
-		Log.d("emmm", "onConnectEvent@ConnectActivity" + connId + "-" + event);
+		Log.e("emmm", "onConnectEvent@ConnectActivity" + connId + "-" + event);
 
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
-			
-			if (TextUtils.isEmpty(passcode)) {
+
+			if (TextUtils.isEmpty(mPasscode)) {
 				generated.SendPasscodeReq(tempConnId);
-				Log.d("emmm", "onConnectEvent:requesting passcode");
+				Log.e("emmm", "onConnectEvent:requesting passcode");
 			} else {
-				XPGConnectClient.xpgcLogin(tempConnId, null, passcode);
+				XPGConnectClient.xpgcLogin(tempConnId, null, mPasscode);
 			}
-			
+
 		}
 
 		if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
 			XPGConnectClient.xpgcLogin(tempConnId, getUserId(), getUserPsw());
-			Log.d("emmm", "onConnectEvent:connecting by big");
+			Log.e("emmm", "onConnectEvent:connecting by big");
 		}
 	}
 
@@ -285,36 +305,37 @@ public class ConnectActivity extends GeneratedActivity {
 
 		passcodeRetrieved = generated.XpgData2String(pResp.getPasscode());
 
-		Log.d("emmm", "OnPasscodeResp: connecting by small");
+		Log.e("emmm", "OnPasscodeResp: connecting by small");
 		XPGConnectClient.xpgcLogin(tempConnId, null, passcodeRetrieved);
-		
+
 		pResp.delete();
 	}
 
 	@Override
 	public void OnLanLoginResp(LanLoginResp_t pResp, int nConnId) {
 		super.OnLanLoginResp(pResp, nConnId);
-		Log.d("emmm", "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
+		Log.e("emmm", "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
 
 		if (pResp.getResult() == 0) {
 			mTvInfo.setText("设备已连接!");
 			jobDone = true;
-//			generated.SendStateReq(Global.connectId);
-			
+			// generated.SendStateReq(Global.connectId);
+
 			Intent data = new Intent();
 			data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
 			data.putExtra(Consts.INTENT_EXTRA_ISONLINE, true);
-			
-			data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
+
+			data.putExtra(Consts.INTENT_EXTRA_MAC, mMac);
 			data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
 			data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
-			
-			String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+
+			String conntext = getIntent().getStringExtra(
+					Consts.INTENT_EXTRA_CONNECT_TEXT);
 			if (conntext == null) {
 				conntext = "";
 			}
-			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
-			
+			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);
+
 			setResult(RESULT_OK, data);
 			finish();
 		}
@@ -324,12 +345,12 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.d("emmm", "onLoginCloudResp@ConnectActivity: " + result);
+		Log.e("emmm", "onLoginCloudResp@ConnectActivity: " + result);
 		switch (result) {
 		case 0: // 可以控制
 			mTvInfo.setText("设备已连接!");
-//			generated.SendStateReq(Global.connectId);
-			
+			// generated.SendStateReq(Global.connectId);
+
 			Intent data = new Intent();
 			data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
 			data.putExtra(Consts.INTENT_EXTRA_ISONLINE, true);
@@ -337,38 +358,41 @@ public class ConnectActivity extends GeneratedActivity {
 			data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
 			data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
 			data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
-			
-			String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+
+			String conntext = getIntent().getStringExtra(
+					Consts.INTENT_EXTRA_CONNECT_TEXT);
 			if (conntext == null) {
 				conntext = "";
 			}
-			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
-			
+			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);
+
 			setResult(RESULT_OK, data);
 			finish();
 			break;
-		case 1: 
+		case 1:
 			// binding get, save them to a list
-			// find cur device 
-			// if in, check online state, if online, enable ctrl, setresult, if offline, enter app with offline state
+			// find cur device
+			// if in, check online state, if online, enable ctrl, setresult, if
+			// offline, enter app with offline state
 			// if not in, can't control -- enter app with offline state
 			generated.SendBindingGetV2Req(tempConnId);
 			break;
 		}
 	}
-	
+
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
 		jobDone = true;
 		for (XpgEndpoint ep : devList) {
-			if (ep.getSzMac().toLowerCase().equals(mac.toLowerCase())) {
-				
+			if (ep.getSzMac().toLowerCase().equals(mMac.toLowerCase())) {
+
 				passcodeRetrieved = ep.getSzPasscode();
 				didRetrieved = ep.getSzDid();
-				Log.d("emmm", mac + " isOnline? " + ep.getIsOnline());
-				
+				Log.e("emmm", mMac + " isOnline? " + ep.getIsOnline());
+
 				if (ep.getIsOnline() == 1) {
 					// is online
-					XPGConnectClient.xpgcEnableCtrl(tempConnId, ep.getSzDid(), ep.getSzPasscode());
+					XPGConnectClient.xpgcEnableCtrl(tempConnId, ep.getSzDid(),
+							ep.getSzPasscode());
 					return;
 				} else {
 					// is offline
@@ -377,51 +401,54 @@ public class ConnectActivity extends GeneratedActivity {
 				}
 			}
 		}
-		
+
 		// is offline
 		setOfflineResult();
-		Log.d("emmm", mac + " isOnline? " + "未绑定此设备");
+		Log.e("emmm", mMac + " isOnline? " + "未绑定此设备");
 	}
-	
+
 	private void setOfflineResult() {
 		mTvInfo.setText("设备不在线");
 		Intent data = new Intent();
 		data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
 		data.putExtra(Consts.INTENT_EXTRA_ISONLINE, false);
 
-		data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
+		data.putExtra(Consts.INTENT_EXTRA_MAC, mMac);
 		data.putExtra(Consts.INTENT_EXTRA_PASSCODE, "");
 		data.putExtra(Consts.INTENT_EXTRA_DID, "");
-		
-		String conntext = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+
+		String conntext = getIntent().getStringExtra(
+				Consts.INTENT_EXTRA_CONNECT_TEXT);
 		if (conntext == null) {
 			conntext = "";
 		}
-		data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);	
-		
+		data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);
+
 		setResult(RESULT_OK, data);
 		finish();
 	}
-	
+
 	private String getUserId() {
 		return getIntent().getStringExtra(Consts.INTENT_EXTRA_USERNAME);
 	}
-	
+
 	private String getUserPsw() {
 		return getIntent().getStringExtra(Consts.INTENT_EXTRA_USERPSW);
 	}
-	
+
 	private void initTargetDeviceInfo() {
-		mac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
-		if (TextUtils.isEmpty(mac)) {
+		mMac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
+		if (TextUtils.isEmpty(mMac)) {
 			setOfflineResult();
 		}
-		
-		passcode = passcodeRetrieved = getIntent().getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
-		String connectText = getIntent().getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
-//		if (!TextUtils.isEmpty(connectText)) {
-//			mTvInfo2.setText(connectText);
-//		}
+
+		mPasscode = passcodeRetrieved = getIntent().getStringExtra(
+				Consts.INTENT_EXTRA_PASSCODE);
+		String connectText = getIntent().getStringExtra(
+				Consts.INTENT_EXTRA_CONNECT_TEXT);
+		// if (!TextUtils.isEmpty(connectText)) {
+		// mTvInfo2.setText(connectText);
+		// }
 	}
 
 	public static String testTime() {
@@ -437,7 +464,8 @@ public class ConnectActivity extends GeneratedActivity {
 	 * 此时只能通过小循环控制, 返回STATE_LAN_ONLY </br> 最后, 如果已登录&有当前设备&当前设备有did, 则大小循环都可以控制,
 	 * 返回STATE_NORMAL
 	 */
-	private void checkLoginAndCurrentDeviceStatus(Context context, Handler flowHandler) {
+	private void checkLoginAndCurrentDeviceStatus(Context context,
+			Handler flowHandler) {
 
 		flowHandler.sendEmptyMessage(STATE_NORMAL);
 		return;
@@ -455,8 +483,8 @@ public class ConnectActivity extends GeneratedActivity {
 					// 先试小循环, 不行则大
 					mTvInfo.setText("通过局域网连接中...");
 					currentLanSearchingState = LAN_SEARCHING;
-					tryConnectBySmallCycle(defaultScanInterval, 8000,
-							new TimerTask() {
+					tryConnectBySmallCycle(defaultScanInterval,
+							defaultScanTimeout, new TimerTask() {
 								@Override
 								public void run() {
 									runOnUiThread(new Runnable() {
@@ -469,7 +497,8 @@ public class ConnectActivity extends GeneratedActivity {
 								}
 							});
 
-				} else if (NetworkStatusUtil.isConnectedByMobileData(getBaseContext())) {
+				} else if (NetworkStatusUtil
+						.isConnectedByMobileData(getBaseContext())) {
 					// 只能大循环
 					tryConnectByBigCycle();
 				}
@@ -481,8 +510,8 @@ public class ConnectActivity extends GeneratedActivity {
 				if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
 					mTvInfo.setText("通过局域网连接中...");
 					currentLanSearchingState = LAN_SEARCHING;
-					tryConnectBySmallCycle(defaultScanInterval, 8000,
-							new TimerTask() {
+					tryConnectBySmallCycle(defaultScanInterval,
+							defaultScanTimeout, new TimerTask() {
 								@Override
 								public void run() {
 									runOnUiThread(new Runnable() {
@@ -508,34 +537,37 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private final static int STATE_NORMAL = 1;
 	private final static int STATE_LAN_ONLY = 2;
-	
-	public static void connectToDevice(Activity act, String mac, String userId, String userPsw) {
+
+	public static void connectToDevice(Activity act, String mac, String userId,
+			String userPsw) {
 		connectToDevice(act, mac, "", userId, userPsw, "");
 	}
-	
-	public static void connectToDevice(Activity act, String mac, String passcode, String userId, String userPsw) {
+
+	public static void connectToDevice(Activity act, String mac,
+			String passcode, String userId, String userPsw) {
 		connectToDevice(act, mac, passcode, userId, userPsw, "");
 	}
-	
-	public static void connectToDevice(Activity act, String mac, String passcode, String userId, String userPsw, String connectText) {
+
+	public static void connectToDevice(Activity act, String mac,
+			String passcode, String userId, String userPsw, String connectText) {
 
 		Intent intent = new Intent(act.getBaseContext(), ConnectActivity.class);
 		intent.putExtra(Consts.INTENT_EXTRA_MAC, mac);
 		intent.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcode);
 		intent.putExtra(Consts.INTENT_EXTRA_USERNAME, userId);
-		intent.putExtra(Consts.INTENT_EXTRA_USERPSW, userPsw);	
-		intent.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, connectText);	
-		
+		intent.putExtra(Consts.INTENT_EXTRA_USERPSW, userPsw);
+		intent.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, connectText);
+
 		act.startActivityForResult(intent, Consts.REQUESTCODE_CONNECT_ACTIVITY);
-		
-	/* 以下是在调用者activity的onActivityResult中取出结果的代码, 为了省力, 写到这里
-		
-		int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
-		boolean isOnline = data.getBooleanExtra(Consts.INTENT_EXTRA_ISONLINE, true);
-		String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
-		String passCode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
-		
-	*/
-		
+
+		/*
+		 * 以下是在调用者activity的onActivityResult中取出结果的代码, 为了省力, 写到这里
+		 * 
+		 * int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
+		 * boolean isOnline = data.getBooleanExtra(Consts.INTENT_EXTRA_ISONLINE,
+		 * true); String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
+		 * String passCode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+		 */
+
 	}
 }

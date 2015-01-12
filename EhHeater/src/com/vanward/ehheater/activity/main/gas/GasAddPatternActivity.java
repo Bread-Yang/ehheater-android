@@ -171,9 +171,13 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 				if (gasVo != null) {
 					new BaseDao(this).getDb().delete(gasVo);
 				}
+				
+				boolean isCheck = getIntent().getBooleanExtra("ischeck", false);
+				customSetVo.setSet(isCheck);
+				
 				new BaseDao(this).getDb().replace(customSetVo);
 
-				if (getIntent().getBooleanExtra("ischeck", false)) {
+				if (isCheck) {
 					new Thread(new Runnable() {
 
 						@Override
