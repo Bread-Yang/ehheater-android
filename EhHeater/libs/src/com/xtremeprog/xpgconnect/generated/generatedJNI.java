@@ -96,6 +96,16 @@ public class generatedJNI {
   public final static native String BootstrapResp_t_szIp_get(long jarg1, BootstrapResp_t jarg1_);
   public final static native long new_BootstrapResp_t();
   public final static native void delete_BootstrapResp_t(long jarg1);
+  public final static native void AirLinkResp_t_mac_set(long jarg1, AirLinkResp_t jarg1_, long jarg2, XpgDataField jarg2_);
+  public final static native long AirLinkResp_t_mac_get(long jarg1, AirLinkResp_t jarg1_);
+  public final static native void AirLinkResp_t_productKey_set(long jarg1, AirLinkResp_t jarg1_, long jarg2, XpgDataField jarg2_);
+  public final static native long AirLinkResp_t_productKey_get(long jarg1, AirLinkResp_t jarg1_);
+  public final static native void AirLinkResp_t_did_set(long jarg1, AirLinkResp_t jarg1_, long jarg2, XpgDataField jarg2_);
+  public final static native long AirLinkResp_t_did_get(long jarg1, AirLinkResp_t jarg1_);
+  public final static native void AirLinkResp_t_szIp_set(long jarg1, AirLinkResp_t jarg1_, String jarg2);
+  public final static native String AirLinkResp_t_szIp_get(long jarg1, AirLinkResp_t jarg1_);
+  public final static native long new_AirLinkResp_t();
+  public final static native void delete_AirLinkResp_t(long jarg1);
   public final static native long new_PasscodeReq_t();
   public final static native void delete_PasscodeReq_t(long jarg1);
   public final static native void PasscodeResp_t_passcode_set(long jarg1, PasscodeResp_t jarg1_, long jarg2, XpgDataField jarg2_);
@@ -870,6 +880,10 @@ public class generatedJNI {
   public final static native long XpgGeneratedContext_onBootstrapResp_get(long jarg1, XpgGeneratedContext jarg1_);
   public final static native void XpgGeneratedContext_onInternalBootstrapResp_set(long jarg1, XpgGeneratedContext jarg1_, long jarg2);
   public final static native long XpgGeneratedContext_onInternalBootstrapResp_get(long jarg1, XpgGeneratedContext jarg1_);
+  public final static native void XpgGeneratedContext_onAirLinkResp_set(long jarg1, XpgGeneratedContext jarg1_, long jarg2);
+  public final static native long XpgGeneratedContext_onAirLinkResp_get(long jarg1, XpgGeneratedContext jarg1_);
+  public final static native void XpgGeneratedContext_onInternalAirLinkResp_set(long jarg1, XpgGeneratedContext jarg1_, long jarg2);
+  public final static native long XpgGeneratedContext_onInternalAirLinkResp_get(long jarg1, XpgGeneratedContext jarg1_);
   public final static native void XpgGeneratedContext_onPasscodeReq_set(long jarg1, XpgGeneratedContext jarg1_, long jarg2);
   public final static native long XpgGeneratedContext_onPasscodeReq_get(long jarg1, XpgGeneratedContext jarg1_);
   public final static native void XpgGeneratedContext_onInternalPasscodeReq_set(long jarg1, XpgGeneratedContext jarg1_, long jarg2);
@@ -1141,6 +1155,10 @@ public class generatedJNI {
   public final static native int BuildBootstrapResp(long jarg1, XpgDataField jarg1_, long jarg2, XpgDataField jarg2_, long jarg3, XpgDataField jarg3_, long jarg4, XpgDataField jarg4_);
   public final static native int SendBootstrapResp(long jarg1, XpgDataField jarg1_, long jarg2, XpgDataField jarg2_, long jarg3, XpgDataField jarg3_, long jarg4, XpgDataField jarg4_);
   public final static native void DumpBootstrapResp(long jarg1, BootstrapResp_t jarg1_);
+  public final static native int DefaultAirLinkResp();
+  public final static native int BuildAirLinkResp(long jarg1, XpgDataField jarg1_, long jarg2, XpgDataField jarg2_, long jarg3, XpgDataField jarg3_);
+  public final static native int SendAirLinkResp(long jarg1, XpgDataField jarg1_, long jarg2, XpgDataField jarg2_, long jarg3, XpgDataField jarg3_);
+  public final static native void DumpAirLinkResp(long jarg1, AirLinkResp_t jarg1_);
   public final static native int DefaultPasscodeReq();
   public final static native int BuildPasscodeReq();
   public final static native int SendPasscodeReq(int jarg1);

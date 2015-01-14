@@ -38,6 +38,16 @@ public interface ClientListener {
 	public void onEasyLinkResp(XpgEndpoint endpoint);
 
 	/**
+	 * Received a air Link response.
+	 * 
+	 * @see XPGConnectClient#xpgcBroadcast
+	 * 
+	 * @param endpoint
+	 *            {@link XpgEndpoint}
+	 */
+	public void onAirLinkResp(XpgEndpoint endpoint);
+
+	/**
 	 * connect event.
 	 * 
 	 * @param connId

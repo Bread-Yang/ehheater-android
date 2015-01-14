@@ -235,10 +235,10 @@ public class MarqueeView extends LinearLayout {
 
 		mTextDifference = Math.abs((mTextWidth - getMeasuredWidth())) + 5;
 
-		Log.d(TAG, "mTextWidth       : " + mTextWidth);
-		Log.d(TAG, "measuredWidth    : " + getMeasuredWidth());
-		Log.d(TAG, "mMarqueeNeeded   : " + mMarqueeNeeded);
-		Log.d(TAG, "mTextDifference  : " + mTextDifference);
+		Log.e(TAG, "mTextWidth       : " + mTextWidth);
+		Log.e(TAG, "measuredWidth    : " + getMeasuredWidth());
+		Log.e(TAG, "mMarqueeNeeded   : " + mMarqueeNeeded);
+		Log.e(TAG, "mTextDifference  : " + mTextDifference);
 		// 用dp作为动画的duration系数
 		final float scale = context.getResources().getDisplayMetrics().density;
 		float mTextDifference_DP = (mTextDifference / scale + 0.5f);

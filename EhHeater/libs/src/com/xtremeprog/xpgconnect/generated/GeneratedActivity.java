@@ -41,6 +41,9 @@ public class GeneratedActivity extends Activity
     public void onEasyLinkResp(XpgEndpoint endpoint) { }
 
     @Override
+    public void onAirLinkResp(XpgEndpoint endpoint) { }
+
+    @Override
     public void onVersionEvent(int key, int value, int connId) { }
 
     @Override
@@ -173,6 +176,15 @@ public class GeneratedActivity extends Activity
     @Override
     public void OnBootstrapResp(BootstrapResp_t pResp) {
         // generated.DumpBootstrapResp(pResp);
+    }
+
+    /**
+    * @param pResp
+    *            可调用 generated.DumpAirLinkResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
+    @Override
+    public void OnAirLinkResp(AirLinkResp_t pResp) {
+        // generated.DumpAirLinkResp(pResp);
     }
 
     /**

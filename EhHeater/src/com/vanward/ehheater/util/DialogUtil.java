@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -59,42 +60,49 @@ public class DialogUtil {
 
 	public void showReconnectDialog(final Runnable onCancel, final Activity act) {
 		dismissDialog();
-		final Dialog reconnectDialog = new Dialog(act, R.style.custom_dialog);
-		reconnectDialog.setContentView(R.layout.dialog_reconnect);
-		reconnectDialog.findViewById(R.id.dr_btn_cancel).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (onCancel != null) {
-							onCancel.run();
+
+		if (!NetworkStatusUtil.isConnected(act)) { // 没有wifi和没有蜂窝网络的时候
+			dialog = BaoDialogShowUtil.getInstance(act)
+					.createDialogWithOneButton(R.string.check_network,
+							R.string.I_know, null);
+		} else {
+			dialog = new Dialog(act, R.style.custom_dialog);
+			dialog.setContentView(R.layout.dialog_reconnect);
+			dialog.findViewById(R.id.dr_btn_cancel).setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (onCancel != null) {
+								onCancel.run();
+							}
+							dialog.dismiss();
 						}
-						reconnectDialog.dismiss();
-					}
-				});
-		reconnectDialog.findViewById(R.id.dr_btn_reconnect).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
+					});
+			dialog.findViewById(R.id.dr_btn_reconnect).setOnClickListener(
+					new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
 
-						HeaterInfo curHeater = new HeaterInfoService(act
-								.getBaseContext()).getCurrentSelectedHeater();
-						if (curHeater == null) {
-							return;
+							HeaterInfo curHeater = new HeaterInfoService(act
+									.getBaseContext())
+									.getCurrentSelectedHeater();
+							if (curHeater == null) {
+								return;
+							}
+							String mac = curHeater.getMac();
+							String passcode = curHeater.getPasscode();
+
+							String userId = AccountService.getUserId(act);
+							String userPsw = AccountService.getUserPsw(act);
+
+							dialog.dismiss();
+							ConnectActivity.connectToDevice(act, mac, passcode,
+									userId, userPsw);
+
 						}
-						String mac = curHeater.getMac();
-						String passcode = curHeater.getPasscode();
+					});
+		}
 
-						String userId = AccountService.getUserId(act);
-						String userPsw = AccountService.getUserPsw(act);
-
-						reconnectDialog.dismiss();
-						ConnectActivity.connectToDevice(act, mac, passcode,
-								userId, userPsw);
-
-					}
-				});
-
-		dialog = reconnectDialog;
 		try {
 			if (!act.isFinishing()) {
 				dialog.show();

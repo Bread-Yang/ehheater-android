@@ -414,18 +414,12 @@ public class MainActivity extends BaseBusinessActivity implements
 			mSlidingMenu.showMenu(true);
 			break;
 		case R.id.ivTitleBtnRigh:
-			/* generated.SendOnOffReq(Global.connectId, (short) 0); */
-			if (!NetworkStatusUtil.isConnected(getBaseContext())) {
-				Toast.makeText(this, R.string.check_network, Toast.LENGTH_SHORT).show();
-				return;
-			}
 
 			if (target_tem.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
 				DialogUtil.instance().showReconnectDialog(MainActivity.this);
 				return;
-
 			}
 
 			if (ison) {
@@ -578,11 +572,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			}
 		});
-
-		if (new EhState(data).getSystemRunningState() == 0) {
-			circle_slider.setVisibility(View.VISIBLE);
-			// circularView.setOn(true);
-		}
+		
+		circle_slider.setVisibility(View.VISIBLE);
 
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
 		// powerTv.setText(3 + "kw");
@@ -897,8 +888,6 @@ public class MainActivity extends BaseBusinessActivity implements
 				changeToIntelligenceModeUpdateUI(data);
 			}
 
-			byte b = new EhState(data).getSystemRunningState();
-			System.out.println("onTcpPacket: " + b);
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
 				// openView.setVisibility(View.VISIBLE);
@@ -954,7 +943,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	public void setHotAnimition(byte[] b) {
-		System.out.println("是否加热中：" + new EhState(b).getSystemRunningState());
 		if (new EhState(b).getSystemRunningState() == 0) {
 			// 未加热
 			hotImgeImageView.setVisibility(View.GONE);
@@ -1021,7 +1009,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.d("emmm", "onConnectEvent@MainActivity:" + connId + "-" + event);
+		Log.e(TAG, "onConnectEvent@MainActivity:" + connId + "-" + event);
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开

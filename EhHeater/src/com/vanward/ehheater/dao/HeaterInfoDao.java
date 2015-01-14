@@ -28,7 +28,7 @@ public class HeaterInfoDao extends BaseDao {
 	}
 
 	public void save(HeaterInfo heater) {
-		Log.d("emmm", "saving heater(allow empty passcode): " + heater);
+		Log.e("emmm", "saving heater(allow empty passcode): " + heater);
 		// getDb().replace(heater);
 
 		HeaterInfo old = getHeaterByMac(heater.getMac());

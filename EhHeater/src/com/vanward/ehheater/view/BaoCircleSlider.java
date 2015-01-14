@@ -494,4 +494,10 @@ public class BaoCircleSlider extends View {
 		ctrlIconView.draw(canvas);
 		canvas.restore();
 	}
+	
+	@Override
+	public void setVisibility(int visibility) {
+		super.setVisibility(visibility);
+		Log.e(TAG, "setVisibility调用了 : " + (visibility == View.VISIBLE));
+	}
 }

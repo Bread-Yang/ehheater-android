@@ -164,41 +164,18 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		ErrorUtils.isMainActivityActive = false;
 
 		Log.e(TAG, "GasMainActivity的onResume调用了");
-		Log.e("gasIsFreezeProofingWarning : ",
-				getIntent()
-						.getBooleanExtra("gasIsFreezeProofingWarning", false)
-						+ "");
 
 		String gasMac = getIntent().getStringExtra("mac");
 		if (gasMac != null
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
 			SwitchDeviceUtil.switchDevice(gasMac, this);
 		}
-
-		if (getIntent().getBooleanExtra("gasIsFreezeProofingWarning", false)) {
-			// showFreezeProofing();
-			getIntent().putExtra("gasIsFreezeProofingWarning", false);
-		}
-
-		Log.e("gasIsOxygenWarning : ",
-				getIntent().getBooleanExtra("gasIsOxygenWarning", false) + "");
-		if (getIntent().getBooleanExtra("gasIsOxygenWarning", false)) {
-			// showOxygenWarning();
-			getIntent().putExtra("gasIsOxygenWarning", false);
-		}
-
-		short errorCode = getIntent().getShortExtra("errorCode", (short) 0);
-		Log.e("errorCode : ", errorCode + "");
-		if (errorCode != 0) {
-			// showErrorWarning(errorCode);
-			getIntent().putExtra("errorCode", 0);
-		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.e("GasMainActivity的onPause调用了", "GasMainActivity的onPause调用了");
+		Log.e(TAG, "GasMainActivity的onPause调用了");
 		deviceSwitchSuccessDialog.dismiss();
 	}
 
@@ -306,11 +283,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				new HeaterInfoService(getBaseContext()).updateBinded(
 						curHeater.getMac(), true);
 			}
-
 			queryState();
-
 		}
-
 	}
 
 	private void queryState() {
@@ -354,7 +328,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			if (animationDrawable != null) {
 				animationDrawable.stop();
 			}
-
 		}
 
 	}
@@ -442,7 +415,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 				DialogUtil.instance().showReconnectDialog(this);
 				return;
-
 			}
 
 			if (ison) {
@@ -480,7 +452,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			break;
 		case R.id.infor_tip:
 			break;
-
 		}
 	}
 
@@ -497,7 +468,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// if (circularView != null) {
 		// circularView.setVisibility(View.VISIBLE);
 		// }
-
 	}
 
 	/**
@@ -526,7 +496,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		// if (circularView != null) {
 		// circularView.setVisibility(View.GONE);
 		// }
-
 	}
 
 	/**
@@ -569,7 +538,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		tv_mode.setText("自定义模式");
 		circle_slider.setVisibility(View.VISIBLE);
 		// circularView.setOn(true);
-
 	}
 
 	// 有没有预约? 这个是 预约按钮无效的
@@ -667,6 +635,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
+		Log.e(TAG, "onConnectEvent@ConnectActivity" + connId + "-" + event);
+		
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			changeToOfflineUI();
@@ -699,15 +669,15 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		dealInHeat(pResp);
 		onoffDeal(pResp);
 		dealErrorWarnIcon(pResp);
-		if (pResp.getOn_off() == 0) {
-			tipsimg.setVisibility(View.GONE);
-		}
 		if (pResp.getCustomFunction() != 0) {
 			circle_slider.setVisibility(View.VISIBLE);
 			// circularView.setOn(true);
 		}
-
-		// pResp.delete();
+		
+		if (pResp.getOn_off() == 0) {
+			tipsimg.setVisibility(View.GONE);
+			circle_slider.setVisibility(View.GONE);
+		}
 	}
 
 	@Override

@@ -66,6 +66,8 @@ public class XPGConnectClient {
 	public static final int ON_V4_BIND_DEVICE = -29;
 	public static final int ON_V4_UNBIND_DEVICE = -30;
 	
+
+	public static final int ON_AIRLINK_RESP = -31;
 	static {
 		System.loadLibrary("xpgconnectcli");
 	}
@@ -419,8 +421,7 @@ public class XPGConnectClient {
 	}
 
 	public static void onEasyLinkResp(long cPtr) {
-		// TODO: should be GetXpgEndpoint(cPtr, true)?
-		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, false);
+		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, true);
 		Log.i(TAG, String.format("%s, mac = %s", Utils.GetFileLineMethod(), res.getSzMac()));
         for (GeneratedActivity activity : lstActivities)
         {
@@ -430,6 +431,20 @@ public class XPGConnectClient {
 		for (ClientListener listener : lstClientListeners)
 		{
 			listener.onEasyLinkResp(res);
+		}
+	}
+
+	public static void onAirLinkResp(long cPtr) {
+		XpgEndpoint res = GeneratedJniJava.GetXpgEndpoint(cPtr, true);
+		Log.i(TAG, String.format("%s, mac = %s", Utils.GetFileLineMethod(), res.getSzMac()));
+        for (GeneratedActivity activity : lstActivities)
+        {
+            Message msg = activity.handler.obtainMessage(ON_AIRLINK_RESP, 0, 0, res);
+            activity.handler.sendMessage(msg);
+        }
+		for (ClientListener listener : lstClientListeners)
+		{
+			listener.onAirLinkResp(res);
 		}
 	}
 

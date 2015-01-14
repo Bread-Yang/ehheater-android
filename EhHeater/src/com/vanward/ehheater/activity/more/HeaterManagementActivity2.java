@@ -289,7 +289,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			new Runnable() {/* onSuccess */
 				@Override
 				public void run() {
-					Log.d("emmm", "ping gizwits SUCCESS");
+					Log.e(TAG, "ping gizwits SUCCESS");
 					serverAcessHandler.sendEmptyMessage(0);
 				}
 			},
@@ -297,12 +297,10 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			new Runnable() {/* onFail */
 				@Override
 				public void run() {
-					Log.d("emmm", "ping gizwits FAIL");
+					Log.e(TAG, "ping gizwits FAIL");
 					serverAcessHandler.sendEmptyMessage(1);
 				}
-			}
-
-			);
+			});
 
 		}
 	}
@@ -332,8 +330,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.d("emmm", "onConnectEvent@HeaterManagement: " + connId + "-"
-				+ event);
+		Log.e(TAG, "onConnectEvent@HeaterManagementActivity@: " + connId + "-" + event);
 
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
 			// 连接成功
@@ -348,7 +345,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.d("emmm", "onLoginCloudResp@HeaterManagement: " + result);
+		Log.e(TAG, "onLoginCloudResp@HeaterManagement: " + result);
 
 		generated.SendBindingDelReq(tempConnId,
 				generated.String2XpgData(didOfHeaterBeingDeleted));
@@ -357,7 +354,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 	@Override
 	public void OnBindingDelResp(BindingDelResp_t pResp, int nConnId) {
 		super.OnBindingDelResp(pResp, nConnId);
-		Log.d("emmm", "OnBindingDelResp@HeaterManagement: " + pResp.getResult());
+		Log.e(TAG, "OnBindingDelResp@HeaterManagement: " + pResp.getResult());
 
 		DialogUtil.dismissDialog();
 

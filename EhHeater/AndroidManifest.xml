@@ -27,13 +27,13 @@
         android:theme="@style/AppBaseTheme" >
 
         <!-- Polling Service -->
-        <service android:name=".notification.PollingService" >
+        <service android:name=".notification.PollingService" > 
             <intent-filter>
                 <action android:name="com.vanward.service.PollingService" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".util.wifi.WifiChangeReceiver" >
+        <receiver android:name=".util.wifi.ConnectChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

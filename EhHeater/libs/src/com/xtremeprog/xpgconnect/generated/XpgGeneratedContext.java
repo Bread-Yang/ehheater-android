@@ -215,6 +215,24 @@ public class XpgGeneratedContext {
     return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_BootstrapResp_t__void(cPtr, false);
   }
 
+  public void setOnAirLinkResp(SWIGTYPE_p_f_size_t_p_AirLinkResp_t__void value) {
+    generatedJNI.XpgGeneratedContext_onAirLinkResp_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_AirLinkResp_t__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_AirLinkResp_t__void getOnAirLinkResp() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onAirLinkResp_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_AirLinkResp_t__void(cPtr, false);
+  }
+
+  public void setOnInternalAirLinkResp(SWIGTYPE_p_f_size_t_p_AirLinkResp_t__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalAirLinkResp_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_AirLinkResp_t__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_AirLinkResp_t__void getOnInternalAirLinkResp() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalAirLinkResp_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_AirLinkResp_t__void(cPtr, false);
+  }
+
   public void setOnPasscodeReq(SWIGTYPE_p_f_size_t_p_PasscodeReq_t_int__void value) {
     generatedJNI.XpgGeneratedContext_onPasscodeReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_PasscodeReq_t_int__void.getCPtr(value));
   }

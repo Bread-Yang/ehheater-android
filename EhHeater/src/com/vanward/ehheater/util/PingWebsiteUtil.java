@@ -53,12 +53,12 @@ public class PingWebsiteUtil {
 			public void run() {
 				boolean ret = ping(addr, port);
 				if (ret) {
-					// Log.d("emmm", "ping success");
+					// Log.e("emmm", "ping success");
 					if (onSuccess != null) {
 						onSuccess.run();
 					}
 				} else {
-					// Log.d("emmm", "ping fail");
+					// Log.e("emmm", "ping fail");
 					if (onFail != null) {
 						onFail.run();
 					}

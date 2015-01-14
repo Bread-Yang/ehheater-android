@@ -197,6 +197,24 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 			return null;
 		}
 		
+		boolean isSameWithLastName = false;
+		if (oldcustomSetVo != null) {
+			if (modeName.equals(oldcustomSetVo.getName())) {
+				isSameWithLastName = true;
+			}
+		}
+		
+		if (!isSameWithLastName) {
+			List items = new BaseDao(this).getDb().findAllByWhere(
+					CustomSetVo.class, " name = '" + modeName + "'");
+
+			if (items.size() != 0) {
+				Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
+						.show();
+				return null;
+			}
+		}
+		
 		if (modeName.equals("晨浴") || modeName.equals("夜电")
 				|| modeName.equals("智能")) {
 			Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
@@ -204,15 +222,6 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 			return null;
 		}
 
-		List items = new BaseDao(this).getDb().findAllByWhere(
-				CustomSetVo.class, " name = '" + modeName + "'");
-
-		if (items.size() != 0) {
-			Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
-					.show();
-			return null;
-		}
-		
 		customSetVo.setName(modeName);
 
 		if (swich.getTag() != null

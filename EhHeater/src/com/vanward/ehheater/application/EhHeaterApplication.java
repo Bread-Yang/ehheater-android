@@ -2,15 +2,19 @@ package com.vanward.ehheater.application;
 
 import android.app.Application;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.LogcatFileManager;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
+import com.xtremeprog.xpgconnect.generated.XPG_CONFIG_KEY;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.listener.ClientListener;
 
 public class EhHeaterApplication extends Application  implements ClientListener{
+	
+	private static final String TAG = "EhHeaterApplication";
 
 	public static Typeface number_tf;
 
@@ -25,6 +29,7 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 		super.onCreate();
 		
 		XPGConnectClient.initClient(this);
+		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),3);
 		
 		LogcatFileManager.getInstance().startLogcatManager(getBaseContext());
 
@@ -52,7 +57,7 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 
 	@Override
 	public void onConnectEvent(int connId, int event) {
-		
+		Log.e(TAG, "onConnectEvent@EhHeaterApplication@: " + connId + "-" + event);
 	}
 
 	@Override
@@ -189,6 +194,11 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 	@Override
 	public void onV4UnbindDevice(int errorCode, String successString,
 			String failString) {
+		
+	}
+
+	@Override
+	public void onAirLinkResp(XpgEndpoint endpoint) {
 		
 	}
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
+import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -23,7 +24,8 @@ import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
-import com.vanward.ehheater.util.wifi.WifiChangeReceiver;
+import com.vanward.ehheater.util.NetworkStatusUtil;
+import com.vanward.ehheater.util.wifi.ConnectChangeReceiver;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
 import com.vanward.ehheater.view.fragment.SlidingMenu;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -53,20 +55,28 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	private boolean shouldReconnect = false;
 	private boolean paused = false;
-	
+
+	private boolean isActived = false;
+
 	BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG, "wifiConnectedReceiver的onReceive()执行了");
-			connectCurDevice();
+			if (isActived) {
+				if (!NetworkStatusUtil.isConnected(BaseBusinessActivity.this)) {
+					DialogUtil.instance().showReconnectDialog(null, BaseBusinessActivity.this);
+				} else {
+					connectCurDevice();
+				}
+			}
 		}
 	};
 
 	BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("emmm",
+			Log.e("emmm",
 					"deviceOnlineReceiver:onReceive@BaseBusinessActivity:");
 			if (isFinishing()) {
 				return;
@@ -78,7 +88,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	BroadcastReceiver alterDeviceDueToDeleteReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("emmm",
+			Log.e("emmm",
 					"alterDeviceDueToDeleteReceiver@BaseBusinessActivity:");
 			if (isFinishing()) {
 				return;
@@ -99,7 +109,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("emmm", "logoutReceiver@BaseBusinessActivity:");
+			Log.e("emmm", "logoutReceiver@BaseBusinessActivity:");
 			XPGConnectClient.RemoveActivity(BaseBusinessActivity.this);
 		}
 	};
@@ -112,23 +122,23 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	public void onWriteEvent(int result, int connId) {
 		super.onWriteEvent(result, connId);
 		// Log.e("TAG", "onWriteEvent调用了");
-//		DialogUtil.instance().showLoadingDialog(this, "");
-//		if (DialogUtil.instance().getIsShowing()) {
-//			return;
-//		}
-//		generated.SendStateReq(Global.connectId);
-//		stateQueried = false;
-//		Handler handler = new Handler(Looper.getMainLooper());
-//		handler.postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//				if (!stateQueried) {
-//					changeToOfflineUI();
-//					DialogUtil.instance().showReconnectDialog(
-//							BaseBusinessActivity.this);
-//				}
-//			}
-//		}, connectTime);
+		// DialogUtil.instance().showLoadingDialog(this, "");
+		// if (DialogUtil.instance().getIsShowing()) {
+		// return;
+		// }
+		// generated.SendStateReq(Global.connectId);
+		// stateQueried = false;
+		// Handler handler = new Handler(Looper.getMainLooper());
+		// handler.postDelayed(new Runnable() {
+		// @Override
+		// public void run() {
+		// if (!stateQueried) {
+		// changeToOfflineUI();
+		// DialogUtil.instance().showReconnectDialog(
+		// BaseBusinessActivity.this);
+		// }
+		// }
+		// }, connectTime);
 	}
 
 	@Override
@@ -169,8 +179,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				wifiConnectedReceiver,
-				new IntentFilter(WifiChangeReceiver.WIFI_CONNECTED));
-		
+				new IntentFilter(ConnectChangeReceiver.CONNECTED));
+
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				deviceOnlineReceiver,
 				new IntentFilter(CheckOnlineUtil.ACTION_DEVICE_ONLINE));
@@ -194,12 +204,15 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	protected void onResume() {
 		super.onResume();
 
+		isActived = true;
+
 		paused = false;
 
 		CheckOnlineUtil.ins().resume();
 
 		if (shouldReconnect) {
 			shouldReconnect = false;
+			Log.e(TAG, "onResume里面执行了connectCurDevice()");
 			connectCurDevice("连接已断开, 正在重新连接...");
 		}
 
@@ -209,8 +222,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	protected void onPause() {
 		super.onPause();
 
+		isActived = false;
+
 		CheckOnlineUtil.ins().pause();
 		paused = true;
+		
+//		XPGConnectClient.RemoveActivity(this);
 	}
 
 	@Override
@@ -223,6 +240,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
+				wifiConnectedReceiver);
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
 				deviceOnlineReceiver);
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
@@ -254,7 +273,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp,
 			int nConnId) {
 		super.OnDeviceOnlineStateResp(pResp, nConnId);
-		Log.d("emmm", "OnDeviceOnlineStateResp@BaseBusinessActivity:");
+		Log.e("emmm", "OnDeviceOnlineStateResp@BaseBusinessActivity:");
 
 		// if current device went offline
 		// offline
@@ -283,7 +302,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.d("emmm", "onConnectEvent@BaseBusinessActivity:" + connId + "-"
+		Log.e(TAG, "onConnectEvent@BaseBusinessActivity:" + connId + "-"
 				+ event);
 
 		if (connId == Global.connectId && event == -7) {
@@ -296,7 +315,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			// 连接断开
 			if (paused) {
 				shouldReconnect = true;
-			} else {
+			} else { 
 				connectCurDevice("连接已断开, 正在重新连接...");
 			}
 
@@ -332,11 +351,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	public SlidingMenu mSlidingMenu;
 
 	protected void connectCurDevice() {
+		Log.e(TAG, "connectCurDevice()");
+		DialogUtil.dismissDialog();
 		connectCurDevice("");
 	}
 
 	protected void connectCurDevice(String connectText) {
-
+		Log.e(TAG, "connectCurDevice(String)");
 		String mac = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeaterMac();
 		String userId = AccountService.getUserId(getBaseContext());
@@ -345,13 +366,19 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		Log.e(TAG, "从start进入的userId是 : " + userId);
 		Log.e(TAG, "从start进入的userPsw是 : " + userPsw);
 
-		ConnectActivity.connectToDevice(this, mac, "", userId, userPsw,
-				connectText);
+		if (getIntent().getBooleanExtra(
+				EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK, false)) {
+			ConnectActivity.connectDirectly(this, "", userId, userPsw,
+					connectText);
+		} else {
+			ConnectActivity.connectToDevice(this, mac, "", userId, userPsw,
+					connectText);
+		}
 	}
 
 	protected void connectDevice(String connectText, String mac) {
 
-//		XPGConnectClient.initClient(this);
+		// XPGConnectClient.initClient(this);
 
 		String userId = AccountService.getUserId(getBaseContext());
 		String userPsw = AccountService.getUserPsw(getBaseContext());

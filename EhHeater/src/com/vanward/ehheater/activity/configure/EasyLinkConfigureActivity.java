@@ -46,12 +46,16 @@ import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.TextStyleUtil;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
+import com.xtremeprog.xpgconnect.generated.AirLinkResp_t;
+import com.xtremeprog.xpgconnect.generated.EasylinkResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 
 public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		OnClickListener, FirstTimeConfigListener {
 
 	private static final String TAG = "EasyLinkConfigureActivity";
+
+	public static final String DIRECT_CONNECT_AFTER_EASYLINK = "directLinkAfterEasyLink";
 
 	private RelativeLayout mRlStepContainer;
 	private Button mBtnNextStep;
@@ -383,8 +387,21 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 	}
 
 	@Override
-	public void onEasyLinkResp(final XpgEndpoint endpoint) {
-		Log.e(TAG, "onEasyLinkResp()回调了");
+	public void onEasyLinkResp(XpgEndpoint endpoint) {
+		super.onEasyLinkResp(endpoint);
+		Log.e(TAG, "onEasyLinkResp(XpgEndpoint endpoint)回调了");
+	}
+
+	@Override
+	public void OnEasylinkResp(EasylinkResp_t pResp) {
+		super.OnEasylinkResp(pResp);
+		Log.e(TAG, "OnEasylinkResp(EasylinkResp_t pResp)回调了");
+	}
+
+	@Override
+	public void onAirLinkResp(final XpgEndpoint endpoint) {
+		super.onAirLinkResp(endpoint);
+		Log.e(TAG, "OnAirLinkResp()回调了");
 		if (isWaitingCallback) {
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
 
@@ -415,10 +432,9 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			if (endpoint.getSzMac() == null || "".equals(endpoint.getSzMac())) {
 				return;
 			}
-			// if (endpoint.getSzDid() == null ||
-			// "".equals(endpoint.getSzDid())) {
-			// return;
-			// }
+			if (endpoint.getSzDid() == null || "".equals(endpoint.getSzDid())) {
+				return;
+			}
 			// if (endpoint.getSzPasscode() == null
 			// || "".equals(endpoint.getSzPasscode())) {
 			// return;
@@ -431,6 +447,10 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			Log.e(TAG,
 					"onEasyLinkResp()返回的endpoint.getSzDid() : "
 							+ endpoint.getSzDid());
+			Log.e(TAG,
+					"onEasyLinkResp()返回的endpoint.getAddr() : "
+							+ endpoint.getAddr());
+			
 			// Log.e(TAG, "onEasyLinkResp()返回的endpoint.getSzPasscode() : " +
 			// endpoint.getSzPasscode());
 
@@ -452,7 +472,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 				@Override
 				public void run() {
 					finishingConfig(endpoint);
-					endpoint.delete();
+					// endpoint.delete();
 				}
 			}, 300);
 		}
@@ -490,13 +510,18 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			}
 		}
 
+		boolean directLinkAfterEasyLink = true;
 		if (flag) {
 			Toast.makeText(this, "此设备已存在", 1000).show();
 		} else {
 			hser.addNewHeater(hinfo);
 		}
+		new SharedPreferUtils(this).put(ShareKey.CurDeviceDid,
+				endpoint.getSzDid());
+		new SharedPreferUtils(this).put(ShareKey.CurDeviceAddress,
+				endpoint.getAddr());
 
-		Log.d("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
+		Log.e("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
 				+ "-" + hinfo.getPasscode());
 
 		Log.e(TAG, "成功通过easylink将电器连上wifi");
@@ -523,6 +548,8 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			intent = new Intent(getBaseContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(DIRECT_CONNECT_AFTER_EASYLINK,
+					directLinkAfterEasyLink);
 
 			XPGConnectClient.RemoveActivity(this);
 			finish();
@@ -535,6 +562,8 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			intent = new Intent(getBaseContext(), GasMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(DIRECT_CONNECT_AFTER_EASYLINK,
+					directLinkAfterEasyLink);
 
 			XPGConnectClient.RemoveActivity(this);
 			finish();
@@ -547,6 +576,8 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			intent = new Intent(getBaseContext(), FurnaceMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(DIRECT_CONNECT_AFTER_EASYLINK,
+					directLinkAfterEasyLink);
 
 			XPGConnectClient.RemoveActivity(this);
 			finish();

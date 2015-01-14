@@ -269,7 +269,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			return;
 		} else {
 			if (statusResp != null) {
-				statusResp.delete();
+//				statusResp.delete();
 			}
 			statusResp = pResp;
 		}
@@ -284,6 +284,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
+		Log.e(TAG, "onConnectEvent@FurnaceMainActivity回调了");
 		if (connId == Global.connectId && event == -7) { // -7:offline, 0 :
 															// online
 			isPowerOffOrOffline = true;

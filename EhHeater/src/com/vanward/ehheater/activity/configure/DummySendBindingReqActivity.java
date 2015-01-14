@@ -82,7 +82,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.d("emmm", "onConnectEvent@DummySendBinding:" + connId + "-" + event);
+		Log.e("emmm", "onConnectEvent@DummySendBinding:" + connId + "-" + event);
 		
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
 			tempConnId = connId;
@@ -93,16 +93,16 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.d("emmm", "onLoginCloudResp@DummySendBinding:" + result);
+		Log.e("emmm", "onLoginCloudResp@DummySendBinding:" + result);
 		
 		generated.SendBindingSetReq(tempConnId, generated.String2XpgData(did2bind), 
 				generated.String2XpgData(passcode2bind));
-		Log.d("emmm", "sendingBinding@DummySendBinding: " + username + "-" + did2bind + "-" + passcode2bind);
+		Log.e("emmm", "sendingBinding@DummySendBinding: " + username + "-" + did2bind + "-" + passcode2bind);
 	}
 	
 	public void OnBindingSetResp(BindingSetResp_t pResp, int nConnId) {
 		super.OnBindingSetResp(pResp, nConnId);
-		Log.d("emmm", "OnBindingSetResp@DummySendBinding:" + pResp.getResult());
+		Log.e("emmm", "OnBindingSetResp@DummySendBinding:" + pResp.getResult());
 		
 		if (pResp.getResult() == 0) {
 			setResult(RESULT_OK);

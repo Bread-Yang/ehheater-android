@@ -209,6 +209,22 @@ public class generated implements generatedConstants {
     generatedJNI.DumpBootstrapResp(BootstrapResp_t.getCPtr(pBootstrapResp), pBootstrapResp);
   }
 
+  public static int DefaultAirLinkResp() {
+    return generatedJNI.DefaultAirLinkResp();
+  }
+
+  public static int BuildAirLinkResp(XpgDataField mac, XpgDataField productKey, XpgDataField did) {
+    return generatedJNI.BuildAirLinkResp(XpgDataField.getCPtr(mac), mac, XpgDataField.getCPtr(productKey), productKey, XpgDataField.getCPtr(did), did);
+  }
+
+  public static int SendAirLinkResp(XpgDataField mac, XpgDataField productKey, XpgDataField did) {
+    return generatedJNI.SendAirLinkResp(XpgDataField.getCPtr(mac), mac, XpgDataField.getCPtr(productKey), productKey, XpgDataField.getCPtr(did), did);
+  }
+
+  public static void DumpAirLinkResp(AirLinkResp_t pAirLinkResp) {
+    generatedJNI.DumpAirLinkResp(AirLinkResp_t.getCPtr(pAirLinkResp), pAirLinkResp);
+  }
+
   public static int DefaultPasscodeReq() {
     return generatedJNI.DefaultPasscodeReq();
   }

@@ -99,8 +99,10 @@ public class LogcatFileManager {
 			 * * * log level：*:v , *:d , *:w , *:e , *:f , *:s * * Show the
 			 * current mPID process level of E and W log. * *
 			 */
-			// cmds = "logcat *:e *:w | grep \"(" + mPID + ")\"";
-			cmds = "logcat *:e *:w | grep \"(" + mPID + ")\"";
+			// cmds = "logcat *:e *:w | grep \"(" + mPID + ")\"";  
+			// cmds = "logcat  | grep \"(" + mPID + ")\"";//打印所有日志信息  
+			// cmds = "logcat -s way";//打印标签过滤信息
+			cmds = "logcat -s DEBUG | xpgc";//打印标签过滤信息
 		}
 
 		public void stopLogs() {

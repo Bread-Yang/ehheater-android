@@ -45,7 +45,7 @@ public class CheckOnlineUtil {
 		this.curmac = mac;
 		paused = false;
 		for (XpgEndpoint item : bindList) {
-			item.delete();
+//			item.delete();
 		}
 		bindList.clear();
 		
@@ -67,7 +67,7 @@ public class CheckOnlineUtil {
 		checkOnlineTimer = new Timer();
 
 		for (XpgEndpoint item : bindList) {
-			item.delete();
+//			item.delete();
 		}
 		bindList.clear();
 		
@@ -75,25 +75,25 @@ public class CheckOnlineUtil {
 			@Override
 			public void run() {
 				
-				Log.d("emmm", "checking online...");
+				Log.e("emmm", "checking online...");
 				
 				if (paused) {
-					Log.d("emmm", "checking online returned due to paused");
+					Log.e("emmm", "checking online returned due to paused");
 					return;
 				}
 				
 				if (Global.checkOnlineConnId < 0) {
 					// 已处理了上线, 或者该连接已断开
-					Log.d("emmm", "checking online returned due to already dealed");
+					Log.e("emmm", "checking online returned due to already dealed");
 					checkOnlineTimer.cancel();
 					return;
-				}
+				} 
 				
 				for (XpgEndpoint end : bindList) {
 					
 					if (end.getSzMac().equals(checkMac) && end.getIsOnline() == 1) {
 
-						Log.d("emmm", "checking online: device online!");
+						Log.e("emmm", "checking online: device online!");
 						checkOnlineTimer.cancel();
 						
 						// ConnectActivity.connectToDevice(act, curmac, userId, userPsw);
@@ -105,10 +105,10 @@ public class CheckOnlineUtil {
 				}
 				
 				for (XpgEndpoint item : bindList) {
-					item.delete();
+//					item.delete();
 				}
 				bindList.clear();
-				Log.d("emmm", "checking online: continue fetch binding");
+				Log.e("emmm", "checking online: continue fetch binding");
 				generated.SendBindingGetV2Req(Global.checkOnlineConnId);
 				
 			}

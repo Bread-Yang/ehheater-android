@@ -166,7 +166,7 @@ public class WelcomeActivity extends GeneratedActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.d("emmm", "onActivityResult(RESULT_OK = -1):" + requestCode + "~"
+		Log.e("emmm", "onActivityResult(RESULT_OK = -1):" + requestCode + "~"
 				+ resultCode);
 
 		// if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {

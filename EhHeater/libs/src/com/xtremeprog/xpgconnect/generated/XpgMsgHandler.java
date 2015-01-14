@@ -27,6 +27,9 @@ import com.xtremeprog.xpgconnect.generated.*;
                 case XPGConnectClient.ON_EASYLINK_RESP:
                      myActivity.onEasyLinkResp((XpgEndpoint) msg.obj);
                      break;
+                case XPGConnectClient.ON_AIRLINK_RESP:
+                     myActivity.onAirLinkResp((XpgEndpoint) msg.obj);
+                     break;
                 case XPGConnectClient.ON_LOGIN_CLOUD_RESP:
                      myActivity.onLoginCloudResp(msg.arg1, (String) msg.obj);
                      break;
@@ -129,70 +132,74 @@ import com.xtremeprog.xpgconnect.generated.*;
                          (BootstrapResp_t) msg.obj); // arg1 = nConnId
                      break;
                 case 6:
+                     myActivity.OnAirLinkResp(
+                         (AirLinkResp_t) msg.obj); // arg1 = nConnId
+                     break;
+                case 7:
                      myActivity.OnPasscodeResp(
                          (PasscodeResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 7:
+                case 8:
                      myActivity.OnLanLoginResp(
                          (LanLoginResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 8:
+                case 9:
                      myActivity.OnModuleVersionResp(
                          (ModuleVersionResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 9:
+                case 10:
                      myActivity.OnWifiListResp(
                          (WifiListResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 10:
+                case 11:
                      myActivity.OnSerialPortConfigResp(
                          (SerialPortConfigResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 11:
+                case 12:
                      myActivity.OnUserRegisterResp(
                          (UserRegisterResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 12:
+                case 13:
                      myActivity.OnBindingSetResp(
                          (BindingSetResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 13:
+                case 14:
                      myActivity.OnBindingGetResp(
                          (BindingGetResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 14:
+                case 15:
                      myActivity.OnBindingGetV2Resp(
                          (BindingGetV2Resp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 15:
+                case 16:
                      myActivity.OnUserPwdChangeResp(
                          (UserPwdChangeResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 16:
+                case 17:
                      myActivity.OnBindingDelResp(
                          (BindingDelResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 17:
+                case 18:
                      myActivity.OnReadWifiConfigResp(
                          (ReadWifiConfigResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 18:
+                case 19:
                      myActivity.OnDeviceOnlineStateResp(
                          (DeviceOnlineStateResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 19:
+                case 20:
                      myActivity.OnStateResp(
                          (StateResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 20:
+                case 21:
                      myActivity.OnGasWaterHeaterStatusResp(
                          (GasWaterHeaterStatusResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 21:
+                case 22:
                      myActivity.OnDERYStatusResp(
                          (DERYStatusResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;
-                case 22:
+                case 23:
                      myActivity.OnHeartbeatResp(
                          (HeartbeatResp_t) msg.obj, msg.arg1); // arg1 = nConnId
                      break;

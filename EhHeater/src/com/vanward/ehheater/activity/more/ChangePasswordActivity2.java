@@ -29,6 +29,7 @@ import com.xtremeprog.xpgconnect.generated.XPG_RESULT;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
+	private static final String TAG = "ChangePasswordActivity2";
 
 	private CheckBox cb_show_pwd;
 	private Button btn_confirm;
@@ -212,7 +213,7 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.d("emmm", "onConnectEvent@ChangePswd: " + connId + "-" + event);
+		Log.e(TAG, "onConnectEvent@ChangePswd: " + connId + "-" + event);
 
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
 			// 连接成功
@@ -227,7 +228,7 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.d("emmm", "onLoginCloudResp@ChangePswd: " + result);
+		Log.e("emmm", "onLoginCloudResp@ChangePswd: " + result);
 
 		generated.SendUserPwdChangeReq(tempConnId, generated
 				.String2XpgData(AccountService.getUserId(getBaseContext())),
@@ -237,7 +238,7 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 	@Override
 	public void OnUserPwdChangeResp(UserPwdChangeResp_t pResp, int nConnId) {
 		super.OnUserPwdChangeResp(pResp, nConnId);
-		Log.d("emmm", "OnUserPwdChangeResp@ChangePswd: " + pResp.getResult());
+		Log.e("emmm", "OnUserPwdChangeResp@ChangePswd: " + pResp.getResult());
 		DialogUtil.dismissDialog();
 
 		if (pResp.getResult() == 0) {

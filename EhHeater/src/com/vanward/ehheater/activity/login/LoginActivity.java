@@ -152,14 +152,14 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.d("emmm", "login paused");
+		Log.e("emmm", "login paused");
 		XPGConnectClient.RemoveActivity(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d("emmm", "login resumed");
+		Log.e("emmm", "login resumed");
 
 		et_user.setText(AccountService.getUserId(this));
 		et_pwd.setText("");
@@ -170,6 +170,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
+		Log.e(TAG, "onConnectEvent@LoginActivity@: " + connId + "-" + event);
 		tempConnId = connId;
 
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) { // 建立连接成功
@@ -310,7 +311,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if (preSelectedDeviceMac.equals(hi.getMac())) {
 			spu.put(ShareKey.CurDeviceMac, hi.getMac());
 		}
-		endpoint.delete();
+//		endpoint.delete();
 	};
 	
 	int count;

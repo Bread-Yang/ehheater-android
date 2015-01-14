@@ -127,7 +127,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 	@Override
 	public void OnUserRegisterResp(UserRegisterResp_t pResp, int nConnId) {
 		super.OnUserRegisterResp(pResp, nConnId);
-		Log.d("emmm", "OnUserRegisterResp:" + pResp.getResult());
+		Log.e("emmm", "OnUserRegisterResp:" + pResp.getResult());
 
 		if (pResp.getResult() == 0) {
 			Toast.makeText(getBaseContext(), "注册成功", 1000).show();

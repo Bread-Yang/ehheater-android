@@ -44,6 +44,8 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 
 	@ViewInject(id = R.id.water_radiogroup, click = "")
 	RadioGroup waterGroup;
+	
+	GasCustomSetVo oldGasCustomSetVo;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,9 +57,9 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 		seekBar.setOnSeekBarChangeListener(this);
 		int voId = getIntent().getIntExtra("gasCusVoId", -1);
 		if (voId != -1) {
-			gasVo = new BaseDao(this).getDb().findById(voId,
+			oldGasCustomSetVo = new BaseDao(this).getDb().findById(voId,
 					GasCustomSetVo.class);
-			setData(gasVo);
+			setData(oldGasCustomSetVo);
 			ivTitleName.setText("编辑模式");
 		} else {
 			ivTitleName.setText("添加模式");
@@ -89,8 +91,6 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 		});
 	}
 
-	GasCustomSetVo gasVo;
-
 	private void setData(GasCustomSetVo gasVo) {
 		nameedittext.setText(gasVo.getName());
 		seekBar.setProgress(gasVo.getTempter() - 35);
@@ -113,8 +113,8 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 
 	public GasCustomSetVo getData() {
 		GasCustomSetVo customSetVo = new GasCustomSetVo();
-		if (gasVo != null) {
-			customSetVo = gasVo;
+		if (oldGasCustomSetVo != null) {
+			customSetVo = oldGasCustomSetVo;
 		}
 		customSetVo
 				.setUid(AccountService.getUserId(GasAddPatternActivity.this));
@@ -125,19 +125,28 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 					.show();
 			return null;
 		}
+		
+		boolean isSameWithLastName = false;
+		if (oldGasCustomSetVo != null) {
+			if (modeName.equals(oldGasCustomSetVo.getName())) {
+				isSameWithLastName = true;
+			}
+		}
+		
+		if (!isSameWithLastName) {
+			List items = new BaseDao(this).getDb().findAllByWhere(
+					GasCustomSetVo.class, " name = '" + modeName + "'");
 
+			if (items.size() != 0) {
+				Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
+						.show();
+				return null;
+			}
+		}
+		
 		if (modeName.equals("舒适") || modeName.equals("厨房")
 				|| modeName.equals("浴缸") || modeName.equals("节能")
 				|| modeName.equals("智能")) {
-			Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
-					.show();
-			return null;
-		}
-
-		List items = new BaseDao(this).getDb().findAllByWhere(
-				GasCustomSetVo.class, " name = '" + modeName + "'");
-
-		if (items.size() != 0) {
 			Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
 					.show();
 			return null;
@@ -151,7 +160,7 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 						+ AccountService.getUserId(GasAddPatternActivity.this)
 						+ "'");
 
-		if (gasVo == null) {
+		if (oldGasCustomSetVo == null) {
 			for (int i = 0; i < list.size(); i++) {
 				if (nameedittext.getText().toString()
 						.equals(list.get(i).getName())) {
@@ -188,8 +197,8 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 			Log.e(TAG,
 					"提交的customSetVo.getTempter() : " + customSetVo.getTempter());
 			if (customSetVo != null) {
-				if (gasVo != null) {
-					new BaseDao(this).getDb().delete(gasVo);
+				if (oldGasCustomSetVo != null) {
+					new BaseDao(this).getDb().delete(oldGasCustomSetVo);
 				}
 
 				boolean isCheck = getIntent().getBooleanExtra("ischeck", false);

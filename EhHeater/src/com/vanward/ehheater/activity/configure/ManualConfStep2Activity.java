@@ -107,14 +107,6 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			dialog_easylink.show();
 			counter.start();
 
-			// XpgDataField sendSSID = generated
-			// .String2XpgData("yoghourt_bao");
-			// XpgDataField sendPSW = generated
-			// .String2XpgData("aaabbccdd");
-			// Log.e(TAG, "发送请求了"); 
-			// generated.SendOnboardingSetReq(sendSSID,
-			// sendPSW);
-
 			if (mTimer == null) {
 				mTimer = new Timer();
 
@@ -142,7 +134,6 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
 		Log.e(TAG, TAG + "的onEasyLinkResp执行了");
 		if (dialog_easylink.isShowing()) {
-			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
 			
 			Log.e(TAG, "打印productKey前");
 			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
@@ -159,8 +150,6 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			dialog_easylink.dismiss();
 			
 			finishingConfig(endpoint);
-			
-			endpoint.delete();
 		}
 	}
 
@@ -193,7 +182,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			hser.addNewHeater(hinfo);
 		}
 
-		Log.d("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
+		Log.e("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
 				+ "-" + hinfo.getPasscode());
 
 		String username = AccountService.getPendingUserId(getBaseContext());
@@ -304,7 +293,6 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		// wifiAdmin.openWifi();
 		// wifiAdmin.addNetwork(wifiAdmin.CreateWifiInfo(ssid, "123456789", 3));
 
-		pResp.delete();
 	}
 
 	private void linkLastConnectWifi() {
