@@ -867,6 +867,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if (mCountDownTimer != null) {
+			mCountDownTimer.cancel();
+		}
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
 				heaterNameChangeReceiver);
 	}

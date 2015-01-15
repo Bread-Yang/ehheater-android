@@ -89,6 +89,9 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
 		Log.e(TAG, "onWanLoginResp()执行了");
+		Log.e(TAG, "result : " + result);
+		Log.e(TAG, "connId : " + connId);
+		
 		tempConnId = connId;
 		
 		Log.e(TAG, "did2bind : " + did2bind);
@@ -137,9 +140,5 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 				finish();
 			}
 		}, 300);
-		
 	};
-	
-	
-	
 }

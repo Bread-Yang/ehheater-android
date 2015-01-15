@@ -319,4 +319,11 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	String preSelectedDeviceMac;
 
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mLoginTimeoutTimer != null) {
+			mLoginTimeoutTimer.cancel();
+		}
+	}
 }

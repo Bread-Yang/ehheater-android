@@ -17,10 +17,10 @@ public class BitmapThumbUtil {
 		final int width = options.outWidth;
 		int inSampleSize = 1;
 		
-		Log.e(TAG, "reqWidth : " + reqWidth);
-		Log.e(TAG, "reqHeight : " + reqHeight);
-		Log.e(TAG, "options.outHeight : " + options.outHeight);
-		Log.e(TAG, "options.outWidth : " + options.outWidth);
+//		Log.e(TAG, "reqWidth : " + reqWidth);
+//		Log.e(TAG, "reqHeight : " + reqHeight);
+//		Log.e(TAG, "options.outHeight : " + options.outHeight);
+//		Log.e(TAG, "options.outWidth : " + options.outWidth);
 
 		if (height > reqHeight || width > reqWidth) {
 

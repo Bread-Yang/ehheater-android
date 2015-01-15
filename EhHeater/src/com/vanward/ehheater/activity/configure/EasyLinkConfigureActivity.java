@@ -622,4 +622,12 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		}
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mEasyLinkTimeoutTimer != null) {
+			mEasyLinkTimeoutTimer.cancel();
+			mEasyLinkTimeoutTimer = null;
+		}
+	}
 }

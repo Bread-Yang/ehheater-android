@@ -378,4 +378,12 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		}
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mTimer != null) {
+			mTimer.cancel();
+			mTimer = null;
+		}
+	}
 }

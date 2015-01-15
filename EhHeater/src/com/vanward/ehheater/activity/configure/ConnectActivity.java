@@ -99,7 +99,7 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e(TAG, "onCreate执行了");
+		Log.e(TAG, "onCreate()");
 
 		setContentView(R.layout.activity_connect_as_dialog);
 		mTvInfo = (TextView) findViewById(R.id.awad_tv);
@@ -121,7 +121,7 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e(TAG, "onResume执行了");
+		Log.e(TAG, "onResume()");
 		isActived = true;
 	}
 
@@ -137,6 +137,7 @@ public class ConnectActivity extends GeneratedActivity {
 	};
 
 	private void helper1() {
+		Log.e(TAG, "helper1()");
 
 		// mPbar.setVisibility(View.VISIBLE);
 		// mBtnRetry.setVisibility(View.GONE);
@@ -159,6 +160,7 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	private void tryConnectByBigCycle() {
+		Log.e(TAG, "tryConnectByBigCycle()");
 
 		XPGConnShortCuts.connect2big();
 
@@ -195,6 +197,7 @@ public class ConnectActivity extends GeneratedActivity {
 	 */
 	private void tryConnectBySmallCycle(final int scanInterval, int timeOut,
 			final TimerTask t) {
+		Log.e(TAG, "tryConnectBySmallCycle()");
 
 		XPGConnectClient.xpgcStartDiscovery();
 
@@ -216,6 +219,7 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
+		Log.e(TAG, "onDeviceFound()");
 		if (null == endpoint) {
 			return;
 		}
@@ -254,7 +258,7 @@ public class ConnectActivity extends GeneratedActivity {
 			if (!TextUtils.isEmpty(macFound)
 					&& macFound.equals(mMac.toLowerCase())) {
 				didRetrieved = didFound;
-				Log.e("TAG", "onDeviceFound:found target, connecting by small");
+				Log.e(TAG, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 
@@ -417,6 +421,7 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
+		Log.e(TAG, "doAfterBindingDevicesReceivedFromMQTT()");
 		jobDone = true;
 		for (XpgEndpoint ep : devList) {
 			if (ep.getSzMac().toLowerCase().equals(mMac.toLowerCase())) {
@@ -444,6 +449,7 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	private void setOfflineResult() {
+		Log.e(TAG, "setOfflineResult()");
 		mTvInfo.setText("设备不在线");
 		Intent data = new Intent();
 		data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);

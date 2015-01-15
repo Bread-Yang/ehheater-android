@@ -59,7 +59,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private boolean isActived = false;
 
 	BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
-
+ 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG, "wifiConnectedReceiver的onReceive()执行了");
@@ -68,15 +68,15 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 					DialogUtil.instance().showReconnectDialog(null, BaseBusinessActivity.this);
 				} else {
 					connectCurDevice();
-				}
+				} 
 			}
-		}
+		} 
 	};
 
 	BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.e("emmm",
+			Log.e(TAG,
 					"deviceOnlineReceiver:onReceive@BaseBusinessActivity:");
 			if (isFinishing()) {
 				return;
@@ -88,7 +88,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	BroadcastReceiver alterDeviceDueToDeleteReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.e("emmm",
+			Log.e(TAG,
 					"alterDeviceDueToDeleteReceiver@BaseBusinessActivity:");
 			if (isFinishing()) {
 				return;
@@ -109,7 +109,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.e("emmm", "logoutReceiver@BaseBusinessActivity:");
+			Log.e(TAG, "logoutReceiver@BaseBusinessActivity:");
 			XPGConnectClient.RemoveActivity(BaseBusinessActivity.this);
 		}
 	};
@@ -173,6 +173,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.e(TAG, "onCreate");
 
 		shouldReconnect = false;
 		paused = false;
@@ -203,6 +204,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		Log.e(TAG, "onResume");
 
 		isActived = true;
 
@@ -210,7 +213,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		CheckOnlineUtil.ins().resume();
 
-		if (shouldReconnect) {
+		if (shouldReconnect) { 
 			shouldReconnect = false;
 			Log.e(TAG, "onResume里面执行了connectCurDevice()");
 			connectCurDevice("连接已断开, 正在重新连接...");
@@ -221,6 +224,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		Log.e(TAG, "onPause");
 
 		isActived = false;
 
@@ -273,7 +277,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp,
 			int nConnId) {
 		super.OnDeviceOnlineStateResp(pResp, nConnId);
-		Log.e("emmm", "OnDeviceOnlineStateResp@BaseBusinessActivity:");
+		Log.e(TAG, "OnDeviceOnlineStateResp@BaseBusinessActivity:");
 
 		// if current device went offline
 		// offline
@@ -351,13 +355,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	public SlidingMenu mSlidingMenu;
 
 	protected void connectCurDevice() {
-		Log.e(TAG, "connectCurDevice()");
+		Log.e(TAG, "connectCurDevice()@BaseBusinessActivity:");
 		DialogUtil.dismissDialog();
 		connectCurDevice("");
 	}
 
 	protected void connectCurDevice(String connectText) {
-		Log.e(TAG, "connectCurDevice(String)");
+		Log.e(TAG, "connectCurDevice(String)@BaseBusinessActivity:");
 		String mac = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeaterMac();
 		String userId = AccountService.getUserId(getBaseContext());
@@ -377,6 +381,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	}
 
 	protected void connectDevice(String connectText, String mac) {
+		Log.e(TAG, "connectCurDevice(String, String)@BaseBusinessActivity:");
 
 		// XPGConnectClient.initClient(this);
 
