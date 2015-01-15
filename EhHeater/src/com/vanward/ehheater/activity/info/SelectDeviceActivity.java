@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.login.LoginActivity;
 
 public class SelectDeviceActivity extends Activity implements OnClickListener {
 	TextView name, time, detail;
@@ -47,31 +48,42 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 		if (arg0.getId() == R.id.ivTitleBtnLeft) {
 			onBackPressed();
 		} else if (arg0.getId() == R.id.elect) {
-			Intent intent = new Intent(getBaseContext(), EasyLinkConfigureActivity.class);
+			Intent intent = new Intent(getBaseContext(),
+					EasyLinkConfigureActivity.class);
 			intent.putExtra("type", "elect");
 			startActivity(intent);
-		
+
 		} else if (arg0.getId() == R.id.gas) {
-			Intent intent = new Intent(getBaseContext(), EasyLinkConfigureActivity.class);
+			Intent intent = new Intent(getBaseContext(),
+					EasyLinkConfigureActivity.class);
 			intent.putExtra("type", "gas");
 			startActivity(intent);
-			
+
 		} else if (arg0.getId() == R.id.rlt_furnace) {
-			Intent intent = new Intent(getBaseContext(), EasyLinkConfigureActivity.class);
+			Intent intent = new Intent(getBaseContext(),
+					EasyLinkConfigureActivity.class);
 			intent.putExtra("type", "furnace");
 			startActivity(intent);
-		
+
 		}
 
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-		boolean shouldKill = getIntent().getBooleanExtra(Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH, false);
+		boolean shouldKill = getIntent()
+				.getBooleanExtra(
+						Consts.INTENT_EXTRA_CONFIGURE_ACTIVITY_SHOULD_KILL_PROCESS_WHEN_FINISH,
+						false);
 		if (shouldKill) {
 			android.os.Process.killProcess(android.os.Process.myPid());
 		} else {
-			super.onBackPressed();
+			if (getIntent().getBooleanExtra("fromWelcomeActivity", false)) {
+				startActivity(new Intent(this, LoginActivity.class));
+				finish();
+			} else {
+				super.onBackPressed();
+			}
 		}
 	}
 }

@@ -215,7 +215,7 @@ public class WelcomeActivity extends GeneratedActivity {
 			case STATE_JUMPED_OUT_TO_CONFIGURE:
 				Intent intent = new Intent(getBaseContext(),
 						SelectDeviceActivity.class);
-				intent.putExtra("isDeleteAll", true);
+				intent.putExtra("fromWelcomeActivity", true);
 				startActivity(intent);
 				XPGConnectClient.RemoveActivity(WelcomeActivity.this);
 				finish();

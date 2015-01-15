@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -23,6 +24,8 @@ import com.xtremeprog.xpgconnect.generated.generated;
 
 public class DummySendBindingReqActivity extends GeneratedActivity {
 	
+	private static final String TAG = "DummySendBindingReqActivity";
+	
 	int tempConnId;
 	
 	private String username;
@@ -30,23 +33,6 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	private String did2bind;
 	private String passcode2bind;
 	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
-		XPGConnectClient.RemoveActivity(this);
-	}
-	
-	private View initContentView() {
-		
-		mTvInfo = new TextView(this);
-		mTvInfo.setGravity(Gravity.CENTER);
-		mTvInfo.setText("正在上传绑定关系...");
-		mTvInfo.setMinHeight(PxUtil.dip2px(this, 40));
-		mTvInfo.setMinWidth(PxUtil.dip2px(this, 200));
-		
-		return mTvInfo;
-	}
 	TextView mTvInfo;
 
 	@Override
@@ -69,40 +55,72 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 			return;
 		}
 		
-		XPGConnShortCuts.connect2big();
+		XPGConnectClient.xpgcLogin2Wan(username, userpsw, "", "");
+//		XPGConnShortCuts.connect2big();
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				setResult(RESULT_CANCELED);
+				setResult(RESULT_CANCELED); 
 				XPGConnectClient.RemoveActivity(DummySendBindingReqActivity.this);
 				finish();
 			}
 		}, 5000);
 	}
 	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
+		XPGConnectClient.RemoveActivity(this);
+	}
+	
+	private View initContentView() {
+		
+		mTvInfo = new TextView(this);
+		mTvInfo.setGravity(Gravity.CENTER);
+		mTvInfo.setText("正在上传绑定关系...");
+		mTvInfo.setMinHeight(PxUtil.dip2px(this, 40));
+		mTvInfo.setMinWidth(PxUtil.dip2px(this, 200));
+		
+		return mTvInfo;
+	}
+	
+	@Override
+	public void onWanLoginResp(int result, int connId) {
+		super.onWanLoginResp(result, connId);
+		Log.e(TAG, "onWanLoginResp()执行了");
+		tempConnId = connId;
+		
+		Log.e(TAG, "did2bind : " + did2bind);
+		Log.e(TAG, "passcode2bind : " + passcode2bind);
+		
+		generated.SendBindingSetReq(connId, generated.String2XpgData(did2bind), 
+				generated.String2XpgData(passcode2bind));
+	}
+	
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.e("emmm", "onConnectEvent@DummySendBinding:" + connId + "-" + event);
-		
-		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
-			tempConnId = connId;
-			XPGConnectClient.xpgcLogin(tempConnId, username, userpsw);	// login to server
-		}
+//		Log.e(TAG, "onConnectEvent@DummySendBinding:" + connId + "-" + event);
+//		
+//		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
+//			tempConnId = connId;
+//			XPGConnectClient.xpgcLogin(tempConnId, username, userpsw);	// login to server
+//		}
 	};
 	
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.e("emmm", "onLoginCloudResp@DummySendBinding:" + result);
-		
-		generated.SendBindingSetReq(tempConnId, generated.String2XpgData(did2bind), 
-				generated.String2XpgData(passcode2bind));
-		Log.e("emmm", "sendingBinding@DummySendBinding: " + username + "-" + did2bind + "-" + passcode2bind);
+//		Log.e(TAG, "onLoginCloudResp@DummySendBinding:" + result);
+//		
+//		generated.SendBindingSetReq(tempConnId, generated.String2XpgData(did2bind), 
+//				generated.String2XpgData(passcode2bind));
+//		Log.e(TAG, "sendingBinding@DummySendBinding: " + username + "-" + did2bind + "-" + passcode2bind);
 	}
 	
 	public void OnBindingSetResp(BindingSetResp_t pResp, int nConnId) {
 		super.OnBindingSetResp(pResp, nConnId);
-		Log.e("emmm", "OnBindingSetResp@DummySendBinding:" + pResp.getResult());
+		Log.e(TAG, "OnBindingSetResp@DummySendBinding:" + pResp.getResult());
 		
 		if (pResp.getResult() == 0) {
 			setResult(RESULT_OK);

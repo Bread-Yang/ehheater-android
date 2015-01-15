@@ -304,7 +304,7 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "执行了");
 	}
 
-	@Override
+	@Override 
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		tempConnId = connId;

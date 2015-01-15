@@ -63,6 +63,7 @@
         <activity
             android:name=".activity.configure.ConnectActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/custom_dialog2" >
         </activity>
         <activity
