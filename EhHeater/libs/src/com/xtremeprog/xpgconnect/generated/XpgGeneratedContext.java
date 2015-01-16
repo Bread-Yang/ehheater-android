@@ -449,6 +449,42 @@ public class XpgGeneratedContext {
     return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_UserRegisterResp_t_int__void(cPtr, false);
   }
 
+  public void setOnLanHeartBeatReq(SWIGTYPE_p_f_size_t_p_LanHeartBeatReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onLanHeartBeatReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_LanHeartBeatReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_LanHeartBeatReq_t_int__void getOnLanHeartBeatReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onLanHeartBeatReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_LanHeartBeatReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalLanHeartBeatReq(SWIGTYPE_p_f_size_t_p_LanHeartBeatReq_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalLanHeartBeatReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_LanHeartBeatReq_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_LanHeartBeatReq_t_int__void getOnInternalLanHeartBeatReq() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalLanHeartBeatReq_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_LanHeartBeatReq_t_int__void(cPtr, false);
+  }
+
+  public void setOnLanHeartBeatResp(SWIGTYPE_p_f_size_t_p_LanHeartBeatResp_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onLanHeartBeatResp_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_LanHeartBeatResp_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_LanHeartBeatResp_t_int__void getOnLanHeartBeatResp() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onLanHeartBeatResp_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_LanHeartBeatResp_t_int__void(cPtr, false);
+  }
+
+  public void setOnInternalLanHeartBeatResp(SWIGTYPE_p_f_size_t_p_LanHeartBeatResp_t_int__void value) {
+    generatedJNI.XpgGeneratedContext_onInternalLanHeartBeatResp_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_LanHeartBeatResp_t_int__void.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_size_t_p_LanHeartBeatResp_t_int__void getOnInternalLanHeartBeatResp() {
+    long cPtr = generatedJNI.XpgGeneratedContext_onInternalLanHeartBeatResp_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_size_t_p_LanHeartBeatResp_t_int__void(cPtr, false);
+  }
+
   public void setOnBindingSetReq(SWIGTYPE_p_f_size_t_p_BindingSetReq_t_int__void value) {
     generatedJNI.XpgGeneratedContext_onBindingSetReq_set(swigCPtr, this, SWIGTYPE_p_f_size_t_p_BindingSetReq_t_int__void.getCPtr(value));
   }

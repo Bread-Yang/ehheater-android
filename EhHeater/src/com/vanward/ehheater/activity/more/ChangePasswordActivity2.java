@@ -207,7 +207,19 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 				}
 			}
 		}, 5000);
+//		XPGConnectClient.xpgcLogin2Wan(
+//				AccountService.getUserId(getBaseContext()),
+//				AccountService.getUserPsw(getBaseContext()), "", "");
 		XPGConnShortCuts.connect2big();
+	}
+	
+	@Override
+	public void onWanLoginResp(int result, int connId) {
+		super.onWanLoginResp(result, connId);
+		tempConnId = connId;
+		generated.SendUserPwdChangeReq(tempConnId, generated
+				.String2XpgData(AccountService.getUserId(getBaseContext())),
+				generated.String2XpgData(newPsw));
 	}
 
 	@Override
@@ -228,7 +240,7 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.e("emmm", "onLoginCloudResp@ChangePswd: " + result);
+		Log.e(TAG, "onLoginCloudResp@ChangePswd: " + result);
 
 		generated.SendUserPwdChangeReq(tempConnId, generated
 				.String2XpgData(AccountService.getUserId(getBaseContext())),
@@ -238,7 +250,7 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 	@Override
 	public void OnUserPwdChangeResp(UserPwdChangeResp_t pResp, int nConnId) {
 		super.OnUserPwdChangeResp(pResp, nConnId);
-		Log.e("emmm", "OnUserPwdChangeResp@ChangePswd: " + pResp.getResult());
+		Log.e(TAG, "OnUserPwdChangeResp@ChangePswd: " + pResp.getResult());
 		DialogUtil.dismissDialog();
 
 		if (pResp.getResult() == 0) {
@@ -250,5 +262,4 @@ public class ChangePasswordActivity2 extends EhHeaterBaseActivity {
 					Toast.LENGTH_SHORT).show();
 		}
 	}
-
 }

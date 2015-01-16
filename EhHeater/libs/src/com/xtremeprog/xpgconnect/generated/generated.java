@@ -417,6 +417,38 @@ public class generated implements generatedConstants {
     generatedJNI.DumpUserRegisterResp(UserRegisterResp_t.getCPtr(pUserRegisterResp), pUserRegisterResp);
   }
 
+  public static int DefaultLanHeartBeatReq() {
+    return generatedJNI.DefaultLanHeartBeatReq();
+  }
+
+  public static int BuildLanHeartBeatReq() {
+    return generatedJNI.BuildLanHeartBeatReq();
+  }
+
+  public static int SendLanHeartBeatReq(int nConnId) {
+    return generatedJNI.SendLanHeartBeatReq(nConnId);
+  }
+
+  public static void DumpLanHeartBeatReq(LanHeartBeatReq_t pLanHeartBeatReq) {
+    generatedJNI.DumpLanHeartBeatReq(LanHeartBeatReq_t.getCPtr(pLanHeartBeatReq), pLanHeartBeatReq);
+  }
+
+  public static int DefaultLanHeartBeatResp() {
+    return generatedJNI.DefaultLanHeartBeatResp();
+  }
+
+  public static int BuildLanHeartBeatResp() {
+    return generatedJNI.BuildLanHeartBeatResp();
+  }
+
+  public static int SendLanHeartBeatResp(int nConnId) {
+    return generatedJNI.SendLanHeartBeatResp(nConnId);
+  }
+
+  public static void DumpLanHeartBeatResp(LanHeartBeatResp_t pLanHeartBeatResp) {
+    generatedJNI.DumpLanHeartBeatResp(LanHeartBeatResp_t.getCPtr(pLanHeartBeatResp), pLanHeartBeatResp);
+  }
+
   public static int DefaultBindingSetReq() {
     return generatedJNI.DefaultBindingSetReq();
   }

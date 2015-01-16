@@ -13,6 +13,7 @@ import com.xtremeprog.xpgconnect.generated.ModuleVersionResp_t;
 import com.xtremeprog.xpgconnect.generated.WifiListResp_t;
 import com.xtremeprog.xpgconnect.generated.SerialPortConfigResp_t;
 import com.xtremeprog.xpgconnect.generated.UserRegisterResp_t;
+import com.xtremeprog.xpgconnect.generated.LanHeartBeatResp_t;
 import com.xtremeprog.xpgconnect.generated.BindingSetResp_t;
 import com.xtremeprog.xpgconnect.generated.BindingGetResp_t;
 import com.xtremeprog.xpgconnect.generated.BindingGetV2Resp_t;
@@ -39,6 +40,7 @@ public interface GeneratedJniListener {
     public void OnWifiListResp(WifiListResp_t resp, int nConnId);
     public void OnSerialPortConfigResp(SerialPortConfigResp_t resp, int nConnId);
     public void OnUserRegisterResp(UserRegisterResp_t resp, int nConnId);
+    public void OnLanHeartBeatResp(LanHeartBeatResp_t resp, int nConnId);
     public void OnBindingSetResp(BindingSetResp_t resp, int nConnId);
     public void OnBindingGetResp(BindingGetResp_t resp, int nConnId);
     public void OnBindingGetV2Resp(BindingGetV2Resp_t resp, int nConnId);

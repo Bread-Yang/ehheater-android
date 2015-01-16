@@ -243,6 +243,15 @@ public class GeneratedActivity extends Activity
 
     /**
     * @param pResp
+    *            可调用 generated.DumpLanHeartBeatResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
+    * */
+    @Override
+    public void OnLanHeartBeatResp(LanHeartBeatResp_t pResp, int nConnId) {
+        // generated.DumpLanHeartBeatResp(pResp);
+    }
+
+    /**
+    * @param pResp
     *            可调用 generated.DumpBindingSetResp(pResp) 方便地输出 pResp 的各个值到 logcat，不须手写代码逐个获取。
     * */
     @Override

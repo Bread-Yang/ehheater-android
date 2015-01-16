@@ -253,13 +253,27 @@ public class GeneratedJniJava {
         }
     }
 
+    public static void OnLanHeartBeatResp(long cPtr, int nConnId) {
+        LanHeartBeatResp_t obj = new LanHeartBeatResp_t(cPtr, false);
+        LanHeartBeatResp_t resp = new LanHeartBeatResp_t();
+        for (Handler handler : lstHandlers)
+        {
+            Message msg = handler.obtainMessage(13, nConnId, 0, resp);
+            handler.sendMessage(msg);
+        }
+        for (GeneratedJniListener listener : lstListeners)
+        {
+            listener.OnLanHeartBeatResp(resp, nConnId);
+        }
+    }
+
     public static void OnBindingSetResp(long cPtr, int nConnId) {
         BindingSetResp_t obj = new BindingSetResp_t(cPtr, false);
         BindingSetResp_t resp = new BindingSetResp_t();
  		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(13, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(14, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -287,7 +301,7 @@ public class GeneratedJniJava {
 		generated.XpgData2Free(obj.getP0Version(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(14, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(15, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -318,7 +332,7 @@ public class GeneratedJniJava {
 		generated.XpgData2Free(obj.getP0Version(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(15, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(16, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -333,7 +347,7 @@ public class GeneratedJniJava {
  		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(16, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(17, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -348,7 +362,7 @@ public class GeneratedJniJava {
  		resp.setResult(obj.getResult());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(17, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(18, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -366,7 +380,7 @@ public class GeneratedJniJava {
  		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(18, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(19, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -391,7 +405,7 @@ public class GeneratedJniJava {
 		generated.XpgData2Free(obj.getP0Version(),0);
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(19, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(20, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -425,7 +439,7 @@ public class GeneratedJniJava {
  		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(20, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(21, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -481,7 +495,7 @@ public class GeneratedJniJava {
  		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(21, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(22, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -532,7 +546,7 @@ public class GeneratedJniJava {
  		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(22, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(23, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
@@ -551,7 +565,7 @@ public class GeneratedJniJava {
  		resp.setChecksum(obj.getChecksum());
         for (Handler handler : lstHandlers)
         {
-            Message msg = handler.obtainMessage(23, nConnId, 0, resp);
+            Message msg = handler.obtainMessage(24, nConnId, 0, resp);
             handler.sendMessage(msg);
         }
         for (GeneratedJniListener listener : lstListeners)
