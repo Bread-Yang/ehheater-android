@@ -316,7 +316,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 				XPGConnectClient.xpgcLogin2Wan(
 						AccountService.getUserId(getBaseContext()),
 						AccountService.getUserPsw(getBaseContext()), "", "");
-//				 XPGConnShortCuts.connect2big();
+				// XPGConnShortCuts.connect2big();
 				break;
 			case 1: // 未与服务器连接
 				DialogUtil.dismissDialog();
@@ -336,16 +336,16 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		Log.e(TAG, "onConnectEvent@HeaterManagementActivity@: " + connId + "-"
 				+ event);
 
-//		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
-//			// 连接成功
-//			tempConnId = connId;
-//			XPGConnectClient.xpgcLogin(tempConnId,
-//					AccountService.getUserId(getBaseContext()),
-//					AccountService.getUserPsw(getBaseContext())); // login to
-//																	// server
-//		}
+		// if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
+		// // 连接成功
+		// tempConnId = connId;
+		// XPGConnectClient.xpgcLogin(tempConnId,
+		// AccountService.getUserId(getBaseContext()),
+		// AccountService.getUserPsw(getBaseContext())); // login to
+		// // server
+		// }
 	}
-	
+
 	@Override
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
@@ -360,8 +360,8 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 		super.onLoginCloudResp(result, mac);
 		Log.e(TAG, "onLoginCloudResp@HeaterManagement: " + result);
 
-//		generated.SendBindingDelReq(tempConnId,
-//				generated.String2XpgData(didOfHeaterBeingDeleted));
+		// generated.SendBindingDelReq(tempConnId,
+		// generated.String2XpgData(didOfHeaterBeingDeleted));
 	}
 
 	@Override
@@ -371,14 +371,14 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 
 		DialogUtil.dismissDialog();
 
-//		if (pResp.getResult() == 0) {
-			new HeaterInfoService(getBaseContext())
-					.deleteHeater(macOfHeaterBeingDeleted);
-			deleted();
-//		} else {
-//			Toast.makeText(getBaseContext(), R.string.failure,
-//					Toast.LENGTH_SHORT).show();
-//		}
+		// if (pResp.getResult() == 0) {
+		new HeaterInfoService(getBaseContext())
+				.deleteHeater(macOfHeaterBeingDeleted);
+		deleted();
+		// } else {
+		// Toast.makeText(getBaseContext(), R.string.failure,
+		// Toast.LENGTH_SHORT).show();
+		// }
 
 		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
 	}

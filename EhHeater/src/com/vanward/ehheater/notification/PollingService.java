@@ -118,7 +118,7 @@ public class PollingService extends Service {
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
 			electicMac = allDevices.get(0).getMac();
 //			Log.e(TAG, "electic mac是 : " + allDevices.get(0).getMac());
-//			Log.e(TAG, "electic did是 : " + allDevices.get(0).getDid());
+			Log.e(TAG, "电热的did是 : " + allDevices.get(0).getDid());
 			String requestURL = "GasInfo/getNewestElData?did="
 					+ allDevices.get(0).getDid();
 //			Log.e(TAG, "checkElecticHeaterInfo的URL" + Consts.REQUEST_BASE_URL + requestURL);
@@ -228,7 +228,7 @@ public class PollingService extends Service {
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
 			gasMac = allDevices.get(0).getMac();
 //			Log.e(TAG, "gasMac是 : " + gasMac);
-//			Log.e(TAG, "gas did是 : " + allDevices.get(0).getDid());
+			Log.e(TAG, "燃热的did是 : " + allDevices.get(0).getDid());
 			String requestURL = "GasInfo/getNewestData?did="
 					+ allDevices.get(0).getDid();
 //			Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);

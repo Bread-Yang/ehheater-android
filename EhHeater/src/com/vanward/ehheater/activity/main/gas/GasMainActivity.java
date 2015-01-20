@@ -713,6 +713,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		currentModeCode = pResp.getFunction_state();
 
 		Log.e(TAG, "pResp.getFunction_state() == " + pResp.getFunction_state());
+		Log.e(TAG, "pResp.getCustomFunction() == " + pResp.getCustomFunction());
 
 		switch (pResp.getFunction_state()) {
 		case 1:
@@ -844,6 +845,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 */
 	public void warningDeal(GasWaterHeaterStatusResp_t pResp) {
 	}
+	
 
 	public void diyModeDeal(GasWaterHeaterStatusResp_t pResp) {
 		modeimg.setVisibility(View.VISIBLE);
