@@ -52,12 +52,13 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
 				case R.id.rb_realtime_consumption:
-					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
+//					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
+					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_update_gas_consumption.html");
 					break;
 
 				case R.id.rb_accumulated_consumption:
 					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-					break;
+					break; 
 				}
 			}
 		});
@@ -71,7 +72,8 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		wv_chart.getSettings().setJavaScriptEnabled(true);
 		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
 				"highChartsJavaScriptInterface");
-		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
+//		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
+		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_update_gas_consumption.html");
 	}
 
 	class HighChartsJavaScriptInterface {

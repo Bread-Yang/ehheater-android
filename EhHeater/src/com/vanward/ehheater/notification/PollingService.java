@@ -385,5 +385,11 @@ public class PollingService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 	}
+	
+	@Override
+	public void onTaskRemoved(Intent rootIntent) {
+		super.onTaskRemoved(rootIntent);
+		Log.e(TAG, "onTaskRemoved()执行了");
+	}
 
 }
