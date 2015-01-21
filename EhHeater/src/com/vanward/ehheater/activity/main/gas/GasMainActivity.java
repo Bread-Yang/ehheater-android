@@ -861,24 +861,26 @@ public class GasMainActivity extends BaseBusinessActivity implements
 											.getUserId(GasMainActivity.this)
 									+ "'");
 			Log.e(TAG, "GasCustomSetVo的大小是" + list.size());
-			if (list.size() > 0) {
-				for (int i = 0; i < list.size(); i++) {
-					GasCustomSetVo customSetVo = list.get(i);
-					Log.e(TAG, "customSetVo.getWaterval() : " + customSetVo.getWaterval());
-					Log.e(TAG, "pResp.getSetWater_power() : " + pResp.getSetWater_power());
-					Log.e(TAG, "customSetVo.getTempter()  : " + customSetVo.getTempter() );
-					Log.e(TAG, "pResp.getTargetTemperature() : " + pResp.getTargetTemperature());
-					if (customSetVo.getTempter() == pResp
-									.getTargetTemperature()) {
-						if (customSetVo.isSet()) {
-							tv_mode.setText(customSetVo.getName());
-							break;
-						}
-					}
-					if (i == list.size() - 1) {
-						tv_mode.setText("自定义模式");
-					}
-				}
+			if (list.size() >= pResp.getCustomFunction()) {
+//				for (int i = 0; i < list.size(); i++) {
+//					GasCustomSetVo customSetVo = list.get(i);
+//					Log.e(TAG, "customSetVo.getWaterval() : " + customSetVo.getWaterval());
+//					Log.e(TAG, "pResp.getSetWater_power() : " + pResp.getSetWater_power());
+//					Log.e(TAG, "customSetVo.getTempter()  : " + customSetVo.getTempter() );
+//					Log.e(TAG, "pResp.getTargetTemperature() : " + pResp.getTargetTemperature());
+//					if (customSetVo.getTempter() == pResp
+//									.getTargetTemperature()) {
+//						if (customSetVo.isSet()) {
+//							tv_mode.setText(customSetVo.getName());
+//							break;
+//						}
+//					}
+//					if (i == list.size() - 1) {
+//						tv_mode.setText("自定义模式");
+//					}
+//				}
+				String name = list.get(pResp.getCustomFunction() - 1).getName();
+				tv_mode.setText(name);
 			} else {
 				tv_mode.setText("自定义模式");
 			}
