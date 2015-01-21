@@ -390,6 +390,30 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
 		super.onEasyLinkResp(endpoint);
 		Log.e(TAG, "onEasyLinkResp(XpgEndpoint endpoint)回调了");
+		
+		Log.e(TAG,
+				"null == endpoint.getSzProductKey() : "
+						+ (null == endpoint.getSzProductKey()));
+		Log.e(TAG, ("endpoint.getSzProductKey()为空字符串 : " + "".equals(endpoint
+				.getSzProductKey())));
+
+		Log.e(TAG,
+				"null == endpoint.getSzMac() : "
+						+ (null == endpoint.getSzMac()));
+		Log.e(TAG,
+				("endpoint.getSzMac()为空字符串 : " + "".equals(endpoint.getSzMac())));
+
+		Log.e(TAG,
+				"null == endpoint.getSzDid() : "
+						+ (null == endpoint.getSzDid()));
+		Log.e(TAG,
+				("endpoint.getSzDid()为空字符串 : " + "".equals(endpoint.getSzDid())));
+
+		Log.e(TAG,
+				"null == endpoint.getSzPasscode() : "
+						+ (null == endpoint.getSzPasscode()));
+		Log.e(TAG, ("endpoint.getSzPasscode()为空字符串 : " + "".equals(endpoint
+				.getSzPasscode())));
 	}
 
 	@Override
@@ -450,7 +474,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			Log.e(TAG,
 					"onEasyLinkResp()返回的endpoint.getAddr() : "
 							+ endpoint.getAddr());
-			
+
 			// Log.e(TAG, "onEasyLinkResp()返回的endpoint.getSzPasscode() : " +
 			// endpoint.getSzPasscode());
 

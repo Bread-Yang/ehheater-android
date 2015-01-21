@@ -81,8 +81,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-//							Log.e(TAG, "checkAppointment请求返回来的数据是 : "
-//									+ jsonString);
+							// Log.e(TAG, "checkAppointment请求返回来的数据是 : "
+							// + jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -109,27 +109,29 @@ public class PollingService extends Service {
 		List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
 				.getAllDeviceOfType(HeaterType.Eh);
 		if (allDevices != null) {
-//			Log.e(TAG, "electicHeaterDids的大小是 : " + allDevices.size() + "");
+			// Log.e(TAG, "electicHeaterDids的大小是 : " + allDevices.size() + "");
 		} else {
-//			Log.e(TAG, "electicHeaterDids为null : " + "electicHeaterDids为null");
+			// Log.e(TAG, "electicHeaterDids为null : " +
+			// "electicHeaterDids为null");
 		}
 		if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
 			electicMac = allDevices.get(0).getMac();
-//			Log.e(TAG, "electic mac是 : " + allDevices.get(0).getMac());
+			// Log.e(TAG, "electic mac是 : " + allDevices.get(0).getMac());
 			Log.e(TAG, "电热的did是 : " + allDevices.get(0).getDid());
 			String requestURL = "GasInfo/getNewestElData?did="
 					+ allDevices.get(0).getDid();
-//			Log.e(TAG, "checkElecticHeaterInfo的URL" + Consts.REQUEST_BASE_URL + requestURL);
+			// Log.e(TAG, "checkElecticHeaterInfo的URL" + Consts.REQUEST_BASE_URL
+			// + requestURL);
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						@Override
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-//							Log.e(TAG, "checkElecticHeaterInfo请求返回来的数据是 : "
-//									+ jsonString);
+							// Log.e(TAG, "checkElecticHeaterInfo请求返回来的数据是 : "
+							// + jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -143,29 +145,21 @@ public class PollingService extends Service {
 												.getInt("error");
 
 										switch (electicErrorCode) {
-										case 160:				// 防冻
+										case 160: // 防冻
 											showNotification(
 													0,
 													R.string.freezeProof_warn_title,
 													R.string.freezeProof_tips);
 											break;
 										case 226:
-											showNotification(
-													0,
-													"干烧故障",
-													"干烧故障");
+											showNotification(0, "干烧故障", "干烧故障");
 											break;
 										case 227:
-											showNotification(
-													0,
-													"传感器故障",
+											showNotification(0, "传感器故障",
 													"传感器故障");
 											break;
 										case 228:
-											showNotification(
-													0,
-													"超温故障",
-													"超温故障");
+											showNotification(0, "超温故障", "超温故障");
 											break;
 
 										}
@@ -219,27 +213,27 @@ public class PollingService extends Service {
 		List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
 				.getAllDeviceOfType(HeaterType.ST);
 		if (allDevices != null) {
-//			Log.e(TAG, "gasHeaterDids的大小是 : " + allDevices.size() + "");
+			// Log.e(TAG, "gasHeaterDids的大小是 : " + allDevices.size() + "");
 		} else {
-//			Log.e(TAG, "gasHeaterDids为null : " + "gasHeaterDids为null");
+			// Log.e(TAG, "gasHeaterDids为null : " + "gasHeaterDids为null");
 		}
 		if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
 			gasMac = allDevices.get(0).getMac();
-//			Log.e(TAG, "gasMac是 : " + gasMac);
+			// Log.e(TAG, "gasMac是 : " + gasMac);
 			Log.e(TAG, "燃热的did是 : " + allDevices.get(0).getDid());
 			String requestURL = "GasInfo/getNewestData?did="
 					+ allDevices.get(0).getDid();
-//			Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);
+			// Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						@Override
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-//							Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
-//									+ jsonString);
+							// Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
+							// + jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -342,15 +336,19 @@ public class PollingService extends Service {
 			intent.putExtra("errorCode", electicErrorCode);
 			intent.putExtra("mac", electicMac);
 			intent.putExtra("isGas", false);
+			intent.putExtra("device_type", HeaterType.Eh);
 			// intent.setClass(this, MainActivity.class);
-		} else {
+		} else if (notifyId == 1) { // 燃热水器
 			// intent.setClass(this, GasMainActivity.class);
 			intent.putExtra("isGas", true);
+			intent.putExtra("device_type", HeaterType.ST);
 			intent.putExtra("mac", gasMac);
 			intent.putExtra("gasIsFreezeProofingWarning",
 					gasIsFreezeProofingWarning);
 			intent.putExtra("gasIsOxygenWarning", gasIsOxygenWarning);
 			intent.putExtra("errorCode", gasErrorCode);
+		} else if (notifyId == 2) { // 壁挂炉
+			intent.putExtra("device_type", HeaterType.EH_FURNACE);
 		}
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -385,7 +383,7 @@ public class PollingService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {
 		super.onTaskRemoved(rootIntent);

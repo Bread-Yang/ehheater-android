@@ -96,7 +96,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 			AlterDeviceHelper.hostActivity = BaseBusinessActivity.this;
 
-			if (Global.connectId > 0) {
+			if (Global.connectId > -1) {
 				// 触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
 				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			} else {
@@ -256,7 +256,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (Global.connectId > 0) {
+		if (Global.connectId > -1) {
 			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 		}
 

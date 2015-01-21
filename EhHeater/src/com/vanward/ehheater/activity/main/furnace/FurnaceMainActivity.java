@@ -36,6 +36,8 @@ import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.ErrorUtils;
+import com.vanward.ehheater.util.SwitchDeviceUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
@@ -122,8 +124,15 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		// generated.SendDERYRefreshReq(Global.connectId);
 		// }
 		// });
+		
+		if (getIntent().getBooleanExtra("newActivity", false)) {
+			String furnaceMac = getIntent().getStringExtra("mac");
+			connectDevice("", furnaceMac);
+		} else {
+			connectCurDevice();
+		}
 
-		connectCurDevice();
+//		connectCurDevice();
 	}
 
 	// private void initSlidingMenu() {
@@ -857,6 +866,15 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		ErrorUtils.isFurnaceMainActivityActive = true;
+		ErrorUtils.isMainActivityActive = false;
+		ErrorUtils.isGasMainActivityActive = false;
+		
+		String mac = getIntent().getStringExtra("mac");
+		if (mac != null
+				&& !getIntent().getBooleanExtra("newActivity", false)) {
+			SwitchDeviceUtil.switchDevice(mac, this);
+		}
 	}
 
 	@Override

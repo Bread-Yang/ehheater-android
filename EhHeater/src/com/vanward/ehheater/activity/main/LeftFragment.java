@@ -235,7 +235,7 @@ public class LeftFragment extends LinearLayout implements
 
 			AlterDeviceHelper.hostActivity = hostActivity;
 
-			if (Global.connectId >= 0) {
+			if (Global.connectId > -1) {
 				// 触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
 				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			} else {

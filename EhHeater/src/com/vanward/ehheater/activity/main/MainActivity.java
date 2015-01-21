@@ -301,12 +301,13 @@ public class MainActivity extends BaseBusinessActivity implements
 		Log.e(TAG, "onResume()");
 		ErrorUtils.isMainActivityActive = true;
 		ErrorUtils.isGasMainActivityActive = false;
+		ErrorUtils.isFurnaceMainActivityActive = false;
 		canupdateView = true;
 
-		String eleticMac = getIntent().getStringExtra("mac");
-		if (eleticMac != null
+		String mac = getIntent().getStringExtra("mac");
+		if (mac != null
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
-			SwitchDeviceUtil.switchDevice(eleticMac, this);
+			SwitchDeviceUtil.switchDevice(mac, this);
 		}
 	}
 

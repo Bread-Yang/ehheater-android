@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
@@ -12,6 +11,7 @@ import net.tsz.afinal.http.AjaxParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.TextUtil;
 
@@ -52,6 +53,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 	private String did = "";
 
 	private String uid = "";
+
+	private Dialog saveDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,45 +82,45 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 	private void setListener() {
 
-		// btn_left.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		//
-		// String requestURL = "";
-		//
-		// AjaxParams params = new AjaxParams();
-		//
-		// params.put("data", gson.toJson(highChar_data));
-		//
-		// showRequestDialog();
-		// mHttpFriend.clearParams()
-		// .toUrl(Consts.REQUEST_BASE_URL + requestURL)
-		// .executePost(params, new AjaxCallBack<String>() {
-		// @Override
-		// public void onSuccess(String jsonString) {
-		// super.onSuccess(jsonString);
-		// Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
-		//
-		// try {
-		// JSONObject json = new JSONObject(jsonString);
-		//
-		// String result = json.getString("result");
-		//
-		// if ("success".equals("result")) {
-		// finish();
-		// } else {
-		// // 弹出对话框,提示是否重新提交
-		// }
-		// } catch (JSONException e) {
-		// e.printStackTrace();
-		// }
-		//
-		// dismissRequestDialog();
-		// }
-		// });
-		// }
-		// });
+		btn_left.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				saveDialog.show();
+			}
+		});
+	}
+	
+	private void saveChartData() {
+		String requestURL = "";
+
+		AjaxParams params = new AjaxParams();
+
+		params.put("data", gson.toJson(highChar_data));
+
+		mHttpFriend
+				.toUrl(Consts.REQUEST_BASE_URL + requestURL)
+				.executePost(params, new AjaxCallBack<String>() {
+					@Override
+					public void onSuccess(String jsonString) {
+						super.onSuccess(jsonString);
+						Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+
+						try {
+							JSONObject json = new JSONObject(jsonString);
+
+							String result = json.getString("result");
+
+							if ("success".equals("result")) {
+								finish();
+							} else {
+								// 弹出对话框,提示是否重新提交
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				});
 	}
 
 	private void extractDataFromJson(String jsonString) {
@@ -219,6 +222,25 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 		// did = new
 		// HeaterInfoService(this).getCurrentSelectedHeater().getDid();
 		// uid = AccountService.getUserId(getBaseContext());
+
+		saveDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithTwoButton(R.string.confirm_save,
+						BaoDialogShowUtil.DEFAULT_RESID,
+						BaoDialogShowUtil.DEFAULT_RESID, new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								saveDialog.dismiss();
+								finish();
+							}
+						}, new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								saveDialog.dismiss();
+								saveChartData();
+							}
+						});
 
 		mHttpFriend = HttpFriend.create(this);
 		// requestHttpData();

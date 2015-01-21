@@ -162,13 +162,14 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		super.onResume();
 		ErrorUtils.isGasMainActivityActive = true;
 		ErrorUtils.isMainActivityActive = false;
+		ErrorUtils.isFurnaceMainActivityActive = false;
 
 		Log.e(TAG, "GasMainActivity的onResume调用了");
 
-		String gasMac = getIntent().getStringExtra("mac");
-		if (gasMac != null
+		String mac = getIntent().getStringExtra("mac");
+		if (mac != null
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
-			SwitchDeviceUtil.switchDevice(gasMac, this);
+			SwitchDeviceUtil.switchDevice(mac, this);
 		}
 	}
 
