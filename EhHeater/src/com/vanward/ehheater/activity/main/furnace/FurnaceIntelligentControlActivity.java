@@ -250,7 +250,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
 				"highChartsJavaScriptInterface");
 		wv_chart.getSettings().setJavaScriptEnabled(true);
-		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control.html");
+//		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control.html");
+		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control_new.html");
 		wv_chart.setBackgroundColor(0xF3F3F3);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			wv_chart.getSettings().setAllowUniversalAccessFromFileURLs(true);
