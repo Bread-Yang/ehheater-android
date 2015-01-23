@@ -44,13 +44,13 @@ import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class LoginActivity extends EhHeaterBaseActivity {
-	
+
 	private static final String TAG = "LoginActivity";
-	
+
 	Button btn_new_device, btn_login;
 	EditText et_user, et_pwd;
 	TextView mTvReg;
-	
+
 	SharedPreferUtils spu;
 
 	@Override
@@ -63,7 +63,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		super.onStop();
 		DialogUtil.dismissDialog();
 	}
-	
+
 	@Override
 	public void initUI() {
 		super.initUI();
@@ -112,7 +112,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		case R.id.login_btn:
 
 			if (!NetworkStatusUtil.isConnected(this)) {
-				Toast.makeText(this, R.string.check_network, Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.check_network, Toast.LENGTH_LONG)
+						.show();
 				return;
 			}
 
@@ -163,7 +164,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		et_user.setText(AccountService.getUserId(this));
 		et_pwd.setText("");
-		
+
 		XPGConnectClient.AddActivity(this);
 	}
 
@@ -238,8 +239,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			SharedPreferUtils.saveUsername(this, et_user.getText().toString());
 			AccountService.setUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
-//			AccountService.setPendingUser(getBaseContext(), et_user.getText()
-//					.toString(), et_pwd.getText().toString());
+			// AccountService.setPendingUser(getBaseContext(), et_user.getText()
+			// .toString(), et_pwd.getText().toString());
 			generated.SendBindingGetV2Req(tempConnId);
 			onDeviceFoundTriggered = false;
 			new Timer().schedule(new TimerTask() {
@@ -269,6 +270,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			Log.e(TAG, "endpoint为null,返回");
 			return;
 		}
+
+		if (endpoint.getIsDisabled() == 1) {
+			Log.e(TAG, "endpoint.getIsDisabled() == 1,返回");
+			return;
+		}
+
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
 		Log.e(TAG, "onDeviceFound:HeaterInfo Downloaded: " + hi);
@@ -284,10 +291,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if (count++ == 0) {
 			AccountService.setUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
-			
-//			if (TextUtils.isEmpty(preSelectedDeviceMac)) {
-				spu.put(ShareKey.CurDeviceMac, hi.getMac());
-//			}
+
+			// if (TextUtils.isEmpty(preSelectedDeviceMac)) {
+			spu.put(ShareKey.CurDeviceMac, hi.getMac());
+			// }
 
 			new Timer().schedule(new TimerTask() {
 				@Override
@@ -311,13 +318,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if (preSelectedDeviceMac.equals(hi.getMac())) {
 			spu.put(ShareKey.CurDeviceMac, hi.getMac());
 		}
-//		endpoint.delete();
+		// endpoint.delete();
 	};
-	
+
 	int count;
 	boolean onDeviceFoundTriggered;
 	String preSelectedDeviceMac;
-
 
 	@Override
 	public void onDestroy() {

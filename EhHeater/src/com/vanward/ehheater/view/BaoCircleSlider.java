@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -499,5 +500,19 @@ public class BaoCircleSlider extends View {
 	public void setVisibility(int visibility) {
 		super.setVisibility(visibility);
 		Log.e(TAG, "setVisibility调用了 : " + (visibility == View.VISIBLE));
+	}
+	
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+		Log.e(TAG, "onDetachedFromWindow()执行了");
+
+		((BitmapDrawable) ctrlIconView.getDrawable()).getBitmap().recycle();
+		((BitmapDrawable) addImageView.getDrawable()).getBitmap().recycle();
+		((BitmapDrawable) minusImageView.getDrawable()).getBitmap().recycle();
+		
+		ctrlIconView.setImageBitmap(null);
+		addImageView.setImageBitmap(null);
+		minusImageView.setImageBitmap(null);
 	}
 }

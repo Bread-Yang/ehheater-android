@@ -41,12 +41,12 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 public class LeftFragment extends LinearLayout implements
 		android.view.View.OnClickListener, OnItemClickListener {
 
-	Button btn_user_manager, btn_device_manager, btn_tip, btn_help, btn_about,
+	private Button btn_user_manager, btn_device_manager, btn_tip, btn_help, btn_about,
 			btn_season_mode;
-	View deviceSwitchLayout, deviceSwitchBtn;
+	private View deviceSwitchLayout, deviceSwitchBtn;
 	private RelativeLayout rlt_season_mode;
 	private ImageView iv_season_mode;
-	public TextView tv_season_mode;
+	private TextView tv_season_mode;
 
 	public LeftFragment(Context context) {
 		super(context);
@@ -137,7 +137,7 @@ public class LeftFragment extends LinearLayout implements
 		}
 	}
 
-	List<HeaterInfo> objects;
+	private List<HeaterInfo> objects;
 
 	class DeviceAdapter extends BaseAdapter {
 

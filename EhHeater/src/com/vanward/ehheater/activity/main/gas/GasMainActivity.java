@@ -167,8 +167,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		Log.e(TAG, "GasMainActivity的onResume调用了");
 
 		String mac = getIntent().getStringExtra("mac");
-		if (mac != null
-				&& !getIntent().getBooleanExtra("newActivity", false)) {
+		if (mac != null && !getIntent().getBooleanExtra("newActivity", false)) {
 			SwitchDeviceUtil.switchDevice(mac, this);
 		}
 	}
@@ -288,6 +287,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		}
 	}
 
+	/**
+	 * 多少秒后没有回调
+	 */
+	private long connectTime = 10000;
+
 	private void queryState() {
 
 		// DialogUtil.instance().showQueryingDialog(this);
@@ -303,12 +307,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 					dealDisConnect();
 				}
 			}
-		}, MainActivity.connectTime);
+		}, connectTime);
 	}
 
 	private boolean stateQueried;
 
-	public void dealDisConnect() {
+	private void dealDisConnect() {
 		Log.e(TAG, "dealDisConnect被调用了");
 		isSendingCommand = false;
 		tv_tempter.setText("--");
@@ -464,7 +468,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
+	private void changetoSofeMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("舒适模式");
 		circle_slider.setVisibility(View.VISIBLE);
 		// circularView.setOn(true);
@@ -479,7 +483,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void changetoKictienMode(GasWaterHeaterStatusResp_t pResp) {
+	private void changetoKictienMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("厨房模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_kitchen);
 		circle_slider.setVisibility(View.GONE);
@@ -493,7 +497,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
+	private void changetoEnergyMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("节能模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_energy);
 		circle_slider.setVisibility(View.GONE);
@@ -507,7 +511,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void changetoIntelligenceMode(GasWaterHeaterStatusResp_t pResp) {
+	private void changetoIntelligenceMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("智能模式");
 		modeimg.setImageResource(R.drawable.gas_home_icon_intelligence);
 		circle_slider.setVisibility(View.GONE);
@@ -521,7 +525,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
+	private void changetoBathtubMode(GasWaterHeaterStatusResp_t pResp) {
 		tv_mode.setText("浴缸模式");
 		circle_slider.setVisibility(View.VISIBLE);
 		// circularView.setOn(true);
@@ -534,8 +538,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-
-	public void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
+	private void changetoDIYMode(GasWaterHeaterStatusResp_t pResp) {
 
 		// circularView.setVisibility(View.VISIBLE);
 
@@ -545,12 +548,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	}
 
 	// 有没有预约? 这个是 预约按钮无效的
-	public void setAppointmentButtonAble(boolean isAble) {
+	private void setAppointmentButtonAble(boolean isAble) {
 		btn_appointment.setEnabled(isAble);
 		btn_power.setEnabled(isAble);
 	}
 
-	public void dealInHeat(GasWaterHeaterStatusResp_t pResp) {
+	private void dealInHeat(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getFlame() == 1) {
 			isHeating = true;
 			stute.setText("加热中");
@@ -622,7 +625,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		}
 	}
 
-	public void initopenView() {
+	private void initopenView() {
 		openView = LinearLayout.inflate(this, R.layout.activity_open, null);
 		RelativeLayout.LayoutParams lParams = new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
@@ -640,7 +643,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		Log.e(TAG, "onConnectEvent@ConnectActivity" + connId + "-" + event);
-		
+
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			changeToOfflineUI();
@@ -677,7 +680,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			circle_slider.setVisibility(View.VISIBLE);
 			// circularView.setOn(true);
 		}
-		
+
 		if (pResp.getOn_off() == 0) {
 			tipsimg.setVisibility(View.GONE);
 			circle_slider.setVisibility(View.GONE);
@@ -699,7 +702,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void dealMode(GasWaterHeaterStatusResp_t pResp) {
+	private void dealMode(GasWaterHeaterStatusResp_t pResp) {
 
 		Log.e(TAG, "重连之后dealMode调用了");
 
@@ -742,7 +745,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	private int currentModeCode = -1;
 
-	public void closeDevice() {
+	private void closeDevice() {
 		openView.setVisibility(View.VISIBLE);
 		// rightButton.setVisibility(View.GONE);
 		ChangeStuteView.swichDeviceOff(stuteParent);
@@ -753,9 +756,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	boolean ison = false;
+	private boolean ison = false;
 
-	public void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
+	private void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getOn_off() == 0) {
 			setViewsAble(false, pResp);
 			stute.setText("关机中");
@@ -781,7 +784,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void temptertureDeal(final GasWaterHeaterStatusResp_t pResp) {
+	private void temptertureDeal(final GasWaterHeaterStatusResp_t pResp) {
 		Log.e(TAG, "返回的当前温度是 : " + pResp.getTargetTemperature());
 		if (!circle_slider.isDraging() && !isSendingCommand) {
 			circle_slider.setValue(pResp.getTargetTemperature());
@@ -812,7 +815,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void waterDeal(GasWaterHeaterStatusResp_t pResp) {
+	private void waterDeal(GasWaterHeaterStatusResp_t pResp) {
 		// 浴缸 设定注水量 累计注水量
 		shuiliuliangText.setText("实时水流量");
 		settemper.setText("/" + (pResp.getSetWater_power() * 10) + "L");
@@ -844,11 +847,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void warningDeal(GasWaterHeaterStatusResp_t pResp) {
+	private void warningDeal(GasWaterHeaterStatusResp_t pResp) {
 	}
-	
 
-	public void diyModeDeal(GasWaterHeaterStatusResp_t pResp) {
+	private void diyModeDeal(GasWaterHeaterStatusResp_t pResp) {
 		modeimg.setVisibility(View.VISIBLE);
 
 		if (pResp.getCustomFunction() != 0) {
@@ -862,23 +864,27 @@ public class GasMainActivity extends BaseBusinessActivity implements
 									+ "'");
 			Log.e(TAG, "GasCustomSetVo的大小是" + list.size());
 			if (list.size() >= pResp.getCustomFunction()) {
-//				for (int i = 0; i < list.size(); i++) {
-//					GasCustomSetVo customSetVo = list.get(i);
-//					Log.e(TAG, "customSetVo.getWaterval() : " + customSetVo.getWaterval());
-//					Log.e(TAG, "pResp.getSetWater_power() : " + pResp.getSetWater_power());
-//					Log.e(TAG, "customSetVo.getTempter()  : " + customSetVo.getTempter() );
-//					Log.e(TAG, "pResp.getTargetTemperature() : " + pResp.getTargetTemperature());
-//					if (customSetVo.getTempter() == pResp
-//									.getTargetTemperature()) {
-//						if (customSetVo.isSet()) {
-//							tv_mode.setText(customSetVo.getName());
-//							break;
-//						}
-//					}
-//					if (i == list.size() - 1) {
-//						tv_mode.setText("自定义模式");
-//					}
-//				}
+				// for (int i = 0; i < list.size(); i++) {
+				// GasCustomSetVo customSetVo = list.get(i);
+				// Log.e(TAG, "customSetVo.getWaterval() : " +
+				// customSetVo.getWaterval());
+				// Log.e(TAG, "pResp.getSetWater_power() : " +
+				// pResp.getSetWater_power());
+				// Log.e(TAG, "customSetVo.getTempter()  : " +
+				// customSetVo.getTempter() );
+				// Log.e(TAG, "pResp.getTargetTemperature() : " +
+				// pResp.getTargetTemperature());
+				// if (customSetVo.getTempter() == pResp
+				// .getTargetTemperature()) {
+				// if (customSetVo.isSet()) {
+				// tv_mode.setText(customSetVo.getName());
+				// break;
+				// }
+				// }
+				// if (i == list.size() - 1) {
+				// tv_mode.setText("自定义模式");
+				// }
+				// }
 				String name = list.get(pResp.getCustomFunction() - 1).getName();
 				tv_mode.setText(name);
 			} else {
@@ -907,7 +913,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private GasCustomSetVo curGasCustomVo = null;
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
-	public void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
+	private void dealErrorWarnIcon(final GasWaterHeaterStatusResp_t pResp) {
 
 		freezeProofing(pResp);
 		oxygenWarning(pResp);
@@ -966,7 +972,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void freezeProofing(GasWaterHeaterStatusResp_t pResp) {
+	private void freezeProofing(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getFreezeProofingWarning() == 1) {
 			showFreezeProofing();
 		}
@@ -1004,7 +1010,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void oxygenWarning(GasWaterHeaterStatusResp_t pResp) {
+	private void oxygenWarning(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getOxygenWarning() == 1) {
 			showOxygenWarning();
 		}
@@ -1041,7 +1047,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void flame(GasWaterHeaterStatusResp_t pResp) {
+	private void flame(GasWaterHeaterStatusResp_t pResp) {
 	}
 
 	@Override
@@ -1050,7 +1056,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		return true;
 	}
 
-	public void sendToMsgAfterThreeSeconds(final int value) {
+	private void sendToMsgAfterThreeSeconds(final int value) {
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 			mCountDownTimer = null;
@@ -1126,7 +1132,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	// public void updateLocalUIdifferent(int outlevel) {
 	// }
 
-	public void setViewsAble(boolean isAble, GasWaterHeaterStatusResp_t pResp) {
+	private void setViewsAble(boolean isAble, GasWaterHeaterStatusResp_t pResp) {
 		if (isAble) {
 			if (pResp.getFunction_state() == 3
 					|| pResp.getFunction_state() == 1

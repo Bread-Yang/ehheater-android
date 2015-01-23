@@ -58,7 +58,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	private boolean isActived = false;
 
-	BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
  
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -73,7 +73,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		} 
 	};
 
-	BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG,
@@ -85,7 +85,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		}
 	};
 
-	BroadcastReceiver alterDeviceDueToDeleteReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver alterDeviceDueToDeleteReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG,
@@ -106,7 +106,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		}
 	};
 
-	BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG, "logoutReceiver@BaseBusinessActivity:");

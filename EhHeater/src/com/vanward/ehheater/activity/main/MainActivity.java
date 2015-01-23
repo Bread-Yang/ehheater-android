@@ -69,8 +69,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private final String TAG = "MainActivity";
 
-	private static final byte E0 = 0;
-
 	private LeftFragment mLeftFragment;
 
 	private RightFragment mRightFragment;
@@ -80,10 +78,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	private Button btn_info;
 	private View btn_power;
 	private TextView tv_tempter, leavewater, target_tem;
-
-	private Dialog dialog_power_setting;
-
-	private WheelView wheelView1, wheelView2;
 
 	private BaoCircleSlider circle_slider;
 
@@ -101,14 +95,13 @@ public class MainActivity extends BaseBusinessActivity implements
 	private boolean isSendingCommand = false;
 
 	// 主界面错误图标
-	Byte errors;
 	private ImageView iv_error;
 
 	private Button rightButton;
 
-	public static String customPatternName = "";
+	private static String customPatternName = "";
 
-	boolean firstShowSwitchSuccess = true;
+	private boolean firstShowSwitchSuccess = true;
 
 	private boolean isError;
 
@@ -267,7 +260,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	/**
 	 * 多少秒后没有回调
 	 */
-	public static long connectTime = 10000;
+	private static long connectTime = 10000;
 
 	private void queryState() {
 		// DialogUtil.instance().showQueryingDialog(this);
@@ -384,7 +377,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		}, 100);
 	}
 
-	public void sendToMsgAfterThreeSeconds(final int value) {
+	private void sendToMsgAfterThreeSeconds(final int value) {
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
@@ -591,11 +584,11 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	}
 
-	public void Tojishi() {
+	private void Tojishi() {
 		SendMsgModel.changeToJishiMode();
 	}
 
-	public void setPower() {
+	private void setPower() {
 		int oldvalue = Integer.parseInt((String) powerTv.getText().subSequence(
 				0, 1));
 
@@ -647,7 +640,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void freezeProofing(StateResp_t date) {
+	private void freezeProofing(StateResp_t date) {
 		Log.e(TAG, "防冻报警 : " + date.getError());
 		if (date.getError() == 160) {
 			iv_error.setVisibility(View.VISIBLE);
@@ -683,7 +676,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void meibangWran(final StateResp_t date) {
+	private void meibangWran(final StateResp_t date) {
 		Log.e(TAG, "镁棒提示 : " + date.getHeating_tube_time());
 		if (date.getHeating_tube_time() > 800 * 60) {
 			iv_error.setVisibility(View.VISIBLE);
@@ -721,7 +714,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * 
 	 * @param pResp
 	 */
-	public void waterWarn(final StateResp_t date) {
+	private void waterWarn(final StateResp_t date) {
 		Log.e(TAG, "水质提醒：" + date.getMachine_not_heating_time());
 		if (date.getMachine_not_heating_time() > 9 * 24 * 60) {
 			iv_error.setVisibility(View.VISIBLE);
@@ -753,10 +746,10 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	// 错误图标
 
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
 			"yyyy/MM/dd HH:mm:ss");
 
-	public void dealErrorWarnIcon(final StateResp_t date) {
+	private void dealErrorWarnIcon(final StateResp_t date) {
 		freezeProofing(date);
 		meibangWran(date);
 		waterWarn(date);
@@ -920,7 +913,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private int currentModeCode = -1;
 
-	public void setTempture(final byte[] b) {
+	private void setTempture(final byte[] b) {
 		System.out.println("当前水温：" + new EhState(b).getInnerTemp1() + "   "
 				+ new EhState(b).getInnerTemp2() + "   "
 				+ new EhState(b).getInnerTemp3());
@@ -946,7 +939,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		System.out.println("当前设置温度：" + new EhState(b).getTargetTemperature());
 	}
 
-	public void setHotAnimition(byte[] b) {
+	private void setHotAnimition(byte[] b) {
 		if (new EhState(b).getSystemRunningState() == 0) {
 			// 未加热
 			hotImgeImageView.setVisibility(View.GONE);
@@ -974,29 +967,29 @@ public class MainActivity extends BaseBusinessActivity implements
 		}
 	}
 
-	public void setLeaveWater(byte[] b) {
+	private void setLeaveWater(byte[] b) {
 		System.out.println("当前水量："
 				+ new EhState(b).getRemainingHotWaterAmount());
 		leavewater.setText(new EhState(b).getRemainingHotWaterAmount() + "%");
 	}
 
-	public void setPower(byte[] b) {
+	private void setPower(byte[] b) {
 		System.out.println("当前功率：" + new EhState(b).getPower());
 		powerTv.setText(new EhState(b).getPower() + "kw");
 	}
 
-	public void setTargerTempertureUI(byte[] b) {
+	private void setTargerTempertureUI(byte[] b) {
 		if (!circle_slider.isDraging() && !isSendingCommand) {
 			circle_slider.setValue(new EhState(b).getTargetTemperature());
 			target_tem.setText(new EhState(b).getTargetTemperature() + "℃");
 		}
 	}
 
-	public void setAppointmentButtonAble(boolean isAble) {
+	private void setAppointmentButtonAble(boolean isAble) {
 		// btn_appointment.setEnabled(isAble);
 	}
 
-	public void initopenView() {
+	private void initopenView() {
 		openView = LinearLayout.inflate(this, R.layout.activity_open, null);
 		RelativeLayout.LayoutParams lParams = new LayoutParams(
 				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
@@ -1022,7 +1015,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	}
 
-	public void dealDisConnect() {
+	private void dealDisConnect() {
 		ison = false;
 		currentModeCode = 0;
 		isSendingCommand = false;

@@ -88,20 +88,6 @@ public class WelcomeActivity extends GeneratedActivity {
 		}
 
 		return curHeater;
-
-		// HeaterInfo hinfo = new HeaterInfo();
-		// hinfo.setMac("C8934641B3B4");
-		// hinfo.setDid("1");
-		// hinfo.setPasscode("FKAIDJKART");
-		// return hinfo;
-
-		// HeaterInfo hinfo = new HeaterInfo();
-		// hinfo.setMac("C8934642E4C7");
-		// hinfo.setDid("o4kvBWCq5QwcWuZZbm4w4Z");
-		// hinfo.setPasscode("JPDRRIXEKX");
-		// hinfo.setBinded(1);
-		// return hinfo;
-
 	}
 
 	HeaterInfo curHeater;
@@ -261,20 +247,6 @@ public class WelcomeActivity extends GeneratedActivity {
 			return false;
 		}
 	});
-
-	// private void setBinding() {
-	// Intent intent = new Intent();
-	// intent.setClass(getBaseContext(), DummySendBindingReqActivity.class);
-	// intent.putExtra(Consts.INTENT_EXTRA_USERNAME,
-	// AccountService.getUserId(getBaseContext()));
-	// intent.putExtra(Consts.INTENT_EXTRA_USERPSW,
-	// AccountService.getUserPsw(getBaseContext()));
-	// intent.putExtra(Consts.INTENT_EXTRA_DID2BIND, getCurrentDevice()
-	// .getDid());
-	// intent.putExtra(Consts.INTENT_EXTRA_PASSCODE2BIND, getCurrentDevice()
-	// .getPasscode());
-	// startActivityForResult(intent, Consts.REQUESTCODE_UPLOAD_BINDING);
-	// }
 
 	@Override
 	protected void onResume() {

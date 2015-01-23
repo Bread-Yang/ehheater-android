@@ -49,11 +49,7 @@ public class ConnectActivity extends GeneratedActivity {
 	private final static int LAN_SEARCHING = 1;
 	private final static int LAN_FOUND = 2;
 
-	private TextView mTvInfo, mTvInfo2;
-
 	private Button mBtnRetry;
-
-	private ProgressBar mPbar;
 
 	/** 建立的连接类型, LAN / MQTT(大) */
 	private int connType = Integer.MAX_VALUE;
@@ -102,10 +98,7 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "onCreate()");
 
 		setContentView(R.layout.activity_connect_as_dialog);
-		mTvInfo = (TextView) findViewById(R.id.awad_tv);
-		mTvInfo2 = (TextView) findViewById(R.id.awad_tv_2);
 		mBtnRetry = (Button) findViewById(R.id.awad_btn_retry);
-		mPbar = (ProgressBar) findViewById(R.id.acad_pbar);
 
 		mBtnRetry.setOnClickListener(new View.OnClickListener() {
 
@@ -171,7 +164,6 @@ public class ConnectActivity extends GeneratedActivity {
 
 		runOnUiThread(new Runnable() {
 			public void run() {
-				mTvInfo.setText("通过云端连接中...");
 			};
 		});
 
@@ -321,7 +313,6 @@ public class ConnectActivity extends GeneratedActivity {
 		tempConnId = connId;
 		switch (result) {
 		case 0: // 可以控制
-			mTvInfo.setText("设备已连接!");
 			// generated.SendStateReq(Global.connectId);
 
 			Intent data = new Intent();
@@ -401,7 +392,6 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
 
 		if (pResp.getResult() == 0) {
-			mTvInfo.setText("设备已连接!");
 			jobDone = true;
 			// generated.SendStateReq(Global.connectId);
 
@@ -496,7 +486,6 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private void setOfflineResult() {
 		Log.e(TAG, "setOfflineResult()");
-		mTvInfo.setText("设备不在线");
 		Intent data = new Intent();
 		data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
 		data.putExtra(Consts.INTENT_EXTRA_ISONLINE, false);
@@ -588,7 +577,6 @@ public class ConnectActivity extends GeneratedActivity {
 
 				if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
 					// 先试小循环, 不行则大
-					mTvInfo.setText("通过局域网连接中...");
 					currentLanSearchingState = LAN_SEARCHING;
 					Log.e(TAG, "小循环");
 					if (getIntent()
@@ -603,7 +591,6 @@ public class ConnectActivity extends GeneratedActivity {
 									public void run() {
 										runOnUiThread(new Runnable() {
 											public void run() {
-												mTvInfo.setText("通过局域网连接热水器失败");
 											};
 										});
 										// 启动大循环
@@ -623,7 +610,6 @@ public class ConnectActivity extends GeneratedActivity {
 			case STATE_LAN_ONLY:
 				// 当前设备没有did, 仅能通过小循环控制
 				if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
-					mTvInfo.setText("通过局域网连接中...");
 					currentLanSearchingState = LAN_SEARCHING;
 					tryConnectBySmallCycle(defaultScanInterval,
 							defaultScanTimeout, new TimerTask() {
@@ -631,7 +617,6 @@ public class ConnectActivity extends GeneratedActivity {
 								public void run() {
 									runOnUiThread(new Runnable() {
 										public void run() {
-											mTvInfo.setText("通过局域网连接热水器失败");
 										};
 									});
 								}
@@ -639,7 +624,6 @@ public class ConnectActivity extends GeneratedActivity {
 
 				} else {
 					// 无法控制
-					mTvInfo.setText("无法连接设备");
 				}
 
 				break;
