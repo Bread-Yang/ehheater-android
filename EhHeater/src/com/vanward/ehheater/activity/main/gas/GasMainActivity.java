@@ -764,6 +764,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			stute.setText("关机中");
 			circle_slider.setVisibility(View.GONE);
 			// circularView.setOn(false);
+			tv_mode.setVisibility(View.INVISIBLE);
 			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 			ison = false;
 		} else {
@@ -774,6 +775,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				setViewsAble(true, pResp);
 				stute.setText("待机中");
 			}
+			tv_mode.setVisibility(View.VISIBLE);
 			ison = true;
 			rightButton.setBackgroundResource(R.drawable.icon_shut);
 		}

@@ -151,7 +151,7 @@
     <string name="gas_unit">m³/h</string>
     <string name="turn_off">关机</string>
     <string name="turn_on">开机</string>
-    <string name="shutdown">关机中</string>
+    <string name="shutdown">已关机</string>
     <string name="standby">待机中</string>
     <string name="gas_consumption">燃气耗量</string>
     <string name="realtime_consumption">实时耗量</string>

@@ -73,7 +73,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	private RightFragment mRightFragment;
 
-	private TextView mTitleName, modeTv, powerTv, temptertitleTextView;
+	private TextView mTitleName, tv_mode, powerTv, temptertitleTextView;
 
 	private Button btn_info;
 	private View btn_power;
@@ -343,7 +343,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		temptertitleTextView = (TextView) findViewById(R.id.temptertext);
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		btn_info = (Button) findViewById(R.id.btn_information);
-		modeTv = (TextView) findViewById(R.id.mode_tv);
+		tv_mode = (TextView) findViewById(R.id.mode_tv);
 		stuteParent = (ViewGroup) findViewById(R.id.stute);
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
 		iv_wave = (ImageView) findViewById(R.id.wave_bg);
@@ -442,7 +442,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			break;
 		case R.id.pattern:
 			Intent intent2 = new Intent();
-			intent2.putExtra("name", modeTv.getText());
+			intent2.putExtra("name", tv_mode.getText());
 			intent2.setClass(this, EIPatternActivity.class);
 			startActivity(intent2);
 			break;
@@ -478,7 +478,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void changeToIntelligenceModeUpdateUI(byte[] data) {
-		modeTv.setText("智能模式");
+		tv_mode.setText("智能模式");
 		circle_slider.setVisibility(View.VISIBLE);
 		// circularView.setOn(true);
 		setAppointmentButtonAble(true);
@@ -494,7 +494,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void changeTojishiModeUpdateUI(byte[] data) {
-		modeTv.setText("即时加热");
+		tv_mode.setText("即时加热");
 		circle_slider.setVisibility(View.GONE);
 		// circularView.setOn(false);
 		setAppointmentButtonAble(true);
@@ -512,7 +512,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void changeToNightModeUpdateUI(byte[] data) {
-		modeTv.setText("夜电模式");
+		tv_mode.setText("夜电模式");
 		circle_slider.setVisibility(View.GONE);
 		// circularView.setOn(false);
 		setAppointmentButtonAble(false);
@@ -533,7 +533,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		setAppointmentButtonAble(true);
 		final int targetTemperature = ehState.getTargetTemperature();
 		final int power = ehState.getPower();
-		modeTv.post(new Runnable() {
+		tv_mode.post(new Runnable() {
 
 			@Override
 			public void run() {
@@ -554,17 +554,17 @@ public class MainActivity extends BaseBusinessActivity implements
 								&& customSetVo.getTempter() == targetTemperature) {
 
 							if (customSetVo.isSet()) {
-								modeTv.setText(customSetVo.getName());
+								tv_mode.setText(customSetVo.getName());
 								break;
 							}
 						}
 						if (i == list.size() - 1) {
-							modeTv.setText("自定义模式");
+							tv_mode.setText("自定义模式");
 						}
 					}
 				} else {
 					Log.e(TAG, "自定义模式");
-					modeTv.setText("自定义模式");
+					tv_mode.setText("自定义模式");
 				}
 
 			}
@@ -623,7 +623,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		circle_slider.setVisibility(View.GONE);
 		// circularView.setOn(false);
 		setAppointmentButtonAble(false);
-		modeTv.setText("晨浴模式");
+		tv_mode.setText("晨浴模式");
 		ChangeStuteView.swichMorningWash(stuteParent);
 		int i = new EhState(data).getRemainingHeatingTime();
 		System.out.println("测试晨浴i: " + i);
@@ -887,9 +887,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			if (!new EhState(data).isPoweredOn()) {
 				System.out.println("关机了");
-				// openView.setVisibility(View.VISIBLE);
 				circle_slider.setVisibility(View.GONE);
-				// circularView.setOn(false);
+				tv_mode.setVisibility(View.INVISIBLE);
 				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
@@ -899,8 +898,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				ChangeStuteView.swichDeviceOff(stuteParent);
 				ison = false;
 			} else {
-				// rightButton.setVisibility(View.VISIBLE);F
-				// openView.setVisibility(View.GONE);
+				tv_mode.setVisibility(View.VISIBLE);
 				findViewById(R.id.pattern).setEnabled(true);
 				findViewById(R.id.power).setEnabled(true);
 				rightButton.setBackgroundResource(R.drawable.icon_shut_able);
@@ -1020,7 +1018,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		currentModeCode = 0;
 		isSendingCommand = false;
 		tv_tempter.setText("--");
-		modeTv.setText("--模式");
+		tv_mode.setText("--模式");
 		leavewater.setText("--%");
 		powerTv.setText("--");
 		target_tem.setText("--");

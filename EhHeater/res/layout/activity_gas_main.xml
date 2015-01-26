@@ -27,7 +27,7 @@
         android:singleLine="true"
         android:paddingTop="3dp"
         android:text="--模式"
-        android:textColor="@color/an_hui"
+        android:textColor="@color/title_color"
         android:textSize="23dp" />
         
         <ImageView

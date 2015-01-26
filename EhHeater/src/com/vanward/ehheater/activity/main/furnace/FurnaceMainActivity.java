@@ -86,7 +86,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private Dialog turnOffInWinnerDialog;
 
 	private boolean isPowerOffOrOffline;
-	
+
 	private boolean firstShowSwitchSuccess = true;
 
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
@@ -124,7 +124,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		// generated.SendDERYRefreshReq(Global.connectId);
 		// }
 		// });
-		
+
 		if (getIntent().getBooleanExtra("newActivity", false)) {
 			String furnaceMac = getIntent().getStringExtra("mac");
 			connectDevice("", furnaceMac);
@@ -132,7 +132,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			connectCurDevice();
 		}
 
-//		connectCurDevice();
+		// connectCurDevice();
 	}
 
 	// private void initSlidingMenu() {
@@ -278,7 +278,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			return;
 		} else {
 			if (statusResp != null) {
-//				statusResp.delete();
+				// statusResp.delete();
 			}
 			statusResp = pResp;
 		}
@@ -286,8 +286,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		seasonAndModeDeal(pResp); // switch season and mode
 		onOffDeal(pResp);
 		gasConsumptionDeal(pResp);
-		
-//		pResp.delete();
+
+		// pResp.delete();
 	}
 
 	@Override
@@ -752,9 +752,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					Consts.INTENT_EXTRA_ISONLINE, true);
 			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
 			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
-			String conntext = data.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+			String conntext = data
+					.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
 
-			final HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			final HeaterInfoService hser = new HeaterInfoService(
+					getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
 			if (!TextUtils.isEmpty(passcode)) {
@@ -779,9 +781,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					queryState();
 				}
 
-				if (getIntent().getBooleanExtra("switchSuccess", false) && firstShowSwitchSuccess) {
+				if (getIntent().getBooleanExtra("switchSuccess", false)
+						&& firstShowSwitchSuccess) {
 					// 12月16日需求:去掉切换成功的提示
-					/*appointmentSwitchSuccessDialog.show();*/
+					/* appointmentSwitchSuccessDialog.show(); */
 					firstShowSwitchSuccess = false;
 				}
 
@@ -795,7 +798,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				DialogUtil.instance().showReconnectDialog(new Runnable() {
 					@Override
 					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext(), hser.getCurrentSelectedHeaterMac());
+						CheckOnlineUtil.ins().start(getBaseContext(),
+								hser.getCurrentSelectedHeaterMac());
 					}
 				}, this);
 			}
@@ -838,6 +842,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	private boolean stateQueried;
 
+	/**
+	 * 多少秒后没有回调
+	 */
+	private static long connectTime = 10000;
+
 	private void queryState() {
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
@@ -854,7 +863,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				}
 
 			}
-		}, MainActivity.connectTime);
+		}, connectTime);
 	}
 
 	@Override
@@ -869,10 +878,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		ErrorUtils.isFurnaceMainActivityActive = true;
 		ErrorUtils.isMainActivityActive = false;
 		ErrorUtils.isGasMainActivityActive = false;
-		
+
 		String mac = getIntent().getStringExtra("mac");
-		if (mac != null
-				&& !getIntent().getBooleanExtra("newActivity", false)) {
+		if (mac != null && !getIntent().getBooleanExtra("newActivity", false)) {
 			SwitchDeviceUtil.switchDevice(mac, this);
 		}
 	}
