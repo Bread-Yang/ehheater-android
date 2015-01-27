@@ -3,6 +3,7 @@ package com.vanward.ehheater.activity.main.furnace;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import net.tsz.afinal.http.AjaxCallBack;
@@ -12,11 +13,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Dialog;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.CheckBox;
@@ -30,8 +32,12 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.TextUtil;
+import com.vanward.ehheater.view.BaoBarView;
+import com.vanward.ehheater.view.BaoBarView.BaoBarViewAdapter;
+import com.vanward.ehheater.view.BaoBarView.BaoTouchArea;
+import com.vanward.ehheater.view.BaoBarView.CGPoint;
 
-public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
+public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  implements BaoBarViewAdapter{
 
 	private final String TAG = "FurnaceIntelligentControlActivity";
 
@@ -43,6 +49,13 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 	private CheckBox cb_Monday, cb_Thuesday, cb_Wednesday, cb_Thursday,
 			cb_Friday, cb_Saturday, cb_Sunday;
+	
+	private BaoBarView bbv;
+	private int[] data = new int[48];
+	
+	private CGPoint touchPoint;  
+	private float tempOffset;
+	private BaoTouchArea touchArea;
 
 	private ArrayList<int[]> highChar_data;
 
@@ -69,6 +82,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 	}
 
 	private void findViewById() {
+		bbv = (BaoBarView) findViewById(R.id.bbv);
 		wv_chart = (WebView) findViewById(R.id.wv_chart);
 		tb_switch = (ToggleButton) findViewById(R.id.tb_switch);
 		cb_Monday = (CheckBox) findViewById(R.id.cb_Monday);
@@ -87,6 +101,50 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 			@Override
 			public void onClick(View v) {
 				saveDialog.show();
+			}
+		});
+		
+		bbv.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				v.getParent().requestDisallowInterceptTouchEvent(true);
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					touchPoint = new CGPoint(event.getX(), event.getY());
+					tempOffset = bbv.getxOffset();
+					BaoTouchArea area = bbv.touchAreaOfPoint(touchPoint);
+					touchArea = area;
+					break; 
+				case MotionEvent.ACTION_MOVE:
+					CGPoint point = new CGPoint(event.getX(), event.getY());
+					if (touchArea == BaoTouchArea.BaoTouch_Scroll) {
+						Float offset = (float) Math.abs(point.x - touchPoint.x);
+						boolean toLeft = (point.x <= touchPoint.x);
+						if (!toLeft) {
+							offset = -offset;
+						}
+						float tempOffset = FurnaceIntelligentControlActivity.this.tempOffset;// self.xOffset;
+						tempOffset += offset;
+						tempOffset = (tempOffset < 0) ? 0 : tempOffset;
+						bbv.setxOffset(tempOffset);
+					} else if (touchArea == BaoTouchArea.BaoTouch_SetValue) {
+						int index = bbv.indexOfTouchPoint(point);
+						int newValue = (int) bbv.valueOfTouchPoint(point);
+						if (index < data.length) {
+							int value = data[index];
+							data[index] = newValue;
+							bbv.invalidate();
+							Log.e(TAG, "data : " + Arrays.toString(data));
+						}
+					}
+					break;
+				case MotionEvent.ACTION_UP:
+
+					break;
+
+				}
+				return true;
 			}
 		});
 	}
@@ -133,7 +191,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 			String data = json.getJSONArray("data").toString();
 
 			highChar_data = gson.fromJson(data,
-					new TypeToken<ArrayList<int[]>>() {
+					new TypeToken<ArrayList<int[]>>() { 
 					}.getType());
 
 			loop = json.getString("loop");
@@ -222,6 +280,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 		// did = new
 		// HeaterInfoService(this).getCurrentSelectedHeater().getDid();
 		// uid = AccountService.getUserId(getBaseContext());
+		bbv.setAdapter(this);
 
 		saveDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.confirm_save,
@@ -247,16 +306,16 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 
 		extractDataFromJson(getTestData()); // for test
 
-		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
-				"highChartsJavaScriptInterface");
-		wv_chart.getSettings().setJavaScriptEnabled(true);
+//		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
+//				"highChartsJavaScriptInterface");
+//		wv_chart.getSettings().setJavaScriptEnabled(true);
 //		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control.html");
-		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control_new.html");
-		wv_chart.setBackgroundColor(0xF3F3F3);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			wv_chart.getSettings().setAllowUniversalAccessFromFileURLs(true);
-			wv_chart.getSettings().setAllowFileAccessFromFileURLs(true);
-		}
+//		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control_new.html");
+//		wv_chart.setBackgroundColor(0xF3F3F3);
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//			wv_chart.getSettings().setAllowUniversalAccessFromFileURLs(true);
+//			wv_chart.getSettings().setAllowFileAccessFromFileURLs(true);
+//		}
 	}
 
 	private void requestHttpData() {
@@ -288,5 +347,22 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity {
 			// x是从1开始,1到24小时
 			highChar_data.set(x - 1, new int[] { x, newY });
 		}
+	}
+
+	@Override
+	public int numberOfBarInBarView(BaoBarView barView) {
+		return data.length;
+	}
+
+	@Override
+	public float valueOfIndex(BaoBarView barView, int index) {
+		return data[index];
+	}
+
+	@Override
+	public String xAxisTitleOfIndex(BaoBarView barView, int index) {
+		int hour = index / 2;
+		int minute = index % 2 * 30;
+		return String.format("%02d", hour) + ":" + String.format("%02d", minute) ;
 	}
 }
