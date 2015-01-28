@@ -63,12 +63,17 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG, "wifiConnectedReceiver的onReceive()执行了");
-			if (isActived) {
-				if (!NetworkStatusUtil.isConnected(BaseBusinessActivity.this)) {
-					DialogUtil.instance().showReconnectDialog(null, BaseBusinessActivity.this);
-				} else {
-					connectCurDevice();
-				} 
+			boolean isConnected = intent.getBooleanExtra("isConnected", false);
+			if (isConnected) {
+				if (isActived) {
+					if (!NetworkStatusUtil.isConnected(BaseBusinessActivity.this)) {
+						DialogUtil.instance().showReconnectDialog(null, BaseBusinessActivity.this);
+					} else {
+						connectCurDevice();
+					} 
+				}
+			} else {
+				changeToOfflineUI();
 			}
 		} 
 	};

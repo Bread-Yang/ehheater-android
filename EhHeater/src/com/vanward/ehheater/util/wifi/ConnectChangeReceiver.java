@@ -25,9 +25,10 @@ public class ConnectChangeReceiver extends BroadcastReceiver {
 		
 		Log.e(TAG, "isConnected : " + isConnected);
 
-		if (isConnected) { // 如果有网络,则自动重连
+//		if (isConnected) { // 如果有网络,则自动重连
 			intent = new Intent(CONNECTED);
+			intent.putExtra("isConnected", isConnected);
 			LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-		}
+//		}
 	}
 }
