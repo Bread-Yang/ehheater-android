@@ -30,14 +30,13 @@ import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.EasyLinkDialogUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.wifi.WifiAdmin;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
-import com.xtremeprog.xpgconnect.generated.EasylinkResp_t;
 import com.xtremeprog.xpgconnect.generated.OnboardingSetResp_t;
-import com.xtremeprog.xpgconnect.generated.WifiListResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -113,7 +112,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 				TimerTask timerTask = new TimerTask() {
 
 					@Override
-					public void run() { 
+					public void run() {
 						Log.e(TAG, "在发送ssid和密码");
 						generated.SendOnboardingSetReq(
 								generated.String2XpgData(ed_input_ssid
@@ -129,12 +128,36 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			break;
 		}
 	}
-	
+
 	@Override
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
 		Log.e(TAG, TAG + "的onEasyLinkResp执行了");
+		// if (dialog_easylink.isShowing()) {
+		//
+		// Log.e(TAG, "打印productKey前");
+		// Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
+		// Log.e(TAG, ("".equals(endpoint.getSzProductKey()) + ""));
+		// if (endpoint.getSzProductKey() == null
+		// || "".equals(endpoint.getSzProductKey())) {
+		// return;
+		// }
+		// if (endpoint.getSzMac() == null || "".equals(endpoint.getSzMac())) {
+		// return;
+		// }
+		//
+		// counter.cancel();
+		// dialog_easylink.dismiss();
+		//
+		// finishingConfig(endpoint);
+		// }
+	}
+
+	@Override
+	public void onAirLinkResp(XpgEndpoint endpoint) {
+		super.onAirLinkResp(endpoint);
+		Log.e(TAG, TAG + "的onAirLinkResp执行了");
 		if (dialog_easylink.isShowing()) {
-			
+
 			Log.e(TAG, "打印productKey前");
 			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
 			Log.e(TAG, ("".equals(endpoint.getSzProductKey()) + ""));
@@ -145,10 +168,10 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			if (endpoint.getSzMac() == null || "".equals(endpoint.getSzMac())) {
 				return;
 			}
-			
+
 			counter.cancel();
 			dialog_easylink.dismiss();
-			
+
 			finishingConfig(endpoint);
 		}
 	}
@@ -182,8 +205,17 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			hser.addNewHeater(hinfo);
 		}
 
-		Log.e("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
-				+ "-" + hinfo.getPasscode());
+		SharedPreferUtils spu = new SharedPreferUtils(this);
+		if (hser.getHeaterType(hinfo) == HeaterType.Eh) {
+			spu.put(ShareKey.FirstEhDeviceDid, hinfo.getDid());
+		} else if (hser.getHeaterType(hinfo) == HeaterType.ST) {
+			spu.put(ShareKey.FirstGasDeviceDid, hinfo.getDid());
+		}
+
+		new SharedPreferUtils(this).put(ShareKey.CurDeviceDid,
+				endpoint.getSzDid());
+		new SharedPreferUtils(this).put(ShareKey.CurDeviceAddress,
+				endpoint.getAddr());
 
 		String username = AccountService.getPendingUserId(getBaseContext());
 		String userpsw = AccountService.getPendingUserPsw(getBaseContext());
@@ -288,7 +320,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		}
 
 		linkLastConnectWifi();
-		
+
 		// WifiAdmin wifiAdmin = new WifiAdmin(ManualConfStep2Activity.this);
 		// wifiAdmin.openWifi();
 		// wifiAdmin.addNetwork(wifiAdmin.CreateWifiInfo(ssid, "123456789", 3));

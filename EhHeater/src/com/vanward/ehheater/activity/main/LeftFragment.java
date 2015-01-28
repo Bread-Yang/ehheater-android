@@ -35,14 +35,16 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.AlterDeviceHelper;
+import com.vanward.ehheater.util.SharedPreferUtils;
+import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 
 public class LeftFragment extends LinearLayout implements
 		android.view.View.OnClickListener, OnItemClickListener {
 
-	private Button btn_user_manager, btn_device_manager, btn_tip, btn_help, btn_about,
-			btn_season_mode;
+	private Button btn_user_manager, btn_device_manager, btn_tip, btn_help,
+			btn_about, btn_season_mode;
 	private View deviceSwitchLayout, deviceSwitchBtn;
 	private RelativeLayout rlt_season_mode;
 	private ImageView iv_season_mode;
@@ -224,6 +226,13 @@ public class LeftFragment extends LinearLayout implements
 			HeaterType newHeaterType = hser.getHeaterType(heaterInfo);
 
 			hser.setCurrentSelectedHeater(heaterInfo.getMac());
+
+			SharedPreferUtils spu = new SharedPreferUtils(getContext());
+			if (newHeaterType == HeaterType.Eh) {
+				spu.put(ShareKey.FirstEhDeviceDid, heaterInfo.getDid());
+			} else if (newHeaterType == HeaterType.ST) {
+				spu.put(ShareKey.FirstGasDeviceDid, heaterInfo.getDid());
+			}
 
 			AlterDeviceHelper.newHeaterType = newHeaterType;
 			AlterDeviceHelper.typeChanged = !newHeaterType

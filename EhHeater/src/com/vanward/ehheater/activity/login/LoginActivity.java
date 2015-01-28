@@ -13,9 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,14 +22,13 @@ import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
-import com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentTimeActivity;
 import com.vanward.ehheater.activity.user.RegisterActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.NetworkStatusUtil;
@@ -284,6 +281,17 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			// 非有效设备, 不予保存
 			Log.e(TAG, "非有效设备, 不予保存");
 			return;
+		}
+
+		SharedPreferUtils spu = new SharedPreferUtils(this);
+		if (hser.getHeaterType(hi).equals(HeaterType.Eh)) {
+			if ("".equals(spu.get(ShareKey.FirstEhDeviceDid, ""))) {
+				spu.put(ShareKey.FirstEhDeviceDid, hi.getDid());
+			}
+		} else if (hser.getHeaterType(hi).equals(HeaterType.ST)) {
+			if ("".equals(spu.get(ShareKey.FirstGasDeviceDid, ""))) {
+				spu.put(ShareKey.FirstGasDeviceDid, hi.getDid());
+			}
 		}
 
 		onDeviceFoundTriggered = true;

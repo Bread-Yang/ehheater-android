@@ -1,14 +1,10 @@
 package com.vanward.ehheater.notification;
 
-import java.util.List;
-import java.util.Random;
+import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import u.aly.cn;
-
-import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -21,14 +17,11 @@ import android.util.Log;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.main.MainActivity;
-import com.vanward.ehheater.activity.main.gas.GasMainActivity;
-import com.vanward.ehheater.bean.HeaterInfo;
-import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
-import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.SharedPreferUtils;
+import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 
 public class PollingService extends Service {
 
@@ -106,22 +99,25 @@ public class PollingService extends Service {
 		if (null != uid && !"".equals(uid)) { // 有uid的时候才请求
 
 		}
-		List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
-				.getAllDeviceOfType(HeaterType.Eh);
-		if (allDevices != null) {
-			// Log.e(TAG, "electicHeaterDids的大小是 : " + allDevices.size() + "");
-		} else {
-			// Log.e(TAG, "electicHeaterDids为null : " +
-			// "electicHeaterDids为null");
-		}
-		if (allDevices != null && allDevices.size() > 0) {
+		// List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
+		// .getAllDeviceOfType(HeaterType.Eh);
+		// if (allDevices != null) {
+		// // Log.e(TAG, "electicHeaterDids的大小是 : " + allDevices.size() + "");
+		// } else {
+		// // Log.e(TAG, "electicHeaterDids为null : " +
+		// // "electicHeaterDids为null");
+		// }
+		SharedPreferUtils spu = new SharedPreferUtils(this);
+		String did = spu.get(ShareKey.FirstEhDeviceDid, "");
+		Log.e(TAG, "EhHeaterDid : " + did);
+		if (!"".equals(did)) {
+			// if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
-			electicMac = allDevices.get(0).getMac();
+			// electicMac = allDevices.get(0).getMac();
 			// Log.e(TAG, "electic mac是 : " + allDevices.get(0).getMac());
-			Log.e(TAG, "电热的did是 : " + allDevices.get(0).getDid());
-			String requestURL = "GasInfo/getNewestElData?did="
-					+ allDevices.get(0).getDid();
+			// Log.e(TAG, "电热的did是 : " + allDevices.get(0).getDid());
+			String requestURL = "GasInfo/getNewestElData?did=" + did;
 			// Log.e(TAG, "checkElecticHeaterInfo的URL" + Consts.REQUEST_BASE_URL
 			// + requestURL);
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
@@ -210,22 +206,27 @@ public class PollingService extends Service {
 
 	/** 燃热水器故障 */
 	private void checkGasHeaterInfo() {
-		List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
-				.getAllDeviceOfType(HeaterType.ST);
-		if (allDevices != null) {
-			// Log.e(TAG, "gasHeaterDids的大小是 : " + allDevices.size() + "");
-		} else {
-			// Log.e(TAG, "gasHeaterDids为null : " + "gasHeaterDids为null");
-		}
-		if (allDevices != null && allDevices.size() > 0) {
+		// List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
+		// .getAllDeviceOfType(HeaterType.ST);
+		// if (allDevices != null) {
+		// // Log.e(TAG, "gasHeaterDids的大小是 : " + allDevices.size() + "");
+		// } else {
+		// // Log.e(TAG, "gasHeaterDids为null : " + "gasHeaterDids为null");
+		// }
+		SharedPreferUtils spu = new SharedPreferUtils(this);
+		String did = spu.get(ShareKey.FirstGasDeviceDid, "");
+		Log.e(TAG, "GasHeaterDid : " + did);
+		if (!"".equals(did)) {
+			// if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
 			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
-			gasMac = allDevices.get(0).getMac();
+			// gasMac = allDevices.get(0).getMac();
 			// Log.e(TAG, "gasMac是 : " + gasMac);
-			Log.e(TAG, "燃热的did是 : " + allDevices.get(0).getDid());
-			String requestURL = "GasInfo/getNewestData?did="
-					+ allDevices.get(0).getDid();
+			// Log.e(TAG, "燃热的did是 : " + allDevices.get(0).getDid());
+
+			String requestURL = "GasInfo/getNewestData?did=" + did;
 			// Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);
+
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						@Override
@@ -294,6 +295,13 @@ public class PollingService extends Service {
 												R.string.oxygen_warn,
 												R.string.oxygen_tips);
 									}
+
+									int water_function = result
+											.getInt("water_function");
+									if (water_function == 1) {
+										showNotification(1, R.string.tips,
+												R.string.full_water);
+									}
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -336,19 +344,15 @@ public class PollingService extends Service {
 			intent.putExtra("errorCode", electicErrorCode);
 			intent.putExtra("mac", electicMac);
 			intent.putExtra("isGas", false);
-			intent.putExtra("device_type", HeaterType.Eh);
 			// intent.setClass(this, MainActivity.class);
-		} else if (notifyId == 1) { // 燃热水器
+		} else {
 			// intent.setClass(this, GasMainActivity.class);
 			intent.putExtra("isGas", true);
-			intent.putExtra("device_type", HeaterType.ST);
 			intent.putExtra("mac", gasMac);
 			intent.putExtra("gasIsFreezeProofingWarning",
 					gasIsFreezeProofingWarning);
 			intent.putExtra("gasIsOxygenWarning", gasIsOxygenWarning);
 			intent.putExtra("errorCode", gasErrorCode);
-		} else if (notifyId == 2) { // 壁挂炉
-			intent.putExtra("device_type", HeaterType.EH_FURNACE);
 		}
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -371,6 +375,7 @@ public class PollingService extends Service {
 
 				@Override
 				public void run() {
+					Log.e(TAG, "PollingThread执行了");
 					// checkAppointment();
 					checkElecticHeaterInfo();
 					checkGasHeaterInfo();
@@ -382,12 +387,6 @@ public class PollingService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-	}
-
-	@Override
-	public void onTaskRemoved(Intent rootIntent) {
-		super.onTaskRemoved(rootIntent);
-		Log.e(TAG, "onTaskRemoved()执行了");
 	}
 
 }

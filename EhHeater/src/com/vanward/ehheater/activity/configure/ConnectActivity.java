@@ -13,13 +13,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
+import com.vanward.ehheater.BuildConfig;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.AccountService;
@@ -97,6 +97,14 @@ public class ConnectActivity extends GeneratedActivity {
 		super.onCreate(savedInstanceState);
 		Log.e(TAG, "onCreate()");
 
+		if (BuildConfig.DEBUG) {
+			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+					.detectAll().penaltyLog().build());
+			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+					.detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
+					.penaltyLog().penaltyDeath().build());
+		}
+
 		setContentView(R.layout.activity_connect_as_dialog);
 		mBtnRetry = (Button) findViewById(R.id.awad_btn_retry);
 
@@ -156,9 +164,9 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "tryConnectByBigCycle()");
 
 		XPGConnectClient.xpgcLogin2Wan(
-		AccountService.getUserId(getBaseContext()),
-		AccountService.getUserPsw(getBaseContext()), "", "");
-//		XPGConnShortCuts.connect2big();
+				AccountService.getUserId(getBaseContext()),
+				AccountService.getUserPsw(getBaseContext()), "", "");
+		// XPGConnShortCuts.connect2big();
 
 		connType = XPG_WAN_LAN.MQTT.swigValue();
 
@@ -256,7 +264,7 @@ public class ConnectActivity extends GeneratedActivity {
 				Log.e(TAG, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
-//				XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
+				// XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
 
 				Log.e(TAG, "didRetrieved : " + didRetrieved);
 				Log.e(TAG, "endpoint.getAddr() : " + endpoint.getAddr());
@@ -301,15 +309,16 @@ public class ConnectActivity extends GeneratedActivity {
 
 		timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 		XPGConnShortCuts.connect2small(ip);
-//		XPGConnectClient.xpgcLogin2Lan(ip, null);
+		// XPGConnectClient.xpgcLogin2Lan(ip, null);
 		Log.e(TAG, "执行了");
 	}
-	
+
 	@Override
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
 		Log.e(TAG, "onWanLoginResp()执行了");
-		Log.e(TAG, "onWanLoginResp@ConnectActivity : result : " + result + " connId : " + connId);
+		Log.e(TAG, "onWanLoginResp@ConnectActivity : result : " + result
+				+ " connId : " + connId);
 		tempConnId = connId;
 		switch (result) {
 		case 0: // 可以控制
@@ -343,7 +352,7 @@ public class ConnectActivity extends GeneratedActivity {
 		}
 	}
 
-	@Override 
+	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		tempConnId = connId;
@@ -366,10 +375,10 @@ public class ConnectActivity extends GeneratedActivity {
 			}
 		}
 
-//		if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
-//			XPGConnectClient.xpgcLogin(tempConnId, getUserId(), getUserPsw());
-//			Log.e(TAG, "onConnectEvent:connecting by big");
-//		}
+		// if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
+		// XPGConnectClient.xpgcLogin(tempConnId, getUserId(), getUserPsw());
+		// Log.e(TAG, "onConnectEvent:connecting by big");
+		// }
 	}
 
 	@Override
@@ -420,39 +429,40 @@ public class ConnectActivity extends GeneratedActivity {
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
 		Log.e(TAG, "onLoginCloudResp()回调了");
-		Log.e(TAG, "onLoginCloudResp@ConnectActivity: result : " + result + " mac : " + mac);
-//		switch (result) {
-//		case 0: // 可以控制
-//			mTvInfo.setText("设备已连接!");
-//			// generated.SendStateReq(Global.connectId);
-//
-//			Intent data = new Intent();
-//			data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
-//			data.putExtra(Consts.INTENT_EXTRA_ISONLINE, true);
-//
-//			data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
-//			data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
-//			data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
-//
-//			String conntext = getIntent().getStringExtra(
-//					Consts.INTENT_EXTRA_CONNECT_TEXT);
-//			if (conntext == null) {
-//				conntext = "";
-//			}
-//			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);
-//
-//			setResult(RESULT_OK, data);
-//			finish();
-//			break;
-//		case 1:
-//			// binding get, save them to a list
-//			// find cur device
-//			// if in, check online state, if online, enable ctrl, setresult, if
-//			// offline, enter app with offline state
-//			// if not in, can't control -- enter app with offline state
-//			generated.SendBindingGetV2Req(tempConnId);
-//			break;
-//		}
+		Log.e(TAG, "onLoginCloudResp@ConnectActivity: result : " + result
+				+ " mac : " + mac);
+		// switch (result) {
+		// case 0: // 可以控制
+		// mTvInfo.setText("设备已连接!");
+		// // generated.SendStateReq(Global.connectId);
+		//
+		// Intent data = new Intent();
+		// data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
+		// data.putExtra(Consts.INTENT_EXTRA_ISONLINE, true);
+		//
+		// data.putExtra(Consts.INTENT_EXTRA_MAC, mac);
+		// data.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcodeRetrieved);
+		// data.putExtra(Consts.INTENT_EXTRA_DID, didRetrieved);
+		//
+		// String conntext = getIntent().getStringExtra(
+		// Consts.INTENT_EXTRA_CONNECT_TEXT);
+		// if (conntext == null) {
+		// conntext = "";
+		// }
+		// data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);
+		//
+		// setResult(RESULT_OK, data);
+		// finish();
+		// break;
+		// case 1:
+		// // binding get, save them to a list
+		// // find cur device
+		// // if in, check online state, if online, enable ctrl, setresult, if
+		// // offline, enter app with offline state
+		// // if not in, can't control -- enter app with offline state
+		// generated.SendBindingGetV2Req(tempConnId);
+		// break;
+		// }
 	}
 
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
@@ -513,14 +523,15 @@ public class ConnectActivity extends GeneratedActivity {
 		return getIntent().getStringExtra(Consts.INTENT_EXTRA_USERPSW);
 	}
 
-	private void initTargetDeviceInfo() {	
+	private void initTargetDeviceInfo() {
 		Log.e(TAG, "initTargetDeviceInfo()执行了");
 		if (!getIntent().getBooleanExtra(
 				EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK, false)) {
 			mMac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
-			
-			Log.e(TAG, "getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC) : " + getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC));
-			
+
+			Log.e(TAG, "getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC) : "
+					+ getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC));
+
 			if (TextUtils.isEmpty(mMac)) {
 				setOfflineResult();
 			}

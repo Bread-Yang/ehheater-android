@@ -6,8 +6,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,7 +28,8 @@ import com.vanward.ehheater.notification.PollingUtils;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
-import com.vanward.ehheater.util.wifi.WifiAdmin;
+import com.vanward.ehheater.util.SharedPreferUtils;
+import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
@@ -208,18 +207,20 @@ public class WelcomeActivity extends GeneratedActivity {
 				break;
 
 			case STATE_NORMAL:
-				// 直接进入MainActivity
 				HeaterInfoService heaterService = new HeaterInfoService(
 						getBaseContext());
+				SharedPreferUtils spu = new SharedPreferUtils(WelcomeActivity.this);
+				String did = heaterService.getCurrentSelectedHeater().getDid();
 				HeaterType type = heaterService.getCurHeaterType();
-				Log.e(TAG, "type == " + type);
 				switch (type) {
 				case Eh:
+					spu.put(ShareKey.FirstEhDeviceDid, did);
 					startActivity(new Intent(getBaseContext(),
 							MainActivity.class));
 					finish();
 					break;
 				case ST:
+					spu.put(ShareKey.FirstGasDeviceDid, did);
 					startActivity(new Intent(getBaseContext(),
 							GasMainActivity.class));
 					finish();

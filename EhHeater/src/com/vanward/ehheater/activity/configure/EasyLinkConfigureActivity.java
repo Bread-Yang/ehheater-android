@@ -46,7 +46,6 @@ import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.TextStyleUtil;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
-import com.xtremeprog.xpgconnect.generated.AirLinkResp_t;
 import com.xtremeprog.xpgconnect.generated.EasylinkResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 
@@ -390,7 +389,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
 		super.onEasyLinkResp(endpoint);
 		Log.e(TAG, "onEasyLinkResp(XpgEndpoint endpoint)回调了");
-		
+
 		Log.e(TAG,
 				"null == endpoint.getSzProductKey() : "
 						+ (null == endpoint.getSzProductKey()));
@@ -540,6 +539,14 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		} else {
 			hser.addNewHeater(hinfo);
 		}
+
+		SharedPreferUtils spu = new SharedPreferUtils(this);
+		if (hser.getHeaterType(hinfo) == HeaterType.Eh) {
+			spu.put(ShareKey.FirstEhDeviceDid, hinfo.getDid());
+		} else if (hser.getHeaterType(hinfo) == HeaterType.ST) {
+			spu.put(ShareKey.FirstGasDeviceDid, hinfo.getDid());
+		}
+
 		new SharedPreferUtils(this).put(ShareKey.CurDeviceDid,
 				endpoint.getSzDid());
 		new SharedPreferUtils(this).put(ShareKey.CurDeviceAddress,

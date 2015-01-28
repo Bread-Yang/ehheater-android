@@ -761,7 +761,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private void onoffDeal(GasWaterHeaterStatusResp_t pResp) {
 		if (pResp.getOn_off() == 0) {
 			setViewsAble(false, pResp);
-			stute.setText("关机中");
+			stute.setText(R.string.shutdown);
 			circle_slider.setVisibility(View.GONE);
 			// circularView.setOn(false);
 			tv_mode.setVisibility(View.INVISIBLE);
