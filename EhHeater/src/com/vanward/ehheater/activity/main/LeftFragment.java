@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,8 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 
 public class LeftFragment extends LinearLayout implements
 		android.view.View.OnClickListener, OnItemClickListener {
+	
+	private static final String TAG = "LeftFragment";
 
 	private Button btn_user_manager, btn_device_manager, btn_tip, btn_help,
 			btn_about, btn_season_mode;
@@ -215,7 +218,6 @@ public class LeftFragment extends LinearLayout implements
 			return;
 		}
 		if (heaterInfo.getMac().equals(shareheaterInfo.getMac())) {
-			System.out.println("heaterInfo.getMac(): " + heaterInfo.getMac());
 			return;
 		} else {
 
@@ -230,8 +232,15 @@ public class LeftFragment extends LinearLayout implements
 			SharedPreferUtils spu = new SharedPreferUtils(getContext());
 			if (newHeaterType == HeaterType.Eh) {
 				spu.put(ShareKey.FirstEhDeviceDid, heaterInfo.getDid());
+				
+				Log.e(TAG, "切换电热的did : " + heaterInfo.getDid());
+				Log.e(TAG, "切换电热的mac : " + heaterInfo.getMac());
+				Log.e(TAG, "切换电热的passcode : " + heaterInfo.getPasscode());
 			} else if (newHeaterType == HeaterType.ST) {
 				spu.put(ShareKey.FirstGasDeviceDid, heaterInfo.getDid());
+				Log.e(TAG, "切换燃热的did : " + heaterInfo.getDid());
+				Log.e(TAG, "切换燃热的mac : " + heaterInfo.getMac());
+				Log.e(TAG, "切换燃热的passcode : " + heaterInfo.getPasscode());
 			}
 
 			AlterDeviceHelper.newHeaterType = newHeaterType;

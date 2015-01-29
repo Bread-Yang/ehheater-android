@@ -175,10 +175,10 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "tryConnectBySmallCycle()");
 
 		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()前");
-		XPGConnectClient.xpgcStartDiscovery(); 
+		XPGConnectClient.xpgcStartDiscovery();  
 		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()后");
 
-		new Timer().schedule(new TimerTask() {
+		new Timer().schedule(new TimerTask() { 
 			@Override
 			public void run() {
 				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()前");
@@ -187,11 +187,13 @@ public class ConnectActivity extends GeneratedActivity {
 				if (currentLanSearchingState == LAN_SEARCHING && t != null) {
 					new Timer().schedule(t, (long) (scanInterval * 1.2));
 					currentLanSearchingState = LAN_NONE;
-				}
+				} 
 			}
 		}, timeOut);
 
-		connType = XPG_WAN_LAN.LAN.swigValue();
+		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()前");
+		connType = XPG_WAN_LAN.LAN.swigValue(); 
+		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()后");
 
 	}
 	
