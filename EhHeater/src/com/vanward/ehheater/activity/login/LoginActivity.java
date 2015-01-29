@@ -287,10 +287,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if (hser.getHeaterType(hi).equals(HeaterType.Eh)) {
 			if ("".equals(spu.get(ShareKey.FirstEhDeviceDid, ""))) {
 				spu.put(ShareKey.FirstEhDeviceDid, hi.getDid());
+				spu.put(ShareKey.FirstEhDeviceMac, hi.getMac());
 			}
 		} else if (hser.getHeaterType(hi).equals(HeaterType.ST)) {
 			if ("".equals(spu.get(ShareKey.FirstGasDeviceDid, ""))) {
 				spu.put(ShareKey.FirstGasDeviceDid, hi.getDid());
+				spu.put(ShareKey.FirstGasDeviceMac, hi.getMac());
 			}
 		}
 

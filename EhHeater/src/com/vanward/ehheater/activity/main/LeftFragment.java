@@ -232,12 +232,15 @@ public class LeftFragment extends LinearLayout implements
 			SharedPreferUtils spu = new SharedPreferUtils(getContext());
 			if (newHeaterType == HeaterType.Eh) {
 				spu.put(ShareKey.FirstEhDeviceDid, heaterInfo.getDid());
+				spu.put(ShareKey.FirstEhDeviceMac, heaterInfo.getMac());
 				
 				Log.e(TAG, "切换电热的did : " + heaterInfo.getDid());
 				Log.e(TAG, "切换电热的mac : " + heaterInfo.getMac());
 				Log.e(TAG, "切换电热的passcode : " + heaterInfo.getPasscode());
 			} else if (newHeaterType == HeaterType.ST) {
 				spu.put(ShareKey.FirstGasDeviceDid, heaterInfo.getDid());
+				spu.put(ShareKey.FirstGasDeviceMac, heaterInfo.getMac());
+				
 				Log.e(TAG, "切换燃热的did : " + heaterInfo.getDid());
 				Log.e(TAG, "切换燃热的mac : " + heaterInfo.getMac());
 				Log.e(TAG, "切换燃热的passcode : " + heaterInfo.getPasscode());

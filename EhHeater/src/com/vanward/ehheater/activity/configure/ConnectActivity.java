@@ -230,6 +230,10 @@ public class ConnectActivity extends GeneratedActivity {
 					"onDeviceFound@ConnectActivity(SMALL): "
 							+ endpoint.getSzMac() + "-" + endpoint.getSzDid()
 							+ "-" + endpoint.getIsOnline());
+			
+			if (endpoint.getSzMac() == null || endpoint.getSzDid() == null) {
+				return;
+			}
 
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();

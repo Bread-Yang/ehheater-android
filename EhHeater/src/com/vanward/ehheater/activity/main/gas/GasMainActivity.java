@@ -167,7 +167,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		Log.e(TAG, "GasMainActivity的onResume调用了");
 
 		String mac = getIntent().getStringExtra("mac");
-		if (mac != null && !getIntent().getBooleanExtra("newActivity", false)) {
+		if (!TextUtils.isEmpty(mac)
+				&& !getIntent().getBooleanExtra("newActivity", false)) {
 			SwitchDeviceUtil.switchDevice(mac, this);
 		}
 	}

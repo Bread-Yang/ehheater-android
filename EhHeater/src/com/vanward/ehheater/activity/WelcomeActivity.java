@@ -211,16 +211,21 @@ public class WelcomeActivity extends GeneratedActivity {
 						getBaseContext());
 				SharedPreferUtils spu = new SharedPreferUtils(WelcomeActivity.this);
 				String did = heaterService.getCurrentSelectedHeater().getDid();
+				String mac = heaterService.getCurrentSelectedHeater().getMac();
 				HeaterType type = heaterService.getCurHeaterType();
 				switch (type) {
 				case Eh:
 					spu.put(ShareKey.FirstEhDeviceDid, did);
+					spu.put(ShareKey.FirstEhDeviceMac, mac);
+					
 					startActivity(new Intent(getBaseContext(),
 							MainActivity.class));
 					finish();
 					break;
 				case ST:
 					spu.put(ShareKey.FirstGasDeviceDid, did);
+					spu.put(ShareKey.FirstGasDeviceMac, mac);
+					
 					startActivity(new Intent(getBaseContext(),
 							GasMainActivity.class));
 					finish();

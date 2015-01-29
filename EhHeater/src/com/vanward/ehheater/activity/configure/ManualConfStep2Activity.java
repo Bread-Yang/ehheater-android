@@ -208,8 +208,10 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		if (hser.getHeaterType(hinfo) == HeaterType.Eh) {
 			spu.put(ShareKey.FirstEhDeviceDid, hinfo.getDid());
+			spu.put(ShareKey.FirstEhDeviceMac, hinfo.getMac());
 		} else if (hser.getHeaterType(hinfo) == HeaterType.ST) {
 			spu.put(ShareKey.FirstGasDeviceDid, hinfo.getDid());
+			spu.put(ShareKey.FirstGasDeviceMac, hinfo.getMac());
 		}
 
 		new SharedPreferUtils(this).put(ShareKey.CurDeviceDid,

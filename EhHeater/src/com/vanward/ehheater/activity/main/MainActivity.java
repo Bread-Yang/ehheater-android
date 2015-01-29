@@ -298,7 +298,9 @@ public class MainActivity extends BaseBusinessActivity implements
 		canupdateView = true;
 
 		String mac = getIntent().getStringExtra("mac");
-		if (mac != null
+		Log.e(TAG, "onResume : mac : " + mac);
+		
+		if (mac != null && !"".equals(mac)
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
 			SwitchDeviceUtil.switchDevice(mac, this);
 		}

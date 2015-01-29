@@ -18,6 +18,7 @@ import android.util.Log;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.AccountService;
+import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.SharedPreferUtils;
@@ -109,6 +110,7 @@ public class PollingService extends Service {
 		// }
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		String did = spu.get(ShareKey.FirstEhDeviceDid, "");
+		electicMac = spu.get(ShareKey.FirstEhDeviceMac, "");
 		Log.e(TAG, "EhHeaterDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
@@ -215,6 +217,7 @@ public class PollingService extends Service {
 		// }
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		String did = spu.get(ShareKey.FirstGasDeviceDid, "");
+		gasMac = spu.get(ShareKey.FirstGasDeviceMac, "");
 		Log.e(TAG, "GasHeaterDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
@@ -298,7 +301,7 @@ public class PollingService extends Service {
 
 									int water_function = result
 											.getInt("water_function");
-									if (water_function == 1) {
+									if (water_function == 2) {
 										showNotification(1, R.string.tips,
 												R.string.full_water);
 									}
@@ -344,13 +347,15 @@ public class PollingService extends Service {
 			intent.putExtra("errorCode", electicErrorCode);
 			intent.putExtra("mac", electicMac);
 			intent.putExtra("isGas", false);
+			intent.putExtra("device_type", HeaterType.Eh);
 			// intent.setClass(this, MainActivity.class);
-		} else {
+		} else if (notifyId == 1){
 			// intent.setClass(this, GasMainActivity.class);
 			intent.putExtra("isGas", true);
 			intent.putExtra("mac", gasMac);
 			intent.putExtra("gasIsFreezeProofingWarning",
 					gasIsFreezeProofingWarning);
+			intent.putExtra("device_type", HeaterType.ST);
 			intent.putExtra("gasIsOxygenWarning", gasIsOxygenWarning);
 			intent.putExtra("errorCode", gasErrorCode);
 		}
