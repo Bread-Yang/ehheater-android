@@ -75,23 +75,6 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private List<XpgEndpoint> tempEndpointList = new ArrayList<XpgEndpoint>();
 
-	private void initTemporaryFields() {
-		Log.e(TAG, "initTemporaryFields()执行了");
-		connType = Integer.MAX_VALUE;
-		currentLanSearchingState = LAN_NONE;
-		tempConnId = -1;
-		mMac = "";
-		mPasscode = "";
-		passcodeRetrieved = "";
-		didRetrieved = "";
-		onDeviceFoundCounter = 0;
-		jobDone = false;
-		for (XpgEndpoint item : tempEndpointList) {
-			// item.delete();
-		}
-		tempEndpointList.clear();
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,20 +95,20 @@ public class ConnectActivity extends GeneratedActivity {
 
 			@Override
 			public void onClick(View v) {
-				helper1();
+				connectToDevice();
 			}
 		});
 
-		helper1();
+		connectToDevice();
 	}
-
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		Log.e(TAG, "onResume()");
 		isActived = true;
 	}
-
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -136,20 +119,28 @@ public class ConnectActivity extends GeneratedActivity {
 	public void onBackPressed() {
 
 	};
+	
+	private void initTemporaryFields() {
+		Log.e(TAG, "initTemporaryFields()执行了");
+		connType = Integer.MAX_VALUE;
+		currentLanSearchingState = LAN_NONE;
+		tempConnId = -1;
+		mMac = "";
+		mPasscode = "";
+		passcodeRetrieved = "";
+		didRetrieved = "";
+		onDeviceFoundCounter = 0;
+		jobDone = false;
+		for (XpgEndpoint item : tempEndpointList) {
+			// item.delete();
+		}
+		tempEndpointList.clear();
+	}
 
-	private void helper1() {
-		Log.e(TAG, "helper1()");
+	private void connectToDevice() {
+		Log.e(TAG, "connectToDevice()");
 
-		// mPbar.setVisibility(View.VISIBLE);
-		// mBtnRetry.setVisibility(View.GONE);
-		// mTvInfo2.setText("连接中...");
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
-			// 无任何网络连接
-			// mTvInfo.setText(R.string.check_network);
-			// mTvInfo2.setText(R.string.check_network);
-			// mBtnRetry.setVisibility(View.VISIBLE);
-			// mPbar.setVisibility(View.GONE);
-
 			setOfflineResult();
 			return;
 		}
@@ -158,25 +149,6 @@ public class ConnectActivity extends GeneratedActivity {
 		initTargetDeviceInfo();
 
 		checkLoginAndCurrentDeviceStatus(getBaseContext(), flowHandler);
-	}
-
-	private void tryConnectByBigCycle() {
-		Log.e(TAG, "tryConnectByBigCycle()");
-
-		XPGConnectClient.xpgcLogin2Wan(
-				AccountService.getUserId(getBaseContext()),
-				AccountService.getUserPsw(getBaseContext()), "", "");
-		// XPGConnShortCuts.connect2big();
-
-		connType = XPG_WAN_LAN.MQTT.swigValue();
-
-		runOnUiThread(new Runnable() {
-			public void run() {
-			};
-		});
-
-		timeoutHandler.sendEmptyMessageDelayed(0, 45000);
-
 	}
 
 	private Handler timeoutHandler = new Handler(new Handler.Callback() {
@@ -189,7 +161,7 @@ public class ConnectActivity extends GeneratedActivity {
 			return false;
 		}
 	});
-
+	
 	/**
 	 * 小循环唯一入口
 	 * 
@@ -218,6 +190,19 @@ public class ConnectActivity extends GeneratedActivity {
 		connType = XPG_WAN_LAN.LAN.swigValue();
 
 	}
+	
+	private void tryConnectByBigCycle() {
+		Log.e(TAG, "tryConnectByBigCycle()");
+
+		XPGConnectClient.xpgcLogin2Wan(
+				AccountService.getUserId(getBaseContext()),
+				AccountService.getUserPsw(getBaseContext()), "", "");
+		// XPGConnShortCuts.connect2big();
+
+		connType = XPG_WAN_LAN.MQTT.swigValue();
+
+		timeoutHandler.sendEmptyMessageDelayed(0, 45000);
+	}
 
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
@@ -232,13 +217,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		if (connType == XPG_WAN_LAN.LAN.swigValue()
 				|| directConnectAfterEasyLink) {
-
-			// if (currentLanSearchingState == LAN_FOUND) {
-			// return;
-			// }
-
-			Log.e(TAG, "onDeviceFound()回调了");
-
+			
 			Log.e(TAG,
 					"onDeviceFound@ConnectActivity(SMALL): "
 							+ endpoint.getSzMac() + "-" + endpoint.getSzDid()
@@ -264,7 +243,7 @@ public class ConnectActivity extends GeneratedActivity {
 				Log.e(TAG, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
-				// XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
+//				 XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
 
 				Log.e(TAG, "didRetrieved : " + didRetrieved);
 				Log.e(TAG, "endpoint.getAddr() : " + endpoint.getAddr());
@@ -309,7 +288,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 		XPGConnShortCuts.connect2small(ip);
-		// XPGConnectClient.xpgcLogin2Lan(ip, null);
+//		 XPGConnectClient.xpgcLogin2Lan(ip, null);
 		Log.e(TAG, "执行了");
 	}
 
@@ -397,7 +376,6 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void OnLanLoginResp(LanLoginResp_t pResp, int nConnId) {
 		super.OnLanLoginResp(pResp, nConnId);
-		Log.e(TAG, "OnLanLoginResp()回调了");
 		Log.e(TAG, "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
 
 		if (pResp.getResult() == 0) {
@@ -422,7 +400,6 @@ public class ConnectActivity extends GeneratedActivity {
 			setResult(RESULT_OK, data);
 			finish();
 		}
-		// pResp.delete();
 	}
 
 	@Override
@@ -541,9 +518,6 @@ public class ConnectActivity extends GeneratedActivity {
 				Consts.INTENT_EXTRA_PASSCODE);
 		String connectText = getIntent().getStringExtra(
 				Consts.INTENT_EXTRA_CONNECT_TEXT);
-		// if (!TextUtils.isEmpty(connectText)) {
-		// mTvInfo2.setText(connectText);
-		// }
 	}
 
 	public static String testTime() {

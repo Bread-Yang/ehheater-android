@@ -1019,6 +1019,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		isSendingCommand = false;
 		tv_tempter.setText("--");
 		tv_mode.setText("--模式");
+		tv_mode.setVisibility(View.INVISIBLE);
 		leavewater.setText("--%");
 		powerTv.setText("--");
 		target_tem.setText("--");

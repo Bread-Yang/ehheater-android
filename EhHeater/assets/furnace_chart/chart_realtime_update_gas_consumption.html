@@ -36,7 +36,7 @@ $(function () {
                             var x = (new Date()).getTime(), // current time
                                 y = Math.random();
                             series.addPoint([x, y], true, true);
-                        }, 1000);
+                        }, 60000);
                     }
                 }
             },
@@ -46,7 +46,10 @@ $(function () {
             xAxis: {
                 lineColor: '#6D8590',
                 type: 'datetime',
-                tickPixelInterval: 150,
+                //tickPixelInterval: 150,
+                tickInterval : 60000,
+               // minRange : 600000,
+               startOnTick: true,
                 reversed: true,
                 labels: {
                     style: {
@@ -115,9 +118,9 @@ $(function () {
                         time = (new Date()).getTime(),
                         i;
 
-                    for (i = -19; i <= 0; i += 1) {
+                    for (i = -7; i <= 0; i += 1) {
                         data.push({
-                            x: time + i * 1000,
+                            x: time + i * 60000,
                             y: Math.random()
                         });
                     }
