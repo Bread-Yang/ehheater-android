@@ -174,12 +174,16 @@ public class ConnectActivity extends GeneratedActivity {
 			final TimerTask t) {
 		Log.e(TAG, "tryConnectBySmallCycle()");
 
-		XPGConnectClient.xpgcStartDiscovery();
+		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()前");
+		XPGConnectClient.xpgcStartDiscovery(); 
+		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()后");
 
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
+				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()前");
 				XPGConnectClient.xpgcStopDiscovery();
+				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()后");
 				if (currentLanSearchingState == LAN_SEARCHING && t != null) {
 					new Timer().schedule(t, (long) (scanInterval * 1.2));
 					currentLanSearchingState = LAN_NONE;
@@ -194,9 +198,11 @@ public class ConnectActivity extends GeneratedActivity {
 	private void tryConnectByBigCycle() {
 		Log.e(TAG, "tryConnectByBigCycle()");
 
+		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()前");
 		XPGConnectClient.xpgcLogin2Wan(
 				AccountService.getUserId(getBaseContext()),
 				AccountService.getUserPsw(getBaseContext()), "", "");
+		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()后");
 		// XPGConnShortCuts.connect2big();
 
 		connType = XPG_WAN_LAN.MQTT.swigValue();
@@ -249,7 +255,9 @@ public class ConnectActivity extends GeneratedActivity {
 				Log.e(TAG, "endpoint.getAddr() : " + endpoint.getAddr());
 
 				currentLanSearchingState = LAN_FOUND;
+				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()前");
 				XPGConnectClient.xpgcStopDiscovery();
+				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()后");
 			}
 
 		} else if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
@@ -349,8 +357,9 @@ public class ConnectActivity extends GeneratedActivity {
 				}
 				Log.e(TAG, "onConnectEvent:requesting passcode");
 			} else {
-				Log.e(TAG, "XPGConnectClient.xpgcLogin()执行");
+				Log.e(TAG, "XPGConnectClient.xpgcLogin()前");
 				XPGConnectClient.xpgcLogin(tempConnId, null, mPasscode);
+				Log.e(TAG, "XPGConnectClient.xpgcLogin()后");
 			}
 		}
 
@@ -368,7 +377,10 @@ public class ConnectActivity extends GeneratedActivity {
 		passcodeRetrieved = generated.XpgData2String(pResp.getPasscode());
 
 		Log.e(TAG, "OnPasscodeResp: connecting by small");
+		
+		Log.e(TAG, "OnPasscodeResp@XPGConnectClient.xpgcLogin()前");
 		XPGConnectClient.xpgcLogin(tempConnId, null, passcodeRetrieved);
+		Log.e(TAG, "OnPasscodeResp@XPGConnectClient.xpgcLogin()后");
 
 		// pResp.delete();
 	}
@@ -455,8 +467,10 @@ public class ConnectActivity extends GeneratedActivity {
 				if (ep.getIsOnline() == 1) {
 					// is online
 					Log.e(TAG, "XPGConnectClient.xpgcEnableCtrl()执行了");
+					Log.e(TAG, "xpgcEnableCtrl.xpgcLogin()前");
 					XPGConnectClient.xpgcEnableCtrl(tempConnId, ep.getSzDid(),
 							ep.getSzPasscode());
+					Log.e(TAG, "xpgcEnableCtrl.xpgcLogin()后");
 					return;
 				} else {
 					// is offline

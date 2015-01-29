@@ -537,7 +537,7 @@ public class BaoBarView extends View {
 		this.adapter = adapter;
 	}
 
-	// custom class
+	// pragma mark -- custom class
 
 	public static class CGPoint {
 		public float x, y;
