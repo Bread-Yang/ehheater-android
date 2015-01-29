@@ -174,6 +174,10 @@ public class ConnectActivity extends GeneratedActivity {
 			final TimerTask t) {
 		Log.e(TAG, "tryConnectBySmallCycle()");
 
+		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()前");
+		connType = XPG_WAN_LAN.LAN.swigValue(); 
+		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()后");
+
 		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()前");
 		XPGConnectClient.xpgcStartDiscovery();  
 		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()后");
@@ -190,15 +194,12 @@ public class ConnectActivity extends GeneratedActivity {
 				} 
 			}
 		}, timeOut);
-
-		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()前");
-		connType = XPG_WAN_LAN.LAN.swigValue(); 
-		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()后");
-
 	}
 	
 	private void tryConnectByBigCycle() {
 		Log.e(TAG, "tryConnectByBigCycle()");
+		
+		connType = XPG_WAN_LAN.MQTT.swigValue();
 
 		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()前");
 		XPGConnectClient.xpgcLogin2Wan(
@@ -206,8 +207,6 @@ public class ConnectActivity extends GeneratedActivity {
 				AccountService.getUserPsw(getBaseContext()), "", "");
 		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()后");
 		// XPGConnShortCuts.connect2big();
-
-		connType = XPG_WAN_LAN.MQTT.swigValue();
 
 		timeoutHandler.sendEmptyMessageDelayed(0, 45000);
 	}
@@ -233,7 +232,7 @@ public class ConnectActivity extends GeneratedActivity {
 			
 			if (endpoint.getSzMac() == null || endpoint.getSzDid() == null) {
 				return;
-			}
+			} 
 
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();
