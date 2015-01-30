@@ -309,17 +309,20 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		Log.e(TAG, "onPause()");
 		deviceSwitchSuccessDialog.dismiss();
 	}
 
 	@Override
 	protected void onStop() {
+		Log.e(TAG, "onStop()");
 		super.onStop();
 	};
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Log.e(TAG, "onDestroy()");
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
@@ -814,6 +817,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
 		super.OnStateResp(pResp, nConnId);
+		Log.e(TAG, "OnStateResp()");
 		pResp.getError();
 
 		dealErrorWarnIcon(pResp);

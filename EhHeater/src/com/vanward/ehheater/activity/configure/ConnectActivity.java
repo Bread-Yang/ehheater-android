@@ -71,7 +71,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private int onDeviceFoundCounter;
 
-	private boolean isActived = false;
+	private boolean isActived = false; 
 
 	private List<XpgEndpoint> tempEndpointList = new ArrayList<XpgEndpoint>();
 
@@ -155,6 +155,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		@Override
 		public boolean handleMessage(Message msg) {
+			Log.e(TAG, "timeoutHandler执行了");
 			if (!jobDone) {
 				setOfflineResult();
 			}
@@ -249,7 +250,7 @@ public class ConnectActivity extends GeneratedActivity {
 			Log.e(TAG, "endpoint.getSzDid(): " + endpoint.getSzDid());
 
 			if (!TextUtils.isEmpty(macFound)
-					&& macFound.equals(mMac.toLowerCase())) {
+					&& macFound.equals(mMac.toLowerCase())) { 
 				didRetrieved = didFound;
 				Log.e(TAG, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
@@ -339,6 +340,7 @@ public class ConnectActivity extends GeneratedActivity {
 			// if in, check online state, if online, enable ctrl, setresult, if
 			// offline, enter app with offline state
 			// if not in, can't control -- enter app with offline state
+			Log.e(TAG, "generated.SendBindingGetV2Req");
 			generated.SendBindingGetV2Req(tempConnId);
 			break;
 		}

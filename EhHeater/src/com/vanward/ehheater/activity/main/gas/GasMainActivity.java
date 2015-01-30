@@ -176,7 +176,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.e(TAG, "GasMainActivity的onPause调用了");
+		Log.e(TAG, "onPause()");
 		deviceSwitchSuccessDialog.dismiss();
 	}
 
@@ -294,6 +294,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private long connectTime = 10000;
 
 	private void queryState() {
+		Log.e(TAG, "queryState()");
 
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
@@ -341,12 +342,14 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	protected void onStop() {
+		Log.e(TAG, "onStop()");
 		super.onStop();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Log.e(TAG, "onDestroy()");
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
