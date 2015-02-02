@@ -59,7 +59,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private boolean isActived = false;
 
 	private BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
- 
+  
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG, "wifiConnectedReceiver的onReceive()执行了");
@@ -82,7 +82,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG,
-					"deviceOnlineReceiver:onReceive@BaseBusinessActivity:");
+					"deviceOnlineReceiver的onReceive()执行了");
 			if (isFinishing()) {
 				return;
 			}
@@ -94,7 +94,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG,
-					"alterDeviceDueToDeleteReceiver@BaseBusinessActivity:");
+					"alterDeviceDueToDeleteReceiver的onReceive()执行了");
 			if (isFinishing()) {
 				return;
 			}
@@ -114,7 +114,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.e(TAG, "logoutReceiver@BaseBusinessActivity:");
+			Log.e(TAG, "logoutReceiver的onReceive()执行了");
 			XPGConnectClient.RemoveActivity(BaseBusinessActivity.this);
 		}
 	};

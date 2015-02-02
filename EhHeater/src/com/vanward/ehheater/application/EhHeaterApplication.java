@@ -28,9 +28,12 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 	public void onCreate() {
 		super.onCreate();
 		
-		XPGConnectClient.initClient(this);
-//		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),3);
-//		
+		XPGConnectClient.initClient(this);  
+		
+		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.DEVICE_FOUND_TIMER.swigValue(),5);
+		
+		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),3);
+		
 //		LogcatFileManager.getInstance().startLogcatManager(getBaseContext());
 
 //		EhHeaterApplication.number_tf = Typeface.createFromAsset(getAssets(),
