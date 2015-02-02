@@ -83,6 +83,22 @@ public class SettingOrderReq_t {
     return generatedJNI.SettingOrderReq_t_order_minute_get(swigCPtr, this);
   }
 
+  public void setSetting_temp(short value) {
+    generatedJNI.SettingOrderReq_t_setting_temp_set(swigCPtr, this, value);
+  }
+
+  public short getSetting_temp() {
+    return generatedJNI.SettingOrderReq_t_setting_temp_get(swigCPtr, this);
+  }
+
+  public void setSetting_power(short value) {
+    generatedJNI.SettingOrderReq_t_setting_power_set(swigCPtr, this, value);
+  }
+
+  public short getSetting_power() {
+    return generatedJNI.SettingOrderReq_t_setting_power_get(swigCPtr, this);
+  }
+
   public void setChecksum(int value) {
     generatedJNI.SettingOrderReq_t_checksum_set(swigCPtr, this, value);
   }

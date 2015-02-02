@@ -540,6 +540,10 @@ public class generatedJNI {
   public final static native short SettingOrderReq_t_order_hour_get(long jarg1, SettingOrderReq_t jarg1_);
   public final static native void SettingOrderReq_t_order_minute_set(long jarg1, SettingOrderReq_t jarg1_, short jarg2);
   public final static native short SettingOrderReq_t_order_minute_get(long jarg1, SettingOrderReq_t jarg1_);
+  public final static native void SettingOrderReq_t_setting_temp_set(long jarg1, SettingOrderReq_t jarg1_, short jarg2);
+  public final static native short SettingOrderReq_t_setting_temp_get(long jarg1, SettingOrderReq_t jarg1_);
+  public final static native void SettingOrderReq_t_setting_power_set(long jarg1, SettingOrderReq_t jarg1_, short jarg2);
+  public final static native short SettingOrderReq_t_setting_power_get(long jarg1, SettingOrderReq_t jarg1_);
   public final static native void SettingOrderReq_t_checksum_set(long jarg1, SettingOrderReq_t jarg1_, int jarg2);
   public final static native int SettingOrderReq_t_checksum_get(long jarg1, SettingOrderReq_t jarg1_);
   public final static native long new_SettingOrderReq_t();
@@ -1312,8 +1316,8 @@ public class generatedJNI {
   public final static native int SendSettingPowerReq(int jarg1, short jarg2);
   public final static native void DumpSettingPowerReq(long jarg1, SettingPowerReq_t jarg1_);
   public final static native int DefaultSettingOrderReq();
-  public final static native int BuildSettingOrderReq(short jarg1, short jarg2);
-  public final static native int SendSettingOrderReq(int jarg1, short jarg2, short jarg3);
+  public final static native int BuildSettingOrderReq(short jarg1, short jarg2, short jarg3, short jarg4);
+  public final static native int SendSettingOrderReq(int jarg1, short jarg2, short jarg3, short jarg4, short jarg5);
   public final static native void DumpSettingOrderReq(long jarg1, SettingOrderReq_t jarg1_);
   public final static native int DefaultCancelBookReq();
   public final static native int BuildCancelBookReq();

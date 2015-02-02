@@ -789,12 +789,12 @@ public class generated implements generatedConstants {
     return generatedJNI.DefaultSettingOrderReq();
   }
 
-  public static int BuildSettingOrderReq(short order_hour, short order_minute) {
-    return generatedJNI.BuildSettingOrderReq(order_hour, order_minute);
+  public static int BuildSettingOrderReq(short order_hour, short order_minute, short setting_temp, short setting_power) {
+    return generatedJNI.BuildSettingOrderReq(order_hour, order_minute, setting_temp, setting_power);
   }
 
-  public static int SendSettingOrderReq(int nConnId, short order_hour, short order_minute) {
-    return generatedJNI.SendSettingOrderReq(nConnId, order_hour, order_minute);
+  public static int SendSettingOrderReq(int nConnId, short order_hour, short order_minute, short setting_temp, short setting_power) {
+    return generatedJNI.SendSettingOrderReq(nConnId, order_hour, order_minute, setting_temp, setting_power);
   }
 
   public static void DumpSettingOrderReq(SettingOrderReq_t pSettingOrderReq) {

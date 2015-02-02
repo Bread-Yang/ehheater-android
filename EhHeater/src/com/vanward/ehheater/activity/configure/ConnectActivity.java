@@ -71,7 +71,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private int onDeviceFoundCounter;
 
-	private boolean isActived = false; 
+	private boolean isActived = false;
 
 	private List<XpgEndpoint> tempEndpointList = new ArrayList<XpgEndpoint>();
 
@@ -101,14 +101,14 @@ public class ConnectActivity extends GeneratedActivity {
 
 		connectToDevice();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		Log.e(TAG, "onResume()");
 		isActived = true;
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -119,7 +119,7 @@ public class ConnectActivity extends GeneratedActivity {
 	public void onBackPressed() {
 
 	};
-	
+
 	private void initTemporaryFields() {
 		Log.e(TAG, "initTemporaryFields()执行了");
 		connType = Integer.MAX_VALUE;
@@ -162,7 +162,7 @@ public class ConnectActivity extends GeneratedActivity {
 			return false;
 		}
 	});
-	
+
 	/**
 	 * 小循环唯一入口
 	 * 
@@ -176,14 +176,14 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "tryConnectBySmallCycle()");
 
 		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()前");
-		connType = XPG_WAN_LAN.LAN.swigValue(); 
+		connType = XPG_WAN_LAN.LAN.swigValue();
 		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()后");
 
 		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()前");
-		XPGConnectClient.xpgcStartDiscovery();  
+		XPGConnectClient.xpgcStartDiscovery();
 		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()后");
 
-		new Timer().schedule(new TimerTask() { 
+		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()前");
@@ -192,14 +192,14 @@ public class ConnectActivity extends GeneratedActivity {
 				if (currentLanSearchingState == LAN_SEARCHING && t != null) {
 					new Timer().schedule(t, (long) (scanInterval * 1.2));
 					currentLanSearchingState = LAN_NONE;
-				} 
+				}
 			}
 		}, timeOut);
 	}
-	
+
 	private void tryConnectByBigCycle() {
 		Log.e(TAG, "tryConnectByBigCycle()");
-		
+
 		connType = XPG_WAN_LAN.MQTT.swigValue();
 
 		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()前");
@@ -225,15 +225,15 @@ public class ConnectActivity extends GeneratedActivity {
 
 		if (connType == XPG_WAN_LAN.LAN.swigValue()
 				|| directConnectAfterEasyLink) {
-			
+
 			Log.e(TAG,
 					"onDeviceFound@ConnectActivity(SMALL): "
 							+ endpoint.getSzMac() + "-" + endpoint.getSzDid()
 							+ "-" + endpoint.getIsOnline());
-			
+
 			if (endpoint.getSzMac() == null || endpoint.getSzDid() == null) {
 				return;
-			} 
+			}
 
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();
@@ -250,12 +250,12 @@ public class ConnectActivity extends GeneratedActivity {
 			Log.e(TAG, "endpoint.getSzDid(): " + endpoint.getSzDid());
 
 			if (!TextUtils.isEmpty(macFound)
-					&& macFound.equals(mMac.toLowerCase())) { 
+					&& macFound.equals(mMac.toLowerCase())) {
 				didRetrieved = didFound;
 				Log.e(TAG, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
-//				 XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
+				// XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
 
 				Log.e(TAG, "didRetrieved : " + didRetrieved);
 				Log.e(TAG, "endpoint.getAddr() : " + endpoint.getAddr());
@@ -269,9 +269,10 @@ public class ConnectActivity extends GeneratedActivity {
 		} else if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
 
 			Log.e(TAG,
-					"onDeviceFound@ConnectActivity(BIG): "
-							+ endpoint.getSzMac() + "-" + endpoint.getSzDid()
-							+ "-" + endpoint.getIsOnline());
+					"onDeviceFound@ConnectActivity(BIG): mac : "
+							+ endpoint.getSzMac() + "- did : "
+							+ endpoint.getSzDid() + "- isOnline : "
+							+ endpoint.getIsOnline());
 
 			if (onDeviceFoundCounter++ == 0) {
 
@@ -302,7 +303,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 		XPGConnShortCuts.connect2small(ip);
-//		 XPGConnectClient.xpgcLogin2Lan(ip, null);
+		// XPGConnectClient.xpgcLogin2Lan(ip, null);
 		Log.e(TAG, "执行了");
 	}
 
@@ -384,7 +385,7 @@ public class ConnectActivity extends GeneratedActivity {
 		passcodeRetrieved = generated.XpgData2String(pResp.getPasscode());
 
 		Log.e(TAG, "OnPasscodeResp: connecting by small");
-		
+
 		Log.e(TAG, "OnPasscodeResp@XPGConnectClient.xpgcLogin()前");
 		XPGConnectClient.xpgcLogin(tempConnId, null, passcodeRetrieved);
 		Log.e(TAG, "OnPasscodeResp@XPGConnectClient.xpgcLogin()后");

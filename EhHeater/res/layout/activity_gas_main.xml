@@ -63,7 +63,8 @@
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="2dp"
                 android:layout_marginTop="2dp"
-                android:background="@drawable/anim_furmace_main_heating" />
+                android:background="@drawable/anim_furmace_main_heating"
+                android:visibility="gone" />
 
             <com.vanward.ehheater.view.BaoCircleSlider
                 android:id="@+id/circle_slider"
