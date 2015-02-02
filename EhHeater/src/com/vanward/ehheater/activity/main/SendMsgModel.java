@@ -27,37 +27,37 @@ public class SendMsgModel {
 	}
 
 	// 发送预约 时间人数
-	public static void sentAppolitionment(final int hour, final int min,
-			final int num) {
-		// generated.SendPatternSettingReq(Global.connectId, (short) 3);
-
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				generated.SendSettingOrderReq(Global.connectId, (short) hour,
-						(short) min);
-
-				try {
-					Thread.sleep(500);
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-				if (num == 1) {
-					generated
-							.SendPatternSettingReq(Global.connectId, (short) 5);
-				} else if (num == 2) {
-					generated
-							.SendPatternSettingReq(Global.connectId, (short) 6);
-				} else if (num == 3) {
-					generated
-							.SendPatternSettingReq(Global.connectId, (short) 7);
-				}
-
-			}
-		}).start();
-
-	}
+//	public static void sentAppolitionment(final int hour, final int min,
+//			final int num) {
+//		// generated.SendPatternSettingReq(Global.connectId, (short) 3);
+//
+//		new Thread(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				generated.SendSettingOrderReq(Global.connectId, (short) hour,
+//						(short) min);
+//
+//				try {
+//					Thread.sleep(500);
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//				}
+//				if (num == 1) {
+//					generated
+//							.SendPatternSettingReq(Global.connectId, (short) 5);
+//				} else if (num == 2) {
+//					generated
+//							.SendPatternSettingReq(Global.connectId, (short) 6);
+//				} else if (num == 3) {
+//					generated
+//							.SendPatternSettingReq(Global.connectId, (short) 7);
+//				}
+//
+//			}
+//		}).start();
+//
+//	}
 
 	// 智能模式
 	public static void changeToIntelligenceModeWash(Context context) {
