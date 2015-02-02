@@ -9,6 +9,7 @@ import java.util.Calendar;
 import net.tsz.afinal.http.AjaxCallBack;
 import net.tsz.afinal.http.AjaxParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,10 +26,10 @@ import android.widget.CheckBox;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.TextUtil;
@@ -117,6 +118,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 					touchArea = area;
 					break; 
 				case MotionEvent.ACTION_MOVE:
+					
 					CGPoint point = new CGPoint(event.getX(), event.getY());
 					if (touchArea == BaoTouchArea.BaoTouch_Scroll) {
 						Float offset = (float) Math.abs(point.x - touchPoint.x);
@@ -150,15 +152,60 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	}
 	
 	private void saveChartData() {
-		String requestURL = "";
+		String requestURL = "furnace/updateWarm";
+
+		/*
+		 * json用的数据
+		 * 
+		 * cb_Monday, cb_Thuesday, cb_Wednesday, cb_Thursday, cb_Friday,
+		 * cb_Saturday, cb_Sunday
+		 */
+		boolean isWarmOn = tb_switch.isChecked();
+		String bbvHeight = new String();
+		// 星期循环
+		loop =    (cb_Monday.isChecked() ? "1" : "0")
+				+ (cb_Thuesday.isChecked() ? "1" : "0")
+				+ (cb_Wednesday.isChecked() ? "1" : "0")
+				+ (cb_Thursday.isChecked() ? "1" : "0")
+				+ (cb_Friday.isChecked() ? "1" : "0")
+				+ (cb_Saturday.isChecked() ? "1" : "0")
+				+ (cb_Sunday.isChecked() ? "1" : "0");
+		
+		for(int i = 0; i < data.length; i++){
+			bbvHeight += data[i];
+			if(i < data.length-1){
+				bbvHeight += ",";
+			}
+		}
+		Log.e(TAG,bbvHeight.length() +  "bbvHeight里面的数据是： " + bbvHeight.toString());
+
+		JSONObject json2 = new JSONObject();
+		try {
+			json2.put("warmId", 1);
+			json2.put("dateTime", 1418092441000d);
+			json2.put("name", "测试555");
+			json2.put("did", "LWFWwtEcFWJ5hSBPXrVXFS");
+			json2.put("uid", "q1231");
+			json2.put("passcode", "123");
+			json2.put("loopflag", 1);
+			json2.put("week",loop);
+			json2.put("isWarmOn", isWarmOn?"1":"0");
+//			json2.put("temp","1,1,2,3,4,6,7,8,60,10,1,2,3,84,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8");
+			json2.put("temp", bbvHeight);
+			
+			
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+
+		Log.e(TAG, json2.toString());
 
 		AjaxParams params = new AjaxParams();
 
-		params.put("data", gson.toJson(highChar_data));
+		params.put("data", json2.toString());
 
-		mHttpFriend
-				.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-				.executePost(params, new AjaxCallBack<String>() {
+		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
+				params, new AjaxCallBack<String>() {
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
@@ -169,7 +216,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 
 							String result = json.getString("result");
 
-							if ("success".equals("result")) {
+							if ("success".equals(result)) {
 								finish();
 							} else {
 								// 弹出对话框,提示是否重新提交
@@ -180,21 +227,90 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 					}
 				});
 	}
+	
+	String forResult;
+	
+	private String getData() {
+
+		HeaterInfoService heaterInfoService = new HeaterInfoService(this);
+		String strdid = heaterInfoService.getCurrentSelectedHeater().getDid();
+		String requestURL = "furnace/getWarm?did=LWFWwtEcFWJ5hSBPXrVXFS&uid=q1231";
+		AjaxParams params = new AjaxParams();
+		params.put("data", gson.toJson(highChar_data));
+
+		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
+				params, new AjaxCallBack<String>() {
+					@Override
+					public void onSuccess(String jsonString) {
+						super.onSuccess(jsonString);
+						Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+
+						try {
+							JSONObject json = new JSONObject(jsonString);
+
+							String result = json.getString("result");
+							forResult = result; // 存放返回结果
+							extractDataFromJson(result); // 加载数据放到这里了
+							if ("success".equals("result")) {
+								finish();
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+		Log.e(TAG, " getData()执行完了");
+		return forResult;
+	}
 
 	private void extractDataFromJson(String jsonString) {
-		try {
-			JSONObject json = new JSONObject(jsonString);
 
-			boolean enable = json.getBoolean("enable");
+		Log.e(TAG, "进入extractDataFromJson方法");
+		try {
+			JSONArray jsonArray = new JSONArray(jsonString);
+
+			JSONObject json = jsonArray.getJSONObject(0);
+
+			// 右上角开关
+			boolean enable = json.getString("isWarmOn").equals("1") ? true
+					: false;
 			tb_switch.setChecked(enable);
 
-			String data = json.getJSONArray("data").toString();
+			// String data1 = json.getJSONArray("data").toString();
+			// highChar_data = gson.fromJson(data1,
+			// new TypeToken<ArrayList<int[]>>() {
+			// }.getType());
 
-			highChar_data = gson.fromJson(data,
-					new TypeToken<ArrayList<int[]>>() { 
-					}.getType());
+			loop = json.getString("week");
 
-			loop = json.getString("loop");
+			// 获取所有高度值存到数组
+			String temp48 = json.getString("temp");
+			Log.d(TAG, temp48.length() + "");
+			
+//			int[] fordot = new int [47] ;
+//			int j = 1; fordot[1] = 0;
+//			for (int i = 0; i < temp48.length(); i++) {
+//				if(temp48.substring(i, i + 1 ).equals(","))
+//				 fordot[j++] = i; 
+//			}
+//			for(int i = 0; i < 47; i++){
+//				
+//			}
+			
+			
+			
+			String[] str = temp48.split(",");
+			int j = 0;
+			for(int i = 0; i < str.length; i++){
+				
+				data[i] = Integer.parseInt(str[i]);
+				
+			}
+			
+			
+			
+
+			Log.e(TAG, "解析json方法里面的--loop的数据是 : " + loop);
 
 			if (!"null".equals(loop)) {
 				for (int i = 0; i < loop.length(); i++) {
@@ -260,7 +376,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			e.printStackTrace();
 		}
 	}
-
+	
 	private String getTestData() {
 
 		InputStream inputStream;
@@ -280,6 +396,15 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		// did = new
 		// HeaterInfoService(this).getCurrentSelectedHeater().getDid();
 		// uid = AccountService.getUserId(getBaseContext());
+		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating", false);
+		// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
+		// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
+		if (isFloorHeating) {
+			bbv.setLimitMaxValue(55);
+		} else {
+			bbv.setLimitMaxValue(80);
+		}
+		bbv.setLimitMinValue(30);
 		bbv.setAdapter(this);
 
 		saveDialog = BaoDialogShowUtil.getInstance(this)
@@ -304,7 +429,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		mHttpFriend = HttpFriend.create(this);
 		// requestHttpData();
 
-		extractDataFromJson(getTestData()); // for test
+//		extractDataFromJson(getTestData()); // for test
+		getData();
 
 //		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
 //				"highChartsJavaScriptInterface");

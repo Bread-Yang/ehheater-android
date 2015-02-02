@@ -48,6 +48,7 @@ public class BaoBarView extends View {
 
 	private Paint xAxisPaint;
 	private Paint yAxisPaint;
+	private Paint gridPaint;
 
 	private int xAxisColorResId = R.color.orange;
 	private int yAxisColorResId = R.color.orange;
@@ -55,12 +56,12 @@ public class BaoBarView extends View {
 	private Paint xLabelPaint;
 	private Paint yLabelPaint;
 
-	private int xLabelColorResId = R.color.black;
-	private int yLabelColorResId = R.color.black;
+	private int xLabelColorResId = R.color.appointment_text_color;
+	private int yLabelColorResId = R.color.appointment_text_color;
 
 	private Paint barPaint;
 
-	private int barColorResId = R.color.sky_blue;
+	private int barColorResId = R.color.orange;
 
 	// pragma mark -- init
 
@@ -85,29 +86,34 @@ public class BaoBarView extends View {
 	private void configureDefaultProperty() {
 		xAxisPaint = new Paint();
 		xAxisPaint.setAntiAlias(true);
+		xAxisPaint.setStrokeWidth(dp2Pixel(1));
 		// xAxisPaint.setColor(context.getResources().getColor(xAxisColorResId));
 
 		yAxisPaint = new Paint();
 		yAxisPaint.setAntiAlias(true);
 		// yAxisPaint.setColor(context.getResources().getColor(yAxisColorResId));
 
+		gridPaint = new Paint();
+		gridPaint.setAntiAlias(true);
+		gridPaint.setColor(context.getResources().getColor(R.color.gray));
+
 		xLabelPaint = new Paint();
 		xLabelPaint.setAntiAlias(true);
-		// xLabelPaint.setColor(context.getResources().getColor(xLabelColorResId));
+		xLabelPaint.setColor(context.getResources().getColor(xLabelColorResId));
 		xLabelPaint.setTextSize(dp2Pixel(15));
 
 		yLabelPaint = new Paint();
 		yLabelPaint.setAntiAlias(true);
-		// yLabelPaint.setColor(context.getResources().getColor(yLabelColorResId));
-		yLabelPaint.setTextSize(dp2Pixel(15));
+		yLabelPaint.setColor(context.getResources().getColor(yLabelColorResId));
+		yLabelPaint.setTextSize(dp2Pixel(13));
 
 		barPaint = new Paint();
 		barPaint.setStrokeWidth(1);
 
-		float top = dp2Pixel(10);
+		float top = dp2Pixel(40);
 		float left = dp2Pixel(35);
 		float bottom = dp2Pixel(45);
-		float right = dp2Pixel(0);
+		float right = dp2Pixel(35);
 		plotArea = new UIEdgeInsets(top, left, bottom, right);
 
 		this.limitMaxValue = 80;
@@ -122,13 +128,13 @@ public class BaoBarView extends View {
 	private void updateGridPad() {
 		float valuePad = this.limitMaxValue - this.limitMinValue;
 		float pad = 5; // Y轴上5度为一格
-		int yNum = (int) Math.ceil((valuePad / pad) + 1 + 2);
+		int yNum = (int) Math.ceil((valuePad / pad));
 		CGSize plotSize = plotSize();
 		float padH = plotSize.height / yNum;
 		yGridPad = padH;
 
-		int xNum = 20 + 1; // 二十个点 + 一个标题
-		float padW = (plotSize.width - dp2Pixel(20)) / xNum;
+		int xNum = 20; // 二十个点 + 一个标题
+		float padW = (plotSize.width) / xNum;
 		xGridPad = padW;
 	}
 
@@ -158,15 +164,15 @@ public class BaoBarView extends View {
 	public BaoTouchArea touchAreaOfPoint(CGPoint point) {
 		BaoTouchArea area = BaoTouchArea.BaoTouch_None;
 		CGSize plotSize = plotSize();
-		CGRect settingArea = new CGRect(this.plotArea.left, this.plotArea.top,
-				plotSize.width, plotSize.height);
+		CGRect settingArea = new CGRect(this.plotArea.left, this.plotArea.top
+				- dp2Pixel(5), plotSize.width, plotSize.height);
 		CGRect scrollArea = new CGRect(this.plotArea.left, getHeight()
 				- this.plotArea.bottom, plotSize.width, this.plotArea.bottom);
 
-		if (settingArea.toRect().contains((int) point.x, (int) point.y)) {
-			area = BaoTouchArea.BaoTouch_SetValue;
-		} else if (scrollArea.toRect().contains((int) point.x, (int) point.y)) {
+		if (scrollArea.toRect().contains((int) point.x, (int) point.y)) {
 			area = BaoTouchArea.BaoTouch_Scroll;
+		} else if (settingArea.toRect().contains((int) point.x, (int) point.y)) {
+			area = BaoTouchArea.BaoTouch_SetValue;
 		}
 		return area;
 	}
@@ -181,6 +187,11 @@ public class BaoBarView extends View {
 		float height = getHeight() - point.y - this.plotArea.bottom;
 		height = (height < 0) ? 0 : height;
 		float result = valueOfHeight(height);
+		if (result < limitMinValue) {
+			result = limitMinValue;
+		} else if (result > limitMaxValue) {
+			result = limitMaxValue;
+		}
 		return result;
 	}
 
@@ -210,7 +221,7 @@ public class BaoBarView extends View {
 		float pad = Math.abs(this.limitMaxValue - this.limitMinValue);
 		float tValue = value - this.limitMinValue;
 		CGSize plotSize = plotSize();
-		float totalH = plotSize.height - 2 * this.yGridPad;
+		float totalH = plotSize.height;
 		float result = tValue / pad * totalH;
 		return result;
 	}
@@ -239,7 +250,7 @@ public class BaoBarView extends View {
 	private void drawXAxisOfContext(Canvas canvas) {
 		float width = 1;
 
-		CGPoint startPoint = new CGPoint(0,
+		CGPoint startPoint = new CGPoint(this.plotArea.left,
 				(getHeight() - this.plotArea.bottom));
 		CGPoint endPoint = new CGPoint((getWidth() - this.plotArea.right),
 				startPoint.y);
@@ -248,11 +259,11 @@ public class BaoBarView extends View {
 				xAxisPaint);
 
 		// 画箭头
-		canvas.drawLine(endPoint.x - dp2Pixel(7), endPoint.y - dp2Pixel(3),
-				endPoint.x, endPoint.y, xAxisPaint);
-
-		canvas.drawLine(endPoint.x - dp2Pixel(7), endPoint.y + dp2Pixel(3),
-				endPoint.x, endPoint.y, xAxisPaint);
+		// canvas.drawLine(endPoint.x - dp2Pixel(7), endPoint.y - dp2Pixel(3),
+		// endPoint.x, endPoint.y, xAxisPaint);
+		//
+		// canvas.drawLine(endPoint.x - dp2Pixel(7), endPoint.y + dp2Pixel(3),
+		// endPoint.x, endPoint.y, xAxisPaint);
 	}
 
 	/**
@@ -264,25 +275,28 @@ public class BaoBarView extends View {
 		float width = 1;
 
 		CGPoint startPoint = new CGPoint(this.plotArea.left, this.plotArea.top);
-		CGPoint endPoint = new CGPoint(startPoint.x, getHeight());
+		CGPoint endPoint = new CGPoint(startPoint.x, getHeight()
+				- this.plotArea.bottom);
 
-		canvas.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
-				xAxisPaint);
+		// canvas.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+		// yAxisPaint);
 
 		// 画箭头
-		canvas.drawLine(startPoint.x - dp2Pixel(3), startPoint.y + dp2Pixel(7),
-				startPoint.x, startPoint.y, xAxisPaint); 
-
-		canvas.drawLine(startPoint.x + dp2Pixel(3), startPoint.y + dp2Pixel(7),
-				startPoint.x, startPoint.y, xAxisPaint);
+		// canvas.drawLine(startPoint.x - dp2Pixel(3), startPoint.y +
+		// dp2Pixel(7),
+		// startPoint.x, startPoint.y, xAxisPaint);
+		//
+		// canvas.drawLine(startPoint.x + dp2Pixel(3), startPoint.y +
+		// dp2Pixel(7),
+		// startPoint.x, startPoint.y, xAxisPaint);
 	}
 
 	/**
-	 * 画Y轴方向的网格
+	 * 画X轴方向的网格
 	 * 
 	 * @param canvs
 	 */
-	private void drawYAxisGrid(Canvas canvas) {
+	private void drawXAxisGrid(Canvas canvas) {
 		float padW = this.xGridPad;
 		int startIndex = (int) Math.floor(this.xOffset / padW);
 		float pIndex = (float) Math.ceil(this.xOffset / padW);
@@ -290,17 +304,21 @@ public class BaoBarView extends View {
 		float startX = padW * pIndex - this.xOffset;
 
 		float xValue = this.plotArea.left + startX;
-		float endLie = (getWidth() - this.plotArea.right - dp2Pixel(20));
+		float endLie = (getWidth() - this.plotArea.right);
 		int titleIndex = 0;
 		float titleStartX = (pIndex < 1) ? this.plotArea.left - startX
 				: this.plotArea.left - (padW - startX);
 		int titleValue = startIndex;
-		while (xValue <= endLie) {
+		while (xValue < endLie + padW) {
+			if (xValue > endLie) {
+				xValue = endLie;
+			}
 			// 横坐标网格
 			CGPoint startPoint = new CGPoint(xValue, this.plotArea.top);
-			CGPoint endPoint = new CGPoint(xValue, getHeight());
+			CGPoint endPoint = new CGPoint(xValue, getHeight()
+					- this.plotArea.bottom);
 			canvas.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
-					xAxisPaint);
+					gridPaint);
 			xValue += padW;
 
 			// 横坐标刻度
@@ -334,34 +352,36 @@ public class BaoBarView extends View {
 		String string = "时间";
 		CGPoint drawPoint = new CGPoint((endLie + 10.0f),
 				(getHeight() - this.plotArea.bottom) + dp2Pixel(5));
-		drawText(canvas, string, drawPoint.x, drawPoint.y, xLabelPaint, 90);
+		// drawText(canvas, string, drawPoint.x, drawPoint.y, xLabelPaint, 90);
 	}
 
 	/**
-	 * 画X轴方向的网格
+	 * 画Y轴方向的网格
 	 * 
 	 * @param canvas
 	 */
-	private void drawXAxisGrid(Canvas canvas) {
+	private void drawYAxisGrid(Canvas canvas) {
 		float valuePad = this.limitMaxValue - this.limitMinValue;
 		float pad = 5f;
-		int num = (int) (Math.ceil(valuePad / pad) + 1 + 2);
+		int num = (int) (Math.ceil(valuePad / pad));
 		float padH = this.yGridPad;
-		// CGContextSaveGState(context);
-		for (int i = 0; i < num + 1; i++) {
+		
+		// 画y轴标题
+		yLabelPaint.setColor(context.getResources().getColor(R.color.orange));
+		drawText(canvas, "℃", dp2Pixel(10), getHeight() - this.plotArea.bottom - ((num + 1) * padH) + dp2Pixel(3),
+				yLabelPaint, 0);
+		
+		yLabelPaint.setColor(context.getResources().getColor(yLabelColorResId));
+		for (int i = 0; i <= num; i++) {
 			float yValue = getHeight() - this.plotArea.bottom - (i * padH);
-			CGPoint startPoint = new CGPoint(0, yValue);
+			CGPoint startPoint = new CGPoint(this.plotArea.left, yValue);
 			CGPoint endPoint = new CGPoint(getWidth() - this.plotArea.right,
 					yValue);
-			// canvas.drawLine(startPoint.x, startPoint.y, endPoint.x,
-			// endPoint.y,
-			// xAxisPaint);
+			canvas.drawLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+					gridPaint);
 
-			if (i >= 0 && i < num) {
-				String string = i * 5 + "℃";
-				if (i == num) {
-					string = "温度";
-				}
+			if (i >= 0 && i <= num) {
+				String string = (int)limitMinValue + i * 5 + "";
 
 				CGRect rect = new CGRect(0, yValue, this.plotArea.left, padH);
 				Rect bounds = new Rect();
@@ -379,8 +399,8 @@ public class BaoBarView extends View {
 						/ 2 - fontMetrics.top;
 				// canvas.drawText(string, drawRect.centerX(), baseline,
 				// yLabelPaint);
-				drawText(canvas, string, 0, yValue - dp2Pixel(3), yLabelPaint,
-						0);
+				drawText(canvas, string, dp2Pixel(10), yValue + dp2Pixel(3),
+						yLabelPaint, 0);
 				// UIFont *font = [UIFont systemFontOfSize:13];
 				// CGSize strSize = [string sizeWithFont:font
 				// constrainedToSize:rect.size
@@ -404,7 +424,7 @@ public class BaoBarView extends View {
 		float padX = (pIndex < 1) ? padW : (padW * pIndex - this.xOffset);
 		float endX = this.plotArea.left + padX;
 		float startX = this.plotArea.left;
-		float endLie = (getWidth() - this.plotArea.right - 20);
+		float endLie = (getWidth() - this.plotArea.right);
 
 		// CGContextSaveGState(context);
 		// UIColor *fillColor = [UIColor cyanColor];
@@ -428,7 +448,7 @@ public class BaoBarView extends View {
 			canvas.drawRect(rect.x, rect.y, rect.x + rect.width, rect.y
 					+ rect.height, barPaint);
 			barPaint.setStyle(Paint.Style.STROKE);
-			barPaint.setColor(Color.BLACK);
+			barPaint.setColor(Color.WHITE);
 			canvas.drawRect(rect.x, rect.y, rect.x + rect.width, rect.y
 					+ rect.height, barPaint);
 
@@ -471,16 +491,16 @@ public class BaoBarView extends View {
 			this.barCount = this.adapter.numberOfBarInBarView(this);
 		}
 
-		// 画轴
-		drawXAxisOfContext(canvas);
-		drawYAxisOfContext(canvas);
-
 		// 画网格
-		drawYAxisGrid(canvas);
 		drawXAxisGrid(canvas);
+		drawYAxisGrid(canvas);
 
 		// 画柱状
 		drawBar(canvas);
+
+		// 画轴
+		drawXAxisOfContext(canvas);
+		drawYAxisOfContext(canvas);
 	}
 
 	// pragma mark -- getter and setter
@@ -522,7 +542,7 @@ public class BaoBarView extends View {
 		Log.e(TAG, "xGridPad : " + xGridPad);
 		Log.e(TAG, "plotArea.right - plotArea.left : "
 				+ (plotArea.right - plotArea.left));
-		if (xOffset + getWidth() - plotArea.right - plotArea.left > xGridPad * 50) {
+		if (xOffset + getWidth() - plotArea.right - plotArea.left > xGridPad * 48) {
 			return;
 		}
 		this.xOffset = xOffset;

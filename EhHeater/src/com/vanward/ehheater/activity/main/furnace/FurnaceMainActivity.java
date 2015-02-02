@@ -685,6 +685,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		case R.id.btn_intellectual:
 			intent = new Intent(FurnaceMainActivity.this,
 					FurnaceIntelligentControlActivity.class);
+			// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
+			// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
+			if (statusResp.getHeatingSend() == 1) { // 地暖
+				intent.putExtra("floor_heating", true);
+			}
 			startActivity(intent);
 			break;
 		}
