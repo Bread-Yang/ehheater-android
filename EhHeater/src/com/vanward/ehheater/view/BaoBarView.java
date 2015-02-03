@@ -438,6 +438,11 @@ public class BaoBarView extends View {
 					value = adapter.valueOfIndex(this, startIndex);
 				}
 			}
+			if (value < limitMinValue) {
+				value = limitMinValue;
+			} else if (value > limitMaxValue) {
+				value = limitMaxValue;
+			}
 			float height = heightOfValue(value);
 			float orignalY = getHeight() - this.plotArea.bottom - height;
 			float width = endX - startX;

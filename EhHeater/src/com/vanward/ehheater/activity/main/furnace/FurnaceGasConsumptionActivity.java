@@ -5,6 +5,7 @@ import java.util.Date;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.RadioGroup;
@@ -60,6 +61,14 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 					break; 
 				}
+			}
+		});
+		
+		findViewById(R.id.btn_click).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				wv_chart.loadUrl("javascript:updateRealTimeChart()");
 			}
 		});
 	}

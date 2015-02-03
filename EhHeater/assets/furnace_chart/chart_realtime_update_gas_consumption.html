@@ -9,7 +9,20 @@
 		<style type="text/css">
 ${demo.css}
 		</style>
+		
 		<script type="text/javascript">
+		
+		var accumulate = 0;
+		
+		function updateRealTimeChart() {
+                var chart=$("#container").highcharts();
+                var series = chart.series[0];
+                var x = (new Date()).getTime() + accumulate * 1000 * 60 * 5; // current time
+                accumulate++;
+                y = Math.random();
+                series.addPoint([x, y], true, true);
+            }
+		
 $(function () {
     $(document).ready(function () {
         Highcharts.setOptions({
@@ -32,11 +45,11 @@ $(function () {
 
                         // set up the updating of the chart each second
                         var series = this.series[0];
-                        setInterval(function () {
-                            var x = (new Date()).getTime(), // current time
-                                y = Math.random();
-                            series.addPoint([x, y], true, true);
-                        }, 60000);
+                        //setInterval(function () {
+                        //    var x = (new Date()).getTime(), // current time
+                        //        y = Math.random();
+                        //    series.addPoint([x, y], true, true);
+                        // }, 1000 * 60 * 5);
                     }
                 }
             },
@@ -47,11 +60,13 @@ $(function () {
                 lineColor: '#6D8590',
                 type: 'datetime',
                 //tickPixelInterval: 150,
-                tickInterval : 60000,
+                tickInterval : 1000 * 60 * 5,
                // minRange : 600000,
                startOnTick: true,
                 reversed: true,
                 labels: {
+                	step: 2,
+                	staggerLines: 1,
                     style: {
                         color: '#6D8590'
                     }
@@ -118,9 +133,9 @@ $(function () {
                         time = (new Date()).getTime(),
                         i;
 
-                    for (i = -7; i <= 0; i += 1) {
+                    for (i = -11; i <= 0; i += 1) {
                         data.push({
-                            x: time + i * 60000,
+                            x: time + i * 1000 * 60 * 5,
                             y: Math.random()
                         });
                     }

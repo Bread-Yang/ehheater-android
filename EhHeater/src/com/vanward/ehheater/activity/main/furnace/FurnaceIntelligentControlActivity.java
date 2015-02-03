@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
@@ -69,6 +70,10 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	private String uid = "";
 
 	private Dialog saveDialog;
+	
+	private boolean isAdd = false;
+	
+	private int warmId = 0 ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,14 +157,21 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	}
 	
 	private void saveChartData() {
-		String requestURL = "furnace/updateWarm";
+		
+		String requestURL = null;
+		
+		if (isAdd) {
+			requestURL = "furnace/saveWarm";
+		} else {
+			requestURL = "furnace/updateWarm";
+		}
 
 		/*
 		 * json用的数据
 		 * 
 		 * cb_Monday, cb_Thuesday, cb_Wednesday, cb_Thursday, cb_Friday,
 		 * cb_Saturday, cb_Sunday
-		 */
+		 */ 
 		boolean isWarmOn = tb_switch.isChecked();
 		String bbvHeight = new String();
 		// 星期循环
@@ -181,11 +193,16 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 
 		JSONObject json2 = new JSONObject();
 		try {
-			json2.put("warmId", 1);
+			if (!isAdd) {
+				json2.put("warmId", warmId);
+			}
 			json2.put("dateTime", 1418092441000d);
+//			json2.put("dateTime", System.currentTimeMillis());
 			json2.put("name", "测试555");
-			json2.put("did", "LWFWwtEcFWJ5hSBPXrVXFS");
+			json2.put("did", "LWFDwtEcFWJ5hSBPXrVXFS");
+//			json2.put("did", did);
 			json2.put("uid", "q1231");
+//			json2.put("uid", uid);
 			json2.put("passcode", "123");
 			json2.put("loopflag", 1);
 			json2.put("week",loop);
@@ -203,6 +220,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		AjaxParams params = new AjaxParams();
 
 		params.put("data", json2.toString());
+		
+		Log.e(TAG, "请求的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
 				params, new AjaxCallBack<String>() {
@@ -214,9 +233,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 						try {
 							JSONObject json = new JSONObject(jsonString);
 
-							String result = json.getString("result");
+							String result = json.getString("responseCode");
 
-							if ("success".equals(result)) {
+							if ("200".equals(result)) {
 								finish();
 							} else {
 								// 弹出对话框,提示是否重新提交
@@ -232,9 +251,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	
 	private String getData() {
 
-		HeaterInfoService heaterInfoService = new HeaterInfoService(this);
-		String strdid = heaterInfoService.getCurrentSelectedHeater().getDid();
-		String requestURL = "furnace/getWarm?did=LWFWwtEcFWJ5hSBPXrVXFS&uid=q1231";
+		String requestURL = "furnace/getWarm?did=LWFDwtEcFWJ5hSBPXrVXFS&uid=q1231";
+		
 		AjaxParams params = new AjaxParams();
 		params.put("data", gson.toJson(highChar_data));
 
@@ -280,6 +298,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			// highChar_data = gson.fromJson(data1,
 			// new TypeToken<ArrayList<int[]>>() {
 			// }.getType());
+			
+			warmId = json.getInt("warmId");
 
 			loop = json.getString("week");
 
@@ -373,6 +393,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			}
 
 		} catch (Exception e) {
+			Log.e(TAG, "没有数据返回");
+			isAdd = true;
 			e.printStackTrace();
 		}
 	}
@@ -393,9 +415,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	}
 
 	private void init() {
-		// did = new
-		// HeaterInfoService(this).getCurrentSelectedHeater().getDid();
-		// uid = AccountService.getUserId(getBaseContext());
+		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
+		uid = AccountService.getUserId(getBaseContext());
+		
 		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating", false);
 		// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
 		// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
