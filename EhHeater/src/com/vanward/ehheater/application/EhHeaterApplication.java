@@ -43,6 +43,8 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 				.getDisplayMetrics().density;
 		
 		Log.e(TAG, "density : " + EhHeaterApplication.device_density);
+		
+		Log.e(TAG, "getResources().getConfiguration().screenWidthDp : " + getResources().getConfiguration().screenWidthDp);
 	}
 
 	@Override 

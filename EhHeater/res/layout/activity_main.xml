@@ -20,7 +20,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/home_tip_bg"
             android:ellipsize="end"
             android:gravity="center_horizontal"
@@ -36,7 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/mode_tv"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
             android:background="@drawable/home_yuan_bg" />
 
         <RelativeLayout
@@ -216,9 +215,8 @@
 
                 <Button
                     android:id="@+id/power"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:background="@null"
                     android:drawablePadding="5dp"
                     android:drawableTop="@drawable/power_button_selector"
@@ -231,10 +229,9 @@
 
                 <Button
                     android:id="@+id/pattern"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
                     android:background="@null"
                     android:drawablePadding="5dp"
                     android:drawableTop="@drawable/pattern_button_selector"
@@ -247,10 +244,9 @@
 
                 <Button
                     android:id="@+id/appointment_btn"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
                     android:background="@null"
                     android:drawablePadding="5dp"
                     android:drawableTop="@drawable/appation_button_selector"
@@ -263,10 +259,9 @@
 
                 <Button
                     android:id="@+id/btn_information"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
                     android:background="@color/transparent"
                     android:button="@null"
                     android:drawablePadding="5dp"
@@ -286,7 +281,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/circle_bg"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -319,7 +313,7 @@
                 android:id="@+id/btn_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
 

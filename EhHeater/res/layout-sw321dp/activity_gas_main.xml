@@ -19,15 +19,15 @@
             android:id="@+id/tv_mode"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" 
-            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
             android:background="@drawable/home_tip_bg"
             android:ellipsize="end"
             android:gravity="center_horizontal"
             android:paddingTop="3dp"
             android:singleLine="true"
             android:text="--模式"
-            android:textColor="@color/title_color"
+            android:textColor="@color/title_color" 
             android:textSize="23dp" />
 
         <ImageView
@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_mode"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
             android:background="@drawable/home_yuan_bg" />
 
         <RelativeLayout
@@ -50,6 +51,7 @@
                 android:id="@+id/wave_bg"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/main_fire_level_1"
@@ -282,13 +284,22 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/circle_bg"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
             android:orientation="vertical"
             android:visibility="visible" >
+
+            <LinearLayout
+                android:id="@+id/hotlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/btn_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
 
