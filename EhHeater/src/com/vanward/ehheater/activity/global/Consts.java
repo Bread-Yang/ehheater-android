@@ -38,16 +38,16 @@ public class Consts {
 	public static final int REQUESTCODE_LOGIN = 1003;
 
 	public static final String HEATER_DEFAULT_NAME = "热水器";
-	public static final String E_HEATER_DEFAULT_NAME = "电热水器";
-	public static final String ST_HEATER_DEFAULT_NAME = "燃气热水器";
-	public static final String EH_FURNACE_DEFAULT_NAME = "万和壁挂炉";
+	public static final String ELECTRIC_HEATER_DEFAULT_NAME = "电热水器";
+	public static final String GAS_HEATER_DEFAULT_NAME = "燃气热水器";
+	public static final String FURNACE_DEFAULT_NAME = "万和壁挂炉";
 	
 	public static final String EH_APPID = "dcea1850ec144673904b8adc6c326281";
 	public static final String GAS_APPID = "91cf43476f184c349b62bbd54a91e0b8";
 
-	public static final String EH_P_KEY = "c2db7fd028fd11e4b605001ec9b6dcfe";
-	public static final String ST_P_KEY = "b82d55ee2f3e11e488f7001ec9b6dcfe";
-	public static final String EH_FURNACE_PRODUCT_KEY = "d787108d040f4e838d04dff28e95ea30";
+	public static final String ELECTRIC_HEATER_P_KEY = "c2db7fd028fd11e4b605001ec9b6dcfe";
+	public static final String GAS_HEATER_P_KEY = "b82d55ee2f3e11e488f7001ec9b6dcfe";
+	public static final String FURNACE_PRODUCT_KEY = "d787108d040f4e838d04dff28e95ea30";
 
 	public static String getHeaterName(HeaterInfo heater) {
 		return heater.getName();

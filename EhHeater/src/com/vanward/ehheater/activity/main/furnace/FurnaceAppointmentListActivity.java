@@ -45,6 +45,8 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 	private static final String TAG = "FurnaceAppointmentListActivity";
 
 	private SwipeListView lv_listview;
+	
+	private Button btn_add_appointment;
 
 	private AppointmentListAdapter adapter;
 
@@ -62,7 +64,8 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		setCenterViewWithNoScrollView(R.layout.activity_furnace_appointment_list);
 		setTopText(R.string.appointment);
 		setLeftButtonBackground(R.drawable.icon_back);
-		setRightButtonBackground(R.drawable.icon_add);
+//		setRightButtonBackground(R.drawable.icon_add);
+		setRightButton(View.GONE);
 		findViewById();
 		setListener();
 		init();
@@ -79,15 +82,16 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 	private void findViewById() {
 		lv_listview = (SwipeListView) findViewById(R.id.lv_listview);
+		btn_add_appointment = (Button) findViewById(R.id.btn_add_appointment);
 	}
 
 	private void setListener() {
-		btn_right.setOnClickListener(new OnClickListener() {
+		btn_add_appointment.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
-				if (deviceType == HeaterType.Eh) { // 电热水器
+				if (deviceType == HeaterType.ELECTRIC_HEATER) { // 电热水器
 					intent.setClass(FurnaceAppointmentListActivity.this,
 							AppointmentTimeActivity.class);
 				} else {
@@ -163,9 +167,9 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 			if ("200".equals(responseCode)) {
 				JSONArray result = json.getJSONArray("result");
 				if (result.length() >= 3) {
-					btn_right.setVisibility(View.INVISIBLE); // 预约数>=3时,隐藏右上角按钮
+					btn_add_appointment.setVisibility(View.INVISIBLE); // 预约数>=3时,隐藏右上角按钮
 				} else {
-					btn_right.setVisibility(View.VISIBLE);
+					btn_add_appointment.setVisibility(View.VISIBLE);
 				}
 
 				adapter_data.clear();
@@ -308,7 +312,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 			holder.tv_temperature.setText(model.getTemper() + "℃");
 
-			if (deviceType == HeaterType.EH_FURNACE) { // 壁挂炉
+			if (deviceType == HeaterType.FURNACE) { // 壁挂炉
 				switch (model.getWorkMode()) {
 				case 0:
 					holder.tv_mode.setText(R.string.mode_default);
@@ -461,7 +465,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					// adapter_date.get(position).getId());
 					// intent.putExtra("week", appointment.getDates());
 					intent.putExtra("editAppointment", model);
-					if (deviceType == HeaterType.EH_FURNACE) {
+					if (deviceType == HeaterType.FURNACE) {
 						intent.setClass(FurnaceAppointmentListActivity.this,
 								FurnaceAppointmentTimeActivity.class);
 					} else {

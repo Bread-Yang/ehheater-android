@@ -230,20 +230,27 @@ public class LeftFragment extends LinearLayout implements
 			hser.setCurrentSelectedHeater(heaterInfo.getMac());
 
 			SharedPreferUtils spu = new SharedPreferUtils(getContext());
-			if (newHeaterType == HeaterType.Eh) {
-				spu.put(ShareKey.FirstEhDeviceDid, heaterInfo.getDid());
-				spu.put(ShareKey.FirstEhDeviceMac, heaterInfo.getMac());
+			if (newHeaterType == HeaterType.ELECTRIC_HEATER) {
+				spu.put(ShareKey.PollingElectricHeaterDid, heaterInfo.getDid());
+				spu.put(ShareKey.PollingElectricHeaterMac, heaterInfo.getMac());
 				
 				Log.e(TAG, "切换电热的did : " + heaterInfo.getDid());
 				Log.e(TAG, "切换电热的mac : " + heaterInfo.getMac());
 				Log.e(TAG, "切换电热的passcode : " + heaterInfo.getPasscode());
-			} else if (newHeaterType == HeaterType.ST) {
-				spu.put(ShareKey.FirstGasDeviceDid, heaterInfo.getDid());
-				spu.put(ShareKey.FirstGasDeviceMac, heaterInfo.getMac());
+			} else if (newHeaterType == HeaterType.GAS_HEATER) {
+				spu.put(ShareKey.PollingGasHeaterDid, heaterInfo.getDid());
+				spu.put(ShareKey.PollingGasHeaterMac, heaterInfo.getMac());
 				
 				Log.e(TAG, "切换燃热的did : " + heaterInfo.getDid());
 				Log.e(TAG, "切换燃热的mac : " + heaterInfo.getMac());
 				Log.e(TAG, "切换燃热的passcode : " + heaterInfo.getPasscode());
+			} else if (newHeaterType == HeaterType.FURNACE) {
+				spu.put(ShareKey.PollingFurnaceDid, heaterInfo.getDid());
+				spu.put(ShareKey.PollingFurnaceMac, heaterInfo.getMac());
+				
+				Log.e(TAG, "切换壁挂炉的did : " + heaterInfo.getDid());
+				Log.e(TAG, "切换壁挂炉的mac : " + heaterInfo.getMac());
+				Log.e(TAG, "切换壁挂炉的passcode : " + heaterInfo.getPasscode());
 			}
 
 			AlterDeviceHelper.newHeaterType = newHeaterType;

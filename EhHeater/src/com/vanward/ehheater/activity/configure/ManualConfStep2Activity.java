@@ -206,12 +206,15 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		}
 
 		SharedPreferUtils spu = new SharedPreferUtils(this);
-		if (hser.getHeaterType(hinfo) == HeaterType.Eh) {
-			spu.put(ShareKey.FirstEhDeviceDid, hinfo.getDid());
-			spu.put(ShareKey.FirstEhDeviceMac, hinfo.getMac());
-		} else if (hser.getHeaterType(hinfo) == HeaterType.ST) {
-			spu.put(ShareKey.FirstGasDeviceDid, hinfo.getDid());
-			spu.put(ShareKey.FirstGasDeviceMac, hinfo.getMac());
+		if (hser.getHeaterType(hinfo) == HeaterType.ELECTRIC_HEATER) {
+			spu.put(ShareKey.PollingElectricHeaterDid, hinfo.getDid());
+			spu.put(ShareKey.PollingElectricHeaterMac, hinfo.getMac());
+		} else if (hser.getHeaterType(hinfo) == HeaterType.GAS_HEATER) {
+			spu.put(ShareKey.PollingGasHeaterDid, hinfo.getDid());
+			spu.put(ShareKey.PollingGasHeaterMac, hinfo.getMac());
+		} else if (hser.getHeaterType(hinfo) == HeaterType.FURNACE) {
+			spu.put(ShareKey.PollingFurnaceDid, hinfo.getDid());
+			spu.put(ShareKey.PollingFurnaceMac, hinfo.getMac());
 		}
 
 		new SharedPreferUtils(this).put(ShareKey.CurDeviceDid,
@@ -236,7 +239,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 
 		switch (hser.getHeaterType(hinfo)) {
 
-		case Eh:
+		case ELECTRIC_HEATER:
 
 			intent = new Intent(getBaseContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -248,7 +251,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			startActivity(intent);
 			break;
 
-		case ST:
+		case GAS_HEATER:
 
 			intent = new Intent(getBaseContext(), GasMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -260,7 +263,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			startActivity(intent);
 			break;
 
-		case EH_FURNACE:
+		case FURNACE:
 
 			intent = new Intent(getBaseContext(), FurnaceMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

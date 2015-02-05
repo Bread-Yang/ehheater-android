@@ -124,7 +124,7 @@ public class WelcomeActivity extends GeneratedActivity {
 			HeaterInfoService hser = new HeaterInfoService(this);
 
 			List<HeaterInfo> allEIDevices = new HeaterInfoDao(getBaseContext())
-					.getAllDeviceOfType(HeaterType.Eh);
+					.getAllDeviceOfType(HeaterType.ELECTRIC_HEATER);
 			if (allEIDevices != null & allEIDevices.size() > 0) {
 				hser.setCurrentSelectedHeater(allEIDevices.get(0).getMac());
 				flowHandler.sendEmptyMessage(STATE_NORMAL);
@@ -132,7 +132,7 @@ public class WelcomeActivity extends GeneratedActivity {
 			}
 
 			List<HeaterInfo> allGasDevices = new HeaterInfoDao(getBaseContext())
-					.getAllDeviceOfType(HeaterType.ST);
+					.getAllDeviceOfType(HeaterType.GAS_HEATER);
 
 			if (allGasDevices != null & allGasDevices.size() > 0) {
 				hser.setCurrentSelectedHeater(allGasDevices.get(0).getMac());
@@ -214,23 +214,26 @@ public class WelcomeActivity extends GeneratedActivity {
 				String mac = heaterService.getCurrentSelectedHeater().getMac();
 				HeaterType type = heaterService.getCurHeaterType();
 				switch (type) {
-				case Eh:
-					spu.put(ShareKey.FirstEhDeviceDid, did);
-					spu.put(ShareKey.FirstEhDeviceMac, mac);
+				case ELECTRIC_HEATER:
+					spu.put(ShareKey.PollingElectricHeaterDid, did);
+					spu.put(ShareKey.PollingElectricHeaterMac, mac);
 					
 					startActivity(new Intent(getBaseContext(),
 							MainActivity.class));
 					finish();
 					break;
-				case ST:
-					spu.put(ShareKey.FirstGasDeviceDid, did);
-					spu.put(ShareKey.FirstGasDeviceMac, mac);
+				case GAS_HEATER:
+					spu.put(ShareKey.PollingGasHeaterDid, did);
+					spu.put(ShareKey.PollingGasHeaterMac, mac);
 					
 					startActivity(new Intent(getBaseContext(),
 							GasMainActivity.class));
 					finish();
 					break;
-				case EH_FURNACE:
+				case FURNACE:
+					spu.put(ShareKey.PollingFurnaceDid, did);
+					spu.put(ShareKey.PollingFurnaceMac, mac);
+					
 					startActivity(new Intent(getBaseContext(),
 							FurnaceMainActivity.class));
 					finish();

@@ -35,7 +35,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:background="@drawable/icon_shut"
+        android:background="@drawable/icon_shut_able"
         android:gravity="center"
         android:minHeight="20dp"
         android:minWidth="20dp" />

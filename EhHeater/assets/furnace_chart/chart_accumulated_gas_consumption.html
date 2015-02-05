@@ -17,24 +17,26 @@
 			
 			function getx(xjson) {
 				//var t2 = "[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'}] ";
-			    var t2 = init.getx();
+//			  return highChartsJavaScriptInterface.fromJsResult();
+				var t2 = highChartsJavaScriptInterface.getx();
 				var tarrat = eval(t2);
 				var result = new Array();
 				for (var i = 0; i < tarrat.length; i++) {
 					result.push(tarrat[i].name);
 
 				}
-				return result;
+				//return highChartsJavaScriptInterface.fromJsResult();
+				return result
 			}
 
 			function getdata(djson) {
-				//var t2 = "[{data:49.9},{data:1.5},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4}] ";
-				var t2= init.getdata();
+			//	var t2 = "[{data:49.9},{data:1.5},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4}] ";
+				var t2= highChartsJavaScriptInterface.getdata();
 				var tarrat = eval(t2);
 				var result = new Array();
 				for (var i = 0; i < tarrat.length; i++) {
 					result.push(tarrat[i].data);
-
+					
 				}
 				return result;
 
@@ -101,7 +103,9 @@
             
         },
         series: [{
-            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+         //  data: [39.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+       
+              data:eval(getdata())
             // data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             //data: [null, null, null, null, null, null, null, null, null, null, null, null]
             // data: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]

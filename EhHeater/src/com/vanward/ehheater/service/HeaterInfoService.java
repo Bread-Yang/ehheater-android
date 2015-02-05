@@ -101,9 +101,9 @@ public class HeaterInfoService {
 
 	public enum HeaterType {
 
-		Eh(Consts.E_HEATER_DEFAULT_NAME, Consts.EH_P_KEY), ST(
-				Consts.ST_HEATER_DEFAULT_NAME, Consts.ST_P_KEY), EH_FURNACE(
-				Consts.EH_FURNACE_DEFAULT_NAME, Consts.EH_FURNACE_PRODUCT_KEY), Unknown(
+		ELECTRIC_HEATER(Consts.ELECTRIC_HEATER_DEFAULT_NAME, Consts.ELECTRIC_HEATER_P_KEY), GAS_HEATER(
+				Consts.GAS_HEATER_DEFAULT_NAME, Consts.GAS_HEATER_P_KEY), FURNACE(
+				Consts.FURNACE_DEFAULT_NAME, Consts.FURNACE_PRODUCT_KEY), Unknown(
 				Consts.HEATER_DEFAULT_NAME, "");
 
 		public String defName, pkey;
@@ -122,12 +122,12 @@ public class HeaterInfoService {
 			return HeaterType.Unknown;
 		}
 		Log.e(TAG, hinfo.getProductKey());
-		if (Consts.EH_P_KEY.equals(hinfo.getProductKey())) {
-			return HeaterType.Eh;
-		} else if (Consts.ST_P_KEY.equals(hinfo.getProductKey())) {
-			return HeaterType.ST;
-		} else if (Consts.EH_FURNACE_PRODUCT_KEY.equals(hinfo.getProductKey())) {
-			return HeaterType.EH_FURNACE;
+		if (Consts.ELECTRIC_HEATER_P_KEY.equals(hinfo.getProductKey())) {
+			return HeaterType.ELECTRIC_HEATER;
+		} else if (Consts.GAS_HEATER_P_KEY.equals(hinfo.getProductKey())) {
+			return HeaterType.GAS_HEATER;
+		} else if (Consts.FURNACE_PRODUCT_KEY.equals(hinfo.getProductKey())) {
+			return HeaterType.FURNACE;
 		}
 		else {
 			return HeaterType.Unknown;

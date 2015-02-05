@@ -65,7 +65,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 	private Map<Integer, View> mMapStepViews = new HashMap<Integer, View>();
 	static int curindex = 0;
 
-	HeaterType mType = HeaterType.Eh;
+	HeaterType mType = HeaterType.ELECTRIC_HEATER;
 
 	private void initHeaterType() {
 		String typeStr = getIntent().getStringExtra("type");
@@ -73,13 +73,13 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			return;
 		}
 		if (typeStr.equals("gas")) {
-			mType = HeaterType.ST;
+			mType = HeaterType.GAS_HEATER;
 			setTopText(R.string.setting_new_device);
 		} else if (typeStr.equals("furnace")) {
-			mType = HeaterType.EH_FURNACE;
+			mType = HeaterType.FURNACE;
 			setTopText(R.string.setting_new_furnace);
 		} else if (typeStr.equals("elect")) {
-			mType = HeaterType.Eh;
+			mType = HeaterType.ELECTRIC_HEATER;
 			setTopText(R.string.setting_new_device);
 		}
 	}
@@ -229,13 +229,13 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			ImageView img = (ImageView) v.findViewById(R.id.img);
 
 			switch (mType) {
-			case Eh:
+			case ELECTRIC_HEATER:
 				img.setImageResource(R.drawable.setting_img1);
 				break;
-			case ST:
+			case GAS_HEATER:
 				img.setImageResource(R.drawable.device_img1_1);
 				break;
-			case EH_FURNACE:
+			case FURNACE:
 				img.setImageResource(R.drawable.device_img3_1);
 				s1tip.setText(R.string.set_device_tip2_eh_furnace);
 				break;
@@ -256,7 +256,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			mTvWifiSsid = (TextView) v.findViewById(R.id.acs2_tv_ssid);
 			mEtWifiPsw = (EditText) v.findViewById(R.id.acs2_et_psw);
 
-			if (mType == HeaterType.EH_FURNACE) {
+			if (mType == HeaterType.FURNACE) {
 				tv_tips.setText(R.string.set_device_tip3_eh_furnace);
 			}
 
@@ -269,21 +269,21 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			ImageView img3 = (ImageView) v.findViewById(R.id.img);
 
 			switch (mType) {
-			case Eh:
+			case ELECTRIC_HEATER:
 				img3.setImageResource(R.drawable.setting_img4);
 				s3tip.setText(R.string.setup_step3_eh);
 				TextStyleUtil.setColorStringInTextView(s3tip,
 						Color.parseColor("#ff5f00"),
 						new String[] { "3秒", "响一声" });
 				break;
-			case ST:
+			case GAS_HEATER:
 				img3.setImageResource(R.drawable.setting_img5);
 				s3tip.setText(R.string.setup_step3_st);
 				TextStyleUtil.setColorStringInTextView(s3tip,
 						Color.parseColor("#ff5f00"), new String[] { "一下",
 								"听到蜂鸣" });
 				break;
-			case EH_FURNACE:
+			case FURNACE:
 				img3.setImageResource(R.drawable.device_img3);
 				s3tip.setText(R.string.setup_step3_eh_furnace);
 				TextStyleUtil.setColorStringInTextView(s3tip,
@@ -541,12 +541,15 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		}
 
 		SharedPreferUtils spu = new SharedPreferUtils(this);
-		if (hser.getHeaterType(hinfo) == HeaterType.Eh) {
-			spu.put(ShareKey.FirstEhDeviceDid, hinfo.getDid());
-			spu.put(ShareKey.FirstEhDeviceMac, hinfo.getMac());
-		} else if (hser.getHeaterType(hinfo) == HeaterType.ST) {
-			spu.put(ShareKey.FirstGasDeviceDid, hinfo.getDid());
-			spu.put(ShareKey.FirstGasDeviceMac, hinfo.getMac());
+		if (hser.getHeaterType(hinfo) == HeaterType.ELECTRIC_HEATER) {
+			spu.put(ShareKey.PollingElectricHeaterDid, hinfo.getDid());
+			spu.put(ShareKey.PollingElectricHeaterMac, hinfo.getMac());
+		} else if (hser.getHeaterType(hinfo) == HeaterType.GAS_HEATER) {
+			spu.put(ShareKey.PollingGasHeaterDid, hinfo.getDid());
+			spu.put(ShareKey.PollingGasHeaterMac, hinfo.getMac());
+		} else if (hser.getHeaterType(hinfo) == HeaterType.FURNACE) {
+			spu.put(ShareKey.PollingFurnaceDid, hinfo.getDid());
+			spu.put(ShareKey.PollingFurnaceMac, hinfo.getMac());
 		}
 
 		new SharedPreferUtils(this).put(ShareKey.CurDeviceDid,
@@ -576,7 +579,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 
 		switch (hser.getHeaterType(hinfo)) {
 
-		case Eh:
+		case ELECTRIC_HEATER:
 
 			intent = new Intent(getBaseContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -590,7 +593,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			startActivity(intent);
 			break;
 
-		case ST:
+		case GAS_HEATER:
 
 			intent = new Intent(getBaseContext(), GasMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -604,7 +607,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			startActivity(intent);
 			break;
 
-		case EH_FURNACE:
+		case FURNACE:
 
 			intent = new Intent(getBaseContext(), FurnaceMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -641,7 +644,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			curindex = 3;
 			Intent intent = new Intent(getBaseContext(),
 					AutoConfigureFailActivity.class);
-			if (mType == HeaterType.EH_FURNACE) {
+			if (mType == HeaterType.FURNACE) {
 				intent.putExtra("isFurnace", true);
 			}
 			startActivity(intent);

@@ -9,7 +9,7 @@
     <com.vanward.ehheater.view.swipelistview.SwipeListView
         android:id="@+id/lv_listview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:listSelector="#00000000"
         swipe:swipeActionLeft="reveal"
         swipe:swipeActionRight="reveal"
@@ -21,5 +21,20 @@
         swipe:swipeOffsetLeft="90dp"
         swipe:swipeOffsetRight="90dp"
         swipe:swipeOpenOnLongPress="false" />
+
+    <Button
+        android:id="@+id/btn_add_appointment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:background="@drawable/layerlist_appointment_list_bg_without_left_right_border"
+        android:gravity="left|center_vertical"
+        android:drawableLeft="@drawable/icon_moshi_add"
+        android:drawablePadding="20dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/add_appointment"
+        android:textColor="#5d7884"
+        android:textSize="18sp" />
 
 </LinearLayout>

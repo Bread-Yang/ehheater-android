@@ -39,7 +39,6 @@ import com.vanward.ehheater.view.AddPatternNameDialogUtil;
 import com.vanward.ehheater.view.AddPatternSettingDialogUtil;
 import com.vanward.ehheater.view.ChangeStuteView;
 import com.vanward.ehheater.view.CircleListener;
-import com.vanward.ehheater.view.CircularView;
 import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.SureDelDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil;

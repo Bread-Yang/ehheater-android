@@ -30,7 +30,7 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 		
 		XPGConnectClient.initClient(this);  
 		
-		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.DEVICE_FOUND_TIMER.swigValue(),5);
+//		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.DEVICE_FOUND_TIMER.swigValue(),5);
 		
 		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),3);
 		
@@ -39,12 +39,14 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 //		EhHeaterApplication.number_tf = Typeface.createFromAsset(getAssets(),
 //				"fonts/number.otf");
 //
-//		EhHeaterApplication.device_density = this.getResources()
-//				.getDisplayMetrics().density;
+		EhHeaterApplication.device_density = this.getResources()
+				.getDisplayMetrics().density;
+		
+		Log.e(TAG, "density : " + EhHeaterApplication.device_density);
 	}
 
-	@Override
-	public void onInited(int result) {
+	@Override 
+	public void onInited(int result) { 
 		
 	}
 

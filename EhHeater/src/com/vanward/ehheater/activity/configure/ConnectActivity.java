@@ -381,6 +381,8 @@ public class ConnectActivity extends GeneratedActivity {
 	public void OnPasscodeResp(PasscodeResp_t pResp, int nConnId) {
 		super.OnPasscodeResp(pResp, nConnId);
 		Log.e(TAG, "OnPasscodeResp()回调了");
+		
+		tempConnId = nConnId;
 
 		passcodeRetrieved = generated.XpgData2String(pResp.getPasscode());
 

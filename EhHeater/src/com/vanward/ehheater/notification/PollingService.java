@@ -10,6 +10,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -34,12 +35,8 @@ public class PollingService extends Service {
 	private NotificationManager mManager;
 	private HttpFriend mHttpFriend;
 	private String uid;
-	private short gasErrorCode = 0;
-	private short electicErrorCode = 0;
-	private boolean gasIsOxygenWarning, gasIsFreezeProofingWarning;
-	private String electicMac, gasMac;
-	private final int TYPE_ELECTIC = 0;
-	private final int TYPE_GAS = 1;
+	private String electicMac, gasMac, furnaceMac;
+	private boolean passOneHour = true;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -109,8 +106,8 @@ public class PollingService extends Service {
 		// // "electicHeaterDids为null");
 		// }
 		SharedPreferUtils spu = new SharedPreferUtils(this);
-		String did = spu.get(ShareKey.FirstEhDeviceDid, "");
-		electicMac = spu.get(ShareKey.FirstEhDeviceMac, "");
+		String did = spu.get(ShareKey.PollingElectricHeaterDid, "");
+		electicMac = spu.get(ShareKey.PollingElectricHeaterMac, "");
 		Log.e(TAG, "EhHeaterDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
@@ -139,7 +136,7 @@ public class PollingService extends Service {
 									JSONObject result = json
 											.getJSONObject("result");
 									try {
-										electicErrorCode = (short) result
+										short electicErrorCode = (short) result
 												.getInt("error");
 
 										switch (electicErrorCode) {
@@ -184,7 +181,6 @@ public class PollingService extends Service {
 										}
 
 									} catch (Exception e) {
-										electicErrorCode = 0;
 									}
 								}
 							} catch (Exception e) {
@@ -216,8 +212,8 @@ public class PollingService extends Service {
 		// // Log.e(TAG, "gasHeaterDids为null : " + "gasHeaterDids为null");
 		// }
 		SharedPreferUtils spu = new SharedPreferUtils(this);
-		String did = spu.get(ShareKey.FirstGasDeviceDid, "");
-		gasMac = spu.get(ShareKey.FirstGasDeviceMac, "");
+		String did = spu.get(ShareKey.PollingGasHeaterDid, "");
+		gasMac = spu.get(ShareKey.PollingGasHeaterMac, "");
 		Log.e(TAG, "GasHeaterDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
@@ -247,30 +243,33 @@ public class PollingService extends Service {
 									JSONObject result = json
 											.getJSONObject("result");
 
+									short gasErrorCode = 0;
 									// 故障
 									try {
 										gasErrorCode = (short) result
 												.getInt("errorCode");
 									} catch (Exception e) {
-										gasErrorCode = 0;
 									}
 
 									// 防冻警报
 									int freezeProofingWarning = result
 											.getInt("freezeProofingWarning");
 									if (freezeProofingWarning == 1) {
-										gasIsFreezeProofingWarning = true;
-									} else {
-										gasIsFreezeProofingWarning = false;
+										showNotification(
+												1,
+												R.string.freezeProof_warn_title,
+												R.string.freezeProof_tips);
+										return;
 									}
 
 									// 氧护警报
 									int oxygenWarning = result
 											.getInt("oxygenWarning");
 									if (oxygenWarning == 1) {
-										gasIsOxygenWarning = true;
-									} else {
-										gasIsOxygenWarning = false;
+										showNotification(1,
+												R.string.oxygen_warn,
+												R.string.oxygen_tips);
+										return;
 									}
 
 									if (gasErrorCode != 0) {
@@ -286,24 +285,29 @@ public class PollingService extends Service {
 														+ ")");
 									}
 
-									if (gasIsFreezeProofingWarning) {
-										showNotification(
-												1,
-												R.string.freezeProof_warn_title,
-												R.string.freezeProof_tips);
-									}
-
-									if (gasIsOxygenWarning) {
-										showNotification(1,
-												R.string.oxygen_warn,
-												R.string.oxygen_tips);
-									}
-
 									int water_function = result
 											.getInt("water_function");
-									if (water_function == 2) {
+									if (water_function == 2 && passOneHour) {
+										passOneHour = false;
+										
 										showNotification(1, R.string.tips,
 												R.string.full_water);
+										
+										new CountDownTimer(10000, 1000) {
+
+											@Override
+											public void onTick(
+													long millisUntilFinished) {
+
+											}
+
+											@Override
+											public void onFinish() {
+												Log.e(TAG,
+														"CountDownTimer的onFinish()执行了");
+												passOneHour = true;
+											}
+										}.start();
 									}
 								}
 							} catch (Exception e) {
@@ -321,6 +325,66 @@ public class PollingService extends Service {
 									+ "checkGasHeaterInfo请求故障接口出错");
 							// showNotification(1, R.string.oxygen_warn,
 							// R.string.oxygen_tips);
+						}
+					});
+		}
+	}
+
+	/** 壁挂炉故障 */
+	private void checkFurnaceInfo() {
+		// List<HeaterInfo> allDevices = new HeaterInfoDao(getBaseContext())
+		// .getAllDeviceOfType(HeaterType.ST);
+		// if (allDevices != null) {
+		// // Log.e(TAG, "gasHeaterDids的大小是 : " + allDevices.size() + "");
+		// } else {
+		// // Log.e(TAG, "gasHeaterDids为null : " + "gasHeaterDids为null");
+		// }
+		SharedPreferUtils spu = new SharedPreferUtils(this);
+		String did = spu.get(ShareKey.PollingFurnaceDid, "");
+		furnaceMac = spu.get(ShareKey.PollingFurnaceMac, "");
+		// Log.e(TAG, "FurnaceDid : " + did);
+		if (!"".equals(did)) {
+			// if (allDevices != null && allDevices.size() > 0) {
+			// String requestURL =
+			// "GasInfo/getNewestData?did=dVfu4XXcUCbE93Z2mu4PyZ";
+			// gasMac = allDevices.get(0).getMac();
+			// Log.e(TAG, "gasMac是 : " + gasMac);
+			// Log.e(TAG, "燃热的did是 : " + allDevices.get(0).getDid());
+
+			String requestURL = "getNewestFurnaceData?did=" + did;
+			// Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);
+
+			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					null, new AjaxCallBack<String>() {
+						@Override
+						public void onSuccess(String jsonString) {
+							super.onSuccess(jsonString);
+
+							// Log.e(TAG, "checkFurnaceInfo请求返回来的数据是 : "
+							// + jsonString);
+
+							try {
+								JSONObject json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									JSONObject result = json
+											.getJSONObject("result");
+
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+								Log.e(TAG, "checkFurnaceInfo解析json出错"
+										+ "checkFurnaceInfo解析json出错");
+							}
+						}
+
+						@Override
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+							Log.e(TAG, "checkFurnaceInfo请求故障接口出错"
+									+ "checkFurnaceInfo请求故障接口出错");
 						}
 					});
 		}
@@ -344,20 +408,14 @@ public class PollingService extends Service {
 		Intent intent = new Intent();
 		intent.setClass(this, ErrorUtils.class);
 		if (notifyId == 0) { // 电热水器
-			intent.putExtra("errorCode", electicErrorCode);
 			intent.putExtra("mac", electicMac);
-			intent.putExtra("isGas", false);
-			intent.putExtra("device_type", HeaterType.Eh);
-			// intent.setClass(this, MainActivity.class);
-		} else if (notifyId == 1){
-			// intent.setClass(this, GasMainActivity.class);
-			intent.putExtra("isGas", true);
+			intent.putExtra("device_type", HeaterType.ELECTRIC_HEATER);
+		} else if (notifyId == 1) { // 燃热水器
 			intent.putExtra("mac", gasMac);
-			intent.putExtra("gasIsFreezeProofingWarning",
-					gasIsFreezeProofingWarning);
-			intent.putExtra("device_type", HeaterType.ST);
-			intent.putExtra("gasIsOxygenWarning", gasIsOxygenWarning);
-			intent.putExtra("errorCode", gasErrorCode);
+			intent.putExtra("device_type", HeaterType.GAS_HEATER);
+		} else if (notifyId == 2) { // 壁挂炉
+			intent.putExtra("mac", furnaceMac);
+			intent.putExtra("device_type", HeaterType.FURNACE);
 		}
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -384,6 +442,7 @@ public class PollingService extends Service {
 					// checkAppointment();
 					checkElecticHeaterInfo();
 					checkGasHeaterInfo();
+					checkFurnaceInfo();
 				}
 			});
 		}

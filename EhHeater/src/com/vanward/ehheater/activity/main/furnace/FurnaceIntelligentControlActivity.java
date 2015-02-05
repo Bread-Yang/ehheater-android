@@ -415,8 +415,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	}
 
 	private void init() {
-		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
-		uid = AccountService.getUserId(getBaseContext());
+//		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
+//		uid = AccountService.getUserId(getBaseContext());
 		
 		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating", false);
 		// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节

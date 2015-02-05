@@ -284,15 +284,20 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		SharedPreferUtils spu = new SharedPreferUtils(this);
-		if (hser.getHeaterType(hi).equals(HeaterType.Eh)) {
-			if ("".equals(spu.get(ShareKey.FirstEhDeviceDid, ""))) {
-				spu.put(ShareKey.FirstEhDeviceDid, hi.getDid());
-				spu.put(ShareKey.FirstEhDeviceMac, hi.getMac());
+		if (hser.getHeaterType(hi).equals(HeaterType.ELECTRIC_HEATER)) {
+			if ("".equals(spu.get(ShareKey.PollingElectricHeaterDid, ""))) {
+				spu.put(ShareKey.PollingElectricHeaterDid, hi.getDid());
+				spu.put(ShareKey.PollingElectricHeaterMac, hi.getMac());
 			}
-		} else if (hser.getHeaterType(hi).equals(HeaterType.ST)) {
-			if ("".equals(spu.get(ShareKey.FirstGasDeviceDid, ""))) {
-				spu.put(ShareKey.FirstGasDeviceDid, hi.getDid());
-				spu.put(ShareKey.FirstGasDeviceMac, hi.getMac());
+		} else if (hser.getHeaterType(hi).equals(HeaterType.GAS_HEATER)) {
+			if ("".equals(spu.get(ShareKey.PollingGasHeaterDid, ""))) {
+				spu.put(ShareKey.PollingGasHeaterDid, hi.getDid());
+				spu.put(ShareKey.PollingGasHeaterMac, hi.getMac());
+			}
+		} else if (hser.getHeaterType(hi).equals(HeaterType.FURNACE)) {
+			if ("".equals(spu.get(ShareKey.PollingFurnaceDid, ""))) {
+				spu.put(ShareKey.PollingFurnaceDid, hi.getDid());
+				spu.put(ShareKey.PollingFurnaceMac, hi.getMac());
 			}
 		}
 

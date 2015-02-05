@@ -217,13 +217,13 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 			ImageView deviceImage = (ImageView) convertView
 					.findViewById(R.id.device_img);
 			switch (new HeaterInfoService(getBaseContext()).getHeaterType(item)) {
-			case Eh:
+			case ELECTRIC_HEATER:
 				deviceImage.setImageResource(R.drawable.setting_img3);
 				break;
-			case ST:
+			case GAS_HEATER:
 				deviceImage.setImageResource(R.drawable.device_line_img2);
 				break;
-			case EH_FURNACE:
+			case FURNACE:
 				deviceImage.setImageResource(R.drawable.device_line_img3);
 				break;
 			default:
@@ -250,7 +250,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 								.getContext()).getHeaterType(hinfo);
 						HeaterType type = new HeaterInfoService(view
 								.getContext()).getHeaterType(hinfo);
-						if (HeaterType.EH_FURNACE == type) {
+						if (HeaterType.FURNACE == type) {
 							deleteFurnaceConfirmDialog.show();
 						} else {
 							deleteHeaterConfirmDialog.show();

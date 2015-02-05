@@ -10,7 +10,7 @@ public class SharedPreferUtils {
 	SharedPreferences share;
 
 	public enum ShareKey {
-		UserNickname, UserId, UserPsw, PendingUserId, PendingUserPsw, FirstEhDeviceDid, FirstEhDeviceMac, FirstGasDeviceDid, FirstGasDeviceMac, CurDeviceMac, CurDeviceDid, CurDeviceAddress, PendingSsid;
+		UserNickname, UserId, UserPsw, PendingUserId, PendingUserPsw, PollingElectricHeaterDid, PollingElectricHeaterMac, PollingGasHeaterDid, PollingGasHeaterMac, PollingFurnaceDid, PollingFurnaceMac, CurDeviceMac, CurDeviceDid, CurDeviceAddress, PendingSsid;
 	}
 
 	public SharedPreferUtils(Context context) {

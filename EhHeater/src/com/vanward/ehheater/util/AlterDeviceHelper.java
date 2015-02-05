@@ -62,17 +62,17 @@ public class AlterDeviceHelper {
 			Intent intent = new Intent();
 			intent.putExtra("switchSuccess", true);
 			switch (newHeaterType) {
-			case Eh:
+			case ELECTRIC_HEATER:
 				intent.setClass(hostActivity, MainActivity.class);
 				hostActivity.startActivity(intent);
 				hostActivity.finish();
 				break;
-			case ST:
+			case GAS_HEATER:
 				intent.setClass(hostActivity, GasMainActivity.class);
 				hostActivity.startActivity(intent);
 				hostActivity.finish();
 				break;
-			case EH_FURNACE:
+			case FURNACE:
 				intent.setClass(hostActivity, FurnaceMainActivity.class);
 				hostActivity.startActivity(intent);
 				hostActivity.finish();

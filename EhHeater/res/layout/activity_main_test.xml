@@ -79,7 +79,7 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="wrap_content" 
                         android:layout_centerInParent="true"
                         android:orientation="vertical" >
 
@@ -362,7 +362,7 @@
                         android:text="@string/information"
                         android:textColor="@color/an_hui"
                         android:textSize="14sp"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
