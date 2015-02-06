@@ -357,7 +357,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 			rb_summer.setText(getResources().getString(R.string.setting)
 					+ pResp.getBathTemTarget() + "°");
-
+ 
 			if (!circle_slider.isDraging() && !isSendingCommand) {
 				circle_slider.setValue(pResp.getBathTemTarget());
 			}

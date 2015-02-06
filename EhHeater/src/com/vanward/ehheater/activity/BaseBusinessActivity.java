@@ -1,16 +1,17 @@
 package com.vanward.ehheater.activity;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
@@ -22,6 +23,7 @@ import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.AlterDeviceHelper;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.NetworkStatusUtil;
@@ -34,7 +36,6 @@ import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
-import com.xtremeprog.xpgconnect.generated.generated;
 
 /**
  * 电热, 燃热, 壁挂炉三个MainActivity共用业务:
@@ -58,31 +59,34 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	private boolean isActived = false;
 
+	private Dialog dialog_exit;
+
 	private BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
-  
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.e(TAG, "wifiConnectedReceiver的onReceive()执行了");
 			boolean isConnected = intent.getBooleanExtra("isConnected", false);
 			if (isConnected) {
 				if (isActived) {
-					if (!NetworkStatusUtil.isConnected(BaseBusinessActivity.this)) {
-						DialogUtil.instance().showReconnectDialog(null, BaseBusinessActivity.this);
+					if (!NetworkStatusUtil
+							.isConnected(BaseBusinessActivity.this)) {
+						DialogUtil.instance().showReconnectDialog(null,
+								BaseBusinessActivity.this);
 					} else {
 						connectCurDevice();
-					} 
+					}
 				}
 			} else {
 				changeToOfflineUI();
 			}
-		} 
+		}
 	};
 
 	private BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.e(TAG,
-					"deviceOnlineReceiver的onReceive()执行了");
+			Log.e(TAG, "deviceOnlineReceiver的onReceive()执行了");
 			if (isFinishing()) {
 				return;
 			}
@@ -93,8 +97,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private BroadcastReceiver alterDeviceDueToDeleteReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.e(TAG,
-					"alterDeviceDueToDeleteReceiver的onReceive()执行了");
+			Log.e(TAG, "alterDeviceDueToDeleteReceiver的onReceive()执行了");
 			if (isFinishing()) {
 				return;
 			}
@@ -204,12 +207,32 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		String mac = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeaterMac();
 		CheckOnlineUtil.ins().reset(mac);
+
+		dialog_exit = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithTwoButton(R.string.confirm_exit,
+						BaoDialogShowUtil.DEFAULT_RESID,
+						BaoDialogShowUtil.DEFAULT_RESID, null,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								if (Global.connectId > -1) {
+									XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+								}
+
+								if (Global.checkOnlineConnId > 0) {
+									XPGConnectClient.xpgcDisconnectAsync(Global.checkOnlineConnId);
+								}
+
+								android.os.Process.killProcess(android.os.Process.myPid());
+							}
+						});
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		Log.e(TAG, "onResume");
 
 		isActived = true;
@@ -218,7 +241,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		CheckOnlineUtil.ins().resume();
 
-		if (shouldReconnect) { 
+		if (shouldReconnect) {
 			shouldReconnect = false;
 			Log.e(TAG, "onResume里面执行了connectCurDevice()");
 			connectCurDevice("连接已断开, 正在重新连接...");
@@ -235,8 +258,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		CheckOnlineUtil.ins().pause();
 		paused = true;
-		
-//		XPGConnectClient.RemoveActivity(this);
+
+		// XPGConnectClient.RemoveActivity(this);
 	}
 
 	@Override
@@ -261,15 +284,16 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (Global.connectId > -1) {
-			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-		}
-
-		if (Global.checkOnlineConnId > 0) {
-			XPGConnectClient.xpgcDisconnectAsync(Global.checkOnlineConnId);
-		}
-
-		android.os.Process.killProcess(android.os.Process.myPid());
+//		if (Global.connectId > -1) {
+//			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+//		}
+//
+//		if (Global.checkOnlineConnId > 0) {
+//			XPGConnectClient.xpgcDisconnectAsync(Global.checkOnlineConnId);
+//		}
+//
+//		android.os.Process.killProcess(android.os.Process.myPid());
+		dialog_exit.show();
 	}
 
 	@Override
@@ -324,7 +348,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			// 连接断开
 			if (paused) {
 				shouldReconnect = true;
-			} else { 
+			} else {
 				connectCurDevice("连接已断开, 正在重新连接...");
 			}
 

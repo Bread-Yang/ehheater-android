@@ -68,6 +68,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	private String did = "";
 
 	private String uid = "";
+	
+	private String passcode = "";
 
 	private Dialog saveDialog;
 	
@@ -81,7 +83,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		setCenterView(R.layout.activity_furnace_intelligent_control);
 		setTopText(R.string.intelligent_control);
 		setLeftButtonBackground(R.drawable.icon_back);
-		setRightButton(View.GONE);
+//		setRightButton(View.GONE);
 		findViewById();
 		setListener();
 		init();
@@ -107,6 +109,14 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			@Override
 			public void onClick(View v) {
 				saveDialog.show();
+			}
+		});
+		
+		btn_right.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				saveChartData();
 			}
 		});
 		
@@ -199,11 +209,12 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			json2.put("dateTime", 1418092441000d);
 //			json2.put("dateTime", System.currentTimeMillis());
 			json2.put("name", "测试555");
-			json2.put("did", "LWFDwtEcFWJ5hSBPXrVXFS");
-//			json2.put("did", did);
-			json2.put("uid", "q1231");
-//			json2.put("uid", uid);
-			json2.put("passcode", "123");
+//			json2.put("did", "LWFDwtEcFWJ5hSBPXrVXFS");
+			json2.put("did", did);
+//			json2.put("uid", "q1231");
+			json2.put("uid", uid);
+//			json2.put("passcode", "123");
+			json2.put("passcode", passcode);
 			json2.put("loopflag", 1);
 			json2.put("week",loop);
 			json2.put("isWarmOn", isWarmOn?"1":"0");
@@ -251,7 +262,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	
 	private String getData() {
 
-		String requestURL = "furnace/getWarm?did=LWFDwtEcFWJ5hSBPXrVXFS&uid=q1231";
+//		String requestURL = "furnace/getWarm?did=LWFDwtEcFWJ5hSBPXrVXFS&uid=q1231";
+		
+		String requestURL = "furnace/getWarm?did=" + did +  "&uid=" + uid;
 		
 		AjaxParams params = new AjaxParams();
 		params.put("data", gson.toJson(highChar_data));
@@ -317,8 +330,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 //				
 //			}
 			
-			
-			
 			String[] str = temp48.split(",");
 			int j = 0;
 			for(int i = 0; i < str.length; i++){
@@ -326,9 +337,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 				data[i] = Integer.parseInt(str[i]);
 				
 			}
-			
-			
-			
 
 			Log.e(TAG, "解析json方法里面的--loop的数据是 : " + loop);
 
@@ -415,8 +423,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	}
 
 	private void init() {
-//		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
-//		uid = AccountService.getUserId(getBaseContext());
+		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
+		uid = AccountService.getUserId(getBaseContext());
+		passcode = AccountService.getUserPsw(getBaseContext());
 		
 		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating", false);
 		// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
@@ -426,7 +435,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		} else {
 			bbv.setLimitMaxValue(80);
 		}
-		bbv.setLimitMinValue(30);
 		bbv.setAdapter(this);
 
 		saveDialog = BaoDialogShowUtil.getInstance(this)

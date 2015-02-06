@@ -32,8 +32,8 @@
 
         <ImageView
             android:id="@+id/circle_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
             android:layout_below="@+id/mode_tv"
             android:layout_centerHorizontal="true"
             android:background="@drawable/home_yuan_bg" />
@@ -50,8 +50,8 @@
                 android:id="@+id/wave_bg"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_marginBottom="4dp"
-                android:scaleType="center"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/main_wave" />
 
             <ImageView
@@ -97,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:text="--"
                         android:textColor="@color/title_color"
-                        android:textSize="70dp" />
+                        android:textSize="55dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -140,8 +140,8 @@
             android:layout_width="73dp"
             android:layout_height="73dp"
             android:layout_below="@+id/circle_bg"
-            android:layout_marginLeft="-55dp"
-            android:layout_marginTop="-60dp"
+            android:layout_marginLeft="-50dp"
+            android:layout_marginTop="-55dp"
             android:layout_toRightOf="@+id/circle_bg"
             android:background="@drawable/set_temperature_bg1"
             android:focusable="false"
@@ -280,8 +280,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/circle_bg"
-            android:layout_marginTop="5dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -290,7 +290,7 @@
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
-                    android:id="@+id/appointment_btn_1" 
+                    android:id="@+id/appointment_btn_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"

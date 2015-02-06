@@ -2,6 +2,7 @@ package com.vanward.ehheater.activity.main.furnace;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import net.tsz.afinal.http.AjaxCallBack;
@@ -26,6 +27,8 @@ import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.service.AccountService;
+import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.HttpFriend;
 
 public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
@@ -43,6 +46,10 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	private String online_data = "[1, 3.5, 4, 5, 4.5, 2, 2.5, 3, 3.4, 4.1, 4.2, 4.4, 3]";
 
 	String result;
+
+	private String did = "";
+
+	private String uid = "";
 
 	private boolean isPowerOffOrOffline;
 
@@ -75,7 +82,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				case R.id.rb_realtime_consumption:
 					// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
 					getDataForShiShi(3);
-					
+
 					break;
 
 				case R.id.rb_accumulated_consumption:
@@ -99,19 +106,23 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-//				wv_chart.loadUrl("javascript:updateRealTimeChart()");
+				// wv_chart.loadUrl("javascript:updateRealTimeChart()");
 				getDataForShiShi(2);
 				wv_chart.loadUrl("javascript:getRealtimeConsumptionTitle()");
-//				wv_chart.reload();
+				// wv_chart.reload();
 				// ("javascript:javacalljswithargs(" + "'hello world'" + ")")
-//				getJson(testJSON());
+				// getJson(testJSON());
 			}
 		});
 	}
 
-	private Handler h3 ;
+	private Handler h3;
 	private TakeDataThread threadFor5minute;
+
 	private void init() {
+		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
+		uid = AccountService.getUserId(getBaseContext());
+
 		isPowerOffOrOffline = getIntent().getBooleanExtra(
 				"isPowerOffOrOffline", false);
 
@@ -120,16 +131,18 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
 				"highChartsJavaScriptInterface");
 		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
-//		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_update_gas_consumption.html");
+		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_update_gas_consumption.html");
+
 		getDataForShiShi(3);
-		
-		h3 = new Handler(){
-			public void handleMessage(Message msg) {};
+
+		h3 = new Handler() {
+			public void handleMessage(Message msg) {
+			};
 		};
-		
+
 		threadFor5minute = new TakeDataThread();
 		threadFor5minute.start();
-		
+
 	}
 
 	class HighChartsJavaScriptInterface {
@@ -187,29 +200,26 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 				}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			sb.append("]");
 
 			return sb.toString();
 		}
-		
+
 		@JavascriptInterface
 		public int gety(int i) {
-			Log.e(TAG, "gety方法执行了"  + i);
-			for(int i2 = 0; i2 < 12; i2++){
+			Log.e(TAG, "gety方法执行了" + i);
+			for (int i2 = 0; i2 < 12; i2++) {
 				Log.d(TAG, "数组的数据是" + intForShiShi[i2]);
 			}
-			if(100 == i){//取最新的那一个数据
+			if (100 == i) {// 取最新的那一个数据
 				return intForShiShi[11];
-			}else  //根据i取12个数据，i的范围是0~11
+			} else // 根据i取12个数据，i的范围是0~11
 			{
 				return intForShiShi[i];
 			}
-			
-			
-			
+
 		}
 
 	}
@@ -296,7 +306,12 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 	private String getData() {
 		mHttpFriend = HttpFriend.create(this);
-		String requestURL = "getFurnaceYearGas?did=dVfu4XXcUCbE93Z2mu4PyZ&year=2014";
+		Calendar c = Calendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+
+		// String requestURL =
+		// "getFurnaceYearGas?did=dVfu4XXcUCbE93Z2mu4PyZ&year=2014";
+		String requestURL = "getFurnaceYearGas?did=" + did + "&year=" + year;
 
 		AjaxParams params = new AjaxParams();
 		params.put("data", gson.toJson(highChar_data));
@@ -306,7 +321,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
-						Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+						Log.e(TAG, "请求getFurnaceYearGas数据是 : " + jsonString);
 
 						try {
 							JSONObject json = new JSONObject(jsonString);
@@ -325,11 +340,15 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		Log.e(TAG, " getData()执行完了");
 		return forResult;
 	}
-	
+
 	int[] intForShiShi = new int[12];
+
 	private String getDataForShiShi(final int ir) {
 		mHttpFriend = HttpFriend.create(this);
-		String requestURL = "http://vanward.xtremeprog.com/EhHeaterWeb/getFurnaceHourGas?did=dVfu4XXcUCbE93Z2mu4PyZ";
+
+		// String requestURL =
+		// "http://vanward.xtremeprog.com/EhHeaterWeb/getFurnaceHourGas?did=dVfu4XXcUCbE93Z2mu4PyZ";
+		String requestURL = "getFurnaceHourGas?did=" + did;
 
 		AjaxParams params = new AjaxParams();
 		params.put("data", gson.toJson(highChar_data));
@@ -339,28 +358,30 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
-						Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+						Log.e(TAG, "请求getFurnaceHourGas后返回的数据是 : " + jsonString);
 
 						try {
 							JSONObject json = new JSONObject(jsonString);
-							
+
 							String result = json.getString("result");
 							JSONArray resultArray = new JSONArray(result);
-							Log.e(TAG, "请求成功后返回的数据是 : " + resultArray.toString());
-							for(int i = 0; i < 12; i++){
-								if(!resultArray.getJSONObject(i).getString("amount").equals("")){
-								intForShiShi[i] = Integer.parseInt(resultArray.getJSONObject(i).getString("amount"));
-								}else{
+							for (int i = 0; i < 12; i++) {
+								if (!resultArray.getJSONObject(i)
+										.getString("amount").equals("")) {
+									intForShiShi[i] = Integer
+											.parseInt(resultArray
+													.getJSONObject(i)
+													.getString("amount"));
+								} else {
 									intForShiShi[i] = 0;
 								}
 							}
-							if(ir == 3){
-							handlerForShiShi.sendEmptyMessage(3);
-							}else{
-							handlerForShiShi.sendEmptyMessage(2);
+							if (ir == 3) {
+								handlerForShiShi.sendEmptyMessage(3);
+							} else {
+								handlerForShiShi.sendEmptyMessage(2);
 							}
-			
-							
+
 							if ("success".equals("result")) {
 								finish();
 							}
@@ -373,17 +394,17 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		return forResult;
 	}
 
-	private  Handler handlerForShiShi = new Handler() {
+	private Handler handlerForShiShi = new Handler() {
 
-		public void handleMessage(Message msg) { 
-			
-			if(msg.what == 2){
-				//啦数据，更新到webview对应的js
-				
+		public void handleMessage(Message msg) {
+
+			if (msg.what == 2) {
+				// 啦数据，更新到webview对应的js
+
 				wv_chart.loadUrl("javascript:updateRealTimeChart()");
-			}else if(msg.what == 3){
+			} else if (msg.what == 3) {
 				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_update_gas_consumption.html");
-			}else if(msg.what ==4){
+			} else if (msg.what == 4) {
 				getDataForShiShi(2);
 			}
 		};
@@ -400,23 +421,19 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	class TakeDataThread extends Thread {
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			Log.d(TAG, "线程开始");
 			while (true) {
-				
-				//睡眠5分钟
+
+				// 睡眠5分钟
 				try {
-					sleep(5 *1000 * 60);
+					sleep(5 * 1000 * 60);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				handlerForShiShi.sendEmptyMessage(4);
-				
+
 			}
-			
-			
-			
+
 		}
 	}
 }

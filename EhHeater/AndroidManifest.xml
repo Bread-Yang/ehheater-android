@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vanward.ehheater"
     android:versionCode="1"
-    android:versionName="b013" >
+    android:versionName="b014" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -27,7 +27,7 @@
         android:theme="@style/AppBaseTheme" >
 
         <!-- Polling Service -->
-        <service android:name=".notification.PollingService" > 
+        <service android:name=".notification.PollingService" >
             <intent-filter>
                 <action android:name="com.vanward.service.PollingService" />
             </intent-filter>
@@ -62,8 +62,8 @@
         </activity>
         <activity
             android:name=".activity.configure.ConnectActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/custom_dialog2" >
         </activity>
         <activity
@@ -72,7 +72,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.login.LoginActivity" 
+            android:name=".activity.login.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
@@ -152,10 +152,12 @@
         </activity>
         <activity
             android:name=".activity.main.gas.GasPatternActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.main.EIPatternActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
         <activity

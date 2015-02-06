@@ -89,6 +89,9 @@ public class HeaterInfoService {
 	public void deleteHeater(String mac) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
 		HeaterInfo hi = hdao.getHeaterByMac(mac);
+		if(hi == null) {
+			return;
+		}
 		hdao.getDb().deleteById(HeaterInfo.class, hi.getId());
 	}
 

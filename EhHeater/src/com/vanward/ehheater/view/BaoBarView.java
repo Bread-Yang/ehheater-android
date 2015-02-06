@@ -188,7 +188,7 @@ public class BaoBarView extends View {
 		height = (height < 0) ? 0 : height;
 		float result = valueOfHeight(height);
 		if (result < limitMinValue) {
-			result = limitMinValue;
+			result = 30;
 		} else if (result > limitMaxValue) {
 			result = limitMaxValue;
 		}
@@ -438,8 +438,8 @@ public class BaoBarView extends View {
 					value = adapter.valueOfIndex(this, startIndex);
 				}
 			}
-			if (value < limitMinValue) {
-				value = limitMinValue;
+			if (value < 30) {
+				value = 30;
 			} else if (value > limitMaxValue) {
 				value = limitMaxValue;
 			}

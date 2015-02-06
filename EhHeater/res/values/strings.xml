@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">万和云智能</string>
-    <string name="version">版本：v 1.0.0 B 0.13</string>
+    <string name="version">版本：v 1.0.0 B 0.14</string>
     <string name="heater">热水器</string>
     <string name="account">用户名</string>
     <string name="password">密码</string>
@@ -209,6 +209,7 @@
     <string name="freezeProof_warn_title">防冻预警</string>
     <string name="freezeProof_tips">亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。</string>
     <string name="full_water">亲,水已注满,请立即关闭。</string>
+    <string name="confirm_exit">确定退出？</string>
     <string name="tips">提示</string>
     <string name="soft_mode">舒适模式</string>
     <string name="magnesiarods_replace">镁棒更换</string>

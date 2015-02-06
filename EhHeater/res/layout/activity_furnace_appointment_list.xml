@@ -25,7 +25,7 @@
     <Button
         android:id="@+id/btn_add_appointment"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:paddingLeft="20dp"
         android:background="@drawable/layerlist_appointment_list_bg_without_left_right_border"
         android:gravity="left|center_vertical"

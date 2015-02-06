@@ -251,29 +251,29 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onProgressChanged(SeekBar seekbar1, int arg1, boolean arg2) {
 
-		int position = seekbar1.getProgress();
-		int temp = position + 35;
-
-		if (48 >= temp)
-			;
-		else if (49 == temp)
-			temp = 48;
-		else if (50 <= temp && 53 > temp)
-			temp = 50;
-		else if (53 <= temp && 58 > temp)
-			temp = 55;
-		else if (58 <= temp && 63 > temp)
-			temp = 60;
-		else if (63 <= temp && 65 >= temp)
-			temp = 65;
-
-		float x = seekbar1.getWidth();
-		float seekbarWidth = seekbar1.getX();
-		float y = seekbar1.getY();
-		float width = (position * x) / 100 + seekbarWidth;
-		System.out.println("width: " + width);
-		System.out.println("x: " + x);
-		System.out.println("position: " + position);
+//		int position = seekbar1.getProgress();
+//		int temp = position + 35;
+//
+//		if (48 >= temp)
+//			;
+//		else if (49 == temp)
+//			temp = 48;
+//		else if (50 <= temp && 53 > temp)
+//			temp = 50;
+//		else if (53 <= temp && 58 > temp)
+//			temp = 55;
+//		else if (58 <= temp && 63 > temp)
+//			temp = 60;
+//		else if (63 <= temp && 65 >= temp)
+//			temp = 65;
+//
+//		float x = seekbar1.getWidth();
+//		float seekbarWidth = seekbar1.getX();
+//		float y = seekbar1.getY();
+//		float width = (position * x) / 100 + seekbarWidth;
+//		System.out.println("width: " + width);
+//		System.out.println("x: " + x);
+//		System.out.println("position: " + position);
 	}
 
 	@Override
@@ -283,6 +283,6 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onStopTrackingTouch(SeekBar arg0) {
-		seekBar.setProgress(heatmakeRange(arg0.getProgress() + 35) - 35);
+//		seekBar.setProgress(heatmakeRange(arg0.getProgress() + 35) - 35);
 	}
 }
