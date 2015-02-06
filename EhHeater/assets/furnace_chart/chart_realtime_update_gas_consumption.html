@@ -19,7 +19,8 @@ ${demo.css}
                 var series = chart.series[0];
                 var x = (new Date()).getTime() + accumulate * 1000 * 60 * 5; // current time
                 accumulate++;
-                y = Math.random();
+              //  y = Math.random();
+               y = highChartsJavaScriptInterface.gety(100);
                 series.addPoint([x, y], true, true);
             }
 		
@@ -136,7 +137,7 @@ $(function () {
                     for (i = -11; i <= 0; i += 1) {
                         data.push({
                             x: time + i * 1000 * 60 * 5,
-                            y: Math.random()
+                            y:  highChartsJavaScriptInterface.gety(i + 11)
                         });
                     }
                     return data;

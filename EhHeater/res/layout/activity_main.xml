@@ -231,7 +231,7 @@
                     android:id="@+id/pattern"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="8dp"
                     android:background="@null"
                     android:drawablePadding="5dp"
                     android:drawableTop="@drawable/pattern_button_selector"
@@ -246,7 +246,7 @@
                     android:id="@+id/appointment_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="8dp"
                     android:background="@null"
                     android:drawablePadding="5dp"
                     android:drawableTop="@drawable/appation_button_selector"
@@ -261,7 +261,7 @@
                     android:id="@+id/btn_information"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="8dp"
                     android:background="@color/transparent"
                     android:button="@null"
                     android:drawablePadding="5dp"
@@ -280,6 +280,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/circle_bg"
+            android:layout_marginTop="5dp"
             android:layout_centerHorizontal="true"
             android:orientation="vertical" >
 
@@ -289,7 +290,7 @@
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
-                    android:id="@+id/appointment_btn_1"
+                    android:id="@+id/appointment_btn_1" 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -313,7 +314,6 @@
                 android:id="@+id/btn_power"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
 

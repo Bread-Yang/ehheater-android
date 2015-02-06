@@ -385,7 +385,7 @@ public class HeaterManagementActivity2 extends EhHeaterBaseActivity {
 
 	private void deleted() {
 
-		Toast.makeText(getBaseContext(), R.string.success, Toast.LENGTH_SHORT)
+		Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT)
 				.show();
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 

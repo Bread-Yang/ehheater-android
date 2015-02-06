@@ -22,7 +22,9 @@ import android.widget.Button;
 import com.vanward.ehheater.BuildConfig;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
+import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
@@ -201,7 +203,7 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "tryConnectByBigCycle()");
 
 		connType = XPG_WAN_LAN.MQTT.swigValue();
-
+		
 		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()前");
 		XPGConnectClient.xpgcLogin2Wan(
 				AccountService.getUserId(getBaseContext()),
@@ -254,7 +256,9 @@ public class ConnectActivity extends GeneratedActivity {
 				didRetrieved = didFound;
 				Log.e(TAG, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
+				Log.e(TAG, "XPGConnShortCuts.connect2small()前");
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
+				Log.e(TAG, "XPGConnShortCuts.connect2small()后");
 				// XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
 
 				Log.e(TAG, "didRetrieved : " + didRetrieved);
@@ -356,6 +360,8 @@ public class ConnectActivity extends GeneratedActivity {
 
 		Log.e(TAG, "是否小循环连接 : " + (connType == XPG_WAN_LAN.LAN.swigValue()));
 		Log.e(TAG, "是否大循环连接 : " + (connType == XPG_WAN_LAN.MQTT.swigValue()));
+		
+		Log.e(TAG, "mPasscode : " + mPasscode);
 
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
 
@@ -467,8 +473,11 @@ public class ConnectActivity extends GeneratedActivity {
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
 		Log.e(TAG, "doAfterBindingDevicesReceivedFromMQTT()");
 		jobDone = true;
+		boolean isBinded = false;
 		for (XpgEndpoint ep : devList) {
 			if (ep.getSzMac().toLowerCase().equals(mMac.toLowerCase())) {
+				
+				isBinded = true;
 
 				passcodeRetrieved = ep.getSzPasscode();
 				didRetrieved = ep.getSzDid();
@@ -489,10 +498,20 @@ public class ConnectActivity extends GeneratedActivity {
 				}
 			}
 		}
-
-		// is offline
-		setOfflineResult();
-		Log.e(TAG, mMac + " isOnline? " + "未绑定此设备");
+		
+		// 如果服务器上没有该设备，则再上传绑定关系
+		if (!isBinded) {
+			HeaterInfoService hser = new HeaterInfoService(
+					getBaseContext());
+			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			
+			Log.e(TAG, "HeaterInfoService.setBinding()执行了");
+			HeaterInfoService.setBinding(this, curHeater.getDid(), curHeater.getPasscode());
+		} else {
+			// is offline
+			setOfflineResult();
+			Log.e(TAG, mMac + " isOnline? " + "未绑定此设备");
+		}
 	}
 
 	private void setOfflineResult() {
@@ -681,5 +700,18 @@ public class ConnectActivity extends GeneratedActivity {
 		intent.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, connectText);
 
 		act.startActivityForResult(intent, Consts.REQUESTCODE_CONNECT_ACTIVITY);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.e(TAG, "onActivityResult()执行了");
+		Log.e(TAG, "在外面");
+		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING && resultCode == RESULT_OK) {
+			Log.e(TAG, "在里面");
+			onDeviceFoundCounter = 0;
+			jobDone = false;
+			tryConnectByBigCycle();
+		}
 	}
 }

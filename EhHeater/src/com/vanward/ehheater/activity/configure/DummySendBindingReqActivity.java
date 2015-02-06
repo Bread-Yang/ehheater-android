@@ -33,13 +33,13 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	private String did2bind;
 	private String passcode2bind;
 	
-	TextView mTvInfo;
+//	TextView mTvInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(initContentView());
+//		setContentView(initContentView());
 		
 		username = getIntent().getStringExtra(Consts.INTENT_EXTRA_USERNAME);
 		userpsw = getIntent().getStringExtra(Consts.INTENT_EXTRA_USERPSW);
@@ -74,16 +74,16 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 		XPGConnectClient.RemoveActivity(this);
 	}
 	
-	private View initContentView() {
+//	private View initContentView() {
 		
-		mTvInfo = new TextView(this);
-		mTvInfo.setGravity(Gravity.CENTER);
-		mTvInfo.setText("正在上传绑定关系...");
-		mTvInfo.setMinHeight(PxUtil.dip2px(this, 40));
-		mTvInfo.setMinWidth(PxUtil.dip2px(this, 200));
-		
-		return mTvInfo;
-	}
+//		mTvInfo = new TextView(this);
+//		mTvInfo.setGravity(Gravity.CENTER);
+//		mTvInfo.setText("正在上传绑定关系...");
+//		mTvInfo.setMinHeight(PxUtil.dip2px(this, 40));
+//		mTvInfo.setMinWidth(PxUtil.dip2px(this, 200));
+//		
+//		return mTvInfo;
+//	}
 	
 	@Override
 	public void onWanLoginResp(int result, int connId) {
@@ -127,10 +127,10 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 		
 		if (pResp.getResult() == 0) {
 			setResult(RESULT_OK);
-			mTvInfo.setText("绑定成功");
+//			mTvInfo.setText("绑定成功");
 		} else {
 			setResult(RESULT_CANCELED);
-			mTvInfo.setText("绑定失败");
+//			mTvInfo.setText("绑定失败");
 		}
 		
 		new Handler().postDelayed(new Runnable() {
