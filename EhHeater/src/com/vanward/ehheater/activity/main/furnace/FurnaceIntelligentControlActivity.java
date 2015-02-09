@@ -39,7 +39,8 @@ import com.vanward.ehheater.view.BaoBarView.BaoBarViewAdapter;
 import com.vanward.ehheater.view.BaoBarView.BaoTouchArea;
 import com.vanward.ehheater.view.BaoBarView.CGPoint;
 
-public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  implements BaoBarViewAdapter{
+public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
+		implements BaoBarViewAdapter {
 
 	private final String TAG = "FurnaceIntelligentControlActivity";
 
@@ -51,11 +52,11 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 
 	private CheckBox cb_Monday, cb_Thuesday, cb_Wednesday, cb_Thursday,
 			cb_Friday, cb_Saturday, cb_Sunday;
-	
+
 	private BaoBarView bbv;
 	private int[] data = new int[48];
-	
-	private CGPoint touchPoint;  
+
+	private CGPoint touchPoint;
 	private float tempOffset;
 	private BaoTouchArea touchArea;
 
@@ -68,14 +69,14 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	private String did = "";
 
 	private String uid = "";
-	
+
 	private String passcode = "";
 
 	private Dialog saveDialog;
-	
+
 	private boolean isAdd = false;
-	
-	private int warmId = 0 ;
+
+	private int warmId = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +84,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		setCenterView(R.layout.activity_furnace_intelligent_control);
 		setTopText(R.string.intelligent_control);
 		setLeftButtonBackground(R.drawable.icon_back);
-//		setRightButton(View.GONE);
+		setRightButtonBackground(R.drawable.menu_icon_ye);
 		findViewById();
 		setListener();
 		init();
@@ -111,15 +112,15 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 				saveDialog.show();
 			}
 		});
-		
+
 		btn_right.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				saveChartData();
 			}
 		});
-		
+
 		bbv.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -131,9 +132,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 					tempOffset = bbv.getxOffset();
 					BaoTouchArea area = bbv.touchAreaOfPoint(touchPoint);
 					touchArea = area;
-					break; 
+					break;
 				case MotionEvent.ACTION_MOVE:
-					
+
 					CGPoint point = new CGPoint(event.getX(), event.getY());
 					if (touchArea == BaoTouchArea.BaoTouch_Scroll) {
 						Float offset = (float) Math.abs(point.x - touchPoint.x);
@@ -148,6 +149,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 					} else if (touchArea == BaoTouchArea.BaoTouch_SetValue) {
 						int index = bbv.indexOfTouchPoint(point);
 						int newValue = (int) bbv.valueOfTouchPoint(point);
+						if (newValue < 30) {
+							newValue = 30;
+						}
 						if (index < data.length) {
 							int value = data[index];
 							data[index] = newValue;
@@ -165,11 +169,11 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			}
 		});
 	}
-	
+
 	private void saveChartData() {
-		
+
 		String requestURL = null;
-		
+
 		if (isAdd) {
 			requestURL = "furnace/saveWarm";
 		} else {
@@ -181,25 +185,26 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		 * 
 		 * cb_Monday, cb_Thuesday, cb_Wednesday, cb_Thursday, cb_Friday,
 		 * cb_Saturday, cb_Sunday
-		 */ 
+		 */
 		boolean isWarmOn = tb_switch.isChecked();
 		String bbvHeight = new String();
-		// 星期循环
-		loop =    (cb_Monday.isChecked() ? "1" : "0")
+		// 星期循环,第0位是星期日
+		loop = (cb_Sunday.isChecked() ? "1" : "0")
+				+ (cb_Monday.isChecked() ? "1" : "0")
 				+ (cb_Thuesday.isChecked() ? "1" : "0")
 				+ (cb_Wednesday.isChecked() ? "1" : "0")
 				+ (cb_Thursday.isChecked() ? "1" : "0")
 				+ (cb_Friday.isChecked() ? "1" : "0")
-				+ (cb_Saturday.isChecked() ? "1" : "0")
-				+ (cb_Sunday.isChecked() ? "1" : "0");
-		
-		for(int i = 0; i < data.length; i++){
+				+ (cb_Saturday.isChecked() ? "1" : "0");
+
+		for (int i = 0; i < data.length; i++) {
 			bbvHeight += data[i];
-			if(i < data.length-1){
+			if (i < data.length - 1) {
 				bbvHeight += ",";
 			}
 		}
-		Log.e(TAG,bbvHeight.length() +  "bbvHeight里面的数据是： " + bbvHeight.toString());
+		Log.e(TAG,
+				bbvHeight.length() + "bbvHeight里面的数据是： " + bbvHeight.toString());
 
 		JSONObject json2 = new JSONObject();
 		try {
@@ -207,21 +212,27 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 				json2.put("warmId", warmId);
 			}
 			json2.put("dateTime", 1418092441000d);
-//			json2.put("dateTime", System.currentTimeMillis());
+			// json2.put("dateTime", System.currentTimeMillis());
 			json2.put("name", "测试555");
-//			json2.put("did", "LWFDwtEcFWJ5hSBPXrVXFS");
+			// json2.put("did", "LWFDwtEcFWJ5hSBPXrVXFS");
 			json2.put("did", did);
-//			json2.put("uid", "q1231");
+			// json2.put("uid", "q1231");
 			json2.put("uid", uid);
-//			json2.put("passcode", "123");
+			// json2.put("passcode", "123");
 			json2.put("passcode", passcode);
-			json2.put("loopflag", 1);
-			json2.put("week",loop);
-			json2.put("isWarmOn", isWarmOn?"1":"0");
-//			json2.put("temp","1,1,2,3,4,6,7,8,60,10,1,2,3,84,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8");
+			// json2.put("loopflag", 1);
+			if ("0000000".equals(loop)) {
+				json2.put("loopflag", 0);
+			} else if ("1111111".equals(loop)) {
+				json2.put("loopflag", 1);
+			} else {
+				json2.put("loopflag", 2);
+			}
+			json2.put("week", loop);
+			json2.put("isWarmOn", isWarmOn ? "1" : "0");
+			// json2.put("temp","1,1,2,3,4,6,7,8,60,10,1,2,3,84,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8");
 			json2.put("temp", bbvHeight);
-			
-			
+
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
@@ -231,7 +242,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		AjaxParams params = new AjaxParams();
 
 		params.put("data", json2.toString());
-		
+
 		Log.e(TAG, "请求的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
@@ -257,15 +268,16 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 					}
 				});
 	}
-	
+
 	String forResult;
-	
+
 	private String getData() {
 
-//		String requestURL = "furnace/getWarm?did=LWFDwtEcFWJ5hSBPXrVXFS&uid=q1231";
-		
-		String requestURL = "furnace/getWarm?did=" + did +  "&uid=" + uid;
-		
+		// String requestURL =
+		// "furnace/getWarm?did=LWFDwtEcFWJ5hSBPXrVXFS&uid=q1231";
+
+		String requestURL = "furnace/getWarm?did=" + did + "&uid=" + uid;
+
 		AjaxParams params = new AjaxParams();
 		params.put("data", gson.toJson(highChar_data));
 
@@ -311,7 +323,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			// highChar_data = gson.fromJson(data1,
 			// new TypeToken<ArrayList<int[]>>() {
 			// }.getType());
-			
+
 			warmId = json.getInt("warmId");
 
 			loop = json.getString("week");
@@ -319,23 +331,23 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			// 获取所有高度值存到数组
 			String temp48 = json.getString("temp");
 			Log.d(TAG, temp48.length() + "");
-			
-//			int[] fordot = new int [47] ;
-//			int j = 1; fordot[1] = 0;
-//			for (int i = 0; i < temp48.length(); i++) {
-//				if(temp48.substring(i, i + 1 ).equals(","))
-//				 fordot[j++] = i; 
-//			}
-//			for(int i = 0; i < 47; i++){
-//				
-//			}
-			
+
+			// int[] fordot = new int [47] ;
+			// int j = 1; fordot[1] = 0;
+			// for (int i = 0; i < temp48.length(); i++) {
+			// if(temp48.substring(i, i + 1 ).equals(","))
+			// fordot[j++] = i;
+			// }
+			// for(int i = 0; i < 47; i++){
+			//
+			// }
+
 			String[] str = temp48.split(",");
 			int j = 0;
-			for(int i = 0; i < str.length; i++){
-				
+			for (int i = 0; i < str.length; i++) {
+
 				data[i] = Integer.parseInt(str[i]);
-				
+
 			}
 
 			Log.e(TAG, "解析json方法里面的--loop的数据是 : " + loop);
@@ -347,26 +359,27 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 						switch (i) {
 
 						case 0:
-							cb_Monday.setChecked(true);
-							break;
-						case 1:
-							cb_Thuesday.setChecked(true);
-							break;
-						case 2:
-							cb_Wednesday.setChecked(true);
-							break;
-						case 3:
-							cb_Thursday.setChecked(true);
-							break;
-						case 4:
-							cb_Friday.setChecked(true);
-							break;
-						case 5:
-							cb_Saturday.setChecked(true);
-							break;
-						case 6:
 							cb_Sunday.setChecked(true);
 							break;
+						case 1:
+							cb_Monday.setChecked(true);
+							break;
+						case 2:
+							cb_Thuesday.setChecked(true);
+							break;
+						case 3:
+							cb_Wednesday.setChecked(true);
+							break;
+						case 4:
+							cb_Thursday.setChecked(true);
+							break;
+						case 5:
+							cb_Friday.setChecked(true);
+							break;
+						case 6:
+							cb_Saturday.setChecked(true);
+							break;
+						
 						}
 					}
 				}
@@ -406,7 +419,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 			e.printStackTrace();
 		}
 	}
-	
+
 	private String getTestData() {
 
 		InputStream inputStream;
@@ -426,8 +439,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
 		uid = AccountService.getUserId(getBaseContext());
 		passcode = AccountService.getUserPsw(getBaseContext());
-		
-		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating", false);
+
+		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating",
+				false);
 		// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
 		// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
 		if (isFloorHeating) {
@@ -459,19 +473,19 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		mHttpFriend = HttpFriend.create(this);
 		// requestHttpData();
 
-//		extractDataFromJson(getTestData()); // for test
+		// extractDataFromJson(getTestData()); // for test
 		getData();
 
-//		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
-//				"highChartsJavaScriptInterface");
-//		wv_chart.getSettings().setJavaScriptEnabled(true);
-//		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control.html");
-//		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control_new.html");
-//		wv_chart.setBackgroundColor(0xF3F3F3);
-//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//			wv_chart.getSettings().setAllowUniversalAccessFromFileURLs(true);
-//			wv_chart.getSettings().setAllowFileAccessFromFileURLs(true);
-//		}
+		// wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
+		// "highChartsJavaScriptInterface");
+		// wv_chart.getSettings().setJavaScriptEnabled(true);
+		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control.html");
+		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control_new.html");
+		// wv_chart.setBackgroundColor(0xF3F3F3);
+		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+		// wv_chart.getSettings().setAllowUniversalAccessFromFileURLs(true);
+		// wv_chart.getSettings().setAllowFileAccessFromFileURLs(true);
+		// }
 	}
 
 	private void requestHttpData() {
@@ -519,6 +533,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 	public String xAxisTitleOfIndex(BaoBarView barView, int index) {
 		int hour = index / 2;
 		int minute = index % 2 * 30;
-		return String.format("%02d", hour) + ":" + String.format("%02d", minute) ;
+		return String.format("%02d", hour) + ":"
+				+ String.format("%02d", minute);
 	}
 }

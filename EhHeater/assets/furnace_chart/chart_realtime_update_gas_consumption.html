@@ -20,7 +20,7 @@ ${demo.css}
                 var x = (new Date()).getTime() + accumulate * 1000 * 60 * 5; // current time
                 accumulate++;
               //  y = Math.random();
-               y = highChartsJavaScriptInterface.gety(100);
+               y =eval(highChartsJavaScriptInterface.gety(100));
                 series.addPoint([x, y], true, true);
             }
 		
@@ -79,11 +79,12 @@ $(function () {
                         color: '#00ACC2'
                     },
                     align: 'high',
-                    offset: 10,
+                   offset: 10,
                     text: 'm²/h',
                     rotation: 0,
                     y: -20
                 },
+                
                 labels: {
                     style: {
                         color: '#00ACC2',
@@ -93,7 +94,9 @@ $(function () {
                     value: 0,
                     width: 1,
                     color: '#808080'
-                }]
+                }],
+              
+                startOnTick:false
             },
             plotOptions: {
                 series: {
@@ -137,7 +140,7 @@ $(function () {
                     for (i = -11; i <= 0; i += 1) {
                         data.push({
                             x: time + i * 1000 * 60 * 5,
-                            y:  highChartsJavaScriptInterface.gety(i + 11)
+                            y:  eval(highChartsJavaScriptInterface.gety(i + 11))
                         });
                     }
                     return data;

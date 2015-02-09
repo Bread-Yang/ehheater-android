@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>  
-<selector xmlns:android="http://schemas.android.com/apk/res/android">  
-    <!-- seekbar的滑块样式 -->  
-    <!-- 按下状态 -->  
-    <item android:drawable="@drawable/tiao_down" android:state_pressed="true"/>  
-    <!-- 普通无焦点状态 -->  
-    <item android:drawable="@drawable/tiao" android:state_pressed="false"/>  
-</selector>  
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:shape="oval">
+    
+    <solid android:color="#fff76805" />
+    
+    <size android:width="13dp" android:height="13dp"/>
+
+</shape>
