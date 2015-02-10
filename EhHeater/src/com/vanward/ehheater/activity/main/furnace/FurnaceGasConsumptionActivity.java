@@ -70,8 +70,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		rg_tab = (RadioGroup) findViewById(R.id.rg_tab);
 	}
 
-	Handler rgtabHandler;
-
 	private void setListener() {
 
 		rg_tab.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -88,40 +86,32 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				case R.id.rb_accumulated_consumption:
 
 					getData();
-					rgtabHandler = new Handler() {
-						@Override
-						public void handleMessage(Message msg) {
-							// TODO Auto-generated method stub
-							super.handleMessage(msg);
-							Log.d(TAG, "加载中。。");
-							wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-						}
-					};
 					break;
 				}
 			}
 		});
 
-		findViewById(R.id.btn_click).setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// wv_chart.loadUrl("javascript:updateRealTimeChart()");
-				getDataForShiShi(2);
-				wv_chart.loadUrl("javascript:getRealtimeConsumptionTitle()");
-				// wv_chart.reload();
-				// ("javascript:javacalljswithargs(" + "'hello world'" + ")")
-				// getJson(testJSON());
-			}
-		});
+//		findViewById(R.id.btn_click).setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// wv_chart.loadUrl("javascript:updateRealTimeChart()");
+//				getDataForShiShi(2);
+//				wv_chart.loadUrl("javascript:getRealtimeConsumptionTitle()");
+//				// wv_chart.reload();
+//				// ("javascript:javacalljswithargs(" + "'hello world'" + ")")
+//				// getJson(testJSON());
+//			}
+//		});
 	}
 
 	private Handler h3;
 	private TakeDataThread threadFor5minute;
 
 	private void init() {
-		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
-		uid = AccountService.getUserId(getBaseContext());
+//		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
+		did = "Twv7ZQwEafRUqgJvC9YEZH";
+//		uid = AccountService.getUserId(getBaseContext());
 
 		isPowerOffOrOffline = getIntent().getBooleanExtra(
 				"isPowerOffOrOffline", false);
@@ -195,7 +185,12 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				for (int i = 0; i < ja.length(); i++) {
 					joTemp = ja.getJSONObject(i);
 					sb.append("{data:");
-					sb.append(joTemp.getString("amount"));
+					Log.e(TAG, "joTemp.getString('amount') : " + joTemp.getString("amount"));
+					if ("".equals(joTemp.getString("amount"))) {
+						sb.append("\"\"");
+					} else {
+						sb.append(joTemp.getString("amount"));
+					}
 					sb.append("},");
 
 				}
@@ -328,7 +323,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 							String result = json.getString("result");
 							forResult = result; // 存放返回结果
-							rgtabHandler.sendEmptyMessage(1);
+							wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 							if ("success".equals("result")) {
 								finish();
 							}

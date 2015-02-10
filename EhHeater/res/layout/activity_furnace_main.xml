@@ -39,7 +39,7 @@
                     android:checked="true"
                     android:drawableTop="@drawable/selector_bg_furnace_main_supply_heating_sanre"
                     android:gravity="center"
-                    android:text="设置45℃"
+                    android:text="设置--℃"
                     android:textColor="@drawable/selector_text_color_furnace_main"
                     android:textSize="12sp" />
 
@@ -53,7 +53,7 @@
                     android:drawablePadding="-5dp"
                     android:drawableTop="@drawable/selector_bg_furnace_main_bath"
                     android:gravity="center"
-                    android:text="设置45℃"
+                    android:text="设置--℃"
                     android:textColor="@drawable/selector_text_color_furnace_main"
                     android:textSize="12sp" />
             </RadioGroup>
@@ -196,33 +196,6 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/icon_bg" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="90dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/icon_bg_middle" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="180dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/icon_bg" />
-        </RelativeLayout>
-        
-         <RelativeLayout
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
             <ImageView
@@ -248,9 +221,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignTop="@+id/imageView1"
+                android:layout_alignParentTop="true"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/main_error" />
+
+        />
 
         </RelativeLayout>
 

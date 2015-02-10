@@ -342,7 +342,7 @@ public class PollingService extends Service {
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		String did = spu.get(ShareKey.PollingFurnaceDid, "");
 		furnaceMac = spu.get(ShareKey.PollingFurnaceMac, "");
-		// Log.e(TAG, "FurnaceDid : " + did);
+		 Log.e(TAG, "FurnaceDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
