@@ -11,8 +11,8 @@
 
 		<script>
 		
-			function getRealtimeConsumptionTitle() {
-				return highChartsJavaScriptInterface.getRealtimeConsumptionTitle();
+			function getAccumulatedConsumptionTitle() {
+				return highChartsJavaScriptInterface.getAccumulatedConsumptionTitle();
 			}
 			
 			function getx(xjson) {
@@ -56,8 +56,8 @@
             enabled: false
         },
         title: {
-            //text: getRealtimeConsumptionTitle(),
-            text:'2014年',
+            text: getAccumulatedConsumptionTitle(),
+            //text:'2014年',
             style: {
                 color: '#6D8590',
             },

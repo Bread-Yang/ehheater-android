@@ -39,7 +39,7 @@
                     android:checked="true"
                     android:drawableTop="@drawable/selector_bg_furnace_main_supply_heating_sanre"
                     android:gravity="center"
-                    android:text="设置--℃"
+                    android:text="设置45℃"
                     android:textColor="@drawable/selector_text_color_furnace_main"
                     android:textSize="12sp" />
 
@@ -53,7 +53,7 @@
                     android:drawablePadding="-5dp"
                     android:drawableTop="@drawable/selector_bg_furnace_main_bath"
                     android:gravity="center"
-                    android:text="设置--℃"
+                    android:text="设置45℃"
                     android:textColor="@drawable/selector_text_color_furnace_main"
                     android:textSize="12sp" />
             </RadioGroup>
@@ -218,14 +218,12 @@
 
             <ImageView
                 android:id="@+id/fault_tip100"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
+                android:layout_alignTop="@+id/imageView1"
+                android:layout_marginLeft="31dp"
                 android:background="@drawable/main_error" />
-
-        />
 
         </RelativeLayout>
 

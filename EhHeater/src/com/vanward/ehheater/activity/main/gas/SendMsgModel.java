@@ -104,8 +104,7 @@ public class SendMsgModel {
 	// DIY设置指令下发
 
 	public static void setDIYModel(int i, final GasCustomSetVo gasCustomSetVo) {
-		Log.e(TAG, "执行了");
-		Log.e(TAG, "SendMsgModel.setDIYModel()" + gasCustomSetVo.getTempter()
+		Log.e(TAG, "SendMsgModel.setDIYModel() : " + gasCustomSetVo.getSendId() + " :  "+ gasCustomSetVo.getTempter()
 				+ " :  " + gasCustomSetVo.getWaterval());
 		// generated.SendGasWaterHeaterDIYSettingReq(arg0, arg1, arg2, arg3,
 		// arg4)
@@ -117,11 +116,10 @@ public class SendMsgModel {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				generated.SendGasWaterHeaterDIYSettingReq(Global.connectId,
-						(short) gasCustomSetVo.getId(),
+						(short) gasCustomSetVo.getSendId(),
 						(short) gasCustomSetVo.getTempter(),
 						(short) gasCustomSetVo.getWaterval());
 			}

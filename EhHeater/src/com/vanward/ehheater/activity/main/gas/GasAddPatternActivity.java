@@ -131,6 +131,8 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 			if (modeName.equals(oldGasCustomSetVo.getName())) {
 				isSameWithLastName = true;
 			}
+		} else {
+			customSetVo.setSendId( new BaseDao(this).getDb().findAll(GasCustomSetVo.class).size() + 1);
 		}
 		
 		if (!isSameWithLastName) {
@@ -153,7 +155,7 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 		}
 
 		customSetVo.setName(nameedittext.getText().toString());
-		customSetVo.setTempter(seekBar.getProgress() + 35);
+		customSetVo.setTempter(seekBar.getSnapProgress());
 		List<GasCustomSetVo> list = new BaseDao(this).getDb().findAllByWhere(
 				GasCustomSetVo.class,
 				" uid = '"

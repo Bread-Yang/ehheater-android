@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewDebug.ExportedProperty;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -189,21 +190,29 @@ public class SeekBarHint extends SeekBar implements
 
 	}
 
-//	@Override
-//	public boolean onTouchEvent(MotionEvent event) {
-//		switch (event.getAction()) {
-//
-//		case MotionEvent.ACTION_DOWN:
-//			setThumb(getResources().getDrawable(R.drawable.tiao_down));
-//			break;
-//
-//		case MotionEvent.ACTION_UP:
-//			setThumb(getResources().getDrawable(R.drawable.tiao));
-//			break;
-//		}
-//
-//		return super.onTouchEvent(event);
-//	}
+	public int getSnapProgress() {
+		String hint = mProgressChangeListener.onHintTextChanged(this,
+				getProgress());
+		int snapProgress = Integer
+				.valueOf(hint.substring(0, hint.length() - 1));
+		return snapProgress;
+	}
+
+	// @Override
+	// public boolean onTouchEvent(MotionEvent event) {
+	// switch (event.getAction()) {
+	//
+	// case MotionEvent.ACTION_DOWN:
+	// setThumb(getResources().getDrawable(R.drawable.tiao_down));
+	// break;
+	//
+	// case MotionEvent.ACTION_UP:
+	// setThumb(getResources().getDrawable(R.drawable.tiao));
+	// break;
+	// }
+	//
+	// return super.onTouchEvent(event);
+	// }
 
 	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {

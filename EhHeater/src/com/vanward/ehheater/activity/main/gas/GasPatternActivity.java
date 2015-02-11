@@ -55,7 +55,7 @@ import com.xtremeprog.xpgconnect.generated.generated;
 public class GasPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnCheckedChangeListener {
 	
-	private static final String TAG = "PatternActivity";
+	private static final String TAG = "GasPatternActivity";
 
 	@ViewInject(id = R.id.textView1, click = "onClick")
 	TextView textView1;
@@ -288,7 +288,6 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 				new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						AddPatternButtonDialogUtil
 								.instance(GasPatternActivity.this)
 								.nextButtonCall(new NextButtonCall() {

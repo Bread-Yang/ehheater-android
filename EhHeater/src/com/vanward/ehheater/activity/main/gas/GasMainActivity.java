@@ -337,7 +337,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				animationDrawable.stop();
 			}
 		}
-
 	}
 
 	@Override
@@ -892,7 +891,14 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				// tv_mode.setText("自定义模式");
 				// }
 				// }
-				String name = list.get(pResp.getCustomFunction() - 1).getName();
+				GasCustomSetVo customSetVo = list.get(pResp.getCustomFunction() - 1);
+				customSetVo.setTempter(pResp.getTargetTemperature());
+				Log.e(TAG, "getTargetTemperature : " + pResp.getTargetTemperature());
+				Log.e(TAG, "customSetVo.getName : " + customSetVo.getName());
+				Log.e(TAG, "customSetVo.getTempter : " + customSetVo.getTempter());
+				Log.e(TAG, "customSetVo.getSendId : " + customSetVo.getSendId());
+				new BaseDao(this).getDb().update(customSetVo);
+				String name = customSetVo.getName();
 				tv_mode.setText(name);
 			} else {
 				tv_mode.setText("自定义模式");
@@ -1080,7 +1086,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			public void onFinish() {
 				if (currentModeCode == 6 && curGasCustomVo != null) {
 					generated.SendGasWaterHeaterDIYSettingReq(Global.connectId,
-							(short) curGasCustomVo.getId(), (short) value,
+							(short) curGasCustomVo.getSendId(), (short) value,
 							(short) curGasCustomVo.getWaterval());
 				} else {
 					SendMsgModel.setTempter(value);

@@ -201,39 +201,38 @@
             </RelativeLayout>
 
               <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" >
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content" >
 
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="90dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/icon_bg_middle"
-                android:visibility="invisible"
-               />
+                  <ImageView
+                      android:id="@+id/imageView1"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="90dp"
+                      android:layout_marginTop="10dp"
+                      android:background="@drawable/icon_bg_middle"
+                      android:visibility="invisible" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="180dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/icon_bg"
-                android:visibility="invisible" />
+                  <ImageView
+                      android:id="@+id/imageView2"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="180dp"
+                      android:layout_marginTop="20dp"
+                      android:background="@drawable/icon_bg"
+                      android:visibility="invisible" />
 
-            <ImageView
-                android:id="@+id/fault_tip100"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignTop="@+id/imageView1"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/main_error" />
+                  <ImageView
+                      android:id="@+id/fault_tip100"
+                      android:layout_width="30dp"
+                      android:layout_height="30dp"
+                      android:layout_alignParentLeft="true"
+                      android:layout_alignTop="@+id/imageView2"
+                      android:layout_marginLeft="36dp"
+                      android:background="@drawable/main_error" />
 
-        />
+              </RelativeLayout>
 
-        </RelativeLayout>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

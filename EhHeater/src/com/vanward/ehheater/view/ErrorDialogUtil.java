@@ -77,6 +77,17 @@ public class ErrorDialogUtil {
 		map.put("227", "中层发热管处传感器故障，请联系客服");
 		map.put("228", "加热水温失控超过设定值，请联系客服");
 		map.put("229", "下层发热管处传感器故障，请联系客服");
+		
+	
+		map.put("E0","卫浴水输入水温度传感器故障或过热" );
+		map.put("E1", "水压故障、缺水/变频水泵故障");
+		map.put("E2","点火失败或伪火故障" );
+		map.put("E3","取暖水温度传感器故障或过热" );
+		map.put("E4","卫浴水温度传感器故障或过热" );
+		map.put("E6","风压/风机故障，可调速风机风速故障，烟道温度探头故障" );
+		map.put("E7","机械温控器过热保护" );
+		map.put("E8","AD采样/12V电压故障");
+		map.put("E9","主阀驱动继电器驱动电路故障" );
 
 		dialogmap.put("226", "干烧故障");
 		dialogmap.put("227", "传感器故障");
@@ -136,6 +147,21 @@ public class ErrorDialogUtil {
 		detail.setText(dialogmap.get(Integer.parseInt(errorcode, 16) + ""));
 		if (detail.getText().length() == 0) {
 			detail.setText(map.get(Integer.parseInt(errorcode, 16) + ""));
+		}
+		return this;
+	}
+	
+	public ErrorDialogUtil initName2(String errorcode) {
+		setting = new Dialog(context, R.style.custom_dialog);
+		setting.setContentView(R.layout.dialog_device_error_tips);
+		TextView title = (TextView) setting.findViewById(R.id.tv_order_title);
+		TextView detail = (TextView) setting.findViewById(R.id.tv_detail);
+		title.setText("机器故障(" + errorcode + ")");
+		System.out.println(errorcode);
+
+		detail.setText(dialogmap.get(errorcode + ""));
+		if (detail.getText().length() == 0) {
+			detail.setText(map.get(errorcode));
 		}
 		return this;
 	}

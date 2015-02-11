@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -36,6 +38,7 @@ import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
+import com.xtremeprog.xpgconnect.generated.generated;
 
 /**
  * 电热, 燃热, 壁挂炉三个MainActivity共用业务:
@@ -122,66 +125,68 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		}
 	};
 
-	private boolean stateQueried;
+	public static int connectTime = 10000;
 
-	public static long connectTime = 10000;
+	private Handler reconnectHandler = new Handler() {
+
+		public void dispatchMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 0:
+				if (!DialogUtil.instance().getIsShowing()) {
+					DialogUtil.instance().showLoadingDialog(
+							BaseBusinessActivity.this, "");
+					generated.SendStateReq(Global.connectId);
+					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
+					reconnectHandler.removeMessages(0);
+				}
+				break;
+			case 1:
+				changeToOfflineUI();
+				DialogUtil.instance().showReconnectDialog(
+						BaseBusinessActivity.this);
+				break;
+			}
+		};
+	};
 
 	@Override
 	public void onWriteEvent(int result, int connId) {
 		super.onWriteEvent(result, connId);
-		// Log.e("TAG", "onWriteEvent调用了");
-		// DialogUtil.instance().showLoadingDialog(this, "");
-		// if (DialogUtil.instance().getIsShowing()) {
-		// return;
-		// }
-		// generated.SendStateReq(Global.connectId);
-		// stateQueried = false;
-		// Handler handler = new Handler(Looper.getMainLooper());
-		// handler.postDelayed(new Runnable() {
-		// @Override
-		// public void run() {
-		// if (!stateQueried) {
-		// changeToOfflineUI();
-		// DialogUtil.instance().showReconnectDialog(
-		// BaseBusinessActivity.this);
-		// }
-		// }
-		// }, connectTime);
+		Log.e(TAG, "onWriteEvent调用了");
+		reconnectHandler.removeMessages(0);
+		reconnectHandler.sendEmptyMessageDelayed(0, connectTime);
 	}
 
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
-		stateQueried = true;
-		Log.e("TAG", "OnStateResp被调用了");
+		Log.e(TAG, "OnStateResp被调用了");
 		super.OnStateResp(pResp, nConnId);
 	}
 
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
-		stateQueried = true;
 		super.onTcpPacket(data, connId);
-		Log.e("TAG", "onTcpPacket被调用了");
+		Log.e(TAG, "onTcpPacket被调用了");
+		reconnectHandler.removeMessages(0);
 	}
 
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
-		stateQueried = true;
+		Log.e(TAG, "OnGasWaterHeaterStatusResp被调用了");
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
-		Log.e("TAG", "OnGasWaterHeaterStatusResp被调用了");
 	}
 
 	@Override
 	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
-		stateQueried = true;
+		Log.e(TAG, "OnDERYStatusResp被调用了");
 		super.OnDERYStatusResp(pResp, nConnId);
-		Log.e("TAG", "OnDERYStatusResp被调用了");
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		Log.e(TAG, "onCreate");
+		super.onCreate(savedInstanceState);
 
 		shouldReconnect = false;
 		paused = false;
@@ -217,23 +222,25 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 							@Override
 							public void onClick(View v) {
 								if (Global.connectId > -1) {
-									XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+									XPGConnectClient
+											.xpgcDisconnectAsync(Global.connectId);
 								}
 
 								if (Global.checkOnlineConnId > 0) {
-									XPGConnectClient.xpgcDisconnectAsync(Global.checkOnlineConnId);
+									XPGConnectClient
+											.xpgcDisconnectAsync(Global.checkOnlineConnId);
 								}
 
-								android.os.Process.killProcess(android.os.Process.myPid());
+								android.os.Process
+										.killProcess(android.os.Process.myPid());
 							}
 						});
 	}
 
 	@Override
 	protected void onResume() {
-		super.onResume();
-
 		Log.e(TAG, "onResume");
+		super.onResume();
 
 		isActived = true;
 
@@ -251,8 +258,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	@Override
 	protected void onPause() {
-		super.onPause();
 		Log.e(TAG, "onPause");
+		super.onPause();
 
 		isActived = false;
 
@@ -284,15 +291,15 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-//		if (Global.connectId > -1) {
-//			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-//		}
-//
-//		if (Global.checkOnlineConnId > 0) {
-//			XPGConnectClient.xpgcDisconnectAsync(Global.checkOnlineConnId);
-//		}
-//
-//		android.os.Process.killProcess(android.os.Process.myPid());
+		// if (Global.connectId > -1) {
+		// XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+		// }
+		//
+		// if (Global.checkOnlineConnId > 0) {
+		// XPGConnectClient.xpgcDisconnectAsync(Global.checkOnlineConnId);
+		// }
+		//
+		// android.os.Process.killProcess(android.os.Process.myPid());
 		dialog_exit.show();
 	}
 

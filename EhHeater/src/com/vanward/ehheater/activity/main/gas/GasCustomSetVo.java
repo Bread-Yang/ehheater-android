@@ -24,6 +24,16 @@ public class GasCustomSetVo {
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
+	
+	int sendId;
+
+	public int getSendId() {
+		return sendId;
+	}
+
+	public void setSendId(int sendId) {
+		this.sendId = sendId;
+	}
 
 	int connid;
 

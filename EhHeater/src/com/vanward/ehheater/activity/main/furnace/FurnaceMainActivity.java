@@ -27,6 +27,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.BaseBusinessActivity;
@@ -186,6 +187,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		
 		
 		faultTipIv = (ImageView) findViewById(R.id.fault_tip100);
+		faultTipIv.setVisibility(View.GONE);
 	
 	}
 
@@ -291,6 +293,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		super.OnDERYStatusResp(pResp, nConnId);
 		DialogUtil.dismissDialog();
 		Log.d(TAG, pResp.getError() + "....");
+//		Toast.makeText(this, "这是错误" + pResp.getError(), Toast.LENGTH_SHORT).show();
 		if (tv_sliding_menu_season_mode != null) {
 			changeSlidingSeasonModeItem(pResp.getSeasonState() == 0 ? FurnaceSeasonActivity.SET_SUMMER_MODE
 					: FurnaceSeasonActivity.SET_WINNER_MODE);
@@ -309,7 +312,22 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		onOffDeal(pResp);
 		gasConsumptionDeal(pResp);
 
-		if(!isError){
+		showTipImageVIew(pResp);
+		
+		// pResp.delete();
+	}
+	
+	private void showTipImageVIew(DERYStatusResp_t pResp){
+		isError = false;
+		for(int i = 0; i < errorArray.length; i++){
+			if(pResp.getError() == errorArray[i])
+			{
+				isError = true;
+			}
+		}
+		
+		
+		if(isError){
 			faultTipIv.setVisibility(View.VISIBLE);	
 			faultTipIv.setBackgroundResource(R.drawable.main_error);
 			AnimationDrawable drawable = (AnimationDrawable) faultTipIv
@@ -317,10 +335,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			drawable.start();
 			
 			pRespG = pResp;
-		isError = true;
-		}
 		
-		// pResp.delete();
+		}else{
+			faultTipIv.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
@@ -917,7 +935,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		ErrorUtils.isMainActivityActive = false;
 		ErrorUtils.isGasMainActivityActive = false;
 		isError = false;
-		faultTipIv.setVisibility(View.GONE);
 		String mac = getIntent().getStringExtra("mac");
 		if (mac != null && !getIntent().getBooleanExtra("newActivity", false)) {
 			SwitchDeviceUtil.switchDevice(mac, this);
@@ -1008,6 +1025,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	protected void changeToOfflineUI() {
+
 		try {
 			tv_status.setText(R.string.offline);
 			rb_summer.setText(R.string.no_set);
@@ -1025,10 +1043,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 	
 	/*
-	 * 卫浴水输入水温度传感器故障或过热(可自动恢复)
+	 *E0-卫浴水输入水温度传感器故障或过热(可自动恢复)
 	 *E1——水压故障、缺水/变频水泵故障(锁定)
 	 *E2——点火失败或伪火故障(锁定)
 	 *E3——取暖水温度传感器故障或过热(可自动恢复)
@@ -1041,7 +1060,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	String errorStr = "";
 	 int errorCodeM = -10;
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-	private final int[] errorArray = {0,1,2,3,4,6,7,8,9};
+	private final int[] errorArray = {-1,1,2,3,4,6,7,8,9};
 	private final String[] errorString = {"卫浴水输入水温度传感器故障或过热","水压故障、缺水/变频水泵故障","点火失败或伪火故障","取暖水温度传感器故障或过热","卫浴水温度传感器故障或过热","风压/风机故障，可调速风机风速故障，烟道温度探头故障","机械温控器过热保护","AD采样/12V电压故障","主阀驱动继电器驱动电路故障",};
 	public void pingFault(DERYStatusResp_t pResp){
 		boolean isError = false;
@@ -1065,7 +1084,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		// AnimationDrawable drawable = (AnimationDrawable) tipsimg
 		// .getDrawable();
 		ErrorDialogUtil.instance(FurnaceMainActivity.this)
-		.initName("E" + errorCode + "")
+		.initName2("E" + errorCode + "")
 		.setNextButtonCall(new NextButtonCall() {
 			@Override
 			public void oncall(View v) {
