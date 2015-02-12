@@ -47,7 +47,7 @@ public class AboutActivity extends Activity {
 
 	private void init() {
 		TextView tv_about = (TextView) findViewById(R.id.tv_about);
-		tv_about.setText(Html.fromHtml(getString(R.string.about_wanward)));
+		tv_about.setText(Html.fromHtml(getString(R.string.wanward_profile)));
 	}
 
 }

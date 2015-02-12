@@ -17,7 +17,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.util.BitmapThumbUtil;
 
 public class BaoCircleSlider extends View {
-	
+
 	private static final String TAG = "BaoCircleSlider";
 
 	private float minValue; // 起始值 : 0
@@ -65,6 +65,8 @@ public class BaoCircleSlider extends View {
 
 	private CountDownTimer countDownTimer;
 
+	private int circleWidth;
+
 	public interface BaoCircleSliderListener {
 
 		public void didBeginTouchCircleSlider();
@@ -79,7 +81,7 @@ public class BaoCircleSlider extends View {
 		super(context);
 		initRoutine();
 	}
-	
+
 	public BaoCircleSlider(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		initRoutine();
@@ -121,7 +123,8 @@ public class BaoCircleSlider extends View {
 		minusImageView.setLayoutParams(new LayoutParams(100, 100));
 		minusImageView.layout(0, 0, widthSpecSize, heightSpecSize);
 
-	} 
+		circleWidth = getWidth() - 30;
+	}
 
 	private void initRoutine() {
 		isOnline = false;
@@ -135,7 +138,7 @@ public class BaoCircleSlider extends View {
 					.decodeSampledBitmapFromResource(getResources(),
 							R.drawable.home_yuan_tiao_intact, 100, 100));
 		}
-		if (addImageView == null) { 
+		if (addImageView == null) {
 			addImageView = new ImageView(getContext());
 			addImageView.setImageBitmap(BitmapThumbUtil
 					.decodeSampledBitmapFromResource(getResources(),
@@ -235,15 +238,20 @@ public class BaoCircleSlider extends View {
 		float angle = 360.0f * (value - this.minValue)
 				/ (this.maxValue - this.minValue); // 当前值所偏移的度数
 		ctrlIconViewCenterPoint = iconCenterOfAngle(angle);
-		// Log.e(TAG, "ctrlIconViewCenterPoint.x : " + 
+		// Log.e(TAG, "ctrlIconViewCenterPoint.x : " +
 		// ctrlIconViewCenterPoint.x);
-		// Log.e(TAG, "ctrlIconViewCenterPoint.y : " + 
+		// Log.e(TAG, "ctrlIconViewCenterPoint.y : " +
 		// ctrlIconViewCenterPoint.y);
 		updateDragingTipViewRotateOfValue(value);
 		ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
 				ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
 				ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 2,
 				ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 2);
+		// ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth /
+		// 2,
+		// ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
+		// ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 2,
+		// ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 2);
 		invalidate();
 	}
 
@@ -257,7 +265,7 @@ public class BaoCircleSlider extends View {
 		float angle = angleOfTouchPoint(touchPoint);
 		int value = valueOfAngle(angle);
 		// Log.e(TAG, "dealWithTouchPoint : " + "angle : " + angle);
-		// Log.e(TAG, "dealWithTouchPoint : " +  "value : " + value);
+		// Log.e(TAG, "dealWithTouchPoint : " + "value : " + value);
 		setCurrentValue(value);
 	}
 
@@ -296,7 +304,7 @@ public class BaoCircleSlider extends View {
 	private int valueOfAngle(float angle) {
 		float valueRange = (this.maxValue - this.minValue);
 		int value = (int) (Math.floor(angle * valueRange / 360.0) + this.minValue);
-		// Log.e(TAG, "valueOfAngle : " +  value);
+		// Log.e(TAG, "valueOfAngle : " + value);
 		return value;
 	}
 
@@ -351,6 +359,8 @@ public class BaoCircleSlider extends View {
 		return (float) (180 * (radian) / Math.PI);
 	}
 
+	boolean isInCtrlIcon;
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
@@ -360,7 +370,9 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_DOWN:
 
-			boolean isInCtrlIcon = isTouchInCtrlIconView(touchPoint);
+			Log.e(TAG, "event : ACTION_DOWN");
+
+			isInCtrlIcon = isTouchInCtrlIconView(touchPoint);
 			isOnline = isOnLine(touchPoint);
 			if (isInCtrlIcon && showCtrlIcon) {
 				isTouchCtrlIcon = true;
@@ -375,6 +387,9 @@ public class BaoCircleSlider extends View {
 			break;
 
 		case MotionEvent.ACTION_MOVE:
+
+			Log.e(TAG, "event : ACTION_MOVE");
+
 			getParent().requestDisallowInterceptTouchEvent(true);
 			if (isTouchCtrlIcon) {
 				draging = true;
@@ -385,10 +400,10 @@ public class BaoCircleSlider extends View {
 					return true; // 控制值的变化，避免从最大值跳到最小值等情况
 				}
 				Log.e(TAG, "angle - preAngle = " + (angle - preAngle));
-//				if (Math.abs(angle - preAngle) >= 4) {
-					isAdd = (angle > preAngle);
-//				}
-				
+				// if (Math.abs(angle - preAngle) >= 4) {
+				isAdd = (angle > preAngle);
+				// }
+
 				preAngle = angle;
 				setShowAddImageView(isAdd);
 				setShowMinusImageView(!isAdd);
@@ -402,6 +417,9 @@ public class BaoCircleSlider extends View {
 			break;
 
 		case MotionEvent.ACTION_UP:
+
+			Log.e(TAG, "event : ACTION_UP");
+
 			if (isTouchCtrlIcon) {
 				float angle = angleOfTouchPoint(touchPoint);
 				float offset = Math.abs(angle - preAngle);
@@ -413,7 +431,7 @@ public class BaoCircleSlider extends View {
 				if (circleSliderListener != null) {
 					circleSliderListener.needChangeValue(currentValue, isAdd);
 				}
-			} else if (isOnline) { 
+			} else if (isOnline) {
 				float angle = angleOfTouchPoint(touchPoint);
 				Rect hitRect = new Rect();
 				ctrlIconView.getHitRect(hitRect);
@@ -443,6 +461,7 @@ public class BaoCircleSlider extends View {
 			isTouchCtrlIcon = false;
 			isOnline = false;
 			hideDragingTipView();
+			isInCtrlIcon = false;
 			break;
 		}
 		return true;
@@ -490,18 +509,31 @@ public class BaoCircleSlider extends View {
 
 		canvas.save();
 		// canvas.rotate(270, getWidth() / 2, getHeight() / 2);
-		canvas.translate(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
-				ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2);
+		if (isInCtrlIcon) {
+			ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth
+					/ 3 * 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 3
+					* 2, ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 3 * 2,
+					ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 3 * 2);
+			canvas.translate(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 3
+					* 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 3 * 2);
+		} else {
+			ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth
+					/ 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
+					ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 2,
+					ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 2);
+			canvas.translate(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
+					ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2);
+		}
 		ctrlIconView.draw(canvas);
 		canvas.restore();
 	}
-	
+
 	@Override
 	public void setVisibility(int visibility) {
 		super.setVisibility(visibility);
 		Log.e(TAG, "setVisibility调用了 : " + (visibility == View.VISIBLE));
 	}
-	
+
 	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
@@ -510,7 +542,7 @@ public class BaoCircleSlider extends View {
 		((BitmapDrawable) ctrlIconView.getDrawable()).getBitmap().recycle();
 		((BitmapDrawable) addImageView.getDrawable()).getBitmap().recycle();
 		((BitmapDrawable) minusImageView.getDrawable()).getBitmap().recycle();
-		
+
 		ctrlIconView.setImageBitmap(null);
 		addImageView.setImageBitmap(null);
 		minusImageView.setImageBitmap(null);

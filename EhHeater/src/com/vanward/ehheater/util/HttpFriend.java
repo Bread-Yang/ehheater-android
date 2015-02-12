@@ -8,12 +8,10 @@ import net.tsz.afinal.http.PreferencesCookieStore;
 import org.apache.http.cookie.Cookie;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.vanward.ehheater.util.BaoDialogShowUtil.BaoTimeoutDailog;
 
 /**
  * 在原有的HttpFriend增加了网络连接状态监测功能和清除参数功能
@@ -35,7 +33,7 @@ public class HttpFriend {
 
 	private Context mContext;
 
-	private Dialog loadingDialog;
+	private BaoTimeoutDailog loadingDialog;
 
 	public boolean showTips = true;
 
@@ -106,7 +104,7 @@ public class HttpFriend {
 		// Log.e(TAG, "executePostJson发送过去的json数据是 : " + json);
 		// AjaxParams params = new AjaxParams();
 		// params.put("data", json);
-		showRequestDialog();
+		showRequestDialog(callBack);
 		fh.post(url, params, new AjaxCallBack<String>() {
 
 			@Override
@@ -162,7 +160,7 @@ public class HttpFriend {
 		FinalHttp fh = new FinalHttp();
 		fh.configCookieStore(pcs);
 
-		showRequestDialog();
+		showRequestDialog(callBack);
 		fh.post(url, params, new AjaxCallBack<String>() {
 
 			@Override
@@ -221,7 +219,7 @@ public class HttpFriend {
 
 		} else {
 			FinalHttp fh = new FinalHttp();
-			showRequestDialog();
+			showRequestDialog(callBack);
 			AjaxCallBack ajaxCallBack = new AjaxCallBack<String>() {
 
 				@Override
@@ -278,14 +276,14 @@ public class HttpFriend {
 		return this;
 	}
 
-	private void showRequestDialog() {
+	private void showRequestDialog(AjaxCallBack callBack) {
 		if (mContext instanceof Activity) {
 			if (!((Activity) mContext).isFinishing()) {
 				if (loadingDialog == null) {
 					loadingDialog = BaoDialogShowUtil.getInstance(mContext)
 							.createLoadingDialog();
 				}
-				loadingDialog.show();
+				loadingDialog.show(callBack);
 			}
 		}
 	}

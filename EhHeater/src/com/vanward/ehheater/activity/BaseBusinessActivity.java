@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -133,8 +132,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			switch (msg.what) {
 			case 0:
 				if (!DialogUtil.instance().getIsShowing()) {
-					DialogUtil.instance().showLoadingDialog(
-							BaseBusinessActivity.this, "");
+					if (isActived) {
+						DialogUtil.instance().showLoadingDialog(
+								BaseBusinessActivity.this, "");
+					}
 					generated.SendStateReq(Global.connectId);
 					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
 					reconnectHandler.removeMessages(0);
@@ -261,6 +262,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		Log.e(TAG, "onPause");
 		super.onPause();
 
+		DialogUtil.dismissDialog();
+
 		isActived = false;
 
 		CheckOnlineUtil.ins().pause();
@@ -370,10 +373,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		setBehindContentView(R.layout.main_left_fragment);
 		mSlidingMenu = getSlidingMenu();
 		mSlidingMenu.setMode(SlidingMenu.LEFT);
+		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
 		mSlidingMenu.setShadowWidth(mScreenWidth / 40);
 		mSlidingMenu.setBehindOffset(mScreenWidth / 4);
 		mSlidingMenu.setFadeDegree(0.35f);
-		mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 		mSlidingMenu.setShadowDrawable(R.drawable.slidingmenu_shadow);
 		mSlidingMenu.setSecondaryShadowDrawable(R.drawable.right_shadow);
 		mSlidingMenu.setFadeEnabled(true);
@@ -398,6 +401,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	protected void connectCurDevice(String connectText) {
 		Log.e(TAG, "connectCurDevice(String)@BaseBusinessActivity:");
+		DialogUtil.dismissDialog();
 		String mac = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeaterMac();
 		String userId = AccountService.getUserId(getBaseContext());

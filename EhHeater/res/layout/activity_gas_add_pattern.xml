@@ -90,7 +90,7 @@
                 android:paddingTop="30dp"
                 android:progress="15"
                 android:progressDrawable="@drawable/seekbarhint_style"
-                android:thumb="@drawable/tiao"
+                android:thumb="@drawable/seekbarhint_thumb"
                 android:thumbOffset="10dp"
                 app:minValueTips="50"
                 app:popupStyle="follow"

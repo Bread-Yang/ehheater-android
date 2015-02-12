@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">万和云智能</string>
-    <string name="version">版本：v 1.0.0 B 0.14</string>
+    <string name="version">版本：v 1.0.0 B 0.15</string>
     <string name="heater">热水器</string>
     <string name="account">用户名</string>
     <string name="password">密码</string>
@@ -110,7 +110,6 @@
     <string name="about">关于</string>
     <string name="check_update">检查更新</string>
     <string name="current_temp">当前温度</string>
-    <string name="outwater_temp">出水温度</string> 
     <string name="setting_water_temperature">设置水温</string>
     <string name="water_amount">剩余热水量</string>
     <string name="heat_amount">剩余加热时间</string>
@@ -218,8 +217,14 @@
     <string name="about_wanward">
         <![CDATA[ 
         <font color=#FE6C18>&#160;&#160;&#160;&#160;&#160;&#160;&#160;广东万和新电气股份有限公司</font>成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。</string>
-    	]]> 
+    	]]>  
     </string>
+    <string name="wanward_profile">
+        <![CDATA[ 
+        &#160;&#160;&#160;&#160;&#160;&#160;&#160万和是国内A股上市公司（股票代码：002543），1992年以中国第一台水控式燃气热水器起家，已发展成为国内生产规模最大的热水器、热水/供暖系统、厨房电器制造商及领先品牌，是国内仅有的两个“全球十大热水器品牌”之一。万和也是国家火炬计划重点高新技术企业、住建部授予的国家住宅产业化基地、中国航天事业合作伙伴。万和正通过致力清洁能源（燃气）及可再生能源（太阳能、空气能）的创新、高效利用，打造“全球领先的燃气具以及生活热水系统供应商”。
+        ]]> 
+    </string>
+  
     
 
 </resources>

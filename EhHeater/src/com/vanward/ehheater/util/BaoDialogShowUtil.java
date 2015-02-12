@@ -1,5 +1,6 @@
 package com.vanward.ehheater.util;
 
+import net.tsz.afinal.http.AjaxCallBack;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.CountDownTimer;
@@ -159,6 +160,27 @@ public class BaoDialogShowUtil {
 				public void onFinish() {
 					if (!isDetach) {
 						dismiss();
+					}
+					countDown = null;
+				}
+			};
+			countDown.start();
+			super.show();
+		}
+		
+		public void show(final AjaxCallBack callBack) {
+			countDown = new CountDownTimer(30000, 1000) {
+				
+				@Override
+				public void onTick(long millisUntilFinished) {
+					
+				}
+				
+				@Override
+				public void onFinish() {
+					if (!isDetach) {
+						dismiss();
+						callBack.onTimeout();
 					}
 					countDown = null;
 				}

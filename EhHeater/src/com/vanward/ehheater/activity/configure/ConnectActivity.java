@@ -141,6 +141,8 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private void connectToDevice() {
 		Log.e(TAG, "connectToDevice()");
+		
+		DialogUtil.instance().dismissDialog();
 
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
 			setOfflineResult();

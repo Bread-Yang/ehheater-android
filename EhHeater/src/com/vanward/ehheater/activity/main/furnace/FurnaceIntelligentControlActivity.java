@@ -105,13 +105,13 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
 	private void setListener() {
 
-		btn_left.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				saveDialog.show();
-			}
-		});
+//		btn_left.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				saveDialog.show();
+//			}
+//		});
 
 		btn_right.setOnClickListener(new OnClickListener() {
 
