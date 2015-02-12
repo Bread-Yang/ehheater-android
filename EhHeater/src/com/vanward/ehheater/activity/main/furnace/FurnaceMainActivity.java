@@ -261,6 +261,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	}
 
 	private void init() {
+		errorString = getResources().getStringArray(R.array.furnace_error_arrary);
+		
 		turnOffInWinnerDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.turn_off_in_winter,
 						R.string.cancel, R.string.turn_off, null,
@@ -277,7 +279,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
 
-		btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
+		btn_top_right.setBackgroundResource(R.drawable.icon_shut_disable);
 
 		circle_slider.setVisibility(View.GONE);
 
@@ -361,7 +363,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			btn_appointment.setEnabled(false);
 			btn_setting.setEnabled(false);
 			btn_intellectual.setEnabled(false);
-			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
+			btn_top_right.setBackgroundResource(R.drawable.icon_shut_disable);
 			isOn = false;
 
 		} /*
@@ -378,13 +380,13 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			btn_appointment.setEnabled(false);
 			btn_setting.setEnabled(false);
 			btn_intellectual.setEnabled(false);
-			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
+			btn_top_right.setBackgroundResource(R.drawable.icon_shut_disable);
 			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
 			isOn = false;
 		} else if (pResp.getOnOff() == 1) { // standby
 			isPowerOffOrOffline = false;
-			btn_top_right.setBackgroundResource(R.drawable.icon_shut);
+			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
 			if (pResp.getSeasonState() == 1) {
 				btn_appointment.setEnabled(true);
 				btn_intellectual.setEnabled(true);
@@ -742,7 +744,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					FurnaceIntelligentControlActivity.class);
 			// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
 			// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
-			if (statusResp.getHeatingSend() == 1) { // 地暖
+			if (statusResp != null && statusResp.getHeatingSend() == 1) { // 地暖
 				intent.putExtra("floor_heating", true);
 			}
 			startActivity(intent);
@@ -1043,7 +1045,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			btn_appointment.setEnabled(false);
 			btn_setting.setEnabled(false);
 			btn_intellectual.setEnabled(false);
-			btn_top_right.setBackgroundResource(R.drawable.icon_shut_enable);
+			btn_top_right.setBackgroundResource(R.drawable.icon_shut_disable);
+			faultTipIv.setVisibility(View.GONE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1059,13 +1062,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	String errorStr = "";
 	int errorCodeM = -10;
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-	private final int[] errorArray = { -1, 1, 2, 3, 4, 6, 7, 8, 9 };
-	private final String[] errorString = { "卫浴水输入水温度传感器故障或过热",
-			"水压故障、缺水/变频水泵故障", "点火失败或伪火故障", "取暖水温度传感器故障或过热", "卫浴水温度传感器故障或过热",
-			"风压/风机故障，可调速风机风速故障，烟道温度探头故障", "机械温控器过热保护", "AD采样/12V电压故障",
-			"主阀驱动继电器驱动电路故障", };
+	private final int[] errorArray = { 10, 1, 2, 3, 4, 6, 7, 8, 9 };
+	private String[] errorString;
 
-	public void pingFault(DERYStatusResp_t pResp) {
+	public void pingFault(final DERYStatusResp_t pResp) {
 		boolean isError = false;
 
 		for (int i = 0; i < 9; i++) {
@@ -1076,7 +1076,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			}
 		}
 		if (isError) {
-			final int errorCode = pResp.getError();
+			// final int errorCode = pResp.getError();
 
 			faultTipIv.setVisibility(View.VISIBLE);
 			faultTipIv.setBackgroundResource(R.drawable.main_error);
@@ -1086,8 +1086,13 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			// tipsimg.setImageResource(R.drawable.main_error);
 			// AnimationDrawable drawable = (AnimationDrawable) tipsimg
 			// .getDrawable();
+
+			if (errorCodeM == 10) {
+				errorCodeM = 0;
+			}
+
 			ErrorDialogUtil.instance(FurnaceMainActivity.this)
-					.initName2("E" + errorCode + "")
+					.initName2("E" + errorCodeM + "")
 					.setNextButtonCall(new NextButtonCall() {
 						@Override
 						public void oncall(View v) {
@@ -1095,10 +1100,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 							// intent.putExtra("data", inforVo);
 							intent.setClass(FurnaceMainActivity.this,
 									InfoErrorActivity.class);
-							intent.putExtra("name", "机器故障(E"
-									+ errorArray[errorCodeM]
-									// + Integer
-									// .toHexString(errorCode)
+							intent.putExtra("name", "机器故障(E" + errorCodeM
+							// + Integer
+							// .toHexString(errorCode)
 									+ ")");
 							intent.putExtra("time",
 									simpleDateFormat.format(new Date()));

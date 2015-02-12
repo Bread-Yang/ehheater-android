@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="furnace_error_arrary">
+        <item>卫浴水输入水温度传感器故障或过热</item>
+        <item>水压故障、缺水/变频水泵故障</item>
+        <item>点火失败或伪火故障</item>
+        <item>取暖水温度传感器故障或过热</item>
+        <item>卫浴水温度传感器故障或过热</item>
+        <item>风压/风机故障，可调速风机风速故障，烟道温度探头故障</item>
+        <item>机械温控器过热保护</item>
+        <item>AD采样/12V电压故障</item>
+        <item>主阀驱动继电器驱动电路故障</item>
+    </string-array>
+</resources>

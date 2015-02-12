@@ -895,7 +895,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				powerTv.setText("--");
 				rightButton.setVisibility(View.VISIBLE);
 				btn_power.setSelected(false);
-				rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+				rightButton.setBackgroundResource(R.drawable.icon_shut_disable);
 				findViewById(R.id.pattern).setEnabled(false);
 				findViewById(R.id.power).setEnabled(false);
 				ChangeStuteView.swichDeviceOff(stuteParent);
@@ -904,7 +904,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				tv_mode.setVisibility(View.VISIBLE);
 				findViewById(R.id.pattern).setEnabled(true);
 				findViewById(R.id.power).setEnabled(true);
-				rightButton.setBackgroundResource(R.drawable.icon_shut_able);
+				rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 
 				// circularView.setOn(true);
 				ison = true;
@@ -1029,7 +1029,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		btn_power.setEnabled(false);
 		// llt_power.setEnabled(false);
 		findViewById(R.id.pattern).setEnabled(false);
-		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+		rightButton.setBackgroundResource(R.drawable.icon_shut_disable);
 		circle_slider.setVisibility(View.GONE);
 		// circularView.setOn(false);
 		iv_error.setVisibility(View.GONE);

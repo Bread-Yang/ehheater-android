@@ -76,7 +76,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	private BaoCircleSlider circle_slider;
 
-	private ImageView iv_wave, hotImgeImageView, modeimg;
+	private ImageView iv_wave, hotImgeImageView, modeimg; 
 	private AnimationDrawable animationDrawable;
 	private RelativeLayout content;
 
@@ -235,10 +235,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 						.shouldExecuteBinding(curHeater);
 
 				if (ison) {
-					rightButton.setBackgroundResource(R.drawable.icon_shut);
+					rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 				} else {
 					rightButton
-							.setBackgroundResource(R.drawable.icon_shut_enable);
+							.setBackgroundResource(R.drawable.icon_shut_disable);
 				}
 
 				if (shouldExecuteBinding) {
@@ -769,7 +769,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			circle_slider.setVisibility(View.GONE);
 			// circularView.setOn(false);
 			tv_mode.setVisibility(View.INVISIBLE);
-			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+			rightButton.setBackgroundResource(R.drawable.icon_shut_disable);
 			ison = false;
 		} else {
 			// rightButton.setVisibility(View.VISIBLE);
@@ -781,7 +781,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			}
 			tv_mode.setVisibility(View.VISIBLE);
 			ison = true;
-			rightButton.setBackgroundResource(R.drawable.icon_shut);
+			rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
 		}
 	}
 
@@ -1168,7 +1168,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void changeToOfflineUI() {
 		dealDisConnect();
-		rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+		rightButton.setBackgroundResource(R.drawable.icon_shut_disable);
 		stute.setText("不在线");
 	}
 

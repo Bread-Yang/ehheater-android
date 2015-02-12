@@ -289,10 +289,10 @@ public class PollingService extends Service {
 											.getInt("water_function");
 									if (water_function == 2 && passOneHour) {
 										passOneHour = false;
-										
+
 										showNotification(1, R.string.tips,
 												R.string.full_water);
-										
+
 										new CountDownTimer(10000, 1000) {
 
 											@Override
@@ -342,7 +342,7 @@ public class PollingService extends Service {
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		String did = spu.get(ShareKey.PollingFurnaceDid, "");
 		furnaceMac = spu.get(ShareKey.PollingFurnaceMac, "");
-		 Log.e(TAG, "FurnaceDid : " + did);
+		Log.e(TAG, "FurnaceDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
@@ -351,17 +351,18 @@ public class PollingService extends Service {
 			// Log.e(TAG, "gasMac是 : " + gasMac);
 			// Log.e(TAG, "燃热的did是 : " + allDevices.get(0).getDid());
 
-			String requestURL = "getNewestFurnaceData?did=" + did;
-			// Log.e(TAG, "checkGasHeaterInfo的URL" + requestURL);
+			String requestURL = Consts.REQUEST_BASE_URL
+					+ "getNewestFurnaceData?did=" + did;
+			Log.e(TAG, "checkFurnaceInfo的URL" + requestURL);
 
-			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-					null, new AjaxCallBack<String>() {
+			mHttpFriend.toUrl(requestURL).executeGet(null,
+					new AjaxCallBack<String>() {
 						@Override
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							// Log.e(TAG, "checkFurnaceInfo请求返回来的数据是 : "
-							// + jsonString);
+							Log.e(TAG, "checkFurnaceInfo请求返回来的数据是 : "
+									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);

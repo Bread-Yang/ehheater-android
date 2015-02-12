@@ -65,8 +65,6 @@ public class BaoCircleSlider extends View {
 
 	private CountDownTimer countDownTimer;
 
-	private int circleWidth;
-
 	public interface BaoCircleSliderListener {
 
 		public void didBeginTouchCircleSlider();
@@ -122,8 +120,6 @@ public class BaoCircleSlider extends View {
 
 		minusImageView.setLayoutParams(new LayoutParams(100, 100));
 		minusImageView.layout(0, 0, widthSpecSize, heightSpecSize);
-
-		circleWidth = getWidth() - 30;
 	}
 
 	private void initRoutine() {

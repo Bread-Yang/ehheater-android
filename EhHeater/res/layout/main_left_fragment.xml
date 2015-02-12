@@ -90,7 +90,7 @@
             android:textSize="18sp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="@string/summer_mode" />
+            android:text="@string/winner_mode" />
 
         <Button
             android:id="@+id/btn_season_mode"
