@@ -8,9 +8,11 @@ import net.tsz.afinal.http.PreferencesCookieStore;
 import org.apache.http.cookie.Cookie;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.vanward.ehheater.R;
 import com.vanward.ehheater.util.BaoDialogShowUtil.BaoTimeoutDailog;
 
 /**
@@ -37,6 +39,8 @@ public class HttpFriend {
 
 	public boolean showTips = true;
 
+	private Dialog serverFailureDialog;
+
 	/**
 	 * 
 	 * @return
@@ -45,6 +49,9 @@ public class HttpFriend {
 		HttpFriend hf = new HttpFriend();
 		hf.mContext = context;
 		hf.pcs = new PreferencesCookieStore(context);
+		hf.serverFailureDialog = BaoDialogShowUtil.getInstance(hf.mContext)
+				.createDialogWithOneButton(R.string.server_failure,
+						BaoDialogShowUtil.DEFAULT_RESID, null);
 		return hf;
 	}
 
@@ -118,8 +125,9 @@ public class HttpFriend {
 				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
 				if (showTips) {
-					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
-							.show();
+					serverFailureDialog.show();
+//					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+//							.show();
 				}
 			}
 
@@ -174,8 +182,9 @@ public class HttpFriend {
 				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
 				if (showTips) {
-					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
-							.show();
+					serverFailureDialog.show();
+//					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+//							.show();
 				}
 			}
 
@@ -233,8 +242,9 @@ public class HttpFriend {
 					dismissRequestDialog();
 					callBack.onFailure(t, errorNo, strMsg);
 					if (showTips) {
-						Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
-								.show();
+						serverFailureDialog.show();
+//						Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+//								.show();
 					}
 
 				}

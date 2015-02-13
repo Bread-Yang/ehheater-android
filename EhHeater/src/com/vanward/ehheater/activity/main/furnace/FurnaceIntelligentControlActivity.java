@@ -319,10 +319,10 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 					@Override
 					public void onFailure(Throwable t, int errorNo,
 							String strMsg) {
-						// TODO Auto-generated method stub
 						super.onFailure(t, errorNo, strMsg);
-						extractDataFromJson(getFromSharedPreferences()); 
-						showDialog("保存数据超时");
+						Log.e(TAG, "onFailure()执行了");
+//						extractDataFromJson(getFromSharedPreferences()); 
+//						showDialog("保存数据超时");
 					}
 				});
 		Log.e(TAG, " getData()执行完了");

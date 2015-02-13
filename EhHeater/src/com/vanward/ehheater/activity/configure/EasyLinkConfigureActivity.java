@@ -536,6 +536,8 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		boolean directLinkAfterEasyLink = true;
 		if (flag) {
 			Toast.makeText(this, "此设备已存在", 1000).show();
+			new SharedPreferUtils(this).put(ShareKey.CurDeviceMac,
+					hinfo.getMac());
 		} else {
 			hser.addNewHeater(hinfo);
 		}
