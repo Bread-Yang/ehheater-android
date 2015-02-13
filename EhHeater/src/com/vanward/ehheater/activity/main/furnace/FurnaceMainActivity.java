@@ -1,4 +1,4 @@
-package com.vanward.ehheater.activity.main.furnace;
+﻿package com.vanward.ehheater.activity.main.furnace;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
