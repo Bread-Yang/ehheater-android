@@ -108,6 +108,7 @@ public class ConnectActivity extends GeneratedActivity {
 	protected void onResume() {
 		super.onResume();
 		Log.e(TAG, "onResume()");
+		DialogUtil.instance().dismissDialog();
 		isActived = true;
 	}
 
