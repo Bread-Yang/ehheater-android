@@ -214,7 +214,7 @@
     <string name="magnesiarods_replace">镁棒更换</string>
     <string name="cannot_connect">无法连接设备，\n请注意设备与手机的网络状态</string>
     <string name="confirm_save">是否保存修改？</string>
-    <string name="server_failure">服务器错误</string>
+    <string name="server_failure">请求数据错误</string>
     <string name="about_wanward">
         <![CDATA[ 
         <font color=#FE6C18>&#160;&#160;&#160;&#160;&#160;&#160;&#160;广东万和新电气股份有限公司</font>成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。</string>

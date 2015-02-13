@@ -293,7 +293,7 @@ public class PollingService extends Service {
 										showNotification(1, R.string.tips,
 												R.string.full_water);
 
-										new CountDownTimer(10000, 1000) {
+										new CountDownTimer(1000 * 60 * 60, 1000) {
 
 											@Override
 											public void onTick(

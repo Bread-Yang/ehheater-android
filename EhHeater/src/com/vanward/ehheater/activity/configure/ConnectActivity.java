@@ -82,6 +82,8 @@ public class ConnectActivity extends GeneratedActivity {
 		super.onCreate(savedInstanceState);
 		Log.e(TAG, "onCreate()");
 
+		DialogUtil.instance().dismissDialog();
+		
 		if (BuildConfig.DEBUG) {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 					.detectAll().penaltyLog().build());
@@ -681,6 +683,8 @@ public class ConnectActivity extends GeneratedActivity {
 	public static void connectToDevice(Activity act, String mac,
 			String passcode, String userId, String userPsw, String connectText) {
 
+		DialogUtil.instance().dismissDialog();
+		
 		Intent intent = new Intent(act.getBaseContext(), ConnectActivity.class);
 		intent.putExtra(Consts.INTENT_EXTRA_MAC, mac);
 		intent.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcode);
