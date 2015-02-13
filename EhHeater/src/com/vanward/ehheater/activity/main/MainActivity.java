@@ -221,7 +221,7 @@ public class MainActivity extends BaseBusinessActivity implements
 					e.printStackTrace();
 				}
 
-				if (ErrorUtils.isMainActivityActive) {
+				if (isActived) {
 					DialogUtil.instance().showReconnectDialog(new Runnable() {
 						@Override
 						public void run() {

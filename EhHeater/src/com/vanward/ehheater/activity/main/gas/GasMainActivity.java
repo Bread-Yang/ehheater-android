@@ -260,7 +260,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Global.checkOnlineConnId = connId;
 				changeToOfflineUI();
 
-				if (ErrorUtils.isGasMainActivityActive) {
+				if (isActived) {
 					DialogUtil.instance().showReconnectDialog(new Runnable() {
 						@Override
 						public void run() {

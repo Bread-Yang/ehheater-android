@@ -857,7 +857,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 				changeToOfflineUI();
 
-				if (ErrorUtils.isFurnaceMainActivityActive) {
+				if (isActived) {
 					DialogUtil.instance().showReconnectDialog(new Runnable() {
 						@Override
 						public void run() {

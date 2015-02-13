@@ -59,7 +59,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private boolean shouldReconnect = false;
 	private boolean paused = false;
 
-	private boolean isActived = false;
+	protected boolean isActived = false;
 
 	private Dialog dialog_exit;
 

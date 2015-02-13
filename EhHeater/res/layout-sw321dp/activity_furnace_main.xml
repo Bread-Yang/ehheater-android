@@ -85,8 +85,8 @@
 
             <ImageView
                 android:id="@+id/iv_circle_bg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="270dp"
+                android:layout_height="270dp"
                 android:layout_below="@+id/rlt_mode"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/home_yuan_bg" />
@@ -115,11 +115,6 @@
                     android:layout_marginLeft="2dp"
                     android:src="@drawable/anim_furmace_main_heating"
                     android:visibility="invisible" />
-
-                <com.vanward.ehheater.view.BaoCircleSlider
-                    android:id="@+id/circle_slider"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -200,6 +195,13 @@
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
+
+            <com.vanward.ehheater.view.BaoCircleSlider
+                android:id="@+id/circle_slider"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_below="@+id/rlt_mode"
+                android:layout_centerHorizontal="true" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
