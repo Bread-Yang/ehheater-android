@@ -221,14 +221,15 @@ public class MainActivity extends BaseBusinessActivity implements
 					e.printStackTrace();
 				}
 
-				DialogUtil.instance().showReconnectDialog(new Runnable() {
-					@Override
-					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext(),
-								hser.getCurrentSelectedHeaterMac());
-					}
-				}, MainActivity.this);
-
+				if (ErrorUtils.isMainActivityActive) {
+					DialogUtil.instance().showReconnectDialog(new Runnable() {
+						@Override
+						public void run() {
+							CheckOnlineUtil.ins().start(getBaseContext(),
+									hser.getCurrentSelectedHeaterMac());
+						}
+					}, MainActivity.this);
+				}
 			}
 
 			if (!conntext.contains("reconnect")) {

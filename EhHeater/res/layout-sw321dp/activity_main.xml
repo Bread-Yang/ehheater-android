@@ -32,8 +32,8 @@
 
         <ImageView
             android:id="@+id/circle_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
             android:layout_below="@+id/mode_tv"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
@@ -63,11 +63,6 @@
                 android:background="@drawable/anim_furmace_main_heating"
                 android:visibility="gone" />
 
-            <com.vanward.ehheater.view.BaoCircleSlider
-                android:id="@+id/circle_slider"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,8 +89,9 @@
 
                     <TextView
                         android:id="@+id/tempter"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="--"
                         android:textColor="@color/title_color"
                         android:textSize="70dp" />
@@ -112,6 +108,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:orientation="horizontal" >
 
                     <TextView
@@ -137,6 +134,13 @@
             </LinearLayout>
         </RelativeLayout>
 
+         <com.vanward.ehheater.view.BaoCircleSlider
+            android:id="@+id/circle_slider"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_below="@+id/mode_tv"
+            android:layout_centerHorizontal="true" />
+        
         <LinearLayout
             android:layout_width="73dp"
             android:layout_height="73dp"

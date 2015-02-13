@@ -51,6 +51,8 @@ public class ErrorUtils extends Activity {
 			break;
 
 		case GAS_HEATER: // 燃热
+			Log.e(TAG, "case GAS-HEATER");
+			Log.e(TAG, "mac : " + getIntent().getStringExtra("mac"));
 			if (isMainActivityActive) { // 如何当前是处于电热或壁挂炉的主控界面,则从电热或壁挂炉主控界面切换到燃热主控界面
 				originalIntent.setClass(this, MainActivity.class);
 			} else if (isFurnaceMainActivityActive) {

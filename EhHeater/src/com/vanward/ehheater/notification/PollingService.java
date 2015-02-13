@@ -125,8 +125,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							 Log.e(TAG, "checkElecticHeaterInfo请求返回来的数据是 : "
-							 + jsonString);
+							Log.e(TAG, "checkElecticHeaterInfo请求返回来的数据是 : "
+									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -232,8 +232,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							 Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
-							 + jsonString);
+							Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
+									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -372,6 +372,50 @@ public class PollingService extends Service {
 									JSONObject result = json
 											.getJSONObject("result");
 
+									int error = result.getInt("error");
+
+									String[] errorStrings = getResources()
+											.getStringArray(
+													R.array.furnace_error_arrary);
+
+									switch (error) {
+									case 10:
+										showNotification(2, "壁挂炉故障",
+												errorStrings[0]);
+										break;
+									case 1:
+										showNotification(2, "壁挂炉故障",
+												errorStrings[1]);
+										break;
+									case 2:
+										showNotification(2, "壁挂炉故障",
+												errorStrings[2]);
+										break;
+									case 3:
+										showNotification(2, "壁挂炉故障",
+												errorStrings[3]);
+										break;
+									case 4:	
+										showNotification(2, "壁挂炉故障",
+												errorStrings[4]);
+										break;
+									case 6:
+										showNotification(2, "壁挂炉故障",
+												errorStrings[5]);
+										break;
+									case 7:
+										showNotification(2, "壁挂炉故障",
+												errorStrings[6]);
+										break;
+									case 8:
+										showNotification(2, "壁挂炉故障",
+												errorStrings[7]);
+										break;
+									case 9:
+										showNotification(2, "壁挂炉故障",
+												errorStrings[8]);
+										break;
+									}
 								}
 							} catch (Exception e) {
 								e.printStackTrace();

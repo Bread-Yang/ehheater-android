@@ -19,7 +19,7 @@
             android:id="@+id/tv_mode"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true" 
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/home_tip_bg"
             android:ellipsize="end"
@@ -102,8 +102,9 @@
 
                     <TextView
                         android:id="@+id/tempter"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:gravity="center"
                         android:text="--"
                         android:textColor="@color/title_color"
                         android:textSize="65dp" />
@@ -120,6 +121,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:orientation="horizontal" >
 
                     <TextView
@@ -280,9 +282,9 @@
             android:id="@+id/llt_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-5dp"
             android:layout_below="@+id/circle_bg"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="-5dp"
             android:orientation="vertical"
             android:visibility="visible" >
 

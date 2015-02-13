@@ -260,13 +260,15 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Global.checkOnlineConnId = connId;
 				changeToOfflineUI();
 
-				DialogUtil.instance().showReconnectDialog(new Runnable() {
-					@Override
-					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext(),
-								hser.getCurrentSelectedHeaterMac());
-					}
-				}, this);
+				if (ErrorUtils.isGasMainActivityActive) {
+					DialogUtil.instance().showReconnectDialog(new Runnable() {
+						@Override
+						public void run() {
+							CheckOnlineUtil.ins().start(getBaseContext(),
+									hser.getCurrentSelectedHeaterMac());
+						}
+					}, this);
+				}
 			}
 
 			if (!conntext.contains("reconnect")) {

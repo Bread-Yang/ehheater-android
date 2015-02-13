@@ -857,13 +857,15 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 				changeToOfflineUI();
 
-				DialogUtil.instance().showReconnectDialog(new Runnable() {
-					@Override
-					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext(),
-								hser.getCurrentSelectedHeaterMac());
-					}
-				}, this);
+				if (ErrorUtils.isFurnaceMainActivityActive) {
+					DialogUtil.instance().showReconnectDialog(new Runnable() {
+						@Override
+						public void run() {
+							CheckOnlineUtil.ins().start(getBaseContext(),
+									hser.getCurrentSelectedHeaterMac());
+						}
+					}, this);
+				}
 			}
 
 			if (!conntext.contains("reconnect")) {
@@ -933,15 +935,24 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		super.onPause();
 		deviceSwitchSuccessDialog.dismiss();
 	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.e(TAG, "onNewIntent()");
+		setIntent(intent);
+	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.e(TAG, "onResume()执行了");
 		ErrorUtils.isFurnaceMainActivityActive = true;
 		ErrorUtils.isMainActivityActive = false;
 		ErrorUtils.isGasMainActivityActive = false;
 		isError = false;
 		String mac = getIntent().getStringExtra("mac");
+		Log.e(TAG, "mac : " + mac);
 		if (mac != null && !getIntent().getBooleanExtra("newActivity", false)) {
 			SwitchDeviceUtil.switchDevice(mac, this);
 		}
