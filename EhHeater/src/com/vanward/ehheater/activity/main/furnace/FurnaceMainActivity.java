@@ -1111,13 +1111,13 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 							// intent.putExtra("data", inforVo);
 							intent.setClass(FurnaceMainActivity.this,
 									InfoErrorActivity.class);
-							intent.putExtra("name", "机器故障(E" + errorCodeM
+							intent.putExtra("name", "机器故障(E" + errorCodeM 
 							// + Integer
 							// .toHexString(errorCode)
 									+ ")");
 							intent.putExtra("time",
 									simpleDateFormat.format(new Date()));
-							intent.putExtra("detail", errorStr);
+							intent.putExtra("detail", errorStr + "，请联系客服。");
 							startActivity(intent);
 						}
 					}).showDialog();

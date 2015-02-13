@@ -276,7 +276,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 						// TODO Auto-generated method stub
 						super.onFailure(t, errorNo, strMsg);
 						String str = null;
-						showDialog(str);
+						showDialog2(2);
 					}
 				});
 		
@@ -322,7 +322,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 						// TODO Auto-generated method stub
 						super.onFailure(t, errorNo, strMsg);
 						extractDataFromJson(getFromSharedPreferences()); 
-						showDialog("保存数据超时");
+						showDialog2(1);
 					}
 				});
 		Log.e(TAG, " getData()执行完了");
@@ -572,7 +572,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		editor.commit();
 	}
 	
-	private void showDialog(String tv_content){
+	public  void showDialog2(int tv_content){
 		final Dialog dialog = new Dialog(this, R.style.custom_dialog);
 		dialog.setContentView(R.layout.dialog_zhineng_error1);
 		Button bt_Sure = (Button)dialog.findViewById(R.id.btn_sure);
@@ -587,11 +587,15 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  imp
 		});
 		
 		
-		if(!(tv_content == null)){
-			TextView tv = (TextView)dialog.findViewById(R.id.tv_content);
-			tv.setText(tv_content);
+		
+		TextView tv = (TextView)dialog.findViewById(R.id.tv_content);
+		if(!(tv_content == 1)){
+			
+			tv.setText("保存数据超时");
+		}else{
+			tv.setText("请求数据超时");
 		}
-		dialog.show();
+		dialog.show(); 
 	}
 	
 	
