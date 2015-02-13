@@ -1,4 +1,4 @@
-package com.vanward.ehheater.activity.main.furnace;
+﻿package com.vanward.ehheater.activity.main.furnace;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,7 +24,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
@@ -39,8 +43,7 @@ import com.vanward.ehheater.view.BaoBarView.BaoBarViewAdapter;
 import com.vanward.ehheater.view.BaoBarView.BaoTouchArea;
 import com.vanward.ehheater.view.BaoBarView.CGPoint;
 
-public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
-		implements BaoBarViewAdapter {
+public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity  implements BaoBarViewAdapter{
 
 	private final String TAG = "FurnaceIntelligentControlActivity";
 
@@ -52,11 +55,11 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
 	private CheckBox cb_Monday, cb_Thuesday, cb_Wednesday, cb_Thursday,
 			cb_Friday, cb_Saturday, cb_Sunday;
-
+	
 	private BaoBarView bbv;
 	private int[] data = new int[48];
-
-	private CGPoint touchPoint;
+	
+	private CGPoint touchPoint;  
 	private float tempOffset;
 	private BaoTouchArea touchArea;
 
@@ -69,14 +72,14 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 	private String did = "";
 
 	private String uid = "";
-
+	
 	private String passcode = "";
 
 	private Dialog saveDialog;
-
+	
 	private boolean isAdd = false;
-
-	private int warmId = 0;
+	
+	private int warmId = 0 ;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 		setCenterView(R.layout.activity_furnace_intelligent_control);
 		setTopText(R.string.intelligent_control);
 		setLeftButtonBackground(R.drawable.icon_back);
+//		setRightButton(View.GONE);
 		setRightButtonBackground(R.drawable.menu_icon_ye);
 		findViewById();
 		setListener();
@@ -105,22 +109,23 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
 	private void setListener() {
 
-//		btn_left.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
+		btn_left.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
 //				saveDialog.show();
-//			}
-//		});
-
+				finish();
+			}
+		});
+		
 		btn_right.setOnClickListener(new OnClickListener() {
-
+			
 			@Override
 			public void onClick(View v) {
 				saveChartData();
 			}
 		});
-
+		
 		bbv.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -132,9 +137,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 					tempOffset = bbv.getxOffset();
 					BaoTouchArea area = bbv.touchAreaOfPoint(touchPoint);
 					touchArea = area;
-					break;
+					break; 
 				case MotionEvent.ACTION_MOVE:
-
+					
 					CGPoint point = new CGPoint(event.getX(), event.getY());
 					if (touchArea == BaoTouchArea.BaoTouch_Scroll) {
 						Float offset = (float) Math.abs(point.x - touchPoint.x);
@@ -149,9 +154,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 					} else if (touchArea == BaoTouchArea.BaoTouch_SetValue) {
 						int index = bbv.indexOfTouchPoint(point);
 						int newValue = (int) bbv.valueOfTouchPoint(point);
-						if (newValue < 30) {
-							newValue = 30;
-						}
 						if (index < data.length) {
 							int value = data[index];
 							data[index] = newValue;
@@ -169,7 +171,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 			}
 		});
 	}
-
+	
+	JSONObject json2;
 	private void saveChartData() {
 
 		String requestURL = null;
@@ -189,13 +192,14 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 		boolean isWarmOn = tb_switch.isChecked();
 		String bbvHeight = new String();
 		// 星期循环,第0位是星期日
-		loop = (cb_Sunday.isChecked() ? "1" : "0")
-				+ (cb_Monday.isChecked() ? "1" : "0")
+		loop = 
+				(cb_Monday.isChecked() ? "1" : "0")
 				+ (cb_Thuesday.isChecked() ? "1" : "0")
 				+ (cb_Wednesday.isChecked() ? "1" : "0")
 				+ (cb_Thursday.isChecked() ? "1" : "0")
 				+ (cb_Friday.isChecked() ? "1" : "0")
-				+ (cb_Saturday.isChecked() ? "1" : "0");
+				+ (cb_Saturday.isChecked() ? "1" : "0")
+				+(cb_Sunday.isChecked() ? "1" : "0");
 
 		for (int i = 0; i < data.length; i++) {
 			bbvHeight += data[i];
@@ -206,7 +210,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 		Log.e(TAG,
 				bbvHeight.length() + "bbvHeight里面的数据是： " + bbvHeight.toString());
 
-		JSONObject json2 = new JSONObject();
+		final JSONObject json2 = new JSONObject();
 		try {
 			if (!isAdd) {
 				json2.put("warmId", warmId);
@@ -256,7 +260,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 							JSONObject json = new JSONObject(jsonString);
 
 							String result = json.getString("responseCode");
-
+							saveToSharedPreferences(json2.toString());
 							if ("200".equals(result)) {
 								finish();
 							} else {
@@ -266,18 +270,25 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 							e.printStackTrace();
 						}
 					}
+					@Override
+					public void onFailure(Throwable t, int errorNo,
+							String strMsg) {
+						// TODO Auto-generated method stub
+						super.onFailure(t, errorNo, strMsg);
+						String str = null;
+						showDialog(str);
+					}
 				});
+		
 	}
-
 	String forResult;
-
+	
 	private String getData() {
 
-		// String requestURL =
-		// "furnace/getWarm?did=LWFDwtEcFWJ5hSBPXrVXFS&uid=q1231";
-
-		String requestURL = "furnace/getWarm?did=" + did + "&uid=" + uid;
-
+//		String requestURL = "furnace/getWarm?did=LWFDwtEcFWJ5hSBPXrVXFS&uid=q1231";
+		
+		String requestURL = "furnace/getWarm?did=" + did +  "&uid=" + uid;
+		
 		AjaxParams params = new AjaxParams();
 		params.put("data", gson.toJson(highChar_data));
 
@@ -287,19 +298,31 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
 						Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+						Log.e(TAG, "Sharedpreferences返回的数据是 : " + getFromSharedPreferences());
 
 						try {
 							JSONObject json = new JSONObject(jsonString);
 
 							String result = json.getString("result");
 							forResult = result; // 存放返回结果
-							extractDataFromJson(result); // 加载数据放到这里了
+//							extractDataFromJson(getFromSharedPreferences()); 
+//							extractDataFromJson(result); // 加载数据放到这里了
+							saveToSharedPreferences(result);
+							extractDataFromJson(getFromSharedPreferences()); 
 							if ("success".equals("result")) {
 								finish();
 							}
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
+					}
+					@Override
+					public void onFailure(Throwable t, int errorNo,
+							String strMsg) {
+						// TODO Auto-generated method stub
+						super.onFailure(t, errorNo, strMsg);
+						extractDataFromJson(getFromSharedPreferences()); 
+						showDialog("保存数据超时");
 					}
 				});
 		Log.e(TAG, " getData()执行完了");
@@ -323,7 +346,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 			// highChar_data = gson.fromJson(data1,
 			// new TypeToken<ArrayList<int[]>>() {
 			// }.getType());
-
+			
 			warmId = json.getInt("warmId");
 
 			loop = json.getString("week");
@@ -331,23 +354,23 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 			// 获取所有高度值存到数组
 			String temp48 = json.getString("temp");
 			Log.d(TAG, temp48.length() + "");
-
-			// int[] fordot = new int [47] ;
-			// int j = 1; fordot[1] = 0;
-			// for (int i = 0; i < temp48.length(); i++) {
-			// if(temp48.substring(i, i + 1 ).equals(","))
-			// fordot[j++] = i;
-			// }
-			// for(int i = 0; i < 47; i++){
-			//
-			// }
-
+			
+//			int[] fordot = new int [47] ;
+//			int j = 1; fordot[1] = 0;
+//			for (int i = 0; i < temp48.length(); i++) {
+//				if(temp48.substring(i, i + 1 ).equals(","))
+//				 fordot[j++] = i; 
+//			}
+//			for(int i = 0; i < 47; i++){
+//				
+//			}
+			
 			String[] str = temp48.split(",");
 			int j = 0;
-			for (int i = 0; i < str.length; i++) {
-
+			for(int i = 0; i < str.length; i++){
+				
 				data[i] = Integer.parseInt(str[i]);
-
+				
 			}
 
 			Log.e(TAG, "解析json方法里面的--loop的数据是 : " + loop);
@@ -359,27 +382,26 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 						switch (i) {
 
 						case 0:
-							cb_Sunday.setChecked(true);
-							break;
-						case 1:
 							cb_Monday.setChecked(true);
 							break;
-						case 2:
+						case 1:
 							cb_Thuesday.setChecked(true);
 							break;
-						case 3:
+						case 2:
 							cb_Wednesday.setChecked(true);
 							break;
-						case 4:
+						case 3:
 							cb_Thursday.setChecked(true);
 							break;
-						case 5:
+						case 4:
 							cb_Friday.setChecked(true);
 							break;
-						case 6:
+						case 5:
 							cb_Saturday.setChecked(true);
 							break;
-						
+						case 6:
+							cb_Sunday.setChecked(true);
+							break;
 						}
 					}
 				}
@@ -419,7 +441,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 			e.printStackTrace();
 		}
 	}
-
+	
 	private String getTestData() {
 
 		InputStream inputStream;
@@ -439,9 +461,11 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
 		uid = AccountService.getUserId(getBaseContext());
 		passcode = AccountService.getUserPsw(getBaseContext());
-
-		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating",
-				false);
+		
+		sp = getSharedPreferences("results", 0);
+		editor = sp.edit();
+		
+		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating", false);
 		// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
 		// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
 		if (isFloorHeating) {
@@ -473,19 +497,19 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 		mHttpFriend = HttpFriend.create(this);
 		// requestHttpData();
 
-		// extractDataFromJson(getTestData()); // for test
+//		extractDataFromJson(getTestData()); // for test
 		getData();
 
-		// wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
-		// "highChartsJavaScriptInterface");
-		// wv_chart.getSettings().setJavaScriptEnabled(true);
-		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control.html");
-		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control_new.html");
-		// wv_chart.setBackgroundColor(0xF3F3F3);
-		// if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-		// wv_chart.getSettings().setAllowUniversalAccessFromFileURLs(true);
-		// wv_chart.getSettings().setAllowFileAccessFromFileURLs(true);
-		// }
+//		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
+//				"highChartsJavaScriptInterface");
+//		wv_chart.getSettings().setJavaScriptEnabled(true);
+//		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control.html");
+//		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_intelligent_control_new.html");
+//		wv_chart.setBackgroundColor(0xF3F3F3);
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//			wv_chart.getSettings().setAllowUniversalAccessFromFileURLs(true);
+//			wv_chart.getSettings().setAllowFileAccessFromFileURLs(true);
+//		}
 	}
 
 	private void requestHttpData() {
@@ -533,7 +557,42 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 	public String xAxisTitleOfIndex(BaoBarView barView, int index) {
 		int hour = index / 2;
 		int minute = index % 2 * 30;
-		return String.format("%02d", hour) + ":"
-				+ String.format("%02d", minute);
+		return String.format("%02d", hour) + ":" + String.format("%02d", minute) ;
 	}
+	
+	
+	private SharedPreferences sp;
+	private Editor  editor;
+	private String getFromSharedPreferences(){
+		
+		return sp.getString("result", "");
+	}
+	private void  saveToSharedPreferences(String strResult){
+		editor.putString("result", strResult);
+		editor.commit();
+	}
+	
+	private void showDialog(String tv_content){
+		final Dialog dialog = new Dialog(this, R.style.custom_dialog);
+		dialog.setContentView(R.layout.dialog_zhineng_error1);
+		Button bt_Sure = (Button)dialog.findViewById(R.id.btn_sure);
+		bt_Sure.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				
+			}
+		});
+		
+		
+		if(!(tv_content == null)){
+			TextView tv = (TextView)dialog.findViewById(R.id.tv_content);
+			tv.setText(tv_content);
+		}
+		dialog.show();
+	}
+	
+	
 }
