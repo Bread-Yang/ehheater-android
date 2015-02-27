@@ -100,7 +100,7 @@
                 android:layout_marginLeft="2dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/main_fire_level_1"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/iv_rotate_animation"
@@ -145,7 +145,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="10dp"
-                        android:src="@drawable/mode_icon_summer" />
+                        android:src="@drawable/mode_icon_winner" />
 
                     <TextView
                         android:id="@+id/tv_temperature"

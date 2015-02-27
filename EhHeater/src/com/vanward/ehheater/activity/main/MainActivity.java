@@ -1094,6 +1094,11 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void needChangeValue(int value, boolean isAdd) {
+		if (value < 35) {
+			value = 35;
+		} else if (value > 75) {
+			value = 75;
+		}
 		if (value >= 35 && value <= 75) {
 			circle_slider.setValue(value);
 

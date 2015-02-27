@@ -261,7 +261,7 @@ public class BaoCircleSlider extends View {
 		float angle = angleOfTouchPoint(touchPoint);
 		int value = valueOfAngle(angle);
 		// Log.e(TAG, "dealWithTouchPoint : " + "angle : " + angle);
-		// Log.e(TAG, "dealWithTouchPoint : " + "value : " + value);
+		 Log.e(TAG, "dealWithTouchPoint : " + "value : " + value);
 		setCurrentValue(value);
 	}
 
@@ -299,7 +299,7 @@ public class BaoCircleSlider extends View {
 
 	private int valueOfAngle(float angle) {
 		float valueRange = (this.maxValue - this.minValue);
-		int value = (int) (Math.floor(angle * valueRange / 360.0) + this.minValue);
+		int value = (int) (Math.ceil(angle * valueRange / 360.0) + this.minValue);
 		// Log.e(TAG, "valueOfAngle : " + value);
 		return value;
 	}
@@ -366,7 +366,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_DOWN:
 
-			Log.e(TAG, "event : ACTION_DOWN");
+//			Log.e(TAG, "1event : ACTION_DOWN");
 
 			isInCtrlIcon = isTouchInCtrlIconView(touchPoint);
 			isOnline = isOnLine(touchPoint);
@@ -384,7 +384,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_MOVE:
 
-			Log.e(TAG, "event : ACTION_MOVE");
+//			Log.e(TAG, "22event : ACTION_MOVE");
 
 			getParent().requestDisallowInterceptTouchEvent(true);
 			if (isTouchCtrlIcon) {
@@ -392,10 +392,10 @@ public class BaoCircleSlider extends View {
 				changingValue = true;
 				float angle = angleOfTouchPoint(touchPoint);
 				float offset = Math.abs(angle - preAngle);
-				if (offset > 30) {
-					return true; // 控制值的变化，避免从最大值跳到最小值等情况
-				}
-				Log.e(TAG, "angle - preAngle = " + (angle - preAngle));
+				// if (offset > 30) {
+				// return true; // 控制值的变化，避免从最大值跳到最小值等情况
+				// }
+				// Log.e(TAG, "angle - preAngle = " + (angle - preAngle));
 				// if (Math.abs(angle - preAngle) >= 4) {
 				isAdd = (angle > preAngle);
 				// }
@@ -405,6 +405,7 @@ public class BaoCircleSlider extends View {
 				setShowMinusImageView(!isAdd);
 				dealWithTouchPoint(touchPoint);
 				// setValue(currentValue); // 使ctrlIconView滚动,for test
+				Log.e(TAG, "currentValue : " + currentValue);
 				if (circleSliderListener != null) {
 					circleSliderListener.needChangeValue(
 							(int) this.currentValue, isAdd);
@@ -414,7 +415,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_UP:
 
-			Log.e(TAG, "event : ACTION_UP");
+//			Log.e(TAG, "333event : ACTION_UP");
 
 			if (isTouchCtrlIcon) {
 				float angle = angleOfTouchPoint(touchPoint);
@@ -437,7 +438,7 @@ public class BaoCircleSlider extends View {
 				// Log.e(TAG, "当前圆点的currentAngle : " + currentAngle);
 				boolean isAdd = angle > currentAngle;
 				int pad = isAdd ? +1 : -1;
-				Log.e(TAG, "ANGLE是 : " + isAdd);
+				// Log.e(TAG, "ANGLE是 : " + isAdd);
 				currentValue = value + pad;
 				// setValue(currentValue); // 使ctrlIconView滚动, for test
 				changingValue = true;
@@ -527,13 +528,13 @@ public class BaoCircleSlider extends View {
 	@Override
 	public void setVisibility(int visibility) {
 		super.setVisibility(visibility);
-		Log.e(TAG, "setVisibility调用了 : " + (visibility == View.VISIBLE));
+		// Log.e(TAG, "setVisibility调用了 : " + (visibility == View.VISIBLE));
 	}
 
 	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
-		Log.e(TAG, "onDetachedFromWindow()执行了");
+		// Log.e(TAG, "onDetachedFromWindow()执行了");
 
 		((BitmapDrawable) ctrlIconView.getDrawable()).getBitmap().recycle();
 		((BitmapDrawable) addImageView.getDrawable()).getBitmap().recycle();

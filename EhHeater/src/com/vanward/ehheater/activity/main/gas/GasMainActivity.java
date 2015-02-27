@@ -1189,6 +1189,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				tv_tempter.setText(circle_max_value + "");
 			}
 		} else {
+			if (value < 35) {
+				value = 35;
+			} else if (value > 65) {
+				value = 65;
+			}
 			if (value >= 35 && value <= circle_max_value) {
 				if (value == 49) {
 					value = isAdd ? 50 : 48;

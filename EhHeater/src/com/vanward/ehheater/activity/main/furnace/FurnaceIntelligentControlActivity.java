@@ -206,6 +206,9 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 				+ (cb_Saturday.isChecked() ? "1" : "0");
 
 		for (int i = 0; i < data.length; i++) {
+			if (data[i] < 30) {
+				data[i] = 30;
+			}
 			bbvHeight += data[i];
 			if (i < data.length - 1) {
 				bbvHeight += ",";
@@ -377,7 +380,10 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 			for (int i = 0; i < str.length; i++) {
 
 				data[i] = Integer.parseInt(str[i]);
-
+				
+				if (data[i] < 30) {
+					data[i] = 30;
+				}
 			}
 
 			Log.e(TAG, "解析json方法里面的--loop的数据是 : " + loop);

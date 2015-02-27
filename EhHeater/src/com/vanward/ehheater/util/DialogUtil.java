@@ -168,7 +168,8 @@ public class DialogUtil {
 	}
 
 	public static void dismissDialog() {
-		if (dialog != null && dialog.isShowing()) {
+//		if (dialog != null && dialog.isShowing()) {
+			if (dialog != null) {
 			try {
 				dialog.dismiss();
 			} catch (Exception e) {

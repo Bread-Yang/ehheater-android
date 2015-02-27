@@ -492,8 +492,11 @@ public class ConnectActivity extends GeneratedActivity {
 					// is online
 					Log.e(TAG, "XPGConnectClient.xpgcEnableCtrl()执行了");
 					Log.e(TAG, "xpgcEnableCtrl.xpgcLogin()前");
-					XPGConnectClient.xpgcEnableCtrl(tempConnId, ep.getSzDid(),
-							ep.getSzPasscode());
+//					XPGConnectClient.xpgcEnableCtrl(tempConnId, ep.getSzDid(),
+//							ep.getSzPasscode());
+					XPGConnectClient.xpgcLogin2Wan(
+							AccountService.getUserId(getBaseContext()),
+							AccountService.getUserPsw(getBaseContext()), ep.getSzDid(), ep.getSzPasscode());
 					Log.e(TAG, "xpgcEnableCtrl.xpgcLogin()后");
 					return;
 				} else {

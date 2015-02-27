@@ -356,7 +356,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			rb_supply_heating.setText(R.string.no_set);
 			rb_bath.setText(R.string.no_set);
 			tv_temperature.setText(R.string.no_set);
-			tv_gas_consumption.setText(R.string.no_set);
+			String s = getResources().getString(R.string.no_set) + getResources().getString(R.string.gas_unit);
+			tv_gas_consumption.setText(s);
 			circle_slider.setVisibility(View.GONE);
 			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
@@ -441,6 +442,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 						.setText(R.string.outlet_temperature);
 				tv_temperature.setText(pResp.getBathTemNow() + "");
 			} else {
+				iv_rotate_animation.setVisibility(View.INVISIBLE);
 				tv_status.setText(R.string.standby);
 				// circle_slider.setVisibility(View.VISIBLE);
 				tv_current_or_setting_temperature_tips
@@ -773,7 +775,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 					@Override
 					public void run() {
-						mSlidingMenu.toggle();
+//						mSlidingMenu.toggle();
 					}
 				}, 500);
 
@@ -984,8 +986,13 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				&& rb_supply_heating.isChecked()) {
 			// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
 			// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
-
+			
 			if (statusResp.getHeatingSend() == 0) { // 0 : 散热器
+				if (value < 30) {
+					value = 30;
+				} else if (value > 80) {
+					value = 80;
+				}
 				if (80 >= value && value >= 30) {
 					tv_temperature.setText(value + "");
 					tv_current_or_setting_temperature_tips
@@ -993,6 +1000,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					circle_slider.setValue(value);
 				}
 			} else {
+				if (value < 30) {
+					value = 30;
+				} else if (value > 55) {
+					value = 55;
+				}
 				if (55 >= value && value >= 30) {
 					tv_temperature.setText(value + "");
 					tv_current_or_setting_temperature_tips
