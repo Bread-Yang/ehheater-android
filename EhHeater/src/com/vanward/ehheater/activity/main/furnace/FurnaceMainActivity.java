@@ -261,8 +261,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	}
 
 	private void init() {
-		errorString = getResources().getStringArray(R.array.furnace_error_arrary);
-		
+		errorString = getResources().getStringArray(
+				R.array.furnace_error_arrary);
+
 		turnOffInWinnerDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.turn_off_in_winter,
 						R.string.cancel, R.string.turn_off, null,
@@ -321,6 +322,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	private void showTipImageVIew(DERYStatusResp_t pResp) {
 		isError = false;
+		Log.e(TAG, "故障是 : " + pResp.getError());
 		for (int i = 0; i < errorArray.length; i++) {
 			if (pResp.getError() == errorArray[i]) {
 				isError = true;
@@ -356,8 +358,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			rb_supply_heating.setText(R.string.no_set);
 			rb_bath.setText(R.string.no_set);
 			tv_temperature.setText(R.string.no_set);
-			String s = getResources().getString(R.string.no_set) + getResources().getString(R.string.gas_unit);
-			tv_gas_consumption.setText(s);
+			String s = getResources().getString(R.string.no_set)
+					+ getResources().getString(R.string.gas_unit);
+			tv_gas_consumption.setText(R.string.no_set);
 			circle_slider.setVisibility(View.GONE);
 			iv_fire_wave_animation.setVisibility(View.INVISIBLE);
 			iv_rotate_animation.setVisibility(View.INVISIBLE);
@@ -589,9 +592,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 																		// current
 				if (rb_bath.isChecked()) {
 					iv_rotate_animation.setVisibility(View.VISIBLE);
-					iv_fire_wave_animation.setVisibility(View.VISIBLE);
+//					iv_fire_wave_animation.setVisibility(View.VISIBLE);
 					tv_current_or_setting_temperature_tips
 							.setText(R.string.outlet_temperature);
+					tv_temperature.setText(pResp.getBathTemNow() + "");
 				} else {
 					iv_rotate_animation.setVisibility(View.INVISIBLE);
 					iv_fire_wave_animation.setVisibility(View.INVISIBLE);
@@ -610,6 +614,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				if (rb_bath.isChecked()) {
 					tv_current_or_setting_temperature_tips
 							.setText(R.string.setting_temperature);
+					tv_temperature.setText(pResp.getBathTemTarget() + "");
 				}
 				if (rg_winner.getCheckedRadioButtonId() == R.id.rb_bath) {
 					circle_slider.setVisibility(View.VISIBLE);
@@ -625,7 +630,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			Log.e(TAG, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
 			Log.e(TAG, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
 		} else {
-			tv_gas_unit.setVisibility(View.GONE);
+//			tv_gas_unit.setVisibility(View.GONE);
 			tv_gas_consumption.setText(R.string.no_set);
 		}
 	}
@@ -775,7 +780,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 					@Override
 					public void run() {
-//						mSlidingMenu.toggle();
+						// mSlidingMenu.toggle();
 					}
 				}, 500);
 
@@ -924,8 +929,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			public void run() {
 				if (!stateQueried) {
 					changeToOfflineUI();
-					DialogUtil.instance().showReconnectDialog(
-							FurnaceMainActivity.this);
+					if (isActived) {
+						DialogUtil.instance().showReconnectDialog(
+								FurnaceMainActivity.this);
+					}
 				}
 
 			}
@@ -937,7 +944,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		super.onPause();
 		deviceSwitchSuccessDialog.dismiss();
 	}
-	
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -986,7 +993,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				&& rb_supply_heating.isChecked()) {
 			// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
 			// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
-			
+
 			if (statusResp.getHeatingSend() == 0) { // 0 : 散热器
 				if (value < 30) {
 					value = 30;
@@ -1015,22 +1022,30 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		} else {
 			if (statusResp.getBathWater() == 0 && statusResp.getOnOff() == 1) {
 				if (statusResp.getBathMode() == 0) { // 0 - normal bath
-					if (48 < value || value < 30) {
-						return;
+					if (48 < value) {
+						value = 48;
+					} else if (value < 30) {
+						value = 30;
 					}
 				} else {
-					if (35 > value || value > 45) {
-						return;
+					if (45 < value) {
+						value = 45;
+					} else if (value < 35) {
+						value = 35;
 					}
 				}
 			} else {
 				if (statusResp.getBathMode() == 0) { // 0 - normal bath
-					if (60 < value || value < 30) {
-						return;
+					if (60 < value) {
+						value = 60;
+					} else if (value < 30) {
+						value = 30;
 					}
 				} else {
-					if (35 > value || value > 45) {
-						return;
+					if (45 < value) {
+						value = 45;
+					} else if (value < 35) {
+						value = 35;
 					}
 				}
 			}
@@ -1123,7 +1138,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 							// intent.putExtra("data", inforVo);
 							intent.setClass(FurnaceMainActivity.this,
 									InfoErrorActivity.class);
-							intent.putExtra("name", "机器故障(E" + errorCodeM 
+							intent.putExtra("name", "机器故障(E" + errorCodeM
 							// + Integer
 							// .toHexString(errorCode)
 									+ ")");

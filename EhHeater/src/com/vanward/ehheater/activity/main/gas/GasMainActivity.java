@@ -306,8 +306,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			@Override
 			public void run() {
 				if (!stateQueried) {
-					DialogUtil.instance().showReconnectDialog(
-							GasMainActivity.this);
+					if (isActived) {
+						DialogUtil.instance().showReconnectDialog(
+								GasMainActivity.this);
+					}
 					dealDisConnect();
 				}
 			}

@@ -270,8 +270,10 @@ public class MainActivity extends BaseBusinessActivity implements
 			public void run() {
 				if (!stateQueried) {
 					changeToOfflineUI();
-					DialogUtil.instance()
-							.showReconnectDialog(MainActivity.this);
+					if (isActived) {
+						DialogUtil.instance().showReconnectDialog(
+								MainActivity.this);
+					}
 				}
 			}
 		}, connectTime);
@@ -297,7 +299,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		String mac = getIntent().getStringExtra("mac");
 		Log.e(TAG, "onResume : mac : " + mac);
-		
+
 		if (mac != null && !"".equals(mac)
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
 			SwitchDeviceUtil.switchDevice(mac, this);
@@ -572,7 +574,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			}
 		});
-		
+
 		circle_slider.setVisibility(View.VISIBLE);
 
 		ChangeStuteView.swichLeaveMinView(stuteParent, 10);

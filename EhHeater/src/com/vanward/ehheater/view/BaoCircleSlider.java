@@ -392,9 +392,9 @@ public class BaoCircleSlider extends View {
 				changingValue = true;
 				float angle = angleOfTouchPoint(touchPoint);
 				float offset = Math.abs(angle - preAngle);
-				// if (offset > 30) {
-				// return true; // 控制值的变化，避免从最大值跳到最小值等情况
-				// }
+				if (offset > 40) {
+					return true; // 控制值的变化，避免从最大值跳到最小值等情况
+				}
 				// Log.e(TAG, "angle - preAngle = " + (angle - preAngle));
 				// if (Math.abs(angle - preAngle) >= 4) {
 				isAdd = (angle > preAngle);
