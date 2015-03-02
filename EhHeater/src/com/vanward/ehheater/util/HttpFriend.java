@@ -125,7 +125,9 @@ public class HttpFriend {
 				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
 				if (showTips) {
-					serverFailureDialog.show();
+					if (!((Activity)mContext).isFinishing()) {
+						serverFailureDialog.show();
+					}
 //					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
 //							.show();
 				}
@@ -182,7 +184,9 @@ public class HttpFriend {
 				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
 				if (showTips) {
-					serverFailureDialog.show();
+					if (!((Activity)mContext).isFinishing()) {
+						serverFailureDialog.show();
+					}
 //					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
 //							.show();
 				}
@@ -242,7 +246,9 @@ public class HttpFriend {
 					dismissRequestDialog();
 					callBack.onFailure(t, errorNo, strMsg);
 					if (showTips) {
-						serverFailureDialog.show();
+						if (!((Activity)mContext).isFinishing()) {
+							serverFailureDialog.show();
+						}
 //						Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
 //								.show();
 					}

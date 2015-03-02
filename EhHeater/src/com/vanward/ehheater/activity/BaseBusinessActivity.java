@@ -143,8 +143,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 				break;
 			case 1:
 				changeToOfflineUI();
-				DialogUtil.instance().showReconnectDialog(
-						BaseBusinessActivity.this);
+				if (isActived) {
+					DialogUtil.instance().showReconnectDialog(
+							BaseBusinessActivity.this);
+				}
 				break;
 			}
 		};
