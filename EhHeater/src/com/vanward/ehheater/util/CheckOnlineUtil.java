@@ -19,6 +19,8 @@ import com.xtremeprog.xpgconnect.generated.generated;
  */
 public class CheckOnlineUtil {
 	
+	private static final String TAG = "CheckOnlineUtil";
+	
 	public static final String ACTION_DEVICE_ONLINE = "device_online";
 	
 	private Timer checkOnlineTimer;
@@ -75,16 +77,16 @@ public class CheckOnlineUtil {
 			@Override
 			public void run() {
 				
-				Log.e("emmm", "checking online...");
+				Log.e(TAG, "checking online...");
 				
 				if (paused) {
-					Log.e("emmm", "checking online returned due to paused");
+					Log.e(TAG, "checking online returned due to paused");
 					return;
 				}
 				
 				if (Global.checkOnlineConnId < 0) {
 					// 已处理了上线, 或者该连接已断开
-					Log.e("emmm", "checking online returned due to already dealed");
+					Log.e(TAG, "checking online returned due to already dealed");
 					checkOnlineTimer.cancel();
 					return;
 				} 
@@ -93,7 +95,7 @@ public class CheckOnlineUtil {
 					
 					if (end.getSzMac().equals(checkMac) && end.getIsOnline() == 1) {
 
-						Log.e("emmm", "checking online: device online!");
+						Log.e(TAG, "checking online: device online!");
 						checkOnlineTimer.cancel();
 						
 						// ConnectActivity.connectToDevice(act, curmac, userId, userPsw);
@@ -108,7 +110,7 @@ public class CheckOnlineUtil {
 //					item.delete();
 				}
 				bindList.clear();
-				Log.e("emmm", "checking online: continue fetch binding");
+				Log.e(TAG, "checking online: continue fetch binding");
 				generated.SendBindingGetV2Req(Global.checkOnlineConnId);
 				
 			}

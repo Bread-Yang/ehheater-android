@@ -201,7 +201,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				pingFault(pRespG);
 			}
 		});
@@ -812,6 +811,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		Log.e("ConnectActivity", "onActivityResult()执行了");
 
 		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
 				&& resultCode == RESULT_OK) {
@@ -1071,6 +1071,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	protected void changeToOfflineUI() {
 
 		try {
+			statusResp = null;
 			tv_status.setText(R.string.offline);
 			rb_summer.setText(R.string.temperature_no_set);
 			rb_supply_heating.setText(R.string.temperature_no_set);

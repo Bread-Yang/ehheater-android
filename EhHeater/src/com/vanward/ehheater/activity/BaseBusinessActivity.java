@@ -332,22 +332,21 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		}
 
-		if (pResp.getIsOnline() == 1) {
-
-			if (paused) {
-				shouldReconnect = true;
-			} else {
-				// connectCurDevice();
-				connectCurDevice("连接已断开, 正在重新连接...");
-			}
-		}
+//		if (pResp.getIsOnline() == 1) {
+//
+//			if (paused) {
+//				shouldReconnect = true;
+//			} else {
+//				connectCurDevice("连接已断开, 正在重新连接...");
+//			}
+//		}
 
 	}
 
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.e(TAG, "onConnectEvent@BaseBusinessActivity:" + connId + "-"
+		Log.e(TAG, "onConnectEvent@BaseBusinessActivity: connId : " + connId + " event : "
 				+ event);
 
 		if (connId == Global.connectId && event == -7) {
@@ -358,11 +357,11 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			}
 
 			// 连接断开
-			if (paused) {
-				shouldReconnect = true;
-			} else {
-				connectCurDevice("连接已断开, 正在重新连接...");
-			}
+//			if (paused) {
+//				shouldReconnect = true;
+//			} else {
+//				connectCurDevice("连接已断开, 正在重新连接...");
+//			}
 
 		}
 

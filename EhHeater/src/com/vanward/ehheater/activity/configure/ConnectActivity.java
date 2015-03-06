@@ -51,8 +51,6 @@ public class ConnectActivity extends GeneratedActivity {
 	private final static int LAN_SEARCHING = 1;
 	private final static int LAN_FOUND = 2;
 
-	private Button mBtnRetry;
-
 	/** 建立的连接类型, LAN / MQTT(大) */
 	private int connType = Integer.MAX_VALUE;
 
@@ -93,15 +91,6 @@ public class ConnectActivity extends GeneratedActivity {
 		}
 
 		setContentView(R.layout.activity_connect_as_dialog);
-		mBtnRetry = (Button) findViewById(R.id.awad_btn_retry);
-
-		mBtnRetry.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				connectToDevice();
-			}
-		});
 
 		connectToDevice();
 	}
@@ -163,9 +152,9 @@ public class ConnectActivity extends GeneratedActivity {
 		@Override
 		public boolean handleMessage(Message msg) {
 			Log.e(TAG, "timeoutHandler执行了");
-			if (!jobDone) {
+//			if (!jobDone) {
 				setOfflineResult();
-			}
+//			}
 			return false;
 		}
 	});
@@ -197,6 +186,7 @@ public class ConnectActivity extends GeneratedActivity {
 				XPGConnectClient.xpgcStopDiscovery();
 				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()后");
 				if (currentLanSearchingState == LAN_SEARCHING && t != null) {
+					Log.e(TAG, "执行了这里面...............");
 					new Timer().schedule(t, (long) (scanInterval * 1.2));
 					currentLanSearchingState = LAN_NONE;
 				}
@@ -342,6 +332,7 @@ public class ConnectActivity extends GeneratedActivity {
 			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);
 
 			setResult(RESULT_OK, data);
+			timeoutHandler.removeMessages(0);
 			finish();
 			break;
 		case 1:
@@ -431,6 +422,7 @@ public class ConnectActivity extends GeneratedActivity {
 			data.putExtra(Consts.INTENT_EXTRA_CONNECT_TEXT, conntext);
 
 			setResult(RESULT_OK, data);
+			timeoutHandler.removeMessages(0);
 			finish();
 		}
 	}

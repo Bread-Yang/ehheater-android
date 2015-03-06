@@ -75,7 +75,7 @@ public class WelcomeActivity extends GeneratedActivity {
 		MobclickAgent.updateOnlineConfig(this);
 
 		// 每5分钟请求一次
-		PollingUtils.startPollingService(this, 5, PollingService.class,
+		PollingUtils.startPollingService(this, 20, PollingService.class,
 				PollingService.ACTION);
 	}
 

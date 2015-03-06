@@ -48,6 +48,7 @@ public class AutoConfigureFailActivity extends EhHeaterBaseActivity {
 		super.onClick(v);
 		switch (v.getId()) {
 		case R.id.aacf_btn_retry:
+			setResult(RESULT_OK);
 			finish();
 			break;
 		case R.id.aacf_btn_manual:

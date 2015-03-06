@@ -6,18 +6,18 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.xtremeprog.xpgconnect.generated.generated;
 
 public class DialogUtil {
 	private static DialogUtil dialogUtil;
@@ -76,6 +76,25 @@ public class DialogUtil {
 								onCancel.run();
 							}
 							dialog.dismiss();
+//							HeaterInfo curHeater = new HeaterInfoService(act
+//									.getBaseContext())
+//									.getCurrentSelectedHeater();
+//							if (curHeater == null) {
+//								return;
+//							}
+//							switch (new HeaterInfoService(act)
+//									.getHeaterType(curHeater)) {
+//							case ELECTRIC_HEATER:
+//								generated.SendStateReq(Global.connectId);
+//								break;
+//							case GAS_HEATER:
+//								generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
+//								break;
+//							case FURNACE:
+//								generated.SendDERYRefreshReq(Global.connectId);
+//								break;
+//
+//							}
 						}
 					});
 			dialog.findViewById(R.id.dr_btn_reconnect).setOnClickListener(
@@ -168,8 +187,8 @@ public class DialogUtil {
 	}
 
 	public static void dismissDialog() {
-//		if (dialog != null && dialog.isShowing()) {
-			if (dialog != null) {
+		// if (dialog != null && dialog.isShowing()) {
+		if (dialog != null) {
 			try {
 				dialog.dismiss();
 			} catch (Exception e) {

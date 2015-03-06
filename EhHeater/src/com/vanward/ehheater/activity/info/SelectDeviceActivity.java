@@ -30,7 +30,7 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		leftbutton.setOnClickListener(this);
 		if (getIntent().getBooleanExtra("isDeleteAll", false)) {
-			leftbutton.setVisibility(View.GONE);
+			// leftbutton.setVisibility(View.GONE);
 		}
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightbButton.setVisibility(View.GONE);
@@ -46,7 +46,14 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		if (arg0.getId() == R.id.ivTitleBtnLeft) {
-			onBackPressed();
+			if (getIntent().getBooleanExtra("isDeleteAll", false)) {
+				Intent intent = new Intent(this, LoginActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				finish();
+			} else {
+				onBackPressed();
+			}
 		} else if (arg0.getId() == R.id.elect) {
 			Intent intent = new Intent(getBaseContext(),
 					EasyLinkConfigureActivity.class);

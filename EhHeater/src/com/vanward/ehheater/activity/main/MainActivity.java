@@ -225,8 +225,8 @@ public class MainActivity extends BaseBusinessActivity implements
 					DialogUtil.instance().showReconnectDialog(new Runnable() {
 						@Override
 						public void run() {
-							CheckOnlineUtil.ins().start(getBaseContext(),
-									hser.getCurrentSelectedHeaterMac());
+//							CheckOnlineUtil.ins().start(getBaseContext(),
+//									hser.getCurrentSelectedHeaterMac());
 						}
 					}, MainActivity.this);
 				}

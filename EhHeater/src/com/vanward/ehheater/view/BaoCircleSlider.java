@@ -103,7 +103,7 @@ public class BaoCircleSlider extends View {
 
 		if (isFirstDisplay) {
 			ctrlIconViewCenterPoint = new Point(widthSpecSize / 2,
-					heightSpecSize - ctrlIconViewWidth / 3 * 2);
+					heightSpecSize - ctrlIconViewWidth / 2);
 			ctrlIconView.layout(widthSpecSize / 2 - ctrlIconViewWidth / 2,
 					heightSpecSize - ctrlIconViewWidth, widthSpecSize / 2
 							+ ctrlIconViewWidth / 2, heightSpecSize);
@@ -118,8 +118,9 @@ public class BaoCircleSlider extends View {
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		addImageView.layout(0, 0, widthSpecSize, widthSpecSize);
 
-		minusImageView.setLayoutParams(new LayoutParams(100, 100));
-		minusImageView.layout(0, 0, widthSpecSize, heightSpecSize);
+		minusImageView.setLayoutParams(new LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		minusImageView.layout(0, 0, widthSpecSize, widthSpecSize);
 	}
 
 	private void initRoutine() {
@@ -261,7 +262,7 @@ public class BaoCircleSlider extends View {
 		float angle = angleOfTouchPoint(touchPoint);
 		int value = valueOfAngle(angle);
 		// Log.e(TAG, "dealWithTouchPoint : " + "angle : " + angle);
-		 Log.e(TAG, "dealWithTouchPoint : " + "value : " + value);
+		// Log.e(TAG, "dealWithTouchPoint : " + "value : " + value);
 		setCurrentValue(value);
 	}
 
@@ -330,7 +331,7 @@ public class BaoCircleSlider extends View {
 
 	private Point iconCenterOfAngle(float angle) {
 		float normalAngle = 90 + angle; // 以最南端为起点，顺时针偏移角度
-		int radius = getWidth() / 2 - this.ctrlIconViewWidth / 3 * 2; // 半径
+		int radius = getWidth() / 2 - this.ctrlIconViewWidth / 3 * 2; // 半径, 可以改这里,但是圆圈会被切
 		// 已知圆心(x0, y0)和半径(r)、角度(a)，可求圆上一点(x1, y1), 公式: x1 = x0 + r * cos(a); y1
 		// = y0 + r * sin(a); (PS:计算机中的正余弦函数的参数为弧度，需要注意装换)
 		double radian = Math.toRadians(normalAngle);
@@ -366,7 +367,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_DOWN:
 
-//			Log.e(TAG, "1event : ACTION_DOWN");
+			// Log.e(TAG, "1event : ACTION_DOWN");
 
 			isInCtrlIcon = isTouchInCtrlIconView(touchPoint);
 			isOnline = isOnLine(touchPoint);
@@ -384,7 +385,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_MOVE:
 
-//			Log.e(TAG, "22event : ACTION_MOVE");
+			// Log.e(TAG, "22event : ACTION_MOVE");
 
 			getParent().requestDisallowInterceptTouchEvent(true);
 			if (isTouchCtrlIcon) {
@@ -405,7 +406,7 @@ public class BaoCircleSlider extends View {
 				setShowMinusImageView(!isAdd);
 				dealWithTouchPoint(touchPoint);
 				// setValue(currentValue); // 使ctrlIconView滚动,for test
-				Log.e(TAG, "currentValue : " + currentValue);
+				// Log.e(TAG, "currentValue : " + currentValue);
 				if (circleSliderListener != null) {
 					circleSliderListener.needChangeValue(
 							(int) this.currentValue, isAdd);
@@ -415,7 +416,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_UP:
 
-//			Log.e(TAG, "333event : ACTION_UP");
+			// Log.e(TAG, "333event : ACTION_UP");
 
 			if (isTouchCtrlIcon) {
 				float angle = angleOfTouchPoint(touchPoint);

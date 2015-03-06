@@ -559,9 +559,6 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		new SharedPreferUtils(this).put(ShareKey.CurDeviceAddress,
 				endpoint.getAddr());
 
-		Log.e("emmm", "finishingConfig:new heater saved!" + hinfo.getMac()
-				+ "-" + hinfo.getPasscode());
-
 		Log.e(TAG, "成功通过easylink将电器连上wifi");
 
 		String username = AccountService.getPendingUserId(getBaseContext());
@@ -649,8 +646,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			if (mType == HeaterType.FURNACE) {
 				intent.putExtra("isFurnace", true);
 			}
-			startActivity(intent);
-			onBackPressed();
+			startActivityForResult(intent, 0);
 		}
 
 		@Override
@@ -666,6 +662,14 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		if (mEasyLinkTimeoutTimer != null) {
 			mEasyLinkTimeoutTimer.cancel();
 			mEasyLinkTimeoutTimer = null;
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			onBackPressed();
 		}
 	}
 }

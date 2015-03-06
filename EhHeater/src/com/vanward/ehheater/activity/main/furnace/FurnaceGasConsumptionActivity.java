@@ -122,10 +122,9 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	private TakeDataThread threadFor5minute;
 
 	private void init() {
-		// did = new
-		// HeaterInfoService(this).getCurrentSelectedHeater().getDid();
-		did = "Twv7ZQwEafRUqgJvC9YEZH";
-		// uid = AccountService.getUserId(getBaseContext());
+		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
+		uid = AccountService.getUserId(getBaseContext());
+		// did = "Twv7ZQwEafRUqgJvC9YEZH";
 
 		isPowerOffOrOffline = getIntent().getBooleanExtra(
 				"isPowerOffOrOffline", false);

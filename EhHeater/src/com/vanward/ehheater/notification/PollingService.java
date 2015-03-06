@@ -36,7 +36,6 @@ public class PollingService extends Service {
 	private HttpFriend mHttpFriend;
 	private String uid;
 	private String electicMac, gasMac, furnaceMac;
-	private boolean passOneHour = true;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -92,6 +91,11 @@ public class PollingService extends Service {
 		}
 	}
 
+	private long magnesiumNotificationTimeStamp;
+	private long waterQualityNotificationTimeStamp;
+	private long electricErrorNotificationTimeStamp;
+	private int electricErrorCode = -1;
+
 	/** 电热水器故障 */
 	private void checkElecticHeaterInfo() {
 		if (null != uid && !"".equals(uid)) { // 有uid的时候才请求
@@ -136,32 +140,53 @@ public class PollingService extends Service {
 									JSONObject result = json
 											.getJSONObject("result");
 									try {
-										short electicErrorCode = (short) result
+										short errorCode = (short) result
 												.getInt("error");
 
-										switch (electicErrorCode) {
-										case 160: // 防冻
-											showNotification(
-													0,
-													R.string.freezeProof_warn_title,
-													R.string.freezeProof_tips);
-											break;
-										case 226:
-											showNotification(0, "干烧故障", "干烧故障");
-											break;
-										case 227:
-											showNotification(0, "传感器故障",
-													"传感器故障");
-											break;
-										case 228:
-											showNotification(0, "超温故障", "超温故障");
-											break;
+										if (errorCode == electricErrorCode
+												&& !(electricErrorNotificationTimeStamp + 1000 * 60 * 60 <= System
+														.currentTimeMillis())) {
+											return;
+										}
+										if (errorCode != 0) {
+											electricErrorCode = errorCode;
+											electricErrorNotificationTimeStamp = System
+													.currentTimeMillis();
+											magnesiumNotificationTimeStamp = 0;
+											waterQualityNotificationTimeStamp = 0;
 
+											switch (errorCode) {
+											case 160: // 防冻
+												showNotification(
+														0,
+														R.string.freezeProof_warn_title,
+														R.string.freezeProof_tips);
+												break;
+											case 226:
+												showNotification(0, "干烧故障",
+														"干烧故障");
+												break;
+											case 227:
+												showNotification(0, "传感器故障",
+														"传感器故障");
+												break;
+											case 228:
+												showNotification(0, "超温故障",
+														"超温故障");
+												break;
+											}
 										}
 
 										int heating_tube_time = result
 												.getInt("heating_tube_time");
-										if (electicErrorCode > 800 * 60) { // 镁棒
+										if (heating_tube_time > 800 * 60
+												&& (magnesiumNotificationTimeStamp + 1000 * 60 * 60 <= System
+														.currentTimeMillis())) { // 镁棒
+											magnesiumNotificationTimeStamp = System
+													.currentTimeMillis();
+											electricErrorNotificationTimeStamp = 0;
+											waterQualityNotificationTimeStamp = 0;
+
 											// 单位是分钟
 											showNotification(
 													0,
@@ -174,7 +199,14 @@ public class PollingService extends Service {
 
 										int machine_not_heating_time = result
 												.getInt("machine_not_heating_time");
-										if (machine_not_heating_time > 9 * 24 * 60) { // 单位是分钟
+										if (machine_not_heating_time > 9 * 24 * 60
+												&& (waterQualityNotificationTimeStamp + 1000 * 60 * 60 <= System
+														.currentTimeMillis())) { // 单位是分钟
+											waterQualityNotificationTimeStamp = System
+													.currentTimeMillis();
+											electricErrorNotificationTimeStamp = 0;
+											waterQualityNotificationTimeStamp = 0;
+
 											showNotification(0, "水质提醒",
 													"亲，我们发现您的热水器长时间没用了，为了您的健康，建议您排空污水后再使用。");
 											return;
@@ -201,6 +233,12 @@ public class PollingService extends Service {
 					});
 		}
 	}
+
+	private long waterFullNotificationTimestamp;
+	private long freezeProofNotificationTimeStamp;
+	private long oxygenNotificationTimeStamp;
+	private long gasErrorNotificationTimeStamp;
+	private int gasErrorCode = -1;
 
 	/** 燃热水器故障 */
 	private void checkGasHeaterInfo() {
@@ -243,36 +281,65 @@ public class PollingService extends Service {
 									JSONObject result = json
 											.getJSONObject("result");
 
-									short gasErrorCode = 0;
-									// 故障
-									try {
-										gasErrorCode = (short) result
-												.getInt("errorCode");
-									} catch (Exception e) {
-									}
-
 									// 防冻警报
 									int freezeProofingWarning = result
 											.getInt("freezeProofingWarning");
-									if (freezeProofingWarning == 1) {
+
+									if (freezeProofingWarning == 1
+											&& (freezeProofNotificationTimeStamp + 1000 * 60 * 60 <= System
+													.currentTimeMillis())) {
+										freezeProofNotificationTimeStamp = System
+												.currentTimeMillis();
+										waterFullNotificationTimestamp = 0;
+										oxygenNotificationTimeStamp = 0;
+										gasErrorNotificationTimeStamp = 0;
+
 										showNotification(
 												1,
 												R.string.freezeProof_warn_title,
 												R.string.freezeProof_tips);
+
 										return;
 									}
 
 									// 氧护警报
 									int oxygenWarning = result
 											.getInt("oxygenWarning");
-									if (oxygenWarning == 1) {
+
+									if (oxygenWarning == 1
+											&& (oxygenNotificationTimeStamp + 1000 * 60 * 60 <= System
+													.currentTimeMillis())) {
+										oxygenNotificationTimeStamp = System
+												.currentTimeMillis();
+										freezeProofNotificationTimeStamp = 0;
+										waterFullNotificationTimestamp = 0;
+										gasErrorNotificationTimeStamp = 0;
+
 										showNotification(1,
 												R.string.oxygen_warn,
 												R.string.oxygen_tips);
+
 										return;
 									}
 
-									if (gasErrorCode != 0) {
+									// 机器警报
+									short errorCode = (short) result
+											.getInt("errorCode");
+
+									if (errorCode == gasErrorCode
+											&& !(gasErrorNotificationTimeStamp + 1000 * 60 * 60 <= System
+													.currentTimeMillis())) {
+										return;
+									}
+
+									if (errorCode != 0) {
+										gasErrorCode = errorCode;
+										gasErrorNotificationTimeStamp = System
+												.currentTimeMillis();
+										freezeProofNotificationTimeStamp = 0;
+										waterFullNotificationTimestamp = 0;
+										oxygenNotificationTimeStamp = 0;
+
 										showNotification(
 												1,
 												"机器故障("
@@ -283,31 +350,24 @@ public class PollingService extends Service {
 														+ Integer
 																.toHexString(gasErrorCode)
 														+ ")");
+										return;
 									}
 
+									// 满水警报
 									int water_function = result
 											.getInt("water_function");
-									if (water_function == 2 && passOneHour) {
-										passOneHour = false;
+
+									if (water_function == 2
+											&& (waterFullNotificationTimestamp + 1000 * 60 * 60 <= System
+													.currentTimeMillis())) {
+										waterFullNotificationTimestamp = System
+												.currentTimeMillis();
+										freezeProofNotificationTimeStamp = 0;
+										oxygenNotificationTimeStamp = 0;
+										gasErrorNotificationTimeStamp = 0;
 
 										showNotification(1, R.string.tips,
 												R.string.full_water);
-
-										new CountDownTimer(1000 * 60 * 60, 1000) {
-
-											@Override
-											public void onTick(
-													long millisUntilFinished) {
-
-											}
-
-											@Override
-											public void onFinish() {
-												Log.e(TAG,
-														"CountDownTimer的onFinish()执行了");
-												passOneHour = true;
-											}
-										}.start();
 									}
 								}
 							} catch (Exception e) {
@@ -329,6 +389,9 @@ public class PollingService extends Service {
 					});
 		}
 	}
+
+	private long furnaceErrorNotificationTimeStamp;
+	private int furnaceErrorCode = -1;
 
 	/** 壁挂炉故障 */
 	private void checkFurnaceInfo() {
@@ -378,43 +441,55 @@ public class PollingService extends Service {
 											.getStringArray(
 													R.array.furnace_error_arrary);
 
-									switch (error) {
-									case 10:
-										showNotification(2, "壁挂炉故障",
-												errorStrings[0]);
-										break;
-									case 1:
-										showNotification(2, "壁挂炉故障",
-												errorStrings[1]);
-										break;
-									case 2:
-										showNotification(2, "壁挂炉故障",
-												errorStrings[2]);
-										break;
-									case 3:
-										showNotification(2, "壁挂炉故障",
-												errorStrings[3]);
-										break;
-									case 4:	
-										showNotification(2, "壁挂炉故障",
-												errorStrings[4]);
-										break;
-									case 6:
-										showNotification(2, "壁挂炉故障",
-												errorStrings[5]);
-										break;
-									case 7:
-										showNotification(2, "壁挂炉故障",
-												errorStrings[6]);
-										break;
-									case 8:
-										showNotification(2, "壁挂炉故障",
-												errorStrings[7]);
-										break;
-									case 9:
-										showNotification(2, "壁挂炉故障",
-												errorStrings[8]);
-										break;
+									if (furnaceErrorCode == error
+											&& !(furnaceErrorNotificationTimeStamp + 1000 * 60 * 60 <= System
+													.currentTimeMillis())) {
+										return;
+									}
+									if (error != 0) {
+
+										furnaceErrorNotificationTimeStamp = System
+												.currentTimeMillis();
+										furnaceErrorCode = error;
+
+										switch (error) {
+										case 10:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[0]);
+											break;
+										case 1:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[1]);
+											break;
+										case 2:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[2]);
+											break;
+										case 3:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[3]);
+											break;
+										case 4:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[4]);
+											break;
+										case 6:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[5]);
+											break;
+										case 7:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[6]);
+											break;
+										case 8:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[7]);
+											break;
+										case 9:
+											showNotification(2, "壁挂炉故障",
+													errorStrings[8]);
+											break;
+										}
 									}
 								}
 							} catch (Exception e) {

@@ -30,9 +30,10 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 		
 		XPGConnectClient.initClient(this);  
 		
-		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.DEVICE_FOUND_TIMER.swigValue(),5);
-		
+		// 加这行显示log详情
 //		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),3);
+		
+//		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.DEVICE_FOUND_TIMER.swigValue(),5);
 		
 //		LogcatFileManager.getInstance().startLogcatManager(getBaseContext());
 

@@ -46,7 +46,7 @@
                         android:checked="true"
                         android:drawableTop="@drawable/selector_bg_furnace_main_supply_heating_sanre"
                         android:gravity="center"
-                        android:text="设置45℃"
+                        android:text="@string/temperature_no_set"
                         android:textColor="@drawable/selector_text_color_furnace_main"
                         android:textSize="12sp" />
 
@@ -60,7 +60,7 @@
                         android:drawablePadding="-5dp"
                         android:drawableTop="@drawable/selector_bg_furnace_main_bath"
                         android:gravity="center"
-                        android:text="设置45℃"
+                        android:text="@string/temperature_no_set"
                         android:textColor="@drawable/selector_text_color_furnace_main"
                         android:textSize="12sp" />
                 </RadioGroup>
@@ -88,6 +88,7 @@
                 android:layout_width="270dp"
                 android:layout_height="270dp"
                 android:layout_below="@+id/rlt_mode"
+                 android:layout_marginTop="5dp"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/home_yuan_bg" />
 
@@ -199,7 +200,7 @@
             <com.vanward.ehheater.view.BaoCircleSlider
                 android:id="@+id/circle_slider"
                 android:layout_width="280dp"
-                android:layout_height="280dp"
+                android:layout_height="280dp" 
                 android:layout_below="@+id/rlt_mode"
                 android:layout_centerHorizontal="true" />
 
@@ -236,156 +237,151 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:id="@+id/llt_time"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/iv_circle_bg"
-                android:orientation="vertical" >
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical"
+                android:visibility="visible" >
 
                 <LinearLayout
-                    android:id="@+id/llt_time"
+                    android:id="@+id/btn_power"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="visible" >
+                    android:layout_marginLeft="30dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                    <LinearLayout
-                        android:id="@+id/btn_power"
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                        android:background="@drawable/icon_device_status" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_device_status" />
+                    <TextView
+                        android:id="@+id/tv_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/transparent"
+                        android:minHeight="20dp"
+                        android:text="@string/offline"
+                        android:textColor="@color/appointment_text_color"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/icon_device_consumption" />
+
+                    <LinearLayout
+                        android:id="@+id/llt_gas_consumption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="horizontal" >
 
                         <TextView
-                            android:id="@+id/tv_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
                             android:layout_marginLeft="10dp"
-                            android:background="@color/transparent"
-                            android:minHeight="20dp"
-                            android:text="@string/offline"
+                            android:text="@string/gas_consumption"
                             android:textColor="@color/appointment_text_color"
                             android:textSize="15dp" />
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal" >
-
-                        <ImageView
+                        <TextView
+                            android:id="@+id/tv_gas_consumption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:background="@drawable/icon_device_consumption" />
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="5dp"
+                            android:text="--"
+                            android:textColor="#FFf46310"
+                            android:textSize="20dp" />
 
-                        <LinearLayout
-                            android:id="@+id/llt_gas_consumption"
+                        <TextView
+                            android:id="@+id/tv_gas_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:layout_marginLeft="10dp"
-                                android:text="@string/gas_consumption"
-                                android:textColor="@color/appointment_text_color"
-                                android:textSize="15dp" />
-
-                            <TextView
-                                android:id="@+id/tv_gas_consumption"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:layout_marginLeft="5dp"
-                                android:text="--"
-                                android:textColor="#FFf46310"
-                                android:textSize="20dp" />
-
-                            <TextView
-                                android:id="@+id/tv_gas_unit"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="bottom"
-                                android:text="@string/gas_unit"
-                                android:textColor="#FFf46310" />
-                        </LinearLayout>
+                            android:layout_gravity="bottom"
+                            android:text="@string/gas_unit"
+                            android:textColor="#FFf46310" />
                     </LinearLayout>
                 </LinearLayout>
+            </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/llt_function"
+            <LinearLayout
+                android:id="@+id/llt_function"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp" >
+
+                <Button
+                    android:id="@+id/btn_appointment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:checked="true"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/selector_bg_furnace_main_appointment"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:padding="0dp"
+                    android:text="@string/appointment"
+                    android:textColor="@color/an_hui"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btn_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:paddingBottom="5dp" >
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/selector_bg_furnace_main_setting"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:padding="0dp"
+                    android:text="@string/setting"
+                    android:textColor="@color/an_hui" />
 
-                    <Button
-                        android:id="@+id/btn_appointment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:checked="true"
-                        android:drawablePadding="5dp"
-                        android:drawableTop="@drawable/selector_bg_furnace_main_appointment"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:padding="0dp"
-                        android:text="@string/appointment"
-                        android:textColor="@color/an_hui"
-                        android:textSize="15sp" />
-
-                    <Button
-                        android:id="@+id/btn_setting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:drawablePadding="5dp"
-                        android:drawableTop="@drawable/selector_bg_furnace_main_setting"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:padding="0dp"
-                        android:text="@string/setting"
-                        android:textColor="@color/an_hui" />
-
-                    <Button
-                        android:id="@+id/btn_intellectual"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="1"
-                        android:background="@color/transparent"
-                        android:button="@null"
-                        android:drawablePadding="5dp"
-                        android:drawableTop="@drawable/selector_bg_furnace_main_intellectual"
-                        android:enabled="false"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:text="@string/intellectual"
-                        android:textColor="@color/an_hui"
-                        android:textSize="15sp"
-                        android:visibility="visible" />
-                </LinearLayout>
+                <Button
+                    android:id="@+id/btn_intellectual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:button="@null"
+                    android:drawablePadding="5dp"
+                    android:drawableTop="@drawable/selector_bg_furnace_main_intellectual"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:text="@string/intellectual"
+                    android:textColor="@color/an_hui"
+                    android:textSize="15sp"
+                    android:visibility="visible" />
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
