@@ -36,7 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_mode"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/home_yuan_bg" />
+            android:background="@drawable/home_yuan_bg"
+            android:visibility="invisible" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -50,9 +51,9 @@
                 android:id="@+id/wave_bg"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="8dp"
                 android:background="@drawable/main_fire_level_1"
                 android:visibility="gone" />
 
@@ -103,8 +104,8 @@
 
                     <TextView
                         android:id="@+id/tempter"
-                        android:layout_height="wrap_content"
                         android:layout_width="80dp"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="--"
                         android:textColor="@color/title_color"

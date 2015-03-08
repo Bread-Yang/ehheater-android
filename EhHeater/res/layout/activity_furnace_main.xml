@@ -224,6 +224,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignTop="@+id/imageView1"
                 android:layout_marginLeft="31dp"
+                android:visibility="invisible"
                 android:background="@drawable/main_error" />
 
         </RelativeLayout>

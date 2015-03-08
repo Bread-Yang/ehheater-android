@@ -989,6 +989,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void needChangeValue(int value, boolean isAdd) {
+		if (statusResp == null) {
+			return;
+		}
 		if (rg_winner.getVisibility() == View.VISIBLE
 				&& rb_supply_heating.isChecked()) {
 			// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节

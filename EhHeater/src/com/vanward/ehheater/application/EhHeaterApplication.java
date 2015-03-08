@@ -41,11 +41,11 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 //				"fonts/number.otf");
 //
 		EhHeaterApplication.device_density = this.getResources()
-				.getDisplayMetrics().density;
+				.getDisplayMetrics().density; 
 		
 		Log.e(TAG, "density : " + EhHeaterApplication.device_density);
 		
-		Log.e(TAG, "getResources().getConfiguration().screenWidthDp : " + getResources().getConfiguration().screenWidthDp);
+//		Log.e(TAG, "getResources().getConfiguration().screenWidthDp : " + getResources().getConfiguration().screenWidthDp);
 	}
 
 	@Override 

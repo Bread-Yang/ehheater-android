@@ -4,10 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Region;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -25,6 +25,7 @@ public class BaoCircleSlider extends View {
 	private int value; // slider对外的值,即圆点的位置代表的值
 
 	private ImageView ctrlIconView;
+	private ImageView backImageView;
 	private ImageView addImageView;
 	private ImageView minusImageView;
 
@@ -64,6 +65,8 @@ public class BaoCircleSlider extends View {
 	private boolean showMinusImageView = false;
 
 	private CountDownTimer countDownTimer;
+
+	private int offset = 0;
 
 	public interface BaoCircleSliderListener {
 
@@ -114,13 +117,24 @@ public class BaoCircleSlider extends View {
 					ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 2);
 		}
 
+		float scale = this.getResources().getDisplayMetrics().density;
+		offset = (int) (8 * scale + 0.5f);
+		// int offset = 0;
+
 		addImageView.setLayoutParams(new LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		addImageView.layout(0, 0, widthSpecSize, widthSpecSize);
+		addImageView.layout(offset, offset, widthSpecSize - offset,
+				widthSpecSize - offset);
 
 		minusImageView.setLayoutParams(new LayoutParams(
 				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		minusImageView.layout(0, 0, widthSpecSize, widthSpecSize);
+		minusImageView.layout(offset, offset, widthSpecSize - offset,
+				widthSpecSize - offset);
+
+		backImageView.setLayoutParams(new LayoutParams(
+				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		backImageView.layout(offset, offset, widthSpecSize - offset,
+				widthSpecSize - offset);
 	}
 
 	private void initRoutine() {
@@ -146,6 +160,12 @@ public class BaoCircleSlider extends View {
 			minusImageView.setImageBitmap(BitmapThumbUtil
 					.decodeSampledBitmapFromResource(getResources(),
 							R.drawable.home_yuan_reduction, 300, 300));
+		}
+		if (backImageView == null) {
+			backImageView = new ImageView(getContext());
+			backImageView.setImageBitmap(BitmapThumbUtil
+					.decodeSampledBitmapFromResource(getResources(),
+							R.drawable.home_yuan_bg, 300, 300));
 		}
 	}
 
@@ -331,7 +351,8 @@ public class BaoCircleSlider extends View {
 
 	private Point iconCenterOfAngle(float angle) {
 		float normalAngle = 90 + angle; // 以最南端为起点，顺时针偏移角度
-		int radius = getWidth() / 2 - this.ctrlIconViewWidth / 3 * 2; // 半径, 可以改这里,但是圆圈会被切
+		int radius = getWidth() / 2 - this.ctrlIconViewWidth / 3 * 2; // 半径,
+																		// 可以改这里,但是圆圈会被切
 		// 已知圆心(x0, y0)和半径(r)、角度(a)，可求圆上一点(x1, y1), 公式: x1 = x0 + r * cos(a); y1
 		// = y0 + r * sin(a); (PS:计算机中的正余弦函数的参数为弧度，需要注意装换)
 		double radian = Math.toRadians(normalAngle);
@@ -489,18 +510,27 @@ public class BaoCircleSlider extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
+		canvas.save();
+		canvas.translate(offset, offset);
+		backImageView.draw(canvas);
+		canvas.restore();
+
 		if (showAddImageView) {
 			canvas.save();
 			canvas.rotate(minus_or_add_imageView_rotate_angle, getWidth() / 2,
 					getHeight() / 2);
+			canvas.translate(offset, offset);
 			addImageView.draw(canvas);
 			canvas.restore();
 		}
+
+		
 
 		if (showMinusImageView) {
 			canvas.save();
 			canvas.rotate(minus_or_add_imageView_rotate_angle, getWidth() / 2,
 					getHeight() / 2);
+			canvas.translate(offset, offset);
 			minusImageView.draw(canvas);
 			canvas.restore();
 		}
