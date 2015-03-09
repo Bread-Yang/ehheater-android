@@ -20,9 +20,10 @@ public class ManualConfigFailActivity extends EhHeaterBaseActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getBaseContext(), EasyLinkConfigureActivity.class);
+				intent.putExtra("isStep2", true);
 				startActivity(intent);
 			}
-		});
+		}); 
 		
 	}
 	

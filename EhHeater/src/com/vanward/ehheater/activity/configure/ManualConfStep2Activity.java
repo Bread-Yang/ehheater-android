@@ -69,6 +69,14 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 		ed_input_ssid = (EditText) findViewById(R.id.et_input_ssid);
 		mEtPsw = (EditText) findViewById(R.id.amc2_et_psw);
 		mBtnNext = (Button) findViewById(R.id.amc2_btn_next);
+		
+		if (getIntent().getBooleanExtra("isFurnace", false)) {
+			TextView tv_connect_device_title = (TextView) findViewById(R.id.tv_connect_device_title);
+			tv_connect_device_title.setText("连接壁挂炉");
+			
+			TextView tv_tips = (TextView) findViewById(R.id.tv_tips);
+			tv_tips.setText(R.string.set_device_tip3_eh_furnace);
+		}
 
 		lastConnectWifiSSID = new SharedPreferUtils(getBaseContext()).get(
 				ShareKey.PendingSsid, "").trim();

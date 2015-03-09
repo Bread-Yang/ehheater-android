@@ -86,10 +86,10 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:drawableLeft="@drawable/setting_icon_xiatian"
-            android:drawablePadding="13dp"
+            android:drawablePadding="11dp"
             android:textSize="18sp"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp"
+            android:paddingLeft="8dp"
             android:text="@string/winner_mode" />
 
         <Button
@@ -150,7 +150,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
-        android:paddingLeft="14dp"
+        android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp" >
 

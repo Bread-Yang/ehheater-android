@@ -560,6 +560,9 @@ public class PollingService extends Service {
 				public void run() {
 					Log.e(TAG, "PollingThread执行了");
 					// checkAppointment();
+					if ("".equals(AccountService.getUserPsw(getBaseContext()))) {
+						return;
+					}
 					checkElecticHeaterInfo();
 					checkGasHeaterInfo();
 					checkFurnaceInfo();

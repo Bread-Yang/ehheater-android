@@ -10,6 +10,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,7 +35,7 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 
 	private Timer mTimer;
 
-	@Override
+	@Override 
 	public void initUI() {
 		super.initUI();
 		setTopText(R.string.manual_conf_guide);
@@ -45,11 +46,18 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 		heaterSsid = getResources().getString(R.string.heater_wifi_ssid);
 
 		TextView t = (TextView) findViewById(R.id.amc1_tv);
-		TextStyleUtil.setColorStringInTextView(t,
-				getResources().getColor(R.color.title_color),
-				new String[] { heaterSsid });
+		t.setText(Html.fromHtml(getString(R.string.manual_operation_step)));
+		
+		if (getIntent().getBooleanExtra("isFurnace", false)) {
+			TextView tv_connect_device_title = (TextView) findViewById(R.id.tv_connect_device_title);
+			tv_connect_device_title.setText("连接壁挂炉");
+		}
+		
+//		TextStyleUtil.setColorStringInTextView(t,
+//				getResources().getColor(R.color.title_color),
+//				new String[] { heaterSsid });
 
-//		XPGConnectClient.initClient(this);
+		// XPGConnectClient.initClient(this);
 
 	}
 
@@ -57,22 +65,22 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 	protected void onResume() {
 		super.onResume();
 
-//		TimerTask timerTask = new TimerTask() {
-//
-//			@Override 
-//			public void run() {
-//				checkCurrentWifi();
-//			}
-//		};
-//
-//		if (mTimer == null) {
-//			mTimer = new Timer();
-//		}
-//		mTimer.schedule(timerTask, 0, 5000);
-		
+		// TimerTask timerTask = new TimerTask() {
+		//
+		// @Override
+		// public void run() {
+		// checkCurrentWifi();
+		// }
+		// };
+		//
+		// if (mTimer == null) {
+		// mTimer = new Timer();
+		// }
+		// mTimer.schedule(timerTask, 0, 5000);
+
 		checkCurrentWifi();
 	}
-	
+
 	private void checkCurrentWifi() {
 		WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
 		wifiManager.startScan();
@@ -90,56 +98,57 @@ public class ManualConfStep1Activity extends EhHeaterBaseActivity {
 			String last5Characters = mac.substring(mac.length() - 5,
 					mac.length());
 			String[] strings = last5Characters.split(":");
-			String targetSSID = "XPG-GAgent-"
-					+ strings[0].toUpperCase()
+			String targetSSID = "XPG-GAgent-" + strings[0].toUpperCase()
 					+ strings[1].toUpperCase();
-//			if (targetSSID.equals(ssid)) {
-				Log.e(TAG, "找到AP的热点了");
+			// if (targetSSID.equals(ssid)) {
+			Log.e(TAG, "找到AP的热点了");
 
-				WifiInfo info = wifiManager.getConnectionInfo();
-				String currentLinkSSID = info.getSSID();
-				if (currentLinkSSID == null) {
-					return;
+			WifiInfo info = wifiManager.getConnectionInfo();
+			String currentLinkSSID = info.getSSID();
+			if (currentLinkSSID == null) {
+				return;
+			}
+			Log.e(TAG, "当前已经连上的热点名称是 : " + currentLinkSSID);
+
+			Log.e(TAG, "改之前currentLinkSSID : " + currentLinkSSID);
+
+			currentLinkSSID = currentLinkSSID.replace("\"", "");
+
+			Log.e(TAG, "改之后currentLinkSSID : " + currentLinkSSID);
+			Log.e(TAG, "ssid : " + ssid);
+			Log.e(TAG, "targetSSID : " + targetSSID);
+
+			// if (!currentLinkSSID.equals("\"" + targetSSID + "\"")) {
+			if (!currentLinkSSID.equals(ssid)) {
+				Log.e(TAG, "正在连上设备热点");
+				// WifiAdmin wifiAdmin = new WifiAdmin(
+				// ManualConfStep1Activity.this);
+				// wifiAdmin.openWifi();
+				// wifiAdmin.addNetwork(wifiAdmin.CreateWifiInfo(ssid,
+				// "123456789", 3));
+			} else {
+				if (mTimer != null) {
+					mTimer.cancel();
+					mTimer = null;
 				}
-				Log.e(TAG, "当前已经连上的热点名称是 : " + currentLinkSSID);
-				
-				Log.e(TAG, "改之前currentLinkSSID : " + currentLinkSSID);
-				
-				currentLinkSSID = currentLinkSSID.replace("\"", "");
-				
-				Log.e(TAG, "改之后currentLinkSSID : " + currentLinkSSID);
-				Log.e(TAG, "ssid : " + ssid);
-				Log.e(TAG, "targetSSID : " + targetSSID);
-				
-//				if (!currentLinkSSID.equals("\"" + targetSSID + "\"")) {
-				if (!currentLinkSSID.equals(ssid)) {
-					Log.e(TAG, "正在连上设备热点");
-//					WifiAdmin wifiAdmin = new WifiAdmin(
-//							ManualConfStep1Activity.this);
-//					wifiAdmin.openWifi();
-//					wifiAdmin.addNetwork(wifiAdmin.CreateWifiInfo(ssid,
-//							"123456789", 3));
-				} else {
-					if (mTimer != null) {
-						mTimer.cancel();
-						mTimer = null;
+
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						Intent intent = new Intent(ManualConfStep1Activity.this, ManualConfStep2Activity.class);
+						intent.putExtra("isFurnace",
+								getIntent().getBooleanExtra("isFurnace", false));
+						startActivity(intent);
+						finish();
 					}
-
-					new Handler().postDelayed(new Runnable() {
-						
-						@Override
-						public void run() {
-							startActivity(new Intent(getBaseContext(),
-									ManualConfStep2Activity.class));
-							finish();
-						}
-					}, 5000);
-				}
-//				break;
-//			}
+				}, 5000);
+			}
+			// break;
+			// }
 		}
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();

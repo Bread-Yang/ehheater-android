@@ -37,20 +37,13 @@
             android:layout_below="@+id/tv_mode"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:visibility="invisible"
-            android:background="@drawable/home_yuan_bg" />
-        
-          <com.vanward.ehheater.view.BaoCircleSlider
-            android:id="@+id/circle_slider"
-            android:layout_width="280dp"
-            android:layout_height="280dp"
-            android:layout_below="@+id/tv_mode"
-            android:layout_marginTop="5dp"
-            android:layout_centerHorizontal="true" />
+            android:background="@drawable/home_yuan_bg"
+            android:visibility="invisible" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_alignBottom="@+id/circle_bg"
             android:layout_alignLeft="@+id/circle_bg"
             android:layout_alignRight="@+id/circle_bg"
@@ -71,9 +64,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/anim_furmace_main_heating"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -191,8 +184,14 @@
             </LinearLayout>
         </RelativeLayout>
 
-        
-        
+        <com.vanward.ehheater.view.BaoCircleSlider
+            android:id="@+id/circle_slider"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_below="@+id/tv_mode"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp" />
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

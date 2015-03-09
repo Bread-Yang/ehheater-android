@@ -63,6 +63,8 @@ public class BaoCircleSlider extends View {
 	private boolean showAddImageView = false;
 
 	private boolean showMinusImageView = false;
+	
+	private boolean showCtrlIconView = true;
 
 	private CountDownTimer countDownTimer;
 
@@ -537,28 +539,35 @@ public class BaoCircleSlider extends View {
 
 		canvas.save();
 		// canvas.rotate(270, getWidth() / 2, getHeight() / 2);
-		if (isInCtrlIcon) {
-			ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth
-					/ 3 * 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 3
-					* 2, ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 3 * 2,
-					ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 3 * 2);
-			canvas.translate(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 3
-					* 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 3 * 2);
-		} else {
-			ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth
-					/ 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
-					ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 2,
-					ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 2);
-			canvas.translate(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
-					ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2);
+		if (showCtrlIconView) {
+			if (isInCtrlIcon) {
+				ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth
+						/ 3 * 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 3
+						* 2, ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 3 * 2,
+						ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 3 * 2);
+				canvas.translate(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 3
+						* 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 3 * 2);
+			} else {
+				ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth
+						/ 2, ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2,
+						ctrlIconViewCenterPoint.x + ctrlIconViewWidth / 2,
+						ctrlIconViewCenterPoint.y + ctrlIconViewWidth / 2);
+				canvas.translate(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
+						ctrlIconViewCenterPoint.y - ctrlIconViewWidth / 2);
+			}
+			ctrlIconView.draw(canvas);
 		}
-		ctrlIconView.draw(canvas);
 		canvas.restore();
 	}
 
 	@Override
 	public void setVisibility(int visibility) {
-		super.setVisibility(visibility);
+//		super.setVisibility(visibility);
+		if (visibility == 0) {
+			showCtrlIconView = true;
+		} else {
+			showCtrlIconView = false;
+		}
 		// Log.e(TAG, "setVisibility调用了 : " + (visibility == View.VISIBLE));
 	}
 

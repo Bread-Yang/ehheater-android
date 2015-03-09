@@ -24,11 +24,13 @@ public class AutoConfigureFailActivity extends EhHeaterBaseActivity {
 
 		findViewById(R.id.aacf_btn_retry).setOnClickListener(this);
 		findViewById(R.id.aacf_btn_manual).setOnClickListener(this);
-		
+
 		boolean isFurnace = getIntent().getBooleanExtra("isFurnace", false);
 		if (isFurnace) {
-			((TextView) findViewById(R.id.tv_fail_title)).setText(R.string.setup_furnace_fail_title);
-			((TextView) findViewById(R.id.tv_fail_tips)).setText(R.string.setup_furnace_fail_tips);
+			((TextView) findViewById(R.id.tv_fail_title))
+					.setText(R.string.setup_furnace_fail_title);
+			((TextView) findViewById(R.id.tv_fail_tips))
+					.setText(R.string.setup_furnace_fail_tips);
 		}
 
 		IntentFilter filter = new IntentFilter(
@@ -52,8 +54,10 @@ public class AutoConfigureFailActivity extends EhHeaterBaseActivity {
 			finish();
 			break;
 		case R.id.aacf_btn_manual:
-			startActivity(new Intent(getBaseContext(),
-					ManualConfStep1Activity.class));
+			Intent intent = new Intent(this, ManualConfStep1Activity.class);
+			intent.putExtra("isFurnace",
+					getIntent().getBooleanExtra("isFurnace", false));
+			startActivity(intent);
 			break;
 		}
 	}

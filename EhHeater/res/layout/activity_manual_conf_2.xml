@@ -14,6 +14,7 @@
         android:layout_marginTop="32dp" >
 
         <TextView
+            android:id="@+id/tv_connect_device_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="68dp"
@@ -67,11 +68,12 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp"
-        android:text="请确保热水器与智能移动终端在同一无线局域网下进行连接"
+        android:text="set_device_tip3"
         android:textColor="@color/color1" />
 
     <TextView

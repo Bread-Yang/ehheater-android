@@ -145,6 +145,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
+		setIntent(intent);
 		Log.e(TAG, "onNewIntent执行了");
 	}
 
@@ -158,6 +159,9 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		// mRlStepContainer.removeAllViews();
 		// mRlStepContainer.addView(getStepView(1));
 		// }
+		if (getIntent().getBooleanExtra("isStep2", false)) {
+			onBackPressed();
+		}
 		XPGConnectClient.AddActivity(this);
 	}
 

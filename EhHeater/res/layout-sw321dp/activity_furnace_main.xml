@@ -93,19 +93,11 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/home_yuan_bg" />
             
-            
-            <com.vanward.ehheater.view.BaoCircleSlider
-                android:id="@+id/circle_slider"
-                android:layout_width="280dp"
-                android:layout_height="280dp" 
-                android:layout_below="@+id/rlt_mode"
-                android:layout_marginTop="5dp"
-                android:layout_centerHorizontal="true" />
-
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/iv_circle_bg"
+                android:layout_marginTop="5dp"
                 android:layout_alignLeft="@+id/iv_circle_bg"
                 android:layout_alignRight="@+id/iv_circle_bg"
                 android:layout_alignTop="@+id/iv_circle_bg" >
@@ -114,7 +106,6 @@
                     android:id="@+id/iv_fire_wave_animation"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:layout_marginBottom="4dp"
                     android:scaleType="center"
                     android:src="@drawable/main_fire_level_1"
                     android:visibility="invisible" />
@@ -124,8 +115,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="2dp"
+                    android:layout_marginTop="5dp"
                     android:src="@drawable/anim_furmace_main_heating"
-                    android:visibility="invisible" />
+                    android:visibility="visible" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -206,6 +198,16 @@
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
+            
+                
+            <com.vanward.ehheater.view.BaoCircleSlider
+                android:id="@+id/circle_slider"
+                android:layout_width="280dp"
+                android:layout_height="280dp" 
+                android:layout_below="@+id/rlt_mode"
+                android:layout_marginTop="5dp"
+                android:layout_centerHorizontal="true" />
+            
             
             <RelativeLayout
                 android:layout_width="fill_parent"
