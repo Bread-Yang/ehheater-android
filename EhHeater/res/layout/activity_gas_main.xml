@@ -32,8 +32,8 @@
 
         <ImageView
             android:id="@+id/circle_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+             android:layout_width="243dp"
+            android:layout_height="243dp"
             android:layout_below="@+id/tv_mode"
             android:layout_centerHorizontal="true"
             android:background="@drawable/home_yuan_bg"
@@ -43,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/circle_bg"
+             android:layout_marginTop="6dp"
             android:layout_alignLeft="@+id/circle_bg"
             android:layout_alignRight="@+id/circle_bg"
             android:layout_alignTop="@+id/circle_bg" >
@@ -55,7 +56,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/main_fire_level_1"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/hotanimition"
@@ -64,12 +65,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginTop="2dp"
                 android:background="@drawable/anim_furmace_main_heating"
-                android:visibility="gone" />
-
-            <com.vanward.ehheater.view.BaoCircleSlider
-                android:id="@+id/circle_slider"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
+                android:visibility="invisible" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -123,6 +119,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="-12dp"
                     android:layout_gravity="center_horizontal"
                     android:orientation="horizontal" >
 
@@ -185,6 +182,13 @@
                     android:textSize="20sp" />
             </LinearLayout>
         </RelativeLayout>
+        
+         <com.vanward.ehheater.view.BaoCircleSlider
+            android:id="@+id/circle_slider"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/tv_mode" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -286,7 +290,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/circle_bg"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-5dp"
+            android:layout_marginTop="8dp"
             android:orientation="vertical"
             android:visibility="visible" >
 

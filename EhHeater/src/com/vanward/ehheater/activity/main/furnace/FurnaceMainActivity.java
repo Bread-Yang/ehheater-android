@@ -578,11 +578,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 						|| rb_supply_heating.isChecked()) {
 					iv_fire_wave_animation.setVisibility(View.VISIBLE);
 				}
-				if (rb_supply_heating.isChecked()) {
+//				if (rb_supply_heating.isChecked()) {
 					if (pResp.getOnOff() == 1) {
 						tv_status.setText(R.string.supplying_heat);
 					}
-				}
+//				}
 			}
 
 			if (pResp.getBathWater() == 0 && pResp.getOnOff() == 1) { // 0 :
@@ -1021,9 +1021,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 							.setText(R.string.setting_temperature);
 					circle_slider.setValue(value);
 				}
-			}
+			} 
 		} else {
-			if (statusResp.getBathWater() == 0 && statusResp.getOnOff() == 1) {
+			if (statusResp.getBathWater() == 0 && statusResp.getOnOff() == 1) { 
 				if (statusResp.getBathMode() == 0) { // 0 - normal bath
 					if (48 < value) {
 						value = 48;

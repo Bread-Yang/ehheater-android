@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp"
-        android:text="set_device_tip3"
+        android:text="@string/set_device_tip3"
         android:textColor="@color/color1" />
 
     <TextView

@@ -303,8 +303,8 @@ public class BaoCircleSlider extends View {
 	private boolean isOnLine(Point point) {
 		float radius = getWidth() / 2;
 		float length = lengthOfTwoPoint(point, circleCenter);
-		boolean isOnline = (length < (radius + ctrlIconViewWidth))
-				&& (length > (radius - ctrlIconViewWidth));
+		boolean isOnline = (length < (radius + ctrlIconViewWidth * 3 / 2))
+				&& (length > (radius - ctrlIconViewWidth * 3 / 2));
 		// Log.e(TAG, "是否在圆环线上 : " + isOnline);
 		return isOnline;
 	}
@@ -385,6 +385,10 @@ public class BaoCircleSlider extends View {
 	public boolean onTouchEvent(MotionEvent event) {
 
 		Point touchPoint = new Point((int) event.getX(), (int) event.getY());
+		
+		if (!showCtrlIconView) {
+			return false; 
+		}
 
 		switch (event.getAction()) {
 
@@ -568,6 +572,7 @@ public class BaoCircleSlider extends View {
 		} else {
 			showCtrlIconView = false;
 		}
+		invalidate();
 		// Log.e(TAG, "setVisibility调用了 : " + (visibility == View.VISIBLE));
 	}
 

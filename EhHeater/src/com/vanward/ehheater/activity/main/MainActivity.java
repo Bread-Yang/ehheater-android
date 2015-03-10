@@ -929,9 +929,10 @@ public class MainActivity extends BaseBusinessActivity implements
 			// circularView.setAngle(new EhState(b).getTargetTemperature());
 			Drawable img = getBaseContext().getResources().getDrawable(
 					R.drawable.icon_temperature);
-			int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-			img.setBounds(0, 0, dp32, dp32);
-			temptertitleTextView.setCompoundDrawables(img, null, null, null);
+//			int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+//			img.setBounds(0, 0, dp32, dp32);
+			temptertitleTextView.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+			temptertitleTextView.setTag(false);
 			temptertitleTextView.setText("当前水温");
 			if (isError) {
 				tv_tempter.setText("--");
@@ -1093,6 +1094,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void didBeginTouchCircleSlider() {
 
 	}
+	
+	private boolean isSettingIcon = false;
 
 	@Override
 	public void needChangeValue(int value, boolean isAdd) {
@@ -1105,11 +1108,14 @@ public class MainActivity extends BaseBusinessActivity implements
 			circle_slider.setValue(value);
 
 			temptertitleTextView.setText("设置温度");
-			Drawable img = getBaseContext().getResources().getDrawable(
-					R.drawable.menu_icon_setting);
-			int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-			img.setBounds(0, 0, dp32, dp32);
-			temptertitleTextView.setCompoundDrawables(img, null, null, null);
+			if (!(Boolean)temptertitleTextView.getTag()) {
+				Drawable img = getBaseContext().getResources().getDrawable(
+						R.drawable.menu_icon_setting);
+//				int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+//				img.setBounds(0, 0, dp32, dp32);
+				temptertitleTextView.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+				temptertitleTextView.setTag(true);
+			}
 
 			tv_tempter.setText(value + "");
 		}
