@@ -44,7 +44,7 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 
 	@ViewInject(id = R.id.water_radiogroup, click = "")
 	RadioGroup waterGroup;
-	
+
 	GasCustomSetVo oldGasCustomSetVo;
 
 	@Override
@@ -125,27 +125,44 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 					.show();
 			return null;
 		}
-		
+
 		boolean isSameWithLastName = false;
 		if (oldGasCustomSetVo != null) {
 			if (modeName.equals(oldGasCustomSetVo.getName())) {
 				isSameWithLastName = true;
 			}
 		} else {
-			customSetVo.setSendId( new BaseDao(this).getDb().findAll(GasCustomSetVo.class).size() + 1);
+			List<GasCustomSetVo> list = new BaseDao(this).getDb()
+					.findAllByWhere(GasCustomSetVo.class,
+							" uid = '" + AccountService.getUserId(this) + "'");
+			for (GasCustomSetVo item : list) {
+				Log.e(TAG, "customSetVo的sendId是 : " + item.getSendId());
+			}
+			if (list.size() == 0) {
+				customSetVo.setSendId(1);
+			}
+			for (int i = 1; i <= list.size(); i++) {
+				if (list.get(i - 1).getSendId() != i) {
+					customSetVo.setSendId(i);
+					break;
+				}
+			}
+			if (customSetVo.getSendId() == 0) {
+				customSetVo.setSendId(list.size() + 1);
+			}
 		}
-		
+
 		if (!isSameWithLastName) {
 			List items = new BaseDao(this).getDb().findAllByWhere(
 					GasCustomSetVo.class, " name = '" + modeName + "'");
 
 			if (items.size() != 0) {
-				Toast.makeText(this, R.string.mode_name_exist, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(this, R.string.mode_name_exist,
+						Toast.LENGTH_SHORT).show();
 				return null;
 			}
 		}
-		
+
 		if (modeName.equals("舒适") || modeName.equals("厨房")
 				|| modeName.equals("浴缸") || modeName.equals("节能")
 				|| modeName.equals("智能")) {
@@ -214,7 +231,7 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 						@Override
 						public void run() {
 
-							SendMsgModel.setDIYModel(customSetVo.getId(),
+							SendMsgModel.setDIYModel(customSetVo.getSendId(),
 									customSetVo);
 
 						}
@@ -253,29 +270,29 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 	@Override
 	public void onProgressChanged(SeekBar seekbar1, int arg1, boolean arg2) {
 
-//		int position = seekbar1.getProgress();
-//		int temp = position + 35;
-//
-//		if (48 >= temp)
-//			;
-//		else if (49 == temp)
-//			temp = 48;
-//		else if (50 <= temp && 53 > temp)
-//			temp = 50;
-//		else if (53 <= temp && 58 > temp)
-//			temp = 55;
-//		else if (58 <= temp && 63 > temp)
-//			temp = 60;
-//		else if (63 <= temp && 65 >= temp)
-//			temp = 65;
-//
-//		float x = seekbar1.getWidth();
-//		float seekbarWidth = seekbar1.getX();
-//		float y = seekbar1.getY();
-//		float width = (position * x) / 100 + seekbarWidth;
-//		System.out.println("width: " + width);
-//		System.out.println("x: " + x);
-//		System.out.println("position: " + position);
+		// int position = seekbar1.getProgress();
+		// int temp = position + 35;
+		//
+		// if (48 >= temp)
+		// ;
+		// else if (49 == temp)
+		// temp = 48;
+		// else if (50 <= temp && 53 > temp)
+		// temp = 50;
+		// else if (53 <= temp && 58 > temp)
+		// temp = 55;
+		// else if (58 <= temp && 63 > temp)
+		// temp = 60;
+		// else if (63 <= temp && 65 >= temp)
+		// temp = 65;
+		//
+		// float x = seekbar1.getWidth();
+		// float seekbarWidth = seekbar1.getX();
+		// float y = seekbar1.getY();
+		// float width = (position * x) / 100 + seekbarWidth;
+		// System.out.println("width: " + width);
+		// System.out.println("x: " + x);
+		// System.out.println("position: " + position);
 	}
 
 	@Override
@@ -285,6 +302,6 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onStopTrackingTouch(SeekBar arg0) {
-//		seekBar.setProgress(heatmakeRange(arg0.getProgress() + 35) - 35);
+		// seekBar.setProgress(heatmakeRange(arg0.getProgress() + 35) - 35);
 	}
 }

@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -27,13 +29,13 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
+import com.vanward.ehheater.application.EhHeaterApplication;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -191,7 +193,28 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	}
 
 	private void setListener() {
-		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
+		final Button btn_left = (Button) findViewById(R.id.ivTitleBtnLeft);
+
+		((View) btn_left.getParent()).post(new Runnable() {
+			@Override
+			public void run() {
+				Rect bounds = new Rect();
+				btn_left.getHitRect(bounds);
+
+				bounds.left -= 20;
+				bounds.right += 30 * EhHeaterApplication.device_density + 0.5f;
+
+				TouchDelegate touchDelegate = new TouchDelegate(bounds,
+						btn_left);
+
+				if (View.class.isInstance(btn_left.getParent())) {
+					((View) btn_left.getParent())
+							.setTouchDelegate(touchDelegate);
+				}
+			}
+		});
+
+		btn_left.setOnClickListener(this);
 		btn_top_right.setOnClickListener(this);
 		btn_appointment.setOnClickListener(this);
 		llt_gas_consumption.setOnClickListener(this);
@@ -578,11 +601,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 						|| rb_supply_heating.isChecked()) {
 					iv_fire_wave_animation.setVisibility(View.VISIBLE);
 				}
-//				if (rb_supply_heating.isChecked()) {
-					if (pResp.getOnOff() == 1) {
-						tv_status.setText(R.string.supplying_heat);
-					}
-//				}
+				// if (rb_supply_heating.isChecked()) {
+				if (pResp.getOnOff() == 1) {
+					tv_status.setText(R.string.supplying_heat);
+				}
+				// }
 			}
 
 			if (pResp.getBathWater() == 0 && pResp.getOnOff() == 1) { // 0 :
@@ -591,7 +614,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 																		// current
 				if (rb_bath.isChecked()) {
 					iv_rotate_animation.setVisibility(View.VISIBLE);
-//					iv_fire_wave_animation.setVisibility(View.VISIBLE);
+					// iv_fire_wave_animation.setVisibility(View.VISIBLE);
 					tv_current_or_setting_temperature_tips
 							.setText(R.string.outlet_temperature);
 					tv_temperature.setText(pResp.getBathTemNow() + "");
@@ -629,7 +652,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			Log.e(TAG, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
 			Log.e(TAG, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
 		} else {
-//			tv_gas_unit.setVisibility(View.GONE);
+			// tv_gas_unit.setVisibility(View.GONE);
 			tv_gas_consumption.setText(R.string.no_set);
 		}
 	}
@@ -1021,9 +1044,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 							.setText(R.string.setting_temperature);
 					circle_slider.setValue(value);
 				}
-			} 
+			}
 		} else {
-			if (statusResp.getBathWater() == 0 && statusResp.getOnOff() == 1) { 
+			if (statusResp.getBathWater() == 0 && statusResp.getOnOff() == 1) {
 				if (statusResp.getBathMode() == 0) { // 0 - normal bath
 					if (48 < value) {
 						value = 48;

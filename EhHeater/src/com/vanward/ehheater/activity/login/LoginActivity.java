@@ -150,17 +150,17 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.e("emmm", "login paused");
 		XPGConnectClient.RemoveActivity(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e("emmm", "login resumed");
 
-		et_user.setText(AccountService.getUserId(this));
-		et_pwd.setText("");
+		if ("".equals(et_user.getText().toString())) {
+			et_user.setText(AccountService.getUserId(this));
+		}
+//		et_pwd.setText("");
 
 		XPGConnectClient.AddActivity(this);
 	}

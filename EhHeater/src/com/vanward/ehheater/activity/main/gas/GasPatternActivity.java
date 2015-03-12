@@ -395,7 +395,7 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 																		SendMsgModel
 																				.setDIYModel(
 																						customSetVo
-																								.getId(),
+																								.getSendId(),
 																								tempcustomSetVo);
 																		finish();
 																	} else {
@@ -441,7 +441,7 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 				new BaseDao(GasPatternActivity.this).getDb().update(
 						customSetVo);
 				
-				SendMsgModel.setDIYModel(customSetVo.getId(), customSetVo);
+				SendMsgModel.setDIYModel(customSetVo.getSendId(), customSetVo);
 				finish();
 			}
 		};

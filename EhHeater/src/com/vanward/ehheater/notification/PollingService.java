@@ -561,6 +561,22 @@ public class PollingService extends Service {
 					Log.e(TAG, "PollingThread执行了");
 					// checkAppointment();
 					if ("".equals(AccountService.getUserPsw(getBaseContext()))) {
+						// electic heater
+						magnesiumNotificationTimeStamp = 0;
+						waterQualityNotificationTimeStamp = 0;
+						electricErrorNotificationTimeStamp = 0;
+						electricErrorCode = -1;
+
+						// gas heater
+						waterFullNotificationTimestamp = 0;
+						freezeProofNotificationTimeStamp = 0;
+						oxygenNotificationTimeStamp = 0;
+						gasErrorNotificationTimeStamp = 0;
+						gasErrorCode = -1;
+
+						// furnace
+						furnaceErrorNotificationTimeStamp = 0;
+						furnaceErrorCode = -1;
 						return;
 					}
 					checkElecticHeaterInfo();

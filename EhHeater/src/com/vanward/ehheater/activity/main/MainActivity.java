@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InfoTipActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentListActivity;
+import com.vanward.ehheater.application.EhHeaterApplication;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -225,8 +228,8 @@ public class MainActivity extends BaseBusinessActivity implements
 					DialogUtil.instance().showReconnectDialog(new Runnable() {
 						@Override
 						public void run() {
-//							CheckOnlineUtil.ins().start(getBaseContext(),
-//									hser.getCurrentSelectedHeaterMac());
+							// CheckOnlineUtil.ins().start(getBaseContext(),
+							// hser.getCurrentSelectedHeaterMac());
 						}
 					}, MainActivity.this);
 				}
@@ -331,7 +334,28 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void initView() {
-		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
+		final Button btn_left = (Button) findViewById(R.id.ivTitleBtnLeft);
+
+		((View) btn_left.getParent()).post(new Runnable() {
+			@Override
+			public void run() {
+				Rect bounds = new Rect();
+				btn_left.getHitRect(bounds);
+
+				bounds.left -= 20;
+				bounds.right += 30 * EhHeaterApplication.device_density + 0.5f;
+
+				TouchDelegate touchDelegate = new TouchDelegate(bounds,
+						btn_left);
+
+				if (View.class.isInstance(btn_left.getParent())) {
+					((View) btn_left.getParent())
+							.setTouchDelegate(touchDelegate);
+				}
+			}
+		});
+
+		btn_left.setOnClickListener(this);
 		rightButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightButton.setOnClickListener(this);
 		btn_appointment = (Button) findViewById(R.id.appointment_btn);
@@ -929,9 +953,10 @@ public class MainActivity extends BaseBusinessActivity implements
 			// circularView.setAngle(new EhState(b).getTargetTemperature());
 			Drawable img = getBaseContext().getResources().getDrawable(
 					R.drawable.icon_temperature);
-//			int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-//			img.setBounds(0, 0, dp32, dp32);
-			temptertitleTextView.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+			// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+			// img.setBounds(0, 0, dp32, dp32);
+			temptertitleTextView.setCompoundDrawablesWithIntrinsicBounds(img,
+					null, null, null);
 			temptertitleTextView.setTag(false);
 			temptertitleTextView.setText("当前水温");
 			if (isError) {
@@ -1030,6 +1055,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		leavewater.setText("--%");
 		powerTv.setText("--");
 		target_tem.setText("--");
+		btn_power.setSelected(false);
 		btn_power.setEnabled(false);
 		// llt_power.setEnabled(false);
 		findViewById(R.id.pattern).setEnabled(false);
@@ -1094,7 +1120,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void didBeginTouchCircleSlider() {
 
 	}
-	
+
 	private boolean isSettingIcon = false;
 
 	@Override
@@ -1108,12 +1134,16 @@ public class MainActivity extends BaseBusinessActivity implements
 			circle_slider.setValue(value);
 
 			temptertitleTextView.setText("设置温度");
-			if (!(Boolean)temptertitleTextView.getTag()) {
+			if (temptertitleTextView.getTag() == null) {
+				temptertitleTextView.setTag(false);
+			}
+			if (!(Boolean) temptertitleTextView.getTag()) {
 				Drawable img = getBaseContext().getResources().getDrawable(
 						R.drawable.menu_icon_setting);
-//				int dp32 = PxUtil.dip2px(getBaseContext(), 32);
-//				img.setBounds(0, 0, dp32, dp32);
-				temptertitleTextView.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
+				// int dp32 = PxUtil.dip2px(getBaseContext(), 32);
+				// img.setBounds(0, 0, dp32, dp32);
+				temptertitleTextView.setCompoundDrawablesWithIntrinsicBounds(
+						img, null, null, null);
 				temptertitleTextView.setTag(true);
 			}
 

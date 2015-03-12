@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -16,6 +17,7 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -38,6 +40,7 @@ import com.vanward.ehheater.activity.info.InfoTipActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.gas.GasPatternActivity;
+import com.vanward.ehheater.application.EhHeaterApplication;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -361,7 +364,28 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	}
 
 	private void initView(Bundle savedInstanceState) {
-		((Button) findViewById(R.id.ivTitleBtnLeft)).setOnClickListener(this);
+		final Button btn_left = (Button) findViewById(R.id.ivTitleBtnLeft);
+
+		((View) btn_left.getParent()).post(new Runnable() {
+			@Override
+			public void run() {
+				Rect bounds = new Rect();
+				btn_left.getHitRect(bounds);
+
+				bounds.left -= 20;
+				bounds.right += 30 * EhHeaterApplication.device_density + 0.5f;
+
+				TouchDelegate touchDelegate = new TouchDelegate(bounds,
+						btn_left);
+
+				if (View.class.isInstance(btn_left.getParent())) {
+					((View) btn_left.getParent())
+							.setTouchDelegate(touchDelegate);
+				}
+			}
+		});
+
+		btn_left.setOnClickListener(this);
 		rightButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightButton.setBackgroundResource(R.drawable.right_button_selector);
 		rightButton.setOnClickListener(this);
@@ -873,37 +897,22 @@ public class GasMainActivity extends BaseBusinessActivity implements
 											.getUserId(GasMainActivity.this)
 									+ "'");
 			Log.e(TAG, "GasCustomSetVo的大小是" + list.size());
-			if (list.size() >= pResp.getCustomFunction()) {
-				// for (int i = 0; i < list.size(); i++) {
-				// GasCustomSetVo customSetVo = list.get(i);
-				// Log.e(TAG, "customSetVo.getWaterval() : " +
-				// customSetVo.getWaterval());
-				// Log.e(TAG, "pResp.getSetWater_power() : " +
-				// pResp.getSetWater_power());
-				// Log.e(TAG, "customSetVo.getTempter()  : " +
-				// customSetVo.getTempter() );
-				// Log.e(TAG, "pResp.getTargetTemperature() : " +
-				// pResp.getTargetTemperature());
-				// if (customSetVo.getTempter() == pResp
-				// .getTargetTemperature()) {
-				// if (customSetVo.isSet()) {
-				// tv_mode.setText(customSetVo.getName());
-				// break;
-				// }
-				// }
-				// if (i == list.size() - 1) {
-				// tv_mode.setText("自定义模式");
-				// }
-				// }
-				GasCustomSetVo customSetVo = list.get(pResp.getCustomFunction() - 1);
-				customSetVo.setTempter(pResp.getTargetTemperature());
-				Log.e(TAG, "getTargetTemperature : " + pResp.getTargetTemperature());
-				Log.e(TAG, "customSetVo.getName : " + customSetVo.getName());
-				Log.e(TAG, "customSetVo.getTempter : " + customSetVo.getTempter());
-				Log.e(TAG, "customSetVo.getSendId : " + customSetVo.getSendId());
-				new BaseDao(this).getDb().update(customSetVo);
-				String name = customSetVo.getName();
-				tv_mode.setText(name);
+			Log.e(TAG, "pResp.getCustomFunction() == " + pResp.getCustomFunction());
+			if (list.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					GasCustomSetVo customSetVo = list.get(i);
+					if (customSetVo.getSendId() == pResp.getCustomFunction()) {
+						customSetVo.setTempter(pResp.getTargetTemperature());
+						Log.e(TAG, "getTargetTemperature : " + pResp.getTargetTemperature());
+						Log.e(TAG, "customSetVo.getName : " + customSetVo.getName());
+						Log.e(TAG, "customSetVo.getTempter : " + customSetVo.getTempter());
+						Log.e(TAG, "customSetVo.getSendId : " + customSetVo.getSendId());
+						new BaseDao(this).getDb().update(customSetVo);
+						String name = customSetVo.getName();
+						tv_mode.setText(name);
+						break;
+					}
+				}
 			} else {
 				tv_mode.setText("自定义模式");
 			}

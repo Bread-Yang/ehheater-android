@@ -198,7 +198,9 @@ public class BaoDialogShowUtil {
 			super.dismiss();
 		}
 
+		@Override
 		public void onDetachedFromWindow() {
+			super.onDetachedFromWindow();
 			isDetach = true;
 		};
 	}

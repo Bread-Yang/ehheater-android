@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">万和云智能</string>
-    <string name="version">版本：v 1.0.0 B 0.18</string>
+    <string name="version">版本：v 1.0.0 B 0.19</string>
     <string name="heater">热水器</string>
     <string name="account">用户名</string>
     <string name="password">密码</string>

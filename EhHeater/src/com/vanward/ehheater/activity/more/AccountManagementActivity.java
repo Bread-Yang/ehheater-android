@@ -61,7 +61,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 		}
 
 		if (view == rlt_change_password) {
-			intent.setClass(getBaseContext(), ChangePasswordActivity2.class);
+			intent.setClass(getBaseContext(), ChangePasswordActivity.class);
 			startActivityForResult(intent, 1);
 		}
 

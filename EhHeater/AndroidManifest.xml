@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vanward.ehheater"
     android:versionCode="1"
-    android:versionName="b018" >
+    android:versionName="b019" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -251,10 +251,6 @@
         </activity>
         <activity
             android:name=".activity.more.ChangePasswordActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".activity.more.ChangePasswordActivity2"
             android:screenOrientation="portrait" >
         </activity>
 

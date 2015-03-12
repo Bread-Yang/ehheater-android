@@ -596,9 +596,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				dialog.dismiss();
-
 			}
 		});
 
