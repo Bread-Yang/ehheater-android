@@ -837,7 +837,7 @@ public class WheelView extends View {
 			if (heightSpecMode == MeasureSpec.AT_MOST) {
 				setHeight = Math.min(setHeight, heightSpecSize);
 			}
-
+			
 			// MeasureSpec.UNSPECIFIED是未指定尺寸，这种情况不多，一般都是父控件是AdapterView，通过measure方法传入的模式。
 		}
 

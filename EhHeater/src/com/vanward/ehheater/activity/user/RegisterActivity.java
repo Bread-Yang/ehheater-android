@@ -26,10 +26,13 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.GizwitsErrorMsg;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
@@ -38,8 +41,8 @@ import com.xtremeprog.xpgconnect.generated.UserRegisterResp_t;
 
 public class RegisterActivity extends EhHeaterBaseActivity {
 
-	private EditText et_nickname, mEtPhone, mEtPsw, mEtPsw2;
-	private Button mBtnConfirm;
+	private EditText et_nickname, mEtPhone, mEtPsw, mEtPsw2, et_captcha;
+	private Button mBtnConfirm, btn_acquire_captcha;
 	private CheckBox mCbShowPsw;
 	private HttpFriend mHttpFriend;
 
@@ -52,12 +55,15 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 		setLeftButtonBackground(R.drawable.icon_back);
 
 		et_nickname = (EditText) findViewById(R.id.et_nickname);
+		et_captcha = (EditText) findViewById(R.id.et_captcha);
 		mEtPhone = (EditText) findViewById(R.id.ar_et_phone);
 		mEtPsw = (EditText) findViewById(R.id.ar_et_psw);
 		mEtPsw2 = (EditText) findViewById(R.id.ar_et_confirm_psw);
 		mBtnConfirm = (Button) findViewById(R.id.ar_btn_confirm);
+		btn_acquire_captcha = (Button) findViewById(R.id.btn_acquire_captcha);
 		mCbShowPsw = (CheckBox) findViewById(R.id.ar_chkbx_showpsw);
 
+		btn_acquire_captcha.setOnClickListener(this);
 		mEtPhone.setOnClickListener(this);
 		mEtPsw.setOnClickListener(this);
 		mEtPsw2.setOnClickListener(this);
@@ -89,12 +95,24 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 		super.onClick(v);
 
 		switch (v.getId()) {
+		case R.id.btn_acquire_captcha:
+			if (isInputValid()) {
+				XPGConnectClient.xpgc4GetMobileAuthCode(Consts.VANWARD_APP_ID,
+						mEtPhone.getText().toString());
+				btn_acquire_captcha.setEnabled(false);
+			}
+			break;
 		case R.id.ar_btn_confirm:
 			if (!NetworkStatusUtil.isConnected(this)) {
-				Toast.makeText(getBaseContext(), R.string.check_network, 500).show();
+				Toast.makeText(getBaseContext(), R.string.check_network, 500)
+						.show();
 				return;
 			}
 			if (isInputValid()) {
+				if (TextUtils.isEmpty(et_captcha.getText().toString())) {
+					Toast.makeText(getBaseContext(), "请输入验证码", 1000).show();
+					return;
+				}
 				DialogUtil.instance().showLoadingDialog(this, "正在验证，请稍后...");
 				new Timer().schedule(new TimerTask() {
 					@Override
@@ -108,9 +126,13 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 				new AsyncTask<Void, Void, Void>() {
 					@Override
 					protected Void doInBackground(Void... params) {
-						// 发现这个方法会卡ui线程
-						XPGConnectClient.xpgcRegister(mEtPhone.getText()
-								.toString(), mEtPsw.getText().toString());
+						// XPGConnectClient.xpgcRegister(mEtPhone.getText()
+						// .toString(), mEtPsw.getText().toString());
+						XPGConnectClient.xpgc4CreateUserByPhone(
+								Consts.VANWARD_APP_ID, mEtPhone.getText()
+										.toString(), mEtPsw.getText()
+										.toString(), et_captcha.getText()
+										.toString());
 						return null;
 					}
 				}.execute();
@@ -121,13 +143,82 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			onBackPressed();
 			break;
 		}
+	}
 
+	@Override
+	public void onV4CreateUserByPhone(int errorCode, String uid, String token,
+			String expire_at) {
+		L.e(this, "onV4CreateUserByPhone()");
+		super.onV4CreateUserByPhone(errorCode, uid, token, expire_at);
+		if (errorCode == 0) {
+			
+			Global.uid = uid;
+			Global.token = token;
+			
+			Toast.makeText(getBaseContext(), "注册成功", 1000).show();
+			
+			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
+					.toString(), mEtPsw.getText().toString());
+			AccountService.setUser(getBaseContext(), mEtPhone.getText()
+					.toString(), mEtPsw.getText().toString());
+
+			String requestURL = "userinfo/saveMemberInfo";
+
+			AjaxParams params = new AjaxParams();
+			params.put("uid", mEtPhone.getText().toString());
+			params.put("userName", et_nickname.getText().toString());
+
+			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					params, new AjaxCallBack<String>() {
+						public void onSuccess(String jsonString) {
+							try {
+								JSONObject json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									startActivity(new Intent(getBaseContext(),
+											SelectDeviceActivity.class));
+									new SharedPreferUtils(getBaseContext())
+											.put(ShareKey.UserNickname,
+													et_nickname.getText()
+															.toString().trim());
+									finish();
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+
+							DialogUtil.dismissDialog();
+						};
+
+						@Override
+						public void onFailure(Throwable t, int errorNo,
+								String strMsg) {
+							super.onFailure(t, errorNo, strMsg);
+							Log.e("注册账号的时候请求昵称失败", "注册账号的时候请求昵称失败");
+							startActivity(new Intent(getBaseContext(),
+									SelectDeviceActivity.class));
+							new SharedPreferUtils(getBaseContext()).put(
+									ShareKey.UserNickname, "");
+							finish();
+							DialogUtil.dismissDialog();
+						}
+					});
+		
+		} else {
+			DialogUtil.dismissDialog();
+			Toast.makeText(getBaseContext(),
+					GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), 3000)
+					.show();
+			btn_acquire_captcha.setEnabled(true);
+			et_captcha.setText("");
+		}
 	}
 
 	@Override
 	public void OnUserRegisterResp(UserRegisterResp_t pResp, int nConnId) {
 		super.OnUserRegisterResp(pResp, nConnId);
-		Log.e("emmm", "OnUserRegisterResp:" + pResp.getResult());
+		L.e(this, "OnUserRegisterResp()");
 
 		if (pResp.getResult() == 0) {
 			Toast.makeText(getBaseContext(), "注册成功", 1000).show();
@@ -230,11 +321,12 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			return false;
 		}
 
-//		if (6 > mEtPsw2.getText().length() || 18 < mEtPsw2.getText().length()) {
-//			Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
-//					Toast.LENGTH_SHORT).show();
-//			return false;
-//		}
+		// if (6 > mEtPsw2.getText().length() || 18 <
+		// mEtPsw2.getText().length()) {
+		// Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
+		// Toast.LENGTH_SHORT).show();
+		// return false;
+		// }
 
 		if (!pswMatch) {
 			Toast.makeText(getBaseContext(), R.string.new_pwd_error, 1000)

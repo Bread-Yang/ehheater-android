@@ -48,6 +48,8 @@ public class Consts {
 	public static final String ELECTRIC_HEATER_P_KEY = "c2db7fd028fd11e4b605001ec9b6dcfe";
 	public static final String GAS_HEATER_P_KEY = "b82d55ee2f3e11e488f7001ec9b6dcfe";
 	public static final String FURNACE_PRODUCT_KEY = "d787108d040f4e838d04dff28e95ea30";
+	
+	public static final String VANWARD_APP_ID = "ded612c2d53d41b3b8f03fd986f1d94a";
 
 	public static String getHeaterName(HeaterInfo heater) {
 		return heater.getName();

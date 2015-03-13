@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.service.AccountService;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.PxUtil;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -39,6 +37,8 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		L.e(this, "onCreate");
+		
 //		setContentView(initContentView());
 		
 		username = getIntent().getStringExtra(Consts.INTENT_EXTRA_USERNAME);
@@ -55,8 +55,15 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 			return;
 		}
 		
-		XPGConnectClient.xpgcLogin2Wan(username, userpsw, "", "");
+//		XPGConnectClient.xpgcLogin2Wan(username, userpsw, "", "");
 //		XPGConnShortCuts.connect2big();
+		
+		if ("".equals(Global.token) || "".equals(Global.uid)) {
+			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, username, userpsw);
+		} else {
+			XPGConnectClient.xpgc4BindDevice(Consts.VANWARD_APP_ID, Global.token, did2bind, passcode2bind, "");
+		}
+		
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
@@ -86,9 +93,25 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 //	}
 	
 	@Override
+	public void onV4Login(int errorCode, String uid, String token,
+			String expire_at) {
+		L.e(this, "onV4Login()");
+		if (errorCode == 0) {
+			Global.uid = uid;
+			Global.token = token;
+			
+			L.e(this, "token : " + token);
+			L.e(this, "did2bind : " + did2bind);
+			L.e(this, "passcode2bind : " + passcode2bind);
+			
+			XPGConnectClient.xpgc4BindDevice(Consts.VANWARD_APP_ID, token, did2bind, passcode2bind, "");
+		}
+	}
+	
+	@Override
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
-		Log.e(TAG, "onWanLoginResp()执行了");
+		L.e(this, "onV4Login()");
 		Log.e(TAG, "result : " + result);
 		Log.e(TAG, "connId : " + connId);
 		
@@ -119,6 +142,27 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 //		generated.SendBindingSetReq(tempConnId, generated.String2XpgData(did2bind), 
 //				generated.String2XpgData(passcode2bind));
 //		Log.e(TAG, "sendingBinding@DummySendBinding: " + username + "-" + did2bind + "-" + passcode2bind);
+	}
+	
+	@Override
+	public void onV4BindDevce(int errorCode, String successString,
+			String failString) {
+		L.e(this, "onV4BindDevce()");
+		super.onV4BindDevce(errorCode, successString, failString);
+		L.e(this, "errorCode : " + errorCode);
+		if (errorCode == 0) {
+			setResult(RESULT_OK);
+		} else {
+			setResult(RESULT_CANCELED);
+		}
+		
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				XPGConnectClient.RemoveActivity(DummySendBindingReqActivity.this);
+				finish();
+			}
+		}, 300);
 	}
 	
 	public void OnBindingSetResp(BindingSetResp_t pResp, int nConnId) {

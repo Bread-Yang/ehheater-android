@@ -226,10 +226,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.more.HeaterManagementActivity2"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".activity.more.HelpActivity"
             android:screenOrientation="portrait" >
         </activity>

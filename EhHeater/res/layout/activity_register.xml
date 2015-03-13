@@ -152,6 +152,39 @@
                 android:text=""
                 android:textSize="16dp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#E1E1E1" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <EditText
+                android:id="@+id/et_captcha"
+                android:layout_width="150dp"
+                android:layout_height="44dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="验证码"
+                android:singleLine="true"
+                android:textSize="16dp" />
+
+            <Button
+                android:id="@+id/btn_acquire_captcha"
+                android:layout_width="100dp"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:layout_height="25dp"
+                android:textSize="16dp"
+                android:text="获取验证码"
+                android:background="@drawable/selector_btn_captcha"
+                android:textColor="@color/white" />
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -163,12 +196,14 @@
 
         <CheckBox
             android:id="@+id/ar_chkbx_showpsw"
-            style="@style/custom_checkbox"
+            android:drawablePadding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:button="@null"
+            android:drawableLeft="@drawable/my_checkbox"
             android:text="显示密码"
-            android:textColor="@color/text_grey2"
-            android:textSize="18sp" />
+            android:textColor="@color/appointment_text_color"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <View

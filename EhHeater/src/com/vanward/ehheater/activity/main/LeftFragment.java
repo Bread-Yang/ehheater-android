@@ -28,7 +28,7 @@ import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceSeasonActivity;
 import com.vanward.ehheater.activity.more.AboutActivity;
 import com.vanward.ehheater.activity.more.AccountManagementActivity;
-import com.vanward.ehheater.activity.more.HeaterManagementActivity2;
+import com.vanward.ehheater.activity.more.HeaterManagementActivity;
 import com.vanward.ehheater.activity.more.HelpActivity;
 import com.vanward.ehheater.activity.more.RemindSettingActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -104,7 +104,7 @@ public class LeftFragment extends LinearLayout implements
 			clazz = AboutActivity.class;
 		}
 		if (view == btn_device_manager) {
-			clazz = HeaterManagementActivity2.class;
+			clazz = HeaterManagementActivity.class;
 		}
 		if (view == btn_help) {
 			clazz = HelpActivity.class;

@@ -20,9 +20,13 @@ import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.GizwitsErrorMsg;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.UserPwdChangeResp_t;
@@ -153,14 +157,6 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 							Toast.LENGTH_SHORT).show();
 					return;
 				} else {
-					// DialogUtil.instance().showLoadingDialog(ChangePasswordActivity.this,
-					// "");
-					// XpgDataField uid =
-					// generated.String2XpgData(AccountService.getUserId(getBaseContext()));
-					// XpgDataField upd =
-					// generated.String2XpgData(editList.get(1).getEditableText().toString());
-					// generated.SendUserPwdChangeReq(connId, uid ,
-					// upd);
 					newPsw = editList.get(1).getEditableText().toString();
 					requestChangePsw();
 				}
@@ -220,6 +216,31 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 		// AccountService.getUserId(getBaseContext()),
 		// AccountService.getUserPsw(getBaseContext()), "", "");
 		XPGConnShortCuts.connect2big();
+
+		if ("".equals(Global.token) || "".equals(Global.uid)) {
+			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
+					AccountService.getUserId(getBaseContext()),
+					AccountService.getUserPsw(getBaseContext()));
+		} else {
+			XPGConnectClient.xpgc4ChangeUserPwd(Consts.VANWARD_APP_ID,
+					Global.token, et_password.getText().toString(),
+					et_new_password.getText().toString());
+		}
+
+	}
+
+	@Override
+	public void onV4Login(int errorCode, String uid, String token,
+			String expire_at) {
+		L.e(this, "onV4Login()");
+		if (errorCode == 0) {
+			Global.uid = uid;
+			Global.token = token;
+
+			XPGConnectClient.xpgc4ChangeUserPwd(Consts.VANWARD_APP_ID,
+					Global.token, et_password.getText().toString(),
+					et_new_password.getText().toString());
+		}
 	}
 
 	@Override
@@ -254,6 +275,21 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 		generated.SendUserPwdChangeReq(tempConnId, generated
 				.String2XpgData(AccountService.getUserId(getBaseContext())),
 				generated.String2XpgData(newPsw));
+	}
+
+	@Override
+	public void onV4ChangeUserPwd(int errorCode, String updatedAt) {
+		super.onV4ChangeUserPwd(errorCode, updatedAt);
+		DialogUtil.dismissDialog();
+		if (errorCode == 0) {
+			AccountService.setUser(getBaseContext(),
+					AccountService.getUserId(getBaseContext()), newPsw);
+			changePswSuccessdialog.show();
+		} else {
+			Toast.makeText(getBaseContext(),
+					GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), 3000)
+					.show();
+		}
 	}
 
 	@Override

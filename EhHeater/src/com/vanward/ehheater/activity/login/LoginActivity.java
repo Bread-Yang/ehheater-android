@@ -23,18 +23,21 @@ import android.widget.Toast;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
+import com.vanward.ehheater.activity.user.FindPasswordActivity;
 import com.vanward.ehheater.activity.user.RegisterActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.GizwitsErrorMsg;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
-import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.XPG_RESULT;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
@@ -46,7 +49,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 	Button btn_new_device, btn_login;
 	EditText et_user, et_pwd;
-	TextView mTvReg;
+	TextView mTvReg, tv_find_passcode;
 
 	SharedPreferUtils spu;
 
@@ -65,14 +68,15 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	public void initUI() {
 		super.initUI();
 		setTopDismiss();
-		setCenterView(R.layout.login_layout);
+		setCenterView(R.layout.activity_login);
 
 		btn_new_device = (Button) findViewById(R.id.new_device_btn);
 		btn_login = (Button) findViewById(R.id.login_btn);
 		et_user = (EditText) findViewById(R.id.login_user_et);
 		et_pwd = (EditText) findViewById(R.id.login_pwd_et);
 
-		mTvReg = (TextView) findViewById(R.id.ll_tv_register);
+		mTvReg = (TextView) findViewById(R.id.tv_register);
+		tv_find_passcode = (TextView) findViewById(R.id.tv_find_passcode);
 
 		spu = new SharedPreferUtils(getBaseContext());
 		preSelectedDeviceMac = spu.get(ShareKey.CurDeviceMac, "");
@@ -97,6 +101,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		btn_new_device.setOnClickListener(this);
 		btn_login.setOnClickListener(this);
 		mTvReg.setOnClickListener(this);
+		tv_find_passcode.setOnClickListener(this);
 	}
 
 	@Override
@@ -137,10 +142,16 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					}
 				}
 			}, 9000);
-			XPGConnShortCuts.connect2big();
+			// XPGConnShortCuts.connect2big();
+			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, et_user
+					.getText().toString(), et_pwd.getText().toString());
 			break;
-		case R.id.ll_tv_register:
+		case R.id.tv_register:
 			startActivity(new Intent(this, RegisterActivity.class));
+			break;
+		case R.id.tv_find_passcode:
+			startActivityForResult(
+					new Intent(this, FindPasswordActivity.class), 0);
 			break;
 		}
 	}
@@ -160,9 +171,88 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if ("".equals(et_user.getText().toString())) {
 			et_user.setText(AccountService.getUserId(this));
 		}
-//		et_pwd.setText("");
+		// et_pwd.setText("");
 
 		XPGConnectClient.AddActivity(this);
+	}
+
+	@Override
+	public void onV4Login(int errorCode, String uid, String token,
+			String expire_at) {
+		if (errorCode == 0) {
+			Global.uid = uid;
+			Global.token = token;
+
+			L.e(this, "uid : " + uid);
+			L.e(this, "token : " + token);
+
+			loginCloudResponseTriggered = true;
+			if (mLoginTimeoutTimer != null) {
+				mLoginTimeoutTimer.cancel();
+			}
+
+			// 获取昵称
+			HttpFriend httpFriend = HttpFriend.create(this);
+
+			String requestURL = "userinfo/getUsageInformation?uid="
+					+ et_user.getText().toString().trim();
+
+			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					null, new AjaxCallBack<String>() {
+						public void onSuccess(String jsonString) {
+							Log.e(TAG, "请求昵称返回的数据是 : " + jsonString);
+							JSONObject json;
+							try {
+								json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									JSONObject result = json
+											.getJSONObject("result");
+									String nickName = result
+											.getString("userName");
+									new SharedPreferUtils(getBaseContext())
+											.put(ShareKey.UserNickname,
+													nickName);
+								} else if ("402".equals(responseCode)) {
+									new SharedPreferUtils(getBaseContext())
+											.put(ShareKey.UserNickname, "");
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						};
+
+					});
+
+			// 0和1都是登录成功
+			SharedPreferUtils.saveUsername(this, et_user.getText().toString());
+			AccountService.setUser(getBaseContext(), et_user.getText()
+					.toString(), et_pwd.getText().toString());
+
+			// generated.SendBindingGetV2Req(tempConnId);
+			XPGConnectClient.xpgc4GetMyBindings(Consts.VANWARD_APP_ID, token,
+					20, 0);
+
+			onDeviceFoundTriggered = false;
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					if (!onDeviceFoundTriggered) {
+						DialogUtil.dismissDialog();
+						startActivity(new Intent(getBaseContext(),
+								SelectDeviceActivity.class));
+					}
+				}
+			}, 6000);
+
+		} else {
+			// 登录失败
+			DialogUtil.dismissDialog();
+			Toast.makeText(getBaseContext(),
+					GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), 3000)
+					.show();
+		}
 	}
 
 	@Override
@@ -257,6 +347,91 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 	}
 
+	@Override
+	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) {
+		L.e(this, "onV4GetMyBindings()");
+
+		if (errorCode != 0) {
+			return;
+		}
+
+		if (endpoint == null) {
+			Log.e(TAG, "endpoint为null,返回");
+			return;
+		}
+
+		if (endpoint.getIsDisabled() == 1) {
+			Log.e(TAG, "endpoint.getIsDisabled() == 1,返回");
+			return;
+		}
+
+		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
+			return;
+		}
+
+		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+		HeaterInfo hi = new HeaterInfo(endpoint);
+		Log.e(TAG, "onDeviceFound:HeaterInfo Downloaded: " + hi);
+
+		if (!(hser.isValidDevice(hi))) {
+			// 非有效设备, 不予保存
+			Log.e(TAG, "非有效设备, 不予保存");
+			return;
+		}
+
+		SharedPreferUtils spu = new SharedPreferUtils(this);
+		if (hser.getHeaterType(hi).equals(HeaterType.ELECTRIC_HEATER)) {
+			if ("".equals(spu.get(ShareKey.PollingElectricHeaterDid, ""))) {
+				spu.put(ShareKey.PollingElectricHeaterDid, hi.getDid());
+				spu.put(ShareKey.PollingElectricHeaterMac, hi.getMac());
+			}
+		} else if (hser.getHeaterType(hi).equals(HeaterType.GAS_HEATER)) {
+			if ("".equals(spu.get(ShareKey.PollingGasHeaterDid, ""))) {
+				spu.put(ShareKey.PollingGasHeaterDid, hi.getDid());
+				spu.put(ShareKey.PollingGasHeaterMac, hi.getMac());
+			}
+		} else if (hser.getHeaterType(hi).equals(HeaterType.FURNACE)) {
+			if ("".equals(spu.get(ShareKey.PollingFurnaceDid, ""))) {
+				spu.put(ShareKey.PollingFurnaceDid, hi.getDid());
+				spu.put(ShareKey.PollingFurnaceMac, hi.getMac());
+			}
+		}
+
+		onDeviceFoundTriggered = true;
+
+		if (count++ == 0) {
+			AccountService.setUser(getBaseContext(), et_user.getText()
+					.toString(), et_pwd.getText().toString());
+
+			// if (TextUtils.isEmpty(preSelectedDeviceMac)) {
+			spu.put(ShareKey.CurDeviceMac, hi.getMac());
+			// }
+
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					// 接收设备列表结束, 这时候只要重新进入welcomeActivity, 就可以正常连接设备了
+
+					// Intent intent = new Intent();
+					// intent.setClass(getBaseContext(), WelcomeActivity.class);
+					// intent.putExtra(Consts.INTENT_EXTRA_FLAG_REENTER, true);
+					// startActivity(intent);
+					// finish();
+
+					setResult(RESULT_OK);
+					finish();
+				}
+			}, 2000);
+
+		}
+
+		hser.saveDownloadedHeater(hi);
+		if (preSelectedDeviceMac.equals(hi.getMac())) {
+			spu.put(ShareKey.CurDeviceMac, hi.getMac());
+		}
+		// endpoint.delete();
+	}
+
 	boolean loginCloudResponseTriggered;
 
 	@Override
@@ -345,6 +520,19 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		super.onDestroy();
 		if (mLoginTimeoutTimer != null) {
 			mLoginTimeoutTimer.cancel();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case 0:
+				String account = data.getStringExtra("account");
+				et_user.setText(account);
+				break;
+			}
 		}
 	}
 }
