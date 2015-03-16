@@ -46,6 +46,8 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 	private EditText et_password, et_new_password, et_new_password_confirm;
 
 	private Dialog changePswSuccessdialog;
+	
+	private boolean isFailure;
 
 	@Override
 	public void initUI() {
@@ -200,7 +202,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (/* 失败 */tempConnId == -2) {
+				if (!isFailure) {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -215,27 +217,36 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 		// XPGConnectClient.xpgcLogin2Wan(
 		// AccountService.getUserId(getBaseContext()),
 		// AccountService.getUserPsw(getBaseContext()), "", "");
-		XPGConnShortCuts.connect2big();
+//		XPGConnShortCuts.connect2big();
 
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
 			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
 					AccountService.getUserId(getBaseContext()),
 					AccountService.getUserPsw(getBaseContext()));
 		} else {
+			L.e(this, "uid : " + Global.uid);
+			L.e(this, "token : " + Global.token);
 			XPGConnectClient.xpgc4ChangeUserPwd(Consts.VANWARD_APP_ID,
 					Global.token, et_password.getText().toString(),
 					et_new_password.getText().toString());
 		}
 
-	}
+	}  
 
 	@Override
 	public void onV4Login(int errorCode, String uid, String token,
 			String expire_at) {
 		L.e(this, "onV4Login()");
-		if (errorCode == 0) {
+		L.e(this, "errorCode : " + errorCode);
+		if (errorCode == 0) { 
 			Global.uid = uid;
 			Global.token = token;
+			
+			L.e(this, "uid : " + Global.uid);
+			L.e(this, "token : " + Global.token);
+			L.e(this, "app_id : " + Consts.VANWARD_APP_ID);
+			L.e(this, "old psw : " + et_password.getText().toString());
+			L.e(this, "new psw : " + et_new_password.getText().toString());
 
 			XPGConnectClient.xpgc4ChangeUserPwd(Consts.VANWARD_APP_ID,
 					Global.token, et_password.getText().toString(),
@@ -276,12 +287,14 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 				.String2XpgData(AccountService.getUserId(getBaseContext())),
 				generated.String2XpgData(newPsw));
 	}
-
+	
 	@Override
 	public void onV4ChangeUserPwd(int errorCode, String updatedAt) {
 		super.onV4ChangeUserPwd(errorCode, updatedAt);
+		L.e(this, "onV4ChangeUserPwd()");
 		DialogUtil.dismissDialog();
 		if (errorCode == 0) {
+			isFailure = true;
 			AccountService.setUser(getBaseContext(),
 					AccountService.getUserId(getBaseContext()), newPsw);
 			changePswSuccessdialog.show();
@@ -291,7 +304,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 					.show();
 		}
 	}
-
+	
 	@Override
 	public void OnUserPwdChangeResp(UserPwdChangeResp_t pResp, int nConnId) {
 		super.OnUserPwdChangeResp(pResp, nConnId);

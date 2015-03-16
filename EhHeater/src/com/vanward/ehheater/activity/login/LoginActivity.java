@@ -531,6 +531,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			case 0:
 				String account = data.getStringExtra("account");
 				et_user.setText(account);
+				et_pwd.setText("");
 				break;
 			}
 		}

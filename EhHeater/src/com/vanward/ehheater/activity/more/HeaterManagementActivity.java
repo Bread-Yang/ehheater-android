@@ -488,6 +488,11 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 		return new SharedPreferUtils(context).get(ShareKey.CurDeviceMac, "");
 	}
 
+	/**
+	 * 编辑设备名称
+	 * 
+	 * @param heater
+	 */
 	private void showRenameDialog(final HeaterInfo heater) {
 		final Dialog renameDialog = new Dialog(this, R.style.custom_dialog);
 		renameDialog.setContentView(R.layout.dialog_rename_heater);

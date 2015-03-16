@@ -24,6 +24,7 @@ import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.GizwitsErrorMsg;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
+import com.vanward.ehheater.util.SharedPreferUtils;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 
 public class FindPasswordActivity extends EhHeaterBaseActivity implements
@@ -39,6 +40,7 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCenterView(R.layout.activity_find_passcode);
+		setTopText(R.string.find_password);
 		setRightButton(View.INVISIBLE);
 		setLeftButtonBackground(R.drawable.icon_back);
 

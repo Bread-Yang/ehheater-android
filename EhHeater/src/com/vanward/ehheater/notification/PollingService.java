@@ -112,7 +112,7 @@ public class PollingService extends Service {
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		String did = spu.get(ShareKey.PollingElectricHeaterDid, "");
 		electicMac = spu.get(ShareKey.PollingElectricHeaterMac, "");
-		Log.e(TAG, "EhHeaterDid : " + did);
+//		Log.e(TAG, "EhHeaterDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
@@ -129,8 +129,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							Log.e(TAG, "checkElecticHeaterInfo请求返回来的数据是 : "
-									+ jsonString);
+//							Log.e(TAG, "checkElecticHeaterInfo请求返回来的数据是 : "
+//									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -217,8 +217,8 @@ public class PollingService extends Service {
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
-								Log.e(TAG, "checkElecticHeaterInfo解析json出错"
-										+ "checkElecticHeaterInfo解析json出错");
+//								Log.e(TAG, "checkElecticHeaterInfo解析json出错"
+//										+ "checkElecticHeaterInfo解析json出错");
 							}
 
 						}
@@ -227,8 +227,8 @@ public class PollingService extends Service {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
-							Log.e(TAG, "checkElecticHeaterInfo请求故障接口出错"
-									+ "checkElecticHeaterInfo请求故障接口出错");
+//							Log.e(TAG, "checkElecticHeaterInfo请求故障接口出错"
+//									+ "checkElecticHeaterInfo请求故障接口出错");
 						}
 					});
 		}
@@ -252,7 +252,7 @@ public class PollingService extends Service {
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		String did = spu.get(ShareKey.PollingGasHeaterDid, "");
 		gasMac = spu.get(ShareKey.PollingGasHeaterMac, "");
-		Log.e(TAG, "GasHeaterDid : " + did);
+//		Log.e(TAG, "GasHeaterDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
@@ -270,8 +270,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
-									+ jsonString);
+//							Log.e(TAG, "checkGasHeaterInfo请求返回来的数据是 : "
+//									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -372,8 +372,8 @@ public class PollingService extends Service {
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
-								Log.e(TAG, "checkGasHeaterInfo解析json出错"
-										+ "checkGasHeaterInfo解析json出错");
+//								Log.e(TAG, "checkGasHeaterInfo解析json出错"
+//										+ "checkGasHeaterInfo解析json出错");
 							}
 						}
 
@@ -381,8 +381,8 @@ public class PollingService extends Service {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
-							Log.e(TAG, "checkGasHeaterInfo请求故障接口出错"
-									+ "checkGasHeaterInfo请求故障接口出错");
+//							Log.e(TAG, "checkGasHeaterInfo请求故障接口出错"
+//									+ "checkGasHeaterInfo请求故障接口出错");
 							// showNotification(1, R.string.oxygen_warn,
 							// R.string.oxygen_tips);
 						}
@@ -405,7 +405,7 @@ public class PollingService extends Service {
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		String did = spu.get(ShareKey.PollingFurnaceDid, "");
 		furnaceMac = spu.get(ShareKey.PollingFurnaceMac, "");
-		Log.e(TAG, "FurnaceDid : " + did);
+//		Log.e(TAG, "FurnaceDid : " + did);
 		if (!"".equals(did)) {
 			// if (allDevices != null && allDevices.size() > 0) {
 			// String requestURL =
@@ -416,7 +416,7 @@ public class PollingService extends Service {
 
 			String requestURL = Consts.REQUEST_BASE_URL
 					+ "getNewestFurnaceData?did=" + did;
-			Log.e(TAG, "checkFurnaceInfo的URL" + requestURL);
+//			Log.e(TAG, "checkFurnaceInfo的URL" + requestURL);
 
 			mHttpFriend.toUrl(requestURL).executeGet(null,
 					new AjaxCallBack<String>() {
@@ -424,8 +424,8 @@ public class PollingService extends Service {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							Log.e(TAG, "checkFurnaceInfo请求返回来的数据是 : "
-									+ jsonString);
+//							Log.e(TAG, "checkFurnaceInfo请求返回来的数据是 : "
+//									+ jsonString);
 
 							try {
 								JSONObject json = new JSONObject(jsonString);
@@ -494,8 +494,8 @@ public class PollingService extends Service {
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
-								Log.e(TAG, "checkFurnaceInfo解析json出错"
-										+ "checkFurnaceInfo解析json出错");
+//								Log.e(TAG, "checkFurnaceInfo解析json出错"
+//										+ "checkFurnaceInfo解析json出错");
 							}
 						}
 
@@ -503,8 +503,8 @@ public class PollingService extends Service {
 						public void onFailure(Throwable t, int errorNo,
 								String strMsg) {
 							super.onFailure(t, errorNo, strMsg);
-							Log.e(TAG, "checkFurnaceInfo请求故障接口出错"
-									+ "checkFurnaceInfo请求故障接口出错");
+//							Log.e(TAG, "checkFurnaceInfo请求故障接口出错"
+//									+ "checkFurnaceInfo请求故障接口出错");
 						}
 					});
 		}
@@ -558,7 +558,7 @@ public class PollingService extends Service {
 
 				@Override
 				public void run() {
-					Log.e(TAG, "PollingThread执行了");
+//					Log.e(TAG, "PollingThread执行了");
 					// checkAppointment();
 					if ("".equals(AccountService.getUserPsw(getBaseContext()))) {
 						// electic heater
