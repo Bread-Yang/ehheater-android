@@ -58,6 +58,7 @@
 
         <LinearLayout
             android:layout_width="288dp"
+            android:orientation="horizontal"
             android:layout_height="48dp" >
 
             <TextView
@@ -72,6 +73,11 @@
                 android:text="@string/forget_password"
                 android:textColor="#a0917e"
                 android:visibility="visible" />
+            
+            <View android:layout_width="1dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:background="#a0917e"/>
 
             <TextView
                 android:id="@+id/tv_register"

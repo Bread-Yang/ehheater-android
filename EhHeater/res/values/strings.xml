@@ -34,6 +34,8 @@
     <string name="change_password">修改密码</string>
     <string name="edit_device_name">修改名称</string>
     <string name="change_bind_phone">修改绑定手机号码</string>
+    <string name="acquire_captcha">获取验证码</string>
+    <string name="acquire_again">重新获取</string>
     <string name="phone_number">手机号码</string>
     <string name="msg_logining">登录中...</string>
     <string name="msg_logining_out">注销中...</string>

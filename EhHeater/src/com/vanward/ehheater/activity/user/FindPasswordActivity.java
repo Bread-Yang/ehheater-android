@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,9 +14,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
@@ -24,13 +25,12 @@ import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.GizwitsErrorMsg;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
-import com.vanward.ehheater.util.SharedPreferUtils;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 
 public class FindPasswordActivity extends EhHeaterBaseActivity implements
 		OnClickListener {
 
-	private EditText et_phone, et_new_passcode, et_captcha;
+	private EditText et_phone, et_new_passcode, et_confirm_psw, et_captcha;
 
 	private Button btn_acquire_captcha, btn_confirm;
 
@@ -40,12 +40,13 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCenterView(R.layout.activity_find_passcode);
-		setTopText(R.string.find_password);
+		setTopText(R.string.forget_pwd);
 		setRightButton(View.INVISIBLE);
 		setLeftButtonBackground(R.drawable.icon_back);
 
 		et_phone = (EditText) findViewById(R.id.et_phone);
 		et_new_passcode = (EditText) findViewById(R.id.et_new_passcode);
+		et_confirm_psw = (EditText) findViewById(R.id.et_confirm_psw);
 		et_captcha = (EditText) findViewById(R.id.et_captcha);
 		btn_acquire_captcha = (Button) findViewById(R.id.btn_acquire_captcha);
 		btn_confirm = (Button) findViewById(R.id.btn_confirm);
@@ -58,8 +59,12 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 				if (isChecked) {
 					et_new_passcode.setInputType(InputType.TYPE_CLASS_TEXT
 							| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+					et_confirm_psw.setInputType(InputType.TYPE_CLASS_TEXT
+							| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 				} else {
 					et_new_passcode.setInputType(InputType.TYPE_CLASS_TEXT
+							| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+					et_confirm_psw.setInputType(InputType.TYPE_CLASS_TEXT
 							| InputType.TYPE_TEXT_VARIATION_PASSWORD);
 				}
 			}
@@ -74,17 +79,45 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 							500).show();
 					return;
 				}
-				if (isInputValid()) {
-					XPGConnectClient.xpgc4GetMobileAuthCode(
-							Consts.VANWARD_APP_ID, et_phone.getText()
-									.toString());
-					btn_acquire_captcha.setEnabled(false);
 
-					((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-							.hideSoftInputFromWindow(FindPasswordActivity.this
-									.getCurrentFocus().getWindowToken(),
-									InputMethodManager.HIDE_NOT_ALWAYS);
+				boolean phoneNotEmpty = !TextUtils.isEmpty(et_phone.getText()
+						.toString());
+
+				if (!phoneNotEmpty) {
+					Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
+					return;
 				}
+				if (et_phone.getText().toString().length() != 11) {
+					Toast.makeText(getBaseContext(), "请输入11位手机号码", 1000).show();
+					return;
+				}
+
+				btn_acquire_captcha.setEnabled(false);
+
+				new CountDownTimer(60000, 1000) {
+
+					@Override
+					public void onTick(long millisUntilFinished) {
+						String acquire_again = getResources().getString(
+								R.string.acquire_again);
+						btn_acquire_captcha.setText(acquire_again + "("
+								+ millisUntilFinished / 1000 + ")");
+					}
+
+					@Override
+					public void onFinish() {
+						btn_acquire_captcha.setEnabled(true);
+						btn_acquire_captcha.setText(R.string.acquire_captcha);
+					}
+				}.start();
+
+				XPGConnectClient.xpgc4GetMobileAuthCode(Consts.VANWARD_APP_ID,
+						et_phone.getText().toString());
+
+				((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+						.hideSoftInputFromWindow(FindPasswordActivity.this
+								.getCurrentFocus().getWindowToken(),
+								InputMethodManager.HIDE_NOT_ALWAYS);
 			}
 		});
 
@@ -129,6 +162,11 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 				.toString());
 		boolean newPswNotEmpty = !TextUtils.isEmpty(et_new_passcode.getText()
 				.toString());
+		boolean confirmPswNotEmpty = !TextUtils.isEmpty(et_confirm_psw
+				.getText().toString());
+		boolean pswMatch = et_new_passcode.getText().toString()
+				.equals(et_confirm_psw.getText().toString());
+
 		boolean lengthGt6 = et_new_passcode.getText().toString().length() >= 6;
 		boolean lengthGt18 = et_new_passcode.getText().toString().length() <= 18;
 
@@ -149,6 +187,18 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 
 		if (!lengthGt6 || !lengthGt18) {
 			Toast.makeText(getBaseContext(), R.string.psw_6_to_18, 1000).show();
+			return false;
+		}
+		
+		if (!confirmPswNotEmpty) {
+			Toast.makeText(getBaseContext(), R.string.please_input_confirm_psw,
+					1000).show();
+			return false;
+		}
+		
+		if (!pswMatch) {
+			Toast.makeText(getBaseContext(), R.string.new_pwd_error, 1000)
+					.show();
 			return false;
 		}
 
