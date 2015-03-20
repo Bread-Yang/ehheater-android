@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="xpgconnectcli">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/xpgconnectcli.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

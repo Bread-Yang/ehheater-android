@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="height=device-height, width=device-width" />
+		<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="highcharts.js"></script>
+		<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/exporting.js"></script>
+
+		<script>
+		
+			function getAccumulatedConsumptionTitle() {
+				return highChartsJavaScriptInterface.getAccumulatedConsumptionTitle();
+			}
+			
+			function getx(xjson) {
+				//var t2 = "[{name:'Jan'},{name:'Feb'},{name:'Mar'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'},{name:'Apr'}] ";
+//			  return highChartsJavaScriptInterface.fromJsResult();
+				var t2 = highChartsJavaScriptInterface.getx();
+				var tarrat = eval(t2);
+				var result = new Array();
+				for (var i = 0; i < tarrat.length; i++) {
+					result.push(tarrat[i].name);
+
+				}
+				//return highChartsJavaScriptInterface.fromJsResult();
+				return result
+			}
+
+			function getAccumulatedData(djson) {
+			//	var t2 = "[{data:49.9},{data:1.5},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4},{data:106.4}] ";
+				var t2= highChartsJavaScriptInterface.getAccumulatedData();
+				var tarrat = eval(t2);
+				var result = new Array();
+				for (var i = 0; i < tarrat.length; i++) {
+					result.push(tarrat[i].data);
+					
+				}
+				return result;
+
+				//return [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4];
+			}
+
+			$(function () {
+    $('#container').highcharts({
+        credits: {
+            enabled: false
+        },
+        chart: {
+            backgroundColor: '#F3F3F3',
+            type: 'column'
+        },
+        legend: {
+            enabled: false
+        },
+        title: {
+            text: getAccumulatedConsumptionTitle(),
+            //text:'2014年',
+            style: {
+                color: '#6D8590',
+            },
+        },
+        exporting: {
+			enabled: false
+		},
+        xAxis: {
+            lineColor: '#6D8590',
+            lineWidth: 2,
+			tickWidth: 0,
+            labels: {
+            	staggerLines: 1,
+                style: {
+                    color: '#6D8590',
+                    fontSize: '10px'
+                }
+            },
+            categories: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+        },
+        plotOptions: {
+            series: {
+            	animation: false,
+                color: '#00ACC2',
+                allowPointSelect: true,
+                dataLabels: {
+                    color: '#00ACC2',
+					enabled: true //是否显示数据标签
+				},
+            }
+        },
+        tooltip: {
+            yDecimals: 2,
+            enabled: false
+        },
+        yAxis:{
+            gridLineWidth: 0,
+            min:0,
+            labels: {
+			    enabled: false
+			},
+            title: {
+				enabled: false,
+			    text: ''
+			},
+            
+        },
+        series: [{
+         //  data: [39.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+       
+              data:eval(getAccumulatedData())
+            // data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            //data: [null, null, null, null, null, null, null, null, null, null, null, null]
+            // data: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+           
+        }]
+    });
+});
+		</script>
+	</head>
+
+	<body style="background: #F3F3F3;">
+		<div id="container" style="width:100%;height:100%;background: #F3F3F3;"></div>
+	</body>
+
+
+
+</html>

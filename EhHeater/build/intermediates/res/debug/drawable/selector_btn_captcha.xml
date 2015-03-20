@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="true"><shape android:shape="rectangle">
+            <solid android:color="@color/orange" />
+
+            <corners android:radius="7dp" />
+        </shape></item>
+    <item android:state_enabled="false"><shape android:shape="rectangle">
+            <solid android:color="@color/gray" />
+
+            <corners android:radius="7dp" />
+        </shape></item>
+
+</selector><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/selector_btn_captcha.xml -->

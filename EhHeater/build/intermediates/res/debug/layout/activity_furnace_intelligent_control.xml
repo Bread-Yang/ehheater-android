@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e6e6e6"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="25dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="25dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/enable"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="18sp" />
+
+        <ToggleButton
+            android:id="@+id/tb_switch"
+            android:layout_width="55dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/selector_bg_furnace_on_or_off"
+            android:textOff=""
+            android:textOn="" />
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/wv_chart"
+        android:layout_width="fill_parent"
+        android:visibility="gone"
+        android:layout_height="300dp"
+        android:background="#F3F3F3" />
+    
+    <com.vanward.ehheater.view.BaoBarView
+        android:id="@+id/bbv"
+        android:layout_width="fill_parent"
+        android:layout_height="300dp" />
+    
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="25dp"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="@string/circle"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/cb_Monday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_left_bg"
+                android:button="@null"
+                android:checked="false"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/one"
+                android:textColor="@drawable/radoo_select1" />
+
+            <CheckBox
+                android:id="@+id/cb_Thuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/two"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#4471878B" />
+
+            <CheckBox
+                android:id="@+id/cb_Wednesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/three"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#4471878B" />
+
+            <CheckBox
+                android:id="@+id/cb_Thursday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/four"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#4471878B" />
+
+            <CheckBox
+                android:id="@+id/cb_Friday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/five"
+                android:textColor="@drawable/radoo_select1" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="#4471878B" />
+
+            <CheckBox
+                android:id="@+id/cb_Saturday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_middle_bg"
+                android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/six"
+                android:textColor="@drawable/radoo_select1" />
+
+            <CheckBox
+                android:id="@+id/cb_Sunday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radio_right_bg"
+                android:button="@null"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/day"
+                android:textColor="@drawable/radoo_select1" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/activity_furnace_intelligent_control.xml -->

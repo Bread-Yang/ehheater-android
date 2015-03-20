@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_checked="true"><bitmap android:gravity="fill" android:src="@drawable/on" />
+    </item>
+    <item android:state_checked="false"><bitmap android:gravity="fill" android:src="@drawable/off" />
+    </item>
+
+</selector><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/selector_bg_furnace_on_or_off.xml -->

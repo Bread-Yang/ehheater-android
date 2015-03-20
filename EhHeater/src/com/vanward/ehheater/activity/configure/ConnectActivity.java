@@ -22,10 +22,12 @@ import android.widget.Button;
 import com.vanward.ehheater.BuildConfig;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
@@ -81,7 +83,7 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "onCreate()");
 
 		DialogUtil.instance().dismissDialog();
-		
+
 		if (BuildConfig.DEBUG) {
 			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 					.detectAll().penaltyLog().build());
@@ -133,7 +135,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 	private void connectToDevice() {
 		Log.e(TAG, "connectToDevice()");
-		
+
 		DialogUtil.instance().dismissDialog();
 
 		if (!NetworkStatusUtil.isConnected(getBaseContext())) {
@@ -152,9 +154,9 @@ public class ConnectActivity extends GeneratedActivity {
 		@Override
 		public boolean handleMessage(Message msg) {
 			Log.e(TAG, "timeoutHandler执行了");
-//			if (!jobDone) {
-				setOfflineResult();
-//			}
+			// if (!jobDone) {
+			setOfflineResult();
+			// }
 			return false;
 		}
 	});
@@ -198,15 +200,49 @@ public class ConnectActivity extends GeneratedActivity {
 		Log.e(TAG, "tryConnectByBigCycle()");
 
 		connType = XPG_WAN_LAN.MQTT.swigValue();
-		
+
 		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()前");
-		XPGConnectClient.xpgcLogin2Wan(
-				AccountService.getUserId(getBaseContext()),
-				AccountService.getUserPsw(getBaseContext()), "", "");
+		// XPGConnectClient.xpgcLogin2Wan(
+		// AccountService.getUserId(getBaseContext()),
+		// AccountService.getUserPsw(getBaseContext()), "", "");
 		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()后");
 		// XPGConnShortCuts.connect2big();
 
+		if ("".equals(Global.token) || "".equals(Global.uid)) {
+			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
+					AccountService.getUserId(getBaseContext()),
+					AccountService.getUserPsw(getBaseContext()));
+		} else {
+			XPGConnectClient.xpgc4GetMyBindings(Consts.VANWARD_APP_ID,
+					Global.token, 20, 0);
+		}
+
 		timeoutHandler.sendEmptyMessageDelayed(0, 45000);
+	}
+
+	@Override
+	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) {
+		super.onV4GetMyBindings(errorCode, endpoint);
+
+		Log.e(TAG,
+				"onV4GetMyBindings: mac : " + endpoint.getSzMac() + "- did : "
+						+ endpoint.getSzDid() + "- isOnline : "
+						+ endpoint.getIsOnline());
+
+		if (onDeviceFoundCounter++ == 0) {
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					// 接收绑定的设备列表完毕
+					doAfterBindingDevicesReceivedFromMQTT(tempEndpointList);
+				}
+			}, 8000);
+
+		}
+
+		tempEndpointList.add(endpoint);
+
 	}
 
 	@Override
@@ -307,6 +343,24 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	@Override
+	public void onV4Login(int errorCode, String uid, String token,
+			String expire_at) {
+		L.e(this, "onV4Login()");
+		L.e(this, "errorCode : " + errorCode);
+		if (errorCode == 0) {
+			Global.uid = uid;
+			Global.token = token;
+
+			L.e(this, "uid : " + Global.uid);
+			L.e(this, "token : " + Global.token);
+			L.e(this, "app_id : " + Consts.VANWARD_APP_ID);
+
+			XPGConnectClient.xpgc4GetMyBindings(Consts.VANWARD_APP_ID,
+					Global.token, 20, 0);
+		}
+	}
+
+	@Override
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
 		Log.e(TAG, "onWanLoginResp()执行了");
@@ -356,7 +410,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		Log.e(TAG, "是否小循环连接 : " + (connType == XPG_WAN_LAN.LAN.swigValue()));
 		Log.e(TAG, "是否大循环连接 : " + (connType == XPG_WAN_LAN.MQTT.swigValue()));
-		
+
 		Log.e(TAG, "mPasscode : " + mPasscode);
 
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
@@ -383,7 +437,7 @@ public class ConnectActivity extends GeneratedActivity {
 	public void OnPasscodeResp(PasscodeResp_t pResp, int nConnId) {
 		super.OnPasscodeResp(pResp, nConnId);
 		Log.e(TAG, "OnPasscodeResp()回调了");
-		
+
 		tempConnId = nConnId;
 
 		passcodeRetrieved = generated.XpgData2String(pResp.getPasscode());
@@ -473,7 +527,7 @@ public class ConnectActivity extends GeneratedActivity {
 		boolean isBinded = false;
 		for (XpgEndpoint ep : devList) {
 			if (ep.getSzMac().toLowerCase().equals(mMac.toLowerCase())) {
-				
+
 				isBinded = true;
 
 				passcodeRetrieved = ep.getSzPasscode();
@@ -484,11 +538,13 @@ public class ConnectActivity extends GeneratedActivity {
 					// is online
 					Log.e(TAG, "XPGConnectClient.xpgcEnableCtrl()执行了");
 					Log.e(TAG, "xpgcEnableCtrl.xpgcLogin()前");
-//					XPGConnectClient.xpgcEnableCtrl(tempConnId, ep.getSzDid(),
-//							ep.getSzPasscode());
+					// XPGConnectClient.xpgcEnableCtrl(tempConnId,
+					// ep.getSzDid(),
+					// ep.getSzPasscode());
 					XPGConnectClient.xpgcLogin2Wan(
 							AccountService.getUserId(getBaseContext()),
-							AccountService.getUserPsw(getBaseContext()), ep.getSzDid(), ep.getSzPasscode());
+							AccountService.getUserPsw(getBaseContext()),
+							ep.getSzDid(), ep.getSzPasscode());
 					Log.e(TAG, "xpgcEnableCtrl.xpgcLogin()后");
 					return;
 				} else {
@@ -498,15 +554,15 @@ public class ConnectActivity extends GeneratedActivity {
 				}
 			}
 		}
-		
+
 		// 如果服务器上没有该设备，则再上传绑定关系
 		if (!isBinded) {
-			HeaterInfoService hser = new HeaterInfoService(
-					getBaseContext());
+			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			Log.e(TAG, "HeaterInfoService.setBinding()执行了");
-			HeaterInfoService.setBinding(this, curHeater.getDid(), curHeater.getPasscode());
+			HeaterInfoService.setBinding(this, curHeater.getDid(),
+					curHeater.getPasscode());
 		} else {
 			// is offline
 			setOfflineResult();
@@ -679,7 +735,7 @@ public class ConnectActivity extends GeneratedActivity {
 			String passcode, String userId, String userPsw, String connectText) {
 
 		DialogUtil.instance().dismissDialog();
-		
+
 		Intent intent = new Intent(act.getBaseContext(), ConnectActivity.class);
 		intent.putExtra(Consts.INTENT_EXTRA_MAC, mac);
 		intent.putExtra(Consts.INTENT_EXTRA_PASSCODE, passcode);
@@ -703,13 +759,14 @@ public class ConnectActivity extends GeneratedActivity {
 
 		act.startActivityForResult(intent, Consts.REQUESTCODE_CONNECT_ACTIVITY);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.e(TAG, "onActivityResult()执行了");
 		Log.e(TAG, "在外面");
-		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING && resultCode == RESULT_OK) {
+		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING
+				&& resultCode == RESULT_OK) {
 			Log.e(TAG, "在里面");
 			onDeviceFoundCounter = 0;
 			jobDone = false;

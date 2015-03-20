@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vanward.ehheater"
     android:versionCode="1"
-    android:versionName="b019" >
+    android:versionName="b019">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -26,16 +26,16 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppBaseTheme" >
+        android:theme="@style/AppBaseTheme">
 
         <!-- Polling Service -->
-        <service android:name=".notification.PollingService" >
+        <service android:name=".notification.PollingService">
             <intent-filter>
                 <action android:name="com.vanward.service.PollingService" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".util.wifi.ConnectChangeReceiver" >
+        <receiver android:name=".util.wifi.ConnectChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -45,7 +45,7 @@
             android:name=".activity.WelcomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/custom_dialog2" >
+            android:theme="@style/custom_dialog2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,205 +55,159 @@
         <activity
             android:name=".activity.main.TestActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".util.ErrorUtils"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.configure.ConnectActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/custom_dialog2" >
-        </activity>
+            android:theme="@style/custom_dialog2"></activity>
         <activity
             android:name=".activity.feedback.FeedbackActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.login.LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.info.SelectDeviceActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.user.RegisterActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.user.FindPasswordActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.gas.GasMainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceMainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnacePatternActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceSendMsgModel"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceSeasonActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceIntelligentControlActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentListActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentList4ExhibitionActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentTimeActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentTime4ExhibitionActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.furnace.FurnaceGasConsumptionActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.gas.GasAddPatternActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.EIAddPatternActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.gas.GasPatternActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.main.EIPatternActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.info.InfoErrorActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.info.InfoTipActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.appointment.AppointmentListActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.appointment.AppointmentTimeActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.appointment.AppointmentDaysActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.appointment.AppointmentNumberActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.info.InformationActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.configure.ConfigureDeviceActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.configure.EasyLinkConfigureActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateUnspecified|adjustResize" >
-        </activity>
+            android:windowSoftInputMode="stateUnspecified|adjustResize"></activity>
         <activity
             android:name=".activity.configure.DummySendBindingReqActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/custom_dialog2" >
-        </activity>
+            android:theme="@style/custom_dialog2"></activity>
         <activity
             android:name=".activity.configure.AutoConfigureFailActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.configure.ManualConfStep1Activity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.configure.ManualConfStep2Activity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.configure.ManualConfigFailActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.more.HeaterManagementActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.more.HelpActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.more.AboutActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.more.RemindSettingActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.more.AccountManagementActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.more.ChangeNicknameActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.more.ChangePasswordActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="541b9732fd98c55f32058e39" >
-        </meta-data>
+            android:value="541b9732fd98c55f32058e39"></meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Channel ID" />

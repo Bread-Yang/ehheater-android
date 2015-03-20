@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.vanward.ehheater"
+    android:versionCode="1"
+    android:versionName="b019" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name="com.vanward.ehheater.application.EhHeaterApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/AppBaseTheme" >
+
+        <!-- Polling Service -->
+        <service android:name="com.vanward.ehheater.notification.PollingService" >
+            <intent-filter>
+                <action android:name="com.vanward.service.PollingService" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name="com.vanward.ehheater.util.wifi.ConnectChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.vanward.ehheater.activity.WelcomeActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/custom_dialog2" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.TestActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.util.ErrorUtils"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.configure.ConnectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/custom_dialog2" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.feedback.FeedbackActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.login.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.info.SelectDeviceActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.user.RegisterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.user.FindPasswordActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.gas.GasMainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnacePatternActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceSendMsgModel"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceSeasonActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceIntelligentControlActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentListActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentList4ExhibitionActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentTimeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceAppointmentTime4ExhibitionActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.furnace.FurnaceGasConsumptionActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.gas.GasAddPatternActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.EIAddPatternActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.gas.GasPatternActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.main.EIPatternActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.info.InfoErrorActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.info.InfoTipActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.appointment.AppointmentListActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.appointment.AppointmentTimeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.appointment.AppointmentDaysActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.appointment.AppointmentNumberActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.info.InformationActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.configure.ConfigureDeviceActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateUnspecified|adjustResize" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.configure.DummySendBindingReqActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/custom_dialog2" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.configure.AutoConfigureFailActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.configure.ManualConfStep1Activity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.configure.ManualConfStep2Activity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.configure.ManualConfigFailActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.more.HeaterManagementActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.more.HelpActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.more.AboutActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.more.RemindSettingActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.more.AccountManagementActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.more.ChangeNicknameActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.vanward.ehheater.activity.more.ChangePasswordActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="541b9732fd98c55f32058e39" >
+        </meta-data>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Channel ID" />
+    </application>
+
+</manifest>

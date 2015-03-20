@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_bg"
+    android:orientation="vertical" >
+
+    <com.vanward.ehheater.view.swipelistview.SwipeListView
+        android:id="@+id/lv_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:listSelector="#00000000"
+        swipe:swipeActionLeft="reveal"
+        swipe:swipeActionRight="reveal"
+        swipe:swipeAnimationTime="1000"
+        swipe:swipeBackView="@+id/rlt_back"
+        swipe:swipeCloseAllItemsWhenMoveList="false"
+        swipe:swipeFrontView="@+id/rlt_front"
+        swipe:swipeMode="left"
+        swipe:swipeOffsetLeft="90dp"
+        swipe:swipeOffsetRight="90dp"
+        swipe:swipeOpenOnLongPress="false" />
+
+    <Button
+        android:id="@+id/btn_add_appointment"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:paddingLeft="20dp"
+        android:background="@drawable/layerlist_appointment_list_bg_without_left_right_border"
+        android:gravity="left|center_vertical"
+        android:drawableLeft="@drawable/icon_moshi_add"
+        android:drawablePadding="20dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/add_appointment"
+        android:textColor="#5d7884"
+        android:textSize="18sp" />
+
+</LinearLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/activity_furnace_appointment_list.xml -->

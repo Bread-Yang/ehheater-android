@@ -16,9 +16,8 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    
-    <style name="DialogBaseTheme" parent="@android:style/Theme.Dialog">
-    </style>
+
+    <style name="DialogBaseTheme" parent="@android:style/Theme.Dialog"></style>
 
     <style name="custom_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -36,15 +35,15 @@
         <!-- 屏幕背景是否变暗 -->
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
-    
-    
+
+
     <style name="custom_dialog2" parent="DialogBaseTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowCloseOnTouchOutside">false</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
-    
+
     <style name="dialogStyle" parent="@android:style/Theme.Dialog">
         <item name="android:windowIsFloating">true</item>
         <!-- 是否浮现在activity之上 -->
@@ -57,12 +56,12 @@
         <item name="android:backgroundDimEnabled">true</item>
         <!-- 屏幕背景不变暗 -->
     </style>
-    
-    
-    <style name="custom_checkbox" parent="@android:style/Widget.CompoundButton.CheckBox"> 
-        <item name="android:button">@drawable/my_checkbox</item> 
+
+
+    <style name="custom_checkbox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/my_checkbox</item>
     </style>
-    
+
     <style name="fade_animation">
         <item name="@android:windowEnterAnimation">@anim/popup_show</item>
         <item name="@android:windowExitAnimation">@anim/popup_hide</item>

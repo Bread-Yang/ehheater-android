@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background"
+    android:scrollbars="none" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="60dp"
+                android:layout_toLeftOf="@+id/acs1_tv_center"
+                android:text="初始化"
+                android:textColor="@color/title_color" />
+
+            <TextView
+                android:id="@+id/acs1_tv_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="连接网络"
+                android:textColor="@color/title_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="66dp"
+                android:layout_toRightOf="@+id/acs1_tv_center"
+                android:text="配置"
+                android:textColor="@color/color1" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/step_dot_highlight"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="#fff"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="4dp"
+                android:background="@color/title_color" />
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/step_dot_highlight"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="#fff"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="4dp"
+                android:background="@color/color1" />
+
+            <TextView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/step_dot"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="@color/color1"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:text="请确保热水器与智能移动终端在同一无线局域网下进行连接"
+            android:textColor="@color/color1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="(无线局域网默认为智能移动终端当前正在使用的无线局域网, 若需更改, 请先更改智能移动终端使用的网络配置)"
+            android:textColor="@color/color2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/login_input_bg"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="网络名称"
+                    android:textColor="@color/color1" />
+
+                <TextView
+                    android:id="@+id/acs2_tv_ssid"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical|right"
+                    android:textColor="@color/color1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="密码"
+                    android:textColor="@color/color1" />
+
+                <EditText
+                    android:id="@+id/acs2_et_psw"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical|right"
+                    android:inputType="textVisiblePassword"
+                    android:singleLine="true" 
+                    android:text=""
+                    android:textColor="@color/title_color" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/activity_configure_step2.xml -->

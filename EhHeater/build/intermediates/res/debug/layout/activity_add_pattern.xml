@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.vanward.ehheater"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_bg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top_layout"
+        layout="@layout/main_title"
+        android:focusable="true" />
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout03"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/activity_background"
+        android:clickable="true"
+        android:paddingBottom="10dp" >
+
+        <EditText
+            android:id="@+id/nameedittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:background="@drawable/white_button_bg"
+            android:hint="@string/input_name"
+            android:lines="1"
+            android:maxLength="15" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout05"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/activity_background"
+        android:clickable="true" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#4471878B"
+            android:paddingTop="5dp" />
+
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:text="分人洗"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/off" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B"
+        android:paddingTop="5dp" />
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout04"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/activity_background"
+        android:clickable="true"
+        android:paddingBottom="10dp" >
+
+        <RadioGroup
+            android:id="@+id/RadioGroup01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" >
+
+            <RadioButton
+                android:id="@+id/RadioButton05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@drawable/radio_selector"
+                android:checked="true"
+                android:tag="1"
+                android:text=" 1人"
+                android:textColor="@drawable/selector_text_color_radiobutton"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/RadioButton04"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@drawable/radio_selector"
+                android:tag="2"
+                android:text="  2人"
+                android:textColor="@drawable/selector_text_color_radiobutton"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/RadioButton06"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@drawable/radio_selector"
+                android:tag="3"
+                android:text="  3人"
+                android:textColor="@drawable/selector_text_color_radiobutton"
+                android:textSize="18sp" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B"
+        android:paddingTop="5dp" />
+
+    <RelativeLayout
+        android:id="@+id/tem_latout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/activity_background"
+        android:clickable="true" >
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:text="温度"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+             android:layout_marginLeft="20dp"
+            android:layout_below="@+id/TextView01" >
+
+            <TextView
+                android:id="@+id/tv_min_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:text="35℃"
+                android:textColor="@color/appointment_text_color"
+                android:textSize="16sp" />
+
+            <com.vanward.ehheater.view.SeekBarHint
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/tv_max_value"
+                android:layout_toRightOf="@+id/tv_min_value"
+                android:max="40"
+                android:maxHeight="6dp"
+                android:minHeight="6dp"
+                android:paddingBottom="30dp"
+                android:paddingTop="30dp"
+                android:progress="15"
+                android:progressDrawable="@drawable/seekbarhint_style"
+                android:thumb="@drawable/seekbarhint_thumb"
+                android:thumbOffset="10dp"
+                app:minValueTips="50"
+                app:popupStyle="follow"
+                app:popupWidth="100dp"
+                app:yOffset="-15dp" />
+
+            <TextView
+                android:id="@+id/tv_max_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:text="75℃"
+                android:textColor="@color/appointment_text_color"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B" />
+
+    <RelativeLayout
+        android:id="@+id/power_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/activity_background"
+        android:clickable="true" >
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp"
+            android:text="功率"
+            android:textColor="@color/appointment_text_color"
+            android:textSize="20sp" />
+
+        <RadioGroup
+            android:id="@+id/power"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/TextView02"
+            android:layout_below="@+id/TextView02"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/RadioButton03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@drawable/radio_selector"
+                android:tag="1"
+                android:text="1kw"
+                android:textColor="@drawable/selector_text_color_radiobutton"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/RadioButton01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:button="@drawable/radio_selector"
+                android:tag="2"
+                android:text="2kw"
+                android:textColor="@drawable/selector_text_color_radiobutton"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/RadioButton02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@drawable/radio_selector"
+                android:tag="3"
+                android:text="3kw"
+                android:textColor="@drawable/selector_text_color_radiobutton"
+                android:textSize="18sp" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#4471878B" />
+
+</LinearLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/activity_add_pattern.xml -->

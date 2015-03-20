@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <declare-styleable name="SeekBarHint">
 
         <attr name="popupWidth" format="dimension" />
@@ -8,8 +8,8 @@
         <attr name="minValueTips" format="integer" />
         <attr name="tipsUnit" format="string" />
         <attr name="popupStyle" format="enum">
-            <enum name="follow" value="0"/>
-            <enum name="fixed" value="1"/>
+            <enum name="follow" value="0" />
+            <enum name="fixed" value="1" />
         </attr>
 
     </declare-styleable>
@@ -78,8 +78,8 @@
         <attr name="pause" format="integer" />
         <attr name="autoStart" format="boolean" />
     </declare-styleable>
-    
-     <declare-styleable name="CircularSeekBar">
+
+    <declare-styleable name="CircularSeekBar">
         <attr name="progress" format="integer"></attr>
         <attr name="max" format="integer"></attr>
         <attr name="move_outside_circle" format="boolean"></attr>

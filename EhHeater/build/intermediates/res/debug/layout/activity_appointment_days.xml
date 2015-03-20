@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_bg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top_layout"
+        layout="@layout/main_title"
+        android:focusable="true" />
+
+    <CheckBox
+        android:id="@+id/cb_Monday"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_appointment_days"
+        android:onClick="onClick"
+        android:text="@string/every_Monday"
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/wheelview_grey_label" />
+
+    <CheckBox
+        android:id="@+id/cb_Tuesday"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_appointment_days"
+        android:onClick="onClick"
+        android:text="@string/every_Tuesday"
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/wheelview_grey_label" />
+
+    <CheckBox
+        android:id="@+id/cb_Wednesday"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_appointment_days"
+        android:onClick="onClick"
+        android:text="@string/every_Wednesday"
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/wheelview_grey_label" />
+
+    <CheckBox
+        android:id="@+id/cb_Thursday"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_appointment_days"
+        android:onClick="onClick"
+        android:text="@string/every_Thursday"
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/wheelview_grey_label" />
+
+    <CheckBox
+        android:id="@+id/cb_Friday"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_appointment_days"
+        android:onClick="onClick"
+        android:text="@string/every_Friday"
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/wheelview_grey_label" />
+
+    <CheckBox
+        android:id="@+id/cb_Saturday"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_appointment_days"
+        android:onClick="onClick"
+        android:text="@string/every_Saturday"
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/wheelview_grey_label" />
+
+    <CheckBox
+        android:id="@+id/cb_Sunday"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:drawableRight="@drawable/selector_appointment_days"
+        android:onClick="onClick"
+        android:text="@string/every_Sunday"
+        android:textColor="@color/appointment_text_color"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/wheelview_grey_label" />
+
+</LinearLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/activity_appointment_days.xml -->

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/home_tab_bg" >
+
+    <TextView
+        android:id="@+id/ivTitleName"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="@string/heater"
+        android:textColor="@color/title_color"
+        android:textSize="24dp" />
+
+    <Button
+        android:id="@+id/ivTitleBtnLeft"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/icon_menu"
+        android:gravity="center"
+        android:minHeight="20dp"
+        android:minWidth="20dp" />
+
+    <Button
+        android:id="@+id/ivTitleBtnRigh"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/icon_shut_enable"
+        android:gravity="center"
+        android:minHeight="20dp"
+        android:minWidth="20dp" />
+
+</RelativeLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/main_title.xml -->
