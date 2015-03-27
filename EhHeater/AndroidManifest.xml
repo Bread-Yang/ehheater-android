@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vanward.ehheater"
     android:versionCode="1"
-    android:versionName="b019">
+    android:versionName="b021">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -101,9 +101,6 @@
             android:name=".activity.main.furnace.FurnacePatternActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.main.furnace.FurnaceSendMsgModel"
-            android:screenOrientation="portrait"></activity>
-        <activity
             android:name=".activity.main.furnace.FurnaceSeasonActivity"
             android:screenOrientation="portrait"></activity>
         <activity
@@ -158,9 +155,6 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.info.InformationActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".activity.configure.ConfigureDeviceActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activity.configure.EasyLinkConfigureActivity"

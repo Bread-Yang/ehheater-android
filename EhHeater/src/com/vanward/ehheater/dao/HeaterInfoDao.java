@@ -11,6 +11,8 @@ import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 
 public class HeaterInfoDao extends BaseDao {
 
+    private static final String TAG = "HeaterInfoDao";
+
 	public HeaterInfoDao(Context context) {
 		super(context);
 	}
@@ -27,7 +29,7 @@ public class HeaterInfoDao extends BaseDao {
 	}
 
 	public void save(HeaterInfo heater) {
-		Log.e("emmm", "saving heater(allow empty passcode): " + heater);
+		Log.e(TAG, "saving heater(allow empty passcode): " + heater);
 		// getDb().replace(heater);
 
 		HeaterInfo old = getHeaterByMac(heater.getMac());

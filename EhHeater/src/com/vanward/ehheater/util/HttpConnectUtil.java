@@ -18,6 +18,7 @@ import android.util.Log;
 
 public class HttpConnectUtil {
 
+    private static final String TAG = "HttpConnectUtil";
 	
 	public static String getGasDatas(String did2query, long dateTime2query, String resultType, String expendType) {
 
@@ -37,7 +38,7 @@ public class HttpConnectUtil {
 //			paras.setParameter("expendType", expendType); 
 			
 
-			Log.e("emmm", "queryParas: " + did2query + "-" + dateTime2query + "-" + resultType + "-" + expendType);
+			Log.e(TAG, "queryParas: " + did2query + "-" + dateTime2query + "-" + resultType + "-" + expendType);
 			
 //			paras.setParameter("did", "EohJ73eV37ABqVPm4jZcNT");
 //			paras.setParameter("dateTime", Calendar.getInstance().getTimeInMillis());
@@ -53,7 +54,6 @@ public class HttpConnectUtil {
 			InputStream content = response.getEntity().getContent(); 
 			
 			String theString = IOUtils.toString(content, "UTF-8");
-//			Log.e("emmm", "theString: " + theString);
 //			testJson(theString);
 			
 			return theString;
@@ -71,7 +71,7 @@ public class HttpConnectUtil {
 		JSONArray jr = new JSONArray(input);
 		for (int i = 0; i<jr.length(); i++) {
 			JSONObject jo = jr.getJSONObject(i);
-			Log.e("emmm", "theString: " + jo.getString("amount") + "-" + jo.getString("time"));
+			Log.e(TAG, "theString: " + jo.getString("amount") + "-" + jo.getString("time"));
 		}
 		
 	}

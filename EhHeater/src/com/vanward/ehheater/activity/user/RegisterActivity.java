@@ -11,10 +11,12 @@ import net.tsz.afinal.http.AjaxParams;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -41,300 +43,342 @@ import com.xtremeprog.xpgconnect.generated.UserRegisterResp_t;
 
 public class RegisterActivity extends EhHeaterBaseActivity {
 
-	private EditText et_nickname, mEtPhone, mEtPsw, mEtPsw2, et_captcha;
-	private Button mBtnConfirm, btn_acquire_captcha;
-	private CheckBox mCbShowPsw;
-	private HttpFriend mHttpFriend;
+    private EditText et_nickname, mEtPhone, mEtPsw, mEtPsw2, et_captcha;
+    private Button mBtnConfirm, btn_acquire_captcha;
+    private CheckBox mCbShowPsw;
+    private HttpFriend mHttpFriend;
 
-	@Override
-	public void initUI() {
-		super.initUI();
-		setCenterView(R.layout.activity_register);
-		setTopText(R.string.register);
-		setRightButton(View.INVISIBLE);
-		setLeftButtonBackground(R.drawable.icon_back);
+    @Override
+    public void initUI() {
+        super.initUI();
+        setCenterView(R.layout.activity_register);
+        setTopText(R.string.register);
+        setRightButton(View.INVISIBLE);
+        setLeftButtonBackground(R.drawable.icon_back);
 
-		et_nickname = (EditText) findViewById(R.id.et_nickname);
-		et_captcha = (EditText) findViewById(R.id.et_captcha);
-		mEtPhone = (EditText) findViewById(R.id.ar_et_phone);
-		mEtPsw = (EditText) findViewById(R.id.ar_et_psw);
-		mEtPsw2 = (EditText) findViewById(R.id.ar_et_confirm_psw);
-		mBtnConfirm = (Button) findViewById(R.id.ar_btn_confirm);
-		btn_acquire_captcha = (Button) findViewById(R.id.btn_acquire_captcha);
-		mCbShowPsw = (CheckBox) findViewById(R.id.ar_chkbx_showpsw);
+        et_nickname = (EditText) findViewById(R.id.et_nickname);
+        et_captcha = (EditText) findViewById(R.id.et_captcha);
+        mEtPhone = (EditText) findViewById(R.id.ar_et_phone);
+        mEtPsw = (EditText) findViewById(R.id.ar_et_psw);
+        mEtPsw2 = (EditText) findViewById(R.id.ar_et_confirm_psw);
+        mBtnConfirm = (Button) findViewById(R.id.ar_btn_confirm);
+        btn_acquire_captcha = (Button) findViewById(R.id.btn_acquire_captcha);
+        mCbShowPsw = (CheckBox) findViewById(R.id.ar_chkbx_showpsw);
 
-		btn_acquire_captcha.setOnClickListener(this);
-		mEtPhone.setOnClickListener(this);
-		mEtPsw.setOnClickListener(this);
-		mEtPsw2.setOnClickListener(this);
-		mBtnConfirm.setOnClickListener(this);
+        btn_acquire_captcha.setOnClickListener(this);
+        mEtPhone.setOnClickListener(this);
+        mEtPsw.setOnClickListener(this);
+        mEtPsw2.setOnClickListener(this);
+        mBtnConfirm.setOnClickListener(this);
 
-		mCbShowPsw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				if (isChecked) {
-					mEtPsw.setInputType(InputType.TYPE_CLASS_TEXT
-							| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-					mEtPsw2.setInputType(InputType.TYPE_CLASS_TEXT
-							| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-				} else {
-					mEtPsw.setInputType(InputType.TYPE_CLASS_TEXT
-							| InputType.TYPE_TEXT_VARIATION_PASSWORD);
-					mEtPsw2.setInputType(InputType.TYPE_CLASS_TEXT
-							| InputType.TYPE_TEXT_VARIATION_PASSWORD);
-				}
-			}
-		});
+        mCbShowPsw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                if (isChecked) {
+                    mEtPsw.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    mEtPsw2.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    mEtPsw.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    mEtPsw2.setInputType(InputType.TYPE_CLASS_TEXT
+                            | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                }
+            }
+        });
 
-		mHttpFriend = HttpFriend.create(this);
-	}
+        mHttpFriend = HttpFriend.create(this);
+    }
 
-	@Override
-	public void onClick(View v) {
-		super.onClick(v);
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
 
-		switch (v.getId()) {
-		case R.id.btn_acquire_captcha:
-			if (isInputValid()) {
-				XPGConnectClient.xpgc4GetMobileAuthCode(Consts.VANWARD_APP_ID,
-						mEtPhone.getText().toString());
-				btn_acquire_captcha.setEnabled(false);
-			}
-			break;
-		case R.id.ar_btn_confirm:
-			if (!NetworkStatusUtil.isConnected(this)) {
-				Toast.makeText(getBaseContext(), R.string.check_network, 500)
-						.show();
-				return;
-			}
-			if (isInputValid()) {
-				if (TextUtils.isEmpty(et_captcha.getText().toString())) {
-					Toast.makeText(getBaseContext(), "请输入验证码", 1000).show();
-					return;
-				}
-				DialogUtil.instance().showLoadingDialog(this, "正在验证，请稍后...");
-				new Timer().schedule(new TimerTask() {
-					@Override
-					public void run() {
-						DialogUtil.dismissDialog();
-					}
-				}, 9000);
+        switch (v.getId()) {
+            case R.id.btn_acquire_captcha:
+                if (!NetworkStatusUtil.isConnected(this)) {
+                    Toast.makeText(getBaseContext(), R.string.check_network, 500)
+                            .show();
+                    return;
+                }
+                boolean phoneNotEmpty = !TextUtils.isEmpty(mEtPhone.getText()
+                        .toString());
 
-				// XPGConnectClient.xpgcRegister(mEtPhone.getText().toString(),
-				// mEtPsw.getText().toString());
-				new AsyncTask<Void, Void, Void>() {
-					@Override
-					protected Void doInBackground(Void... params) {
-						// XPGConnectClient.xpgcRegister(mEtPhone.getText()
-						// .toString(), mEtPsw.getText().toString());
-						XPGConnectClient.xpgc4CreateUserByPhone(
-								Consts.VANWARD_APP_ID, mEtPhone.getText()
-										.toString(), mEtPsw.getText()
-										.toString(), et_captcha.getText()
-										.toString());
-						return null;
-					}
-				}.execute();
-			}
-			break;
+                if (!phoneNotEmpty) {
+                    Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
+                    return;
+                }
+                if (mEtPhone.getText().toString().length() != 11) {
+                    Toast.makeText(getBaseContext(), "请输入11位手机号码", 1000).show();
+                    return;
+                }
 
-		case R.id.btn_left:
-			onBackPressed();
-			break;
-		}
-	}
+                btn_acquire_captcha.setEnabled(false);
 
-	@Override
-	public void onV4CreateUserByPhone(int errorCode, String uid, String token,
-			String expire_at) {
-		L.e(this, "onV4CreateUserByPhone()");
-		super.onV4CreateUserByPhone(errorCode, uid, token, expire_at);
-		if (errorCode == 0) {
-			
-			Global.uid = uid;
-			Global.token = token;
-			
-			Toast.makeText(getBaseContext(), "注册成功", 1000).show();
-			
-			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
-					.toString(), mEtPsw.getText().toString());
-			AccountService.setUser(getBaseContext(), mEtPhone.getText()
-					.toString(), mEtPsw.getText().toString());
+                new CountDownTimer(60000, 1000) {
 
-			String requestURL = "userinfo/saveMemberInfo";
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        String acquire_again = getResources().getString(
+                                R.string.acquire_again);
+                        btn_acquire_captcha.setText(acquire_again + "("
+                                + millisUntilFinished / 1000 + ")");
+                    }
 
-			AjaxParams params = new AjaxParams();
-			params.put("uid", mEtPhone.getText().toString());
-			params.put("userName", et_nickname.getText().toString());
+                    @Override
+                    public void onFinish() {
+                        btn_acquire_captcha.setEnabled(true);
+                        btn_acquire_captcha.setText(R.string.acquire_captcha);
+                    }
+                }.start();
 
-			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-					params, new AjaxCallBack<String>() {
-						public void onSuccess(String jsonString) {
-							try {
-								JSONObject json = new JSONObject(jsonString);
-								String responseCode = json
-										.getString("responseCode");
-								if ("200".equals(responseCode)) {
-									startActivity(new Intent(getBaseContext(),
-											SelectDeviceActivity.class));
-									new SharedPreferUtils(getBaseContext())
-											.put(ShareKey.UserNickname,
-													et_nickname.getText()
-															.toString().trim());
-									finish();
-								}
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
+                XPGConnectClient.xpgc4GetMobileAuthCode(Consts.VANWARD_APP_ID,
+                        mEtPhone.getText().toString());
 
-							DialogUtil.dismissDialog();
-						};
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(RegisterActivity.this
+                                        .getCurrentFocus().getWindowToken(),
+                                InputMethodManager.HIDE_NOT_ALWAYS);
+                break;
+            case R.id.ar_btn_confirm:
+                if (!NetworkStatusUtil.isConnected(this)) {
+                    Toast.makeText(getBaseContext(), R.string.check_network, 500)
+                            .show();
+                    return;
+                }
+                if (isInputValid()) {
+                    if (TextUtils.isEmpty(et_captcha.getText().toString())) {
+                        Toast.makeText(getBaseContext(), "请输入验证码", 1000).show();
+                        return;
+                    }
+                    DialogUtil.instance().showLoadingDialog(this, "正在验证，请稍后...");
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            DialogUtil.dismissDialog();
+                        }
+                    }, 9000);
 
-						@Override
-						public void onFailure(Throwable t, int errorNo,
-								String strMsg) {
-							super.onFailure(t, errorNo, strMsg);
-							Log.e("注册账号的时候请求昵称失败", "注册账号的时候请求昵称失败");
-							startActivity(new Intent(getBaseContext(),
-									SelectDeviceActivity.class));
-							new SharedPreferUtils(getBaseContext()).put(
-									ShareKey.UserNickname, "");
-							finish();
-							DialogUtil.dismissDialog();
-						}
-					});
-		
-		} else {
-			DialogUtil.dismissDialog();
-			Toast.makeText(getBaseContext(),
-					GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), 3000)
-					.show();
-			btn_acquire_captcha.setEnabled(true);
-			et_captcha.setText("");
-		}
-	}
+                    // XPGConnectClient.xpgcRegister(mEtPhone.getText().toString(),
+                    // mEtPsw.getText().toString());
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            // XPGConnectClient.xpgcRegister(mEtPhone.getText()
+                            // .toString(), mEtPsw.getText().toString());
+                            XPGConnectClient.xpgc4CreateUserByPhone(
+                                    Consts.VANWARD_APP_ID, mEtPhone.getText()
+                                            .toString(), mEtPsw.getText()
+                                            .toString(), et_captcha.getText()
+                                            .toString());
+                            return null;
+                        }
+                    }.execute();
+                }
+                break;
 
-	@Override
-	public void OnUserRegisterResp(UserRegisterResp_t pResp, int nConnId) {
-		super.OnUserRegisterResp(pResp, nConnId);
-		L.e(this, "OnUserRegisterResp()");
+            case R.id.btn_left:
+                onBackPressed();
+                break;
+        }
+    }
 
-		if (pResp.getResult() == 0) {
-			Toast.makeText(getBaseContext(), "注册成功", 1000).show();
-			AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
-					.toString(), mEtPsw.getText().toString());
-			AccountService.setUser(getBaseContext(), mEtPhone.getText()
-					.toString(), mEtPsw.getText().toString());
+    @Override
+    public void onV4CreateUserByPhone(int errorCode, String uid, String token,
+                                      String expire_at) {
+        L.e(this, "onV4CreateUserByPhone()");
+        super.onV4CreateUserByPhone(errorCode, uid, token, expire_at);
+        if (errorCode == 0) {
 
-			String requestURL = "userinfo/saveMemberInfo";
+            Global.uid = uid;
+            Global.token = token;
 
-			AjaxParams params = new AjaxParams();
-			params.put("uid", mEtPhone.getText().toString());
-			params.put("userName", et_nickname.getText().toString());
+            Toast.makeText(getBaseContext(), "注册成功", 1000).show();
 
-			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-					params, new AjaxCallBack<String>() {
-						public void onSuccess(String jsonString) {
-							try {
-								JSONObject json = new JSONObject(jsonString);
-								String responseCode = json
-										.getString("responseCode");
-								if ("200".equals(responseCode)) {
-									startActivity(new Intent(getBaseContext(),
-											SelectDeviceActivity.class));
-									new SharedPreferUtils(getBaseContext())
-											.put(ShareKey.UserNickname,
-													et_nickname.getText()
-															.toString().trim());
-									finish();
-								}
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
+            AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
+                    .toString(), mEtPsw.getText().toString());
+            AccountService.setUser(getBaseContext(), mEtPhone.getText()
+                    .toString(), mEtPsw.getText().toString());
 
-							DialogUtil.dismissDialog();
-						};
+            String requestURL = "userinfo/saveMemberInfo";
 
-						@Override
-						public void onFailure(Throwable t, int errorNo,
-								String strMsg) {
-							super.onFailure(t, errorNo, strMsg);
-							Log.e("注册账号的时候请求昵称失败", "注册账号的时候请求昵称失败");
-							startActivity(new Intent(getBaseContext(),
-									SelectDeviceActivity.class));
-							new SharedPreferUtils(getBaseContext()).put(
-									ShareKey.UserNickname, "");
-							finish();
-							DialogUtil.dismissDialog();
-						}
-					});
-		} else {
-			if (!isChangingConfigurations()) {
+            AjaxParams params = new AjaxParams();
+            params.put("uid", mEtPhone.getText().toString());
+            params.put("userName", et_nickname.getText().toString());
 
-			}
-			Toast.makeText(getBaseContext(), "该号码已注册", 1000).show();
-			DialogUtil.dismissDialog();
-		}
+            mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+                    params, new AjaxCallBack<String>() {
+                        public void onSuccess(String jsonString) {
+                            try {
+                                JSONObject json = new JSONObject(jsonString);
+                                String responseCode = json
+                                        .getString("responseCode");
+                                if ("200".equals(responseCode)) {
+                                    startActivity(new Intent(getBaseContext(),
+                                            SelectDeviceActivity.class));
+                                    new SharedPreferUtils(getBaseContext())
+                                            .put(ShareKey.UserNickname,
+                                                    et_nickname.getText()
+                                                            .toString().trim());
+                                    finish();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-	}
+                            DialogUtil.dismissDialog();
+                        }
 
-	private boolean isInputValid() {
+                        ;
 
-		boolean nicknameNotEmpty = !TextUtils.isEmpty(et_nickname.getText()
-				.toString());
-		boolean phoneNotEmpty = !TextUtils.isEmpty(mEtPhone.getText()
-				.toString());
-		boolean pswNotEmpty = !TextUtils.isEmpty(mEtPsw.getText().toString());
-		boolean confirmPswNotEmpty = !TextUtils.isEmpty(mEtPsw2.getText()
-				.toString());
-		boolean lengthGt6 = mEtPsw.getText().toString().length() >= 6;
-		boolean lengthGt18 = mEtPsw.getText().toString().length() <= 18;
-		boolean pswMatch = mEtPsw.getText().toString()
-				.equals(mEtPsw2.getText().toString());
+                        @Override
+                        public void onFailure(Throwable t, int errorNo,
+                                              String strMsg) {
+                            super.onFailure(t, errorNo, strMsg);
+                            Log.e("注册账号的时候请求昵称失败", "注册账号的时候请求昵称失败");
+                            startActivity(new Intent(getBaseContext(),
+                                    SelectDeviceActivity.class));
+                            new SharedPreferUtils(getBaseContext()).put(
+                                    ShareKey.UserNickname, "");
+                            finish();
+                            DialogUtil.dismissDialog();
+                        }
+                    });
 
-		if (!nicknameNotEmpty) {
-			Toast.makeText(getBaseContext(), "请输入用户名", 1000).show();
-			return false;
-		}
-		if (!phoneNotEmpty) {
-			Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
-			return false;
-		}
-		if (mEtPhone.getText().toString().length() != 11) {
-			Toast.makeText(getBaseContext(), "请输入11位手机号码", 1000).show();
-			return false;
-		}
-		if (!pswNotEmpty) {
-			Toast.makeText(getBaseContext(), "请输入密码", 1000).show();
-			return false;
-		}
+        } else {
+            DialogUtil.dismissDialog();
+            Toast.makeText(getBaseContext(),
+                    GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), 3000)
+                    .show();
+            btn_acquire_captcha.setEnabled(true);
+            et_captcha.setText("");
+        }
+    }
 
-		if (!lengthGt6 || !lengthGt18) {
-			Toast.makeText(getBaseContext(), R.string.psw_6_to_18, 1000).show();
-			return false;
-		}
+    @Override
+    public void OnUserRegisterResp(UserRegisterResp_t pResp, int nConnId) {
+        super.OnUserRegisterResp(pResp, nConnId);
+        L.e(this, "OnUserRegisterResp()");
 
-		if (!confirmPswNotEmpty) {
-			Toast.makeText(getBaseContext(), R.string.please_input_confirm_psw,
-					1000).show();
-			return false;
-		}
+        if (pResp.getResult() == 0) {
+            Toast.makeText(getBaseContext(), "注册成功", 1000).show();
+            AccountService.setPendingUser(getBaseContext(), mEtPhone.getText()
+                    .toString(), mEtPsw.getText().toString());
+            AccountService.setUser(getBaseContext(), mEtPhone.getText()
+                    .toString(), mEtPsw.getText().toString());
 
-		// if (6 > mEtPsw2.getText().length() || 18 <
-		// mEtPsw2.getText().length()) {
-		// Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
-		// Toast.LENGTH_SHORT).show();
-		// return false;
-		// }
+            String requestURL = "userinfo/saveMemberInfo";
 
-		if (!pswMatch) {
-			Toast.makeText(getBaseContext(), R.string.new_pwd_error, 1000)
-					.show();
-			return false;
-		}
+            AjaxParams params = new AjaxParams();
+            params.put("uid", mEtPhone.getText().toString());
+            params.put("userName", et_nickname.getText().toString());
 
-		return lengthGt6 && pswMatch;
-	}
+            mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+                    params, new AjaxCallBack<String>() {
+                        public void onSuccess(String jsonString) {
+                            try {
+                                JSONObject json = new JSONObject(jsonString);
+                                String responseCode = json
+                                        .getString("responseCode");
+                                if ("200".equals(responseCode)) {
+                                    startActivity(new Intent(getBaseContext(),
+                                            SelectDeviceActivity.class));
+                                    new SharedPreferUtils(getBaseContext())
+                                            .put(ShareKey.UserNickname,
+                                                    et_nickname.getText()
+                                                            .toString().trim());
+                                    finish();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            DialogUtil.dismissDialog();
+                        }
+
+                        ;
+
+                        @Override
+                        public void onFailure(Throwable t, int errorNo,
+                                              String strMsg) {
+                            super.onFailure(t, errorNo, strMsg);
+                            Log.e("注册账号的时候请求昵称失败", "注册账号的时候请求昵称失败");
+                            startActivity(new Intent(getBaseContext(),
+                                    SelectDeviceActivity.class));
+                            new SharedPreferUtils(getBaseContext()).put(
+                                    ShareKey.UserNickname, "");
+                            finish();
+                            DialogUtil.dismissDialog();
+                        }
+                    });
+        } else {
+            if (!isChangingConfigurations()) {
+
+            }
+            Toast.makeText(getBaseContext(), "该号码已注册", 1000).show();
+            DialogUtil.dismissDialog();
+        }
+
+    }
+
+    private boolean isInputValid() {
+
+        boolean nicknameNotEmpty = !TextUtils.isEmpty(et_nickname.getText()
+                .toString());
+        boolean phoneNotEmpty = !TextUtils.isEmpty(mEtPhone.getText()
+                .toString());
+        boolean pswNotEmpty = !TextUtils.isEmpty(mEtPsw.getText().toString());
+        boolean confirmPswNotEmpty = !TextUtils.isEmpty(mEtPsw2.getText()
+                .toString());
+        boolean lengthGt6 = mEtPsw.getText().toString().length() >= 6;
+        boolean lengthGt18 = mEtPsw.getText().toString().length() <= 18;
+        boolean pswMatch = mEtPsw.getText().toString()
+                .equals(mEtPsw2.getText().toString());
+
+        if (!nicknameNotEmpty) {
+            Toast.makeText(getBaseContext(), "请输入用户名", 1000).show();
+            return false;
+        }
+        if (!phoneNotEmpty) {
+            Toast.makeText(getBaseContext(), "请输入手机号码", 1000).show();
+            return false;
+        }
+        if (mEtPhone.getText().toString().length() != 11) {
+            Toast.makeText(getBaseContext(), "请输入11位手机号码", 1000).show();
+            return false;
+        }
+        if (!pswNotEmpty) {
+            Toast.makeText(getBaseContext(), "请输入密码", 1000).show();
+            return false;
+        }
+
+        if (!lengthGt6 || !lengthGt18) {
+            Toast.makeText(getBaseContext(), R.string.psw_6_to_18, 1000).show();
+            return false;
+        }
+
+        if (!confirmPswNotEmpty) {
+            Toast.makeText(getBaseContext(), R.string.please_input_confirm_psw,
+                    1000).show();
+            return false;
+        }
+
+        // if (6 > mEtPsw2.getText().length() || 18 <
+        // mEtPsw2.getText().length()) {
+        // Toast.makeText(getBaseContext(), R.string.psw_6_to_18,
+        // Toast.LENGTH_SHORT).show();
+        // return false;
+        // }
+
+        if (!pswMatch) {
+            Toast.makeText(getBaseContext(), R.string.new_pwd_error, 1000)
+                    .show();
+            return false;
+        }
+
+        return lengthGt6 && pswMatch;
+    }
 
 }

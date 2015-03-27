@@ -519,7 +519,6 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		}
 
 		if (!mType.pkey.equals(hinfo.getProductKey())) {
-
 			Toast.makeText(getBaseContext(), "设备类型错误", Toast.LENGTH_LONG)
 					.show();
 			return;
@@ -529,6 +528,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 
 		HeaterInfoDao hdao = new HeaterInfoDao(this);
 		List<HeaterInfo> list = hdao.getAll();
+
 		boolean flag = false;
 
 		for (int i = 0; i < list.size(); i++) {

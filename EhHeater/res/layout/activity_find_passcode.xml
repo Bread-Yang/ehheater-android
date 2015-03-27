@@ -141,12 +141,12 @@
 
             <Button
                 android:id="@+id/btn_acquire_captcha"
-                android:layout_width="120dp"
+                android:layout_width="100dp"
                 android:gravity="center"
                 android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
                 android:layout_height="25dp"
-                android:textSize="14dp"
+                android:textSize="16dp"
                 android:text="@string/acquire_captcha"
                 android:background="@drawable/selector_btn_captcha"
                 android:textColor="@color/white" />
