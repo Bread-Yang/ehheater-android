@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -21,6 +20,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.model.AppointmentVo4Exhibition;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.view.SeekBarHint;
@@ -140,8 +140,8 @@ public class FurnaceAppointmentTime4ExhibitionActivity extends
 			String time = dateFormat.format(new Date(editModel.getDateTime()));
 			String[] times = time.split(":");
 
-			Log.e(TAG, "getDateTime : " + editModel.getDateTime());
-			Log.e(TAG, "time : " + time);
+			L.e(this, "getDateTime : " + editModel.getDateTime());
+			L.e(this, "time : " + time);
 
 			wheelView1.setCurrentItem(Integer.valueOf(times[0]));
 			wheelView2.setCurrentItem(Integer.valueOf(times[1]));
@@ -294,13 +294,13 @@ public class FurnaceAppointmentTime4ExhibitionActivity extends
 				int day = c.get(Calendar.DAY_OF_MONTH);
 				int second = c.get(Calendar.SECOND);
 
-				Log.e(TAG, "year : " + year);
-				Log.e(TAG, "month : " + month);
-				Log.e(TAG, "day : " + day);
-				Log.e(TAG, "hour : " + currentHour);
-				Log.e(TAG, "minute : " + currentMinute);
-				Log.e(TAG, "second : " + second);
-				Log.e(TAG, "timestamp: " + c.getTimeInMillis());
+				L.e(this, "year : " + year);
+				L.e(this, "month : " + month);
+				L.e(this, "day : " + day);
+				L.e(this, "hour : " + currentHour);
+				L.e(this, "minute : " + currentMinute);
+				L.e(this, "second : " + second);
+				L.e(this, "timestamp: " + c.getTimeInMillis());
 
 				c.set(year, month, day, setHour, setMinute);
 

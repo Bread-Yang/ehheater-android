@@ -2,52 +2,35 @@ package com.vanward.ehheater.activity.main;
 
 import java.util.List;
 
-import u.aly.i;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.service.AccountService;
-import com.vanward.ehheater.statedata.EhState;
-import com.vanward.ehheater.util.TcpPacketCheckUtil;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.view.AddPatternButtonDialogUtil;
 import com.vanward.ehheater.view.AddPatternNameDialogUtil;
-import com.vanward.ehheater.view.AddPatternSettingDialogUtil;
-import com.vanward.ehheater.view.ChangeStuteView;
-import com.vanward.ehheater.view.CircleListener;
-import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.SureDelDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.vanward.ehheater.view.WashNumDialogUtil;
-import com.vanward.ehheater.view.fragment.SlidingMenu;
-import com.vanward.ehheater.view.wheelview.WheelView;
-import com.xtremeprog.xpgconnect.generated.StateResp_t;
-import com.xtremeprog.xpgconnect.generated.generated;
 
 public class EIPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnCheckedChangeListener {
@@ -127,7 +110,7 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onClick(View v) {
-		Log.e(TAG, "view:" + v.getId());
+		L.e(this, "view:" + v.getId());
 		switch (v.getId()) {
 		case R.id.textradio0:
 			radio0.setChecked(true);
@@ -457,13 +440,13 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 //				return;
 //			}
 
-			Log.e(TAG, "自定义");
+			L.e(this, "自定义");
 			SendMsgModel.changeToZidingyiMode();
 			Thread.sleep(700);
-			Log.e(TAG, "自定义 pow: " + customSetVo.getPower());
+			L.e(this, "自定义 pow: " + customSetVo.getPower());
 			SendMsgModel.setPower(customSetVo.getPower());
 			Thread.sleep(700);
-			Log.e(TAG, "自定义 Tem: " + customSetVo.getTempter());
+			L.e(this, "自定义 Tem: " + customSetVo.getTempter());
 			SendMsgModel.setTempter(customSetVo.getTempter());
 
 		} catch (InterruptedException e) {

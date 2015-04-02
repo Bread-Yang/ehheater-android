@@ -4,53 +4,31 @@ import java.util.List;
 
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-import com.vanward.ehheater.activity.appointment.AppointmentListActivity;
-import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.CustomSetVo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.service.AccountService;
-import com.vanward.ehheater.statedata.EhState;
-import com.vanward.ehheater.util.TcpPacketCheckUtil;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.view.AddPatternButtonDialogUtil;
-import com.vanward.ehheater.view.AddPatternGasSettingDialogUtil;
 import com.vanward.ehheater.view.AddPatternNameDialogUtil;
-import com.vanward.ehheater.view.AddPatternSettingDialogUtil;
 import com.vanward.ehheater.view.BathSettingDialogUtil;
-import com.vanward.ehheater.view.ChangeStuteView;
-import com.vanward.ehheater.view.CircleListener;
-import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.SureDelDialogUtil;
-import com.vanward.ehheater.view.TimeDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
-import com.vanward.ehheater.view.WashNumDialogUtil;
-import com.vanward.ehheater.view.fragment.SlidingMenu;
-import com.vanward.ehheater.view.wheelview.WheelView;
-import com.xtremeprog.xpgconnect.generated.StateResp_t;
-import com.xtremeprog.xpgconnect.generated.generated;
 
 public class GasPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnCheckedChangeListener {
@@ -428,8 +406,8 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// 清空其他的
-				Log.e(TAG, "被点击了");
-				Log.e(TAG, "customSetVolist的大小是 : " + customSetVolist.size());
+				L.e(this, "被点击了");
+				L.e(this, "customSetVolist的大小是 : " + customSetVolist.size());
 				setRadiocheck("", getWindow().getDecorView());
 				radioButton.setChecked(true);
 				for (GasCustomSetVo item : customSetVolist) {

@@ -68,8 +68,6 @@ public class NotificationUtils {
 						public void onSuccess(String jsonString) {
 							super.onSuccess(jsonString);
 
-							Log.e("请求返回来的数据是 : ", jsonString);
-
 							try {
 								JSONObject json = new JSONObject(jsonString);
 								String responseCode = json

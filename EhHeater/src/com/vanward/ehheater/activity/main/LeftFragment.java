@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,7 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.AlterDeviceHelper;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.UIUtil;
@@ -234,23 +234,23 @@ public class LeftFragment extends LinearLayout implements
 				spu.put(ShareKey.PollingElectricHeaterDid, heaterInfo.getDid());
 				spu.put(ShareKey.PollingElectricHeaterMac, heaterInfo.getMac());
 				
-				Log.e(TAG, "切换电热的did : " + heaterInfo.getDid());
-				Log.e(TAG, "切换电热的mac : " + heaterInfo.getMac());
-				Log.e(TAG, "切换电热的passcode : " + heaterInfo.getPasscode());
+				L.e(this, "切换电热的did : " + heaterInfo.getDid());
+				L.e(this, "切换电热的mac : " + heaterInfo.getMac());
+				L.e(this, "切换电热的passcode : " + heaterInfo.getPasscode());
 			} else if (newHeaterType == HeaterType.GAS_HEATER) {
 				spu.put(ShareKey.PollingGasHeaterDid, heaterInfo.getDid());
 				spu.put(ShareKey.PollingGasHeaterMac, heaterInfo.getMac());
 				
-				Log.e(TAG, "切换燃热的did : " + heaterInfo.getDid());
-				Log.e(TAG, "切换燃热的mac : " + heaterInfo.getMac());
-				Log.e(TAG, "切换燃热的passcode : " + heaterInfo.getPasscode());
+				L.e(this, "切换燃热的did : " + heaterInfo.getDid());
+				L.e(this, "切换燃热的mac : " + heaterInfo.getMac());
+				L.e(this, "切换燃热的passcode : " + heaterInfo.getPasscode());
 			} else if (newHeaterType == HeaterType.FURNACE) {
 				spu.put(ShareKey.PollingFurnaceDid, heaterInfo.getDid());
 				spu.put(ShareKey.PollingFurnaceMac, heaterInfo.getMac());
 				
-				Log.e(TAG, "切换壁挂炉的did : " + heaterInfo.getDid());
-				Log.e(TAG, "切换壁挂炉的mac : " + heaterInfo.getMac());
-				Log.e(TAG, "切换壁挂炉的passcode : " + heaterInfo.getPasscode());
+				L.e(this, "切换壁挂炉的did : " + heaterInfo.getDid());
+				L.e(this, "切换壁挂炉的mac : " + heaterInfo.getMac());
+				L.e(this, "切换壁挂炉的passcode : " + heaterInfo.getPasscode());
 			}
 
 			AlterDeviceHelper.newHeaterType = newHeaterType;

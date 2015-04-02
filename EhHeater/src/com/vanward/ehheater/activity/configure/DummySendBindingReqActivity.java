@@ -112,13 +112,13 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
 		L.e(this, "onV4Login()");
-		Log.e(TAG, "result : " + result);
-		Log.e(TAG, "connId : " + connId);
+		L.e(this, "result : " + result);
+		L.e(this, "connId : " + connId);
 		
 		tempConnId = connId;
 		
-		Log.e(TAG, "did2bind : " + did2bind);
-		Log.e(TAG, "passcode2bind : " + passcode2bind);
+		L.e(this, "did2bind : " + did2bind);
+		L.e(this, "passcode2bind : " + passcode2bind);
 		
 		generated.SendBindingSetReq(connId, generated.String2XpgData(did2bind), 
 				generated.String2XpgData(passcode2bind));
@@ -126,7 +126,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-//		Log.e(TAG, "onConnectEvent@DummySendBinding:" + connId + "-" + event);
+//		L.e(this, "onConnectEvent@DummySendBinding:" + connId + "-" + event);
 //		
 //		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
 //			tempConnId = connId;
@@ -137,11 +137,11 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-//		Log.e(TAG, "onLoginCloudResp@DummySendBinding:" + result);
+//		L.e(this, "onLoginCloudResp@DummySendBinding:" + result);
 //		
 //		generated.SendBindingSetReq(tempConnId, generated.String2XpgData(did2bind), 
 //				generated.String2XpgData(passcode2bind));
-//		Log.e(TAG, "sendingBinding@DummySendBinding: " + username + "-" + did2bind + "-" + passcode2bind);
+//		L.e(this, "sendingBinding@DummySendBinding: " + username + "-" + did2bind + "-" + passcode2bind);
 	}
 	
 	@Override
@@ -167,7 +167,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	
 	public void OnBindingSetResp(BindingSetResp_t pResp, int nConnId) {
 		super.OnBindingSetResp(pResp, nConnId);
-		Log.e(TAG, "OnBindingSetResp@DummySendBinding:" + pResp.getResult());
+		L.e(this, "OnBindingSetResp@DummySendBinding:" + pResp.getResult());
 		
 		if (pResp.getResult() == 0) {
 			setResult(RESULT_OK);

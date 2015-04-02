@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -37,6 +35,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.view.swipelistview.SwipeListView;
 
@@ -69,9 +68,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		findViewById();
 		setListener();
 		init();
-
-		// Log.e("格式化前 : ", String.format("%-5s", 11));
-		// Log.e("格式化后的 : ", String.format("%-5s", 11).replace(' ', '0'));
 	}
 
 	@Override
@@ -142,15 +138,11 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		// String requestURL =
 		// "userinfo/getAppointmentList?did=LWFWwtEcFWJ5hSBPXrVXFS&uid=q1231";
 
-//		Log.e("请求的地址是", requestURL);
-
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 				null, new AjaxCallBack<String>() {
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
-
-//						Log.e("请求返回来的数据是 : ", jsonString);
 
 						extractDataFromJson(jsonString);
 
@@ -379,7 +371,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 								public void onSuccess(String t) {
 									super.onSuccess(t);
 
-//									Log.e("添加成功返回的json : ", t);
 
 									if ((Integer) view.getTag() == 1) {
 										((ImageButton) view)
@@ -402,7 +393,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					// public void onSuccess(String jsonString) {
 					// super.onSuccess(jsonString);
 					//
-					// Log.e("添加成功返回的json : ", jsonString);
 					//
 					// ((ImageButton) view)
 					// .setImageResource(R.drawable.on);
@@ -435,7 +425,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 								@Override
 								public void onSuccess(String jsonString) {
 									super.onSuccess(jsonString);
-									Log.e(TAG, "删除预约返回的json数据是 : " + jsonString);
+									L.e(this, "删除预约返回的json数据是 : " + jsonString);
 									try {
 										JSONObject json;
 										json = new JSONObject(jsonString);

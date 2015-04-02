@@ -11,7 +11,6 @@ import android.net.wifi.WifiConfiguration;
 import android.os.CountDownTimer;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +31,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.EasyLinkDialogUtil;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.wifi.WifiAdmin;
@@ -121,7 +121,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 
 					@Override
 					public void run() {
-						Log.e(TAG, "在发送ssid和密码");
+						L.e(this, "在发送ssid和密码");
 						generated.SendOnboardingSetReq(
 								generated.String2XpgData(ed_input_ssid
 										.getText().toString().trim()),
@@ -139,12 +139,12 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 
 	@Override
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
-		Log.e(TAG, TAG + "的onEasyLinkResp执行了");
+		L.e(this, TAG + "的onEasyLinkResp执行了");
 		// if (dialog_easylink.isShowing()) {
 		//
-		// Log.e(TAG, "打印productKey前");
-		// Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
-		// Log.e(TAG, ("".equals(endpoint.getSzProductKey()) + ""));
+		// L.e(this, "打印productKey前");
+		// L.e(this, (null == endpoint.getSzProductKey()) + "");
+		// L.e(this, ("".equals(endpoint.getSzProductKey()) + ""));
 		// if (endpoint.getSzProductKey() == null
 		// || "".equals(endpoint.getSzProductKey())) {
 		// return;
@@ -163,12 +163,12 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 	@Override
 	public void onAirLinkResp(XpgEndpoint endpoint) {
 		super.onAirLinkResp(endpoint);
-		Log.e(TAG, TAG + "的onAirLinkResp执行了");
+		L.e(this, TAG + "的onAirLinkResp执行了");
 		if (dialog_easylink.isShowing()) {
 
-			Log.e(TAG, "打印productKey前");
-			Log.e(TAG, (null == endpoint.getSzProductKey()) + "");
-			Log.e(TAG, ("".equals(endpoint.getSzProductKey()) + ""));
+			L.e(this, "打印productKey前");
+			L.e(this, (null == endpoint.getSzProductKey()) + "");
+			L.e(this, ("".equals(endpoint.getSzProductKey()) + ""));
 			if (endpoint.getSzProductKey() == null
 					|| "".equals(endpoint.getSzProductKey())) {
 				return;
@@ -325,7 +325,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 	public void OnOnboardingSetResp(OnboardingSetResp_t pResp) {
 		super.OnOnboardingSetResp(pResp);
 
-		Log.e(TAG, "OnOnboardingSetResp执行了");
+		L.e(this, "OnOnboardingSetResp执行了");
 
 		if (mTimer != null) {
 			mTimer.cancel();
@@ -349,7 +349,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			// 表示是否在可连接范围内
 			boolean canConnectable = false;
 			for (int i = 0; i < scanResultList.size(); i++) {
-				Log.e(TAG,
+				L.e(this,
 						"scanResultList" + i + "----->"
 								+ scanResultList.get(i).SSID);
 				if (scanResultList.get(i).SSID.equals(lastConnectWifiSSID)) {
@@ -358,7 +358,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 				}
 			}
 			if (canConnectable) {
-				Log.e(TAG, "%%%%%在可连接范围内%%%%%%%%");
+				L.e(this, "%%%%%在可连接范围内%%%%%%%%");
 
 				// 表示wifi是否已经配置过了
 				boolean isConfigurated = false;
@@ -366,9 +366,9 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 				// 判断是否连接上制定的wifi
 				boolean isConnected = false;
 				if (configuratedList != null) {
-					Log.e(TAG, "*********************");
+					L.e(this, "*********************");
 					for (int j = 0; j < configuratedList.size(); j++) {
-						Log.e(TAG, "configuratedList" + j + "------->"
+						L.e(this, "configuratedList" + j + "------->"
 								+ configuratedList.get(j).SSID);
 						if (configuratedList.get(j).SSID == null) {
 							continue;
@@ -377,26 +377,26 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 								.equals(lastConnectWifiConfigureSSID)) {
 							isConfigurated = true;
 							networkId = configuratedList.get(j).networkId;
-							Log.e(TAG, "#########################" + j);
+							L.e(this, "#########################" + j);
 							break;
 						}
 						// isConfigurated = false;
 					}
-					Log.e(TAG, "%%%%%%%%%%%%%%%%%%%%%%" + isConfigurated);
+					L.e(this, "%%%%%%%%%%%%%%%%%%%%%%" + isConfigurated);
 					if (isConfigurated) {
-						Log.e(TAG, "^^^^^^^连接前");
+						L.e(this, "^^^^^^^连接前");
 						wifiAdmin.connectWifi(networkId);
-						Log.e(TAG, "#########连接后");
-						Log.e(TAG, "isConnected--------->" + isConnected);
+						L.e(this, "#########连接后");
+						L.e(this, "isConnected--------->" + isConnected);
 						while (!isConnected) {
-							Log.e(TAG, "*************连接上指定wifi*************");
+							L.e(this, "*************连接上指定wifi*************");
 							break;
 						}
-						Log.e(TAG, "**************************");
+						L.e(this, "**************************");
 					}
 				}
 			} else {
-				Log.e(TAG, "$$$$$$$$$$不在可连接范围内$$$$$$$$$$$$$");
+				L.e(this, "$$$$$$$$$$不在可连接范围内$$$$$$$$$$$$$");
 			}
 		}
 	}

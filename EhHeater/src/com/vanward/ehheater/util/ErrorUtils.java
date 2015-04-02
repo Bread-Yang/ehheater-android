@@ -20,21 +20,21 @@ public class ErrorUtils extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e(TAG, "ErrorUtils的onCreate()执行了");
+		L.e(this, "ErrorUtils的onCreate()执行了");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e(TAG, "ErrorUtils的onResume()执行了");
+		L.e(this, "ErrorUtils的onResume()执行了");
 		Intent originalIntent = getIntent();
 		HeaterType device_type = (HeaterType) originalIntent
 				.getSerializableExtra("device_type");
 
-		Log.e(TAG, "device_type : " + device_type);
-		Log.e(TAG, "isGasMainActivityActive : " + isGasMainActivityActive);
-		Log.e(TAG, "isMainActivityActive : " + isMainActivityActive);
-		Log.e(TAG, "isFurnaceMainActivityActive : " + isFurnaceMainActivityActive);
+		L.e(this, "device_type : " + device_type);
+		L.e(this, "isGasMainActivityActive : " + isGasMainActivityActive);
+		L.e(this, "isMainActivityActive : " + isMainActivityActive);
+		L.e(this, "isFurnaceMainActivityActive : " + isFurnaceMainActivityActive);
 
 		switch (device_type) {
 		case ELECTRIC_HEATER: // 电热
@@ -51,8 +51,8 @@ public class ErrorUtils extends Activity {
 			break;
 
 		case GAS_HEATER: // 燃热
-			Log.e(TAG, "case GAS-HEATER");
-			Log.e(TAG, "mac : " + getIntent().getStringExtra("mac"));
+			L.e(this, "case GAS-HEATER");
+			L.e(this, "mac : " + getIntent().getStringExtra("mac"));
 			if (isMainActivityActive) { // 如何当前是处于电热或壁挂炉的主控界面,则从电热或壁挂炉主控界面切换到燃热主控界面
 				originalIntent.setClass(this, MainActivity.class);
 			} else if (isFurnaceMainActivityActive) {

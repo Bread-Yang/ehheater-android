@@ -37,6 +37,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.view.BaoBarView;
 import com.vanward.ehheater.view.BaoBarView.BaoBarViewAdapter;
@@ -162,7 +163,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
                                 int value = data[index];
                                 data[index] = newValue;
                                 bbv.invalidate();
-                                Log.e(TAG, "data : " + Arrays.toString(data));
+                                L.e(this, "data : " + Arrays.toString(data));
                             }
                         }
                         break;
@@ -214,7 +215,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
                 bbvHeight += ",";
             }
         }
-        Log.e(TAG,
+        L.e(this,
                 bbvHeight.length() + "bbvHeight里面的数据是： " + bbvHeight.toString());
 
         final JSONObject json2 = new JSONObject();
@@ -248,20 +249,20 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
             e1.printStackTrace();
         }
 
-        Log.e(TAG, json2.toString());
+        L.e(this, json2.toString());
 
         AjaxParams params = new AjaxParams();
 
         params.put("data", json2.toString());
 
-        Log.e(TAG, "请求的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
+        L.e(this, "请求的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 
         mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
                 params, new AjaxCallBack<String>() {
                     @Override
                     public void onSuccess(String jsonString) {
                         super.onSuccess(jsonString);
-                        Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+                        L.e(this, "请求成功后返回的数据是 : " + jsonString);
 
                         try {
                             JSONObject json = new JSONObject(jsonString);
@@ -306,8 +307,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
                     @Override
                     public void onSuccess(String jsonString) {
                         super.onSuccess(jsonString);
-                        Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
-                        Log.e(TAG, "Sharedpreferences返回的数据是 : "
+                        L.e(this, "请求成功后返回的数据是 : " + jsonString);
+                        L.e(this, "Sharedpreferences返回的数据是 : "
                                 + getFromSharedPreferences());
 
                         try {
@@ -335,13 +336,13 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 //						showDialog2(1);
                     }
                 });
-        Log.e(TAG, " getData()执行完了");
+        L.e(this, " getData()执行完了");
         return forResult;
     }
 
     private void extractDataFromJson(String jsonString) {
 
-        Log.e(TAG, "进入extractDataFromJson方法");
+        L.e(this, "进入extractDataFromJson方法");
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
 
@@ -386,7 +387,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
                 }
             }
 
-            Log.e(TAG, "解析json方法里面的--loop的数据是 : " + loop);
+            L.e(this, "解析json方法里面的--loop的数据是 : " + loop);
 
             if (!"null".equals(loop)) {
                 for (int i = 0; i < loop.length(); i++) {
@@ -449,7 +450,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "没有数据返回");
+            L.e(this, "没有数据返回");
             isAdd = true;
             e.printStackTrace();
         }
@@ -535,7 +536,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
                     @Override
                     public void onSuccess(String jsonString) {
                         super.onSuccess(jsonString);
-                        Log.e(TAG, "请求成功后返回的数据是 : " + jsonString);
+                        L.e(this, "请求成功后返回的数据是 : " + jsonString);
 
                         extractDataFromJson(jsonString);
 

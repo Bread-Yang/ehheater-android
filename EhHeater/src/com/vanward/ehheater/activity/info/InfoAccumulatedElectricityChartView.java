@@ -11,42 +11,28 @@ import net.tsz.afinal.http.AjaxCallBack;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import u.aly.w;
-import android.R.string;
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Paint.FontMetrics;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
 import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.HttpConnectUtil;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 
 public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 		OnClickListener, OnCheckedChangeListener {
@@ -215,13 +201,13 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 	}
 
 	public void getmessageweek(long da) {
-		Log.e(TAG, "getmessageweek时间是 : " + da);
+		L.e(this, "getmessageweek时间是 : " + da);
 
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
 				+ "&dateTime=" + da + "&resultType=1&expendType=3";
-		Log.e(TAG, "getmessageweek的连接是 : " + url);
+		L.e(this, "getmessageweek的连接是 : " + url);
 
 		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
 
@@ -230,7 +216,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 			@Override
 			public void onSuccess(String t) {
-				Log.e(TAG, "getmessageweek返回的数据是 : " + t);
+				L.e(this, "getmessageweek返回的数据是 : " + t);
 				try {
 					JSONObject jsonObject = new JSONObject(t);
 					JSONArray array = jsonObject.getJSONArray("result");
@@ -324,7 +310,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 					@Override
 					public void onSuccess(String t) {
-						Log.e(TAG, 
+						L.e(this, 
 								"getmessagemonth返回的数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);

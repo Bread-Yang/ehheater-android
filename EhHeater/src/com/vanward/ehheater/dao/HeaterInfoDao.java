@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
+import com.vanward.ehheater.util.L;
 
 public class HeaterInfoDao extends BaseDao {
 
@@ -29,7 +29,7 @@ public class HeaterInfoDao extends BaseDao {
 	}
 
 	public void save(HeaterInfo heater) {
-		Log.e(TAG, "saving heater(allow empty passcode): " + heater);
+		L.e(this, "saving heater(allow empty passcode): " + heater);
 		// getDb().replace(heater);
 
 		HeaterInfo old = getHeaterByMac(heater.getMac());

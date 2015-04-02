@@ -77,16 +77,16 @@ public class CheckOnlineUtil {
 			@Override
 			public void run() {
 				
-				Log.e(TAG, "checking online...");
+				L.e(this, "checking online...");
 				
 				if (paused) {
-					Log.e(TAG, "checking online returned due to paused");
+					L.e(this, "checking online returned due to paused");
 					return;
 				}
 				
 				if (Global.checkOnlineConnId < 0) {
 					// 已处理了上线, 或者该连接已断开
-					Log.e(TAG, "checking online returned due to already dealed");
+					L.e(this, "checking online returned due to already dealed");
 					checkOnlineTimer.cancel();
 					return;
 				} 
@@ -95,7 +95,7 @@ public class CheckOnlineUtil {
 					
 					if (end.getSzMac().equals(checkMac) && end.getIsOnline() == 1) {
 
-						Log.e(TAG, "checking online: device online!");
+						L.e(this, "checking online: device online!");
 						checkOnlineTimer.cancel();
 						
 						// ConnectActivity.connectToDevice(act, curmac, userId, userPsw);
@@ -110,7 +110,7 @@ public class CheckOnlineUtil {
 //					item.delete();
 				}
 				bindList.clear();
-				Log.e(TAG, "checking online: continue fetch binding");
+				L.e(this, "checking online: continue fetch binding");
 				generated.SendBindingGetV2Req(Global.checkOnlineConnId);
 				
 			}

@@ -266,7 +266,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.e(TAG, "onConnectEvent@ChangePswd: " + connId + "-" + event);
+		L.e(this, "onConnectEvent@ChangePswd: " + connId + "-" + event);
 
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
 			// 连接成功
@@ -281,7 +281,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.e(TAG, "onLoginCloudResp@ChangePswd: " + result);
+		L.e(this, "onLoginCloudResp@ChangePswd: " + result);
 
 		generated.SendUserPwdChangeReq(tempConnId, generated
 				.String2XpgData(AccountService.getUserId(getBaseContext())),
@@ -308,7 +308,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 	@Override
 	public void OnUserPwdChangeResp(UserPwdChangeResp_t pResp, int nConnId) {
 		super.OnUserPwdChangeResp(pResp, nConnId);
-		Log.e(TAG, "OnUserPwdChangeResp@ChangePswd: " + pResp.getResult());
+		L.e(this, "OnUserPwdChangeResp@ChangePswd: " + pResp.getResult());
 		DialogUtil.dismissDialog();
 
 		if (pResp.getResult() == 0) {

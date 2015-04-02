@@ -288,7 +288,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			new Runnable() {/* onSuccess */
 				@Override
 				public void run() {
-					Log.e(TAG, "ping gizwits SUCCESS");
+					L.e(this, "ping gizwits SUCCESS");
 					serverAcessHandler.sendEmptyMessage(0);
 				}
 			},
@@ -296,7 +296,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			new Runnable() {/* onFail */
 				@Override
 				public void run() {
-					Log.e(TAG, "ping gizwits FAIL");
+					L.e(this, "ping gizwits FAIL");
 					serverAcessHandler.sendEmptyMessage(1);
 				}
 			});
@@ -342,7 +342,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.e(TAG, "onConnectEvent@HeaterManagementActivity@: " + connId + "-"
+		L.e(this, "onConnectEvent@HeaterManagementActivity@: " + connId + "-"
 				+ event);
 
 		// if (event == XPG_RESULT.ERROR_NONE.swigValue()) {
@@ -373,7 +373,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
-		Log.e(TAG, "onWanLoginResp()调用了");
+		L.e(this, "onWanLoginResp()调用了");
 		tempConnId = connId;
 		generated.SendBindingDelReq(connId,
 				generated.String2XpgData(didOfHeaterBeingDeleted));
@@ -382,7 +382,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.e(TAG, "onLoginCloudResp@HeaterManagement: " + result);
+		L.e(this, "onLoginCloudResp@HeaterManagement: " + result);
 
 		// generated.SendBindingDelReq(tempConnId,
 		// generated.String2XpgData(didOfHeaterBeingDeleted));
@@ -407,7 +407,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 	@Override
 	public void OnBindingDelResp(BindingDelResp_t pResp, int nConnId) {
 		super.OnBindingDelResp(pResp, nConnId);
-		Log.e(TAG, "OnBindingDelResp@HeaterManagement: " + pResp.getResult());
+		L.e(this, "OnBindingDelResp@HeaterManagement: " + pResp.getResult());
 
 		DialogUtil.dismissDialog();
 

@@ -43,6 +43,7 @@ import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.ErrorUtils;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SwitchDeviceUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
@@ -346,7 +347,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
     private void showTipImageVIew(DERYStatusResp_t pResp) {
         isError = false;
-        Log.e(TAG, "故障是 : " + pResp.getError());
+        L.e(this, "故障是 : " + pResp.getError());
         for (int i = 0; i < errorArray.length; i++) {
             if (pResp.getError() == errorArray[i]) {
                 isError = true;
@@ -370,7 +371,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
     @Override
     public void onConnectEvent(int connId, int event) {
         super.onConnectEvent(connId, event);
-        Log.e(TAG, "onConnectEvent@FurnaceMainActivity回调了");
+        L.e(this, "onConnectEvent@FurnaceMainActivity回调了");
         if (connId == Global.connectId && event == -7) { // -7:offline, 0 :
             // online
             isPowerOffOrOffline = true;
@@ -490,7 +491,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
             }
         } else if (pResp.getSeasonState() == 1) { // winner
 
-            // Log.e(TAG, "冬季返回来的温度是 : " + pResp.getHeatingTemTarget());
+            // L.e(this, "冬季返回来的温度是 : " + pResp.getHeatingTemTarget());
 
             if (pResp.getHeatingSend() == 0) { // 0 : 散热器
                 rb_supply_heating
@@ -651,8 +652,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
         if (pResp.getOnOff() == 1) {
             tv_gas_unit.setVisibility(View.VISIBLE);
             tv_gas_consumption.setText(String.valueOf(pResp.getGasCountNow()));
-            Log.e(TAG, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
-            Log.e(TAG, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
+            L.e(this, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
+            L.e(this, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
         } else {
             // tv_gas_unit.setVisibility(View.GONE);
             tv_gas_consumption.setText(R.string.no_set);
@@ -973,20 +974,20 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.e(TAG, "onNewIntent()");
+        L.e(this, "onNewIntent()");
         setIntent(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume()执行了");
+        L.e(this, "onResume()执行了");
         ErrorUtils.isFurnaceMainActivityActive = true;
         ErrorUtils.isMainActivityActive = false;
         ErrorUtils.isGasMainActivityActive = false;
         isError = false;
         String mac = getIntent().getStringExtra("mac");
-        Log.e(TAG, "mac : " + mac);
+        L.e(this, "mac : " + mac);
         if (mac != null && !getIntent().getBooleanExtra("newActivity", false)) {
             SwitchDeviceUtil.switchDevice(mac, this);
         }
@@ -1009,7 +1010,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
     @Override
     public void didBeginTouchCircleSlider() {
-        // Log.e(TAG, "didBeginTouchCircleSlider");
+        // L.e(this, "didBeginTouchCircleSlider");
     }
 
     @Override
@@ -1086,7 +1087,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
     @Override
     public void didEndChangeValue() {
-        // Log.e(TAG, "didEndChangeValue");
+        // L.e(this, "didEndChangeValue");
         boolean isBathMode = true;
         if (rg_winner.getVisibility() == View.VISIBLE
                 && rg_winner.getCheckedRadioButtonId() == R.id.rb_supply_heating) {

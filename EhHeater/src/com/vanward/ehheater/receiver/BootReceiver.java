@@ -3,7 +3,8 @@ package com.vanward.ehheater.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+
+import com.vanward.ehheater.util.L;
 
 public class BootReceiver extends BroadcastReceiver {
 
@@ -15,7 +16,7 @@ public class BootReceiver extends BroadcastReceiver {
 		// 接收广播：设备上新安装了一个应用程序包后自动启动新安装应用程序。
 		if (intent.getAction().equals("android.intent.action.PACKAGE_ADDED")) {
 			String packageName = intent.getDataString().substring(8);
-			Log.e(TAG, "---------------" + packageName);
+			L.e(this, "---------------" + packageName);
 			Intent newIntent = new Intent();
 			newIntent.setClassName(packageName, packageName + ".MainActivity");
 			newIntent.setAction("android.intent.action.MAIN");
@@ -25,7 +26,7 @@ public class BootReceiver extends BroadcastReceiver {
 		}
 		// 接收广播：设备上删除了一个应用程序包。
 		if (intent.getAction().equals("android.intent.action.PACKAGE_REMOVED")) {
-			Log.e(TAG, "万和云智能被删除了");
+			L.e(this, "万和云智能被删除了");
 		}
 	}
 }

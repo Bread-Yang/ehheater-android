@@ -2,11 +2,11 @@ package com.vanward.ehheater.activity.feedback;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.login.LoginActivity;
+import com.vanward.ehheater.util.L;
 import com.xtremeprog.xpgconnect.generated.BindingDelResp_t;
 import com.xtremeprog.xpgconnect.generated.BindingGetResp_t;
 import com.xtremeprog.xpgconnect.generated.BindingSetResp_t;
@@ -122,14 +122,14 @@ public class FeedbackActivity extends EhHeaterBaseActivity {
 		// 第15位 : "剩余热水量"
 		device.setResidualHotWater(data[15]);
 
-		Log.e(TAG, "开关机状态 : " + (device.isPowerOn() ? "开机" : "关机"));
-		Log.e(TAG, "加热状态 : " + (device.isHeating() ? "加热" : "未加热"));
-		Log.e(TAG, "预约状态 : " + (device.isAppointment() ? "预约" : "未预约"));
-		Log.e(TAG, "内胆水温 : " + (device.getInnerTemp() + ""));
-		Log.e(TAG, "设置水温 : " + (device.getSetupTemp() + ""));
-		Log.e(TAG, "设置功率 : " + (device.getSetupPower() + ""));
-		Log.e(TAG, "剩余加热时间 : " + (device.getResidualHeatTime() + ""));
-		Log.e(TAG, "剩余热水量 : " + (device.getResidualHotWater() + ""));
+		L.e(this, "开关机状态 : " + (device.isPowerOn() ? "开机" : "关机"));
+		L.e(this, "加热状态 : " + (device.isHeating() ? "加热" : "未加热"));
+		L.e(this, "预约状态 : " + (device.isAppointment() ? "预约" : "未预约"));
+		L.e(this, "内胆水温 : " + (device.getInnerTemp() + ""));
+		L.e(this, "设置水温 : " + (device.getSetupTemp() + ""));
+		L.e(this, "设置功率 : " + (device.getSetupPower() + ""));
+		L.e(this, "剩余加热时间 : " + (device.getResidualHeatTime() + ""));
+		L.e(this, "剩余热水量 : " + (device.getResidualHotWater() + ""));
 	}
 
 	@Override

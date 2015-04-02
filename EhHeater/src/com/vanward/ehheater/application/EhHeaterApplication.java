@@ -2,13 +2,11 @@ package com.vanward.ehheater.application;
 
 import android.app.Application;
 import android.graphics.Typeface;
-import android.util.Log;
 
 import com.vanward.ehheater.statedata.EhState;
-import com.vanward.ehheater.util.LogcatFileManager;
+import com.vanward.ehheater.util.L;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
-import com.xtremeprog.xpgconnect.generated.XPG_CONFIG_KEY;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.listener.ClientListener;
 
@@ -43,9 +41,9 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 		EhHeaterApplication.device_density = this.getResources()
 				.getDisplayMetrics().density; 
 		
-		Log.e(TAG, "density : " + EhHeaterApplication.device_density);
+		L.e(this, "density : " + EhHeaterApplication.device_density);
 		
-//		Log.e(TAG, "getResources().getConfiguration().screenWidthDp : " + getResources().getConfiguration().screenWidthDp);
+//		L.e(this, "getResources().getConfiguration().screenWidthDp : " + getResources().getConfiguration().screenWidthDp);
 	}
 
 	@Override 
@@ -65,7 +63,7 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 
 	@Override
 	public void onConnectEvent(int connId, int event) {
-		Log.e(TAG, "onConnectEvent@EhHeaterApplication@: " + connId + "-" + event);
+		L.e(this, "onConnectEvent@EhHeaterApplication@: " + connId + "-" + event);
 	}
 
 	@Override

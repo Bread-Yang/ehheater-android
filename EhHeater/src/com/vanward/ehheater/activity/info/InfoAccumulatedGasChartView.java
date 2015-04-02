@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,8 +30,8 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
 import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.util.HttpConnectUtil;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 
 public class InfoAccumulatedGasChartView extends LinearLayout implements
 		OnClickListener, OnCheckedChangeListener {
@@ -198,12 +197,12 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 	}
 
 	public void getmessageweek(final long da) {
-		Log.e(TAG, "getmessageweek返回的时间是 : " + da);
+		L.e(this, "getmessageweek返回的时间是 : " + da);
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 		String url = Consts.REQUEST_BASE_URL + "GasInfo/getgasdata?did=" + adid
 				+ "&dateTime=" + da + "&resultType=1&expendType=1";
-		Log.e(TAG, "getmessageweek请求的url是 : " + url);
+		L.e(this, "getmessageweek请求的url是 : " + url);
 
 		mHttpFriend.toUrl(url).executeGet(null, new AjaxCallBack<String>() {
 
@@ -212,7 +211,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 			@Override
 			public void onSuccess(String t) {
-				Log.e(TAG, "getmessageweek返回的json数据是 : " + t);
+				L.e(this, "getmessageweek返回的json数据是 : " + t);
 				try {
 					JSONObject jsonObject = new JSONObject(t);
 					JSONArray array = jsonObject.getJSONArray("result");
@@ -239,9 +238,9 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 						JSONObject jsonOBJ2 = new JSONObject();
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
-						Log.e(TAG, "li.get(i).getAmount() : "
+						L.e(this, "li.get(i).getAmount() : "
 								+ li.get(i).getAmount());
-						Log.e(TAG, "b : " + b);
+						L.e(this, "b : " + b);
 						a = a + b + 0f;
 						jsonOBJ.put("name", li.get(i).getTime());
 						if (li.get(i).getAmount().equals("")) {
@@ -279,7 +278,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 	}
 
 	public void getmessagemonth(final long da2) {
-		Log.e(TAG, "getmessagemonth返回的时间是 : " + da2);
+		L.e(this, "getmessagemonth返回的时间是 : " + da2);
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
 
@@ -294,7 +293,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 					@Override
 					public void onSuccess(String t) {
-						Log.e(TAG, "getmessagemonth返回的json数据是 : " + t);
+						L.e(this, "getmessagemonth返回的json数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -343,10 +342,10 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 								b = Math.round(Float.parseFloat(li.get(i)
 										.getAmount().equals("") ? "0" : li.get(
 										i).getAmount()));
-								Log.e(TAG,
+								L.e(this,
 										"li.get(i).getAmount() : "
 												+ li.get(i).getAmount());
-								Log.e(TAG, "b : " + b);
+								L.e(this, "b : " + b);
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								if (li.get(i).getAmount().equals("")) {
@@ -404,7 +403,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 			@Override
 			public void onSuccess(String t) {
-				Log.e(TAG, "getmessageyear返回的json数据是 : " + t);
+				L.e(this, "getmessageyear返回的json数据是 : " + t);
 				try {
 					JSONObject jsonObject = new JSONObject(t);
 					JSONArray array = jsonObject.getJSONArray("result");
@@ -443,7 +442,7 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
-						Log.e(TAG, "JSON是 : " + jsonArray2.toString());
+						L.e(this, "JSON是 : " + jsonArray2.toString());
 					}
 					// 赋值name
 					namelistjson = jsonArray.toString();

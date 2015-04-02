@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import net.tsz.afinal.http.AjaxCallBack;
-import net.tsz.afinal.http.AjaxParams;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +21,6 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.google.gson.Gson;
 import com.vanward.ehheater.R;
@@ -31,6 +29,7 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 
 public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
@@ -66,7 +65,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setCenterView(R.layout.activity_furnace_gas_consumption);
-		setTopText(R.string.gas_consumption);
+		setTopText(R.string.gas_consumption_title);
 		setLeftButtonBackground(R.drawable.icon_back);
 		setRightButton(View.GONE);
 		findViewById();
@@ -151,20 +150,17 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 		@JavascriptInterface
 		public String getRealtimeConsumptionTitle() {
-			Log.d(TAG, "getRealtime方法执行了");
 			return realTimeTitleDateFormat.format(new Date());
 		}
 
 		@JavascriptInterface
 		public String getAccumulatedConsumptionTitle() {
-			Log.d(TAG, "getAccumulatedConsumptionTitle方法执行了");
 			return AccumulatedDateFormat.format(new Date());
 
 		}
 
 		@JavascriptInterface
 		public String getHighChartData() {
-			Log.d(TAG, "getHighChartData方法执行了");
 			if (isPowerOffOrOffline) {
 				return offline_data;
 			} else {
@@ -180,7 +176,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				sb.append("'").append(realTimeXCategories.get(i)).append("',");
 			}
 			sb.append("]");
-			Log.e(TAG, "X_Categories : " + sb.toString());
+			L.e(this, "X_Categories : " + sb.toString());
 			return sb.toString();
 		}
 
@@ -206,14 +202,14 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				sb.append(realTimeYDatas.get(i)).append(",");
 			}
 			sb.append("]");
-			Log.e(TAG, "realTimeDatas : " + sb.toString());
+			L.e(this, "realTimeDatas : " + sb.toString());
 			return sb.toString();
 		}
 
 		@JavascriptInterface
 		public String getAccumulatedData() {
 
-			Log.e(TAG, "getx方法执行完了" + forResult);
+			L.e(this, "getx方法执行完了" + forResult);
 			JSONObject joTemp, joResult;
 			JSONArray ja = new JSONArray();
 			StringBuilder sb = new StringBuilder();
@@ -223,13 +219,14 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				for (int i = 0; i < ja.length(); i++) {
 					joTemp = ja.getJSONObject(i);
 					sb.append("{data:");
-					Log.e(TAG,
+					L.e(this,
 							"joTemp.getString('amount') : "
 									+ joTemp.getString("amount"));
 					if ("".equals(joTemp.getString("amount"))) {
 						sb.append("\"\"");
 					} else {
-						sb.append(joTemp.getString("amount"));
+						int amount = Integer.valueOf(joTemp.getString("amount")) / 10; 
+						sb.append(amount);
 					}
 					sb.append("},");
 
@@ -244,7 +241,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	}
 
 	private JSONObject testJSON() {
-		Log.e("FurnaceGas", "testJSON方法执行了");
 		JSONObject[] jbArray = new JSONObject[12];
 		for (int i = 0; i < 12; i++) {
 			jbArray[i] = new JSONObject();
@@ -289,8 +285,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 			e.printStackTrace();
 		}
 
-		Log.e("FurnaceGas", json.toString());
-
 		return json;
 	}
 
@@ -308,8 +302,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		Log.e("getJson执行了的数据是", jo1 + jo2 + ja1.toString());
-
 	}
 
 	private String json2StringLeiji() {
@@ -334,7 +326,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
-						Log.e(TAG, "请求getFurnaceYearGas数据是 : " + jsonString);
+						L.e(this, "请求getFurnaceYearGas数据是 : " + jsonString);
 
 						try {
 							JSONObject json = new JSONObject(jsonString);
@@ -368,7 +360,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 					}
 				});
-		Log.e(TAG, " getData()执行完了");
+		L.e(this, " getData()执行完了");
 		return forResult;
 	}
 
@@ -384,7 +376,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 					@Override
 					public void onSuccess(String jsonString) {
 						super.onSuccess(jsonString);
-						Log.e(TAG, "请求getFurnaceHourGas后返回的数据是 : " + jsonString);
+						L.e(this, "请求getFurnaceHourGas后返回的数据是 : " + jsonString);
 
 						try {
 							JSONObject json = new JSONObject(jsonString);
@@ -400,7 +392,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 								realTimeXCategories.add(time);
 								if (!item.getString("amount").equals("")) {
 									realTimeYDatas.add(Double.parseDouble(item
-											.getString("amount")));
+											.getString("amount")) / 10);
 								} else {
 									realTimeYDatas.add(0.0);
 								}
@@ -437,7 +429,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 					}
 				});
 
-		Log.e(TAG, " getDataForShiShi()执行完了");
+		L.e(this, " getDataForShiShi()执行完了");
 		return forResult;
 	}
 
@@ -469,7 +461,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	class TakeDataThread extends Thread {
 		@Override
 		public void run() {
-			Log.d(TAG, "线程开始");
 			while (true) {
 
 				// 睡眠5分钟

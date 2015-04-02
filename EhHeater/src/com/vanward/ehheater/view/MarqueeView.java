@@ -8,7 +8,6 @@ import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.L;
 
 /**
  * Provides a simple marquee effect for a single {@link android.widget.TextView}
@@ -235,10 +235,10 @@ public class MarqueeView extends LinearLayout {
 
 		mTextDifference = Math.abs((mTextWidth - getMeasuredWidth())) + 5;
 
-		Log.e(TAG, "mTextWidth       : " + mTextWidth);
-		Log.e(TAG, "measuredWidth    : " + getMeasuredWidth());
-		Log.e(TAG, "mMarqueeNeeded   : " + mMarqueeNeeded);
-		Log.e(TAG, "mTextDifference  : " + mTextDifference);
+		L.e(this, "mTextWidth       : " + mTextWidth);
+		L.e(this, "measuredWidth    : " + getMeasuredWidth());
+		L.e(this, "mMarqueeNeeded   : " + mMarqueeNeeded);
+		L.e(this, "mTextDifference  : " + mTextDifference);
 		// 用dp作为动画的duration系数
 		final float scale = context.getResources().getDisplayMetrics().density;
 		float mTextDifference_DP = (mTextDifference / scale + 0.5f);

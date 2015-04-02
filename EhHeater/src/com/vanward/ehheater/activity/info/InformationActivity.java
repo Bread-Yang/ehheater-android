@@ -2,18 +2,16 @@ package com.vanward.ehheater.activity.info;
 
 import java.util.ArrayList;
 
+import net.tsz.afinal.http.AjaxCallBack;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import net.tsz.afinal.http.AjaxCallBack;
-
 import android.content.Context;
 import android.os.Bundle;
-
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,12 +19,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 
 public class InformationActivity extends EhHeaterBaseActivity implements
 		OnPageChangeListener, OnClickListener {
@@ -242,7 +240,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 					+ heaterInfoService.getCurrentSelectedHeater().getDid();
 		}
 
-		Log.e(TAG , "信息请求的url是 : " + url);
+		L.e(this , "信息请求的url是 : " + url);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + url).executeGet(null,
 				new AjaxCallBack<String>() {
@@ -250,7 +248,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 					@Override
 					public void onSuccess(String t) {
 						super.onSuccess(t);
-						Log.e(TAG, "信息请求返回的json是 : " + t);
+						L.e(this, "信息请求返回的json是 : " + t);
 						try {
 							JSONObject json = new JSONObject(t);
 							String responseCode = json

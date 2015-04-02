@@ -257,9 +257,9 @@ public class BaoCircleSlider extends View {
 		float angle = 360.0f * (value - this.minValue)
 				/ (this.maxValue - this.minValue); // 当前值所偏移的度数
 		ctrlIconViewCenterPoint = iconCenterOfAngle(angle);
-		// Log.e(TAG, "ctrlIconViewCenterPoint.x : " +
+		// L.e(this, "ctrlIconViewCenterPoint.x : " +
 		// ctrlIconViewCenterPoint.x);
-		// Log.e(TAG, "ctrlIconViewCenterPoint.y : " +
+		// L.e(this, "ctrlIconViewCenterPoint.y : " +
 		// ctrlIconViewCenterPoint.y);
 		updateDragingTipViewRotateOfValue(value);
 		ctrlIconView.layout(ctrlIconViewCenterPoint.x - ctrlIconViewWidth / 2,
@@ -283,8 +283,8 @@ public class BaoCircleSlider extends View {
 	private void dealWithTouchPoint(Point touchPoint) {
 		float angle = angleOfTouchPoint(touchPoint);
 		int value = valueOfAngle(angle);
-		// Log.e(TAG, "dealWithTouchPoint : " + "angle : " + angle);
-		// Log.e(TAG, "dealWithTouchPoint : " + "value : " + value);
+		// L.e(this, "dealWithTouchPoint : " + "angle : " + angle);
+		// L.e(this, "dealWithTouchPoint : " + "value : " + value);
 		setCurrentValue(value);
 	}
 
@@ -305,25 +305,25 @@ public class BaoCircleSlider extends View {
 		float length = lengthOfTwoPoint(point, circleCenter);
 		boolean isOnline = (length < (radius + ctrlIconViewWidth * 3 / 2))
 				&& (length > (radius - ctrlIconViewWidth * 3 / 2));
-		// Log.e(TAG, "是否在圆环线上 : " + isOnline);
+		// L.e(this, "是否在圆环线上 : " + isOnline);
 		return isOnline;
 	}
 
 	private boolean isTouchInCtrlIconView(Point point) {
 		Rect hitRect = new Rect();
 		ctrlIconView.getHitRect(hitRect);
-		// Log.e(TAG, "hitRect.left : " + hitRect.left);
-		// Log.e(TAG, "hitRect.top : " + hitRect.top);
-		// Log.e(TAG, "hitRect.right : " + hitRect.right);
-		// Log.e(TAG, "hitRect.bottom : " + hitRect.bottom);
-		// Log.e(TAG, "是否在Rect中 : " + hitRect.contains(point.x, point.y));
+		// L.e(this, "hitRect.left : " + hitRect.left);
+		// L.e(this, "hitRect.top : " + hitRect.top);
+		// L.e(this, "hitRect.right : " + hitRect.right);
+		// L.e(this, "hitRect.bottom : " + hitRect.bottom);
+		// L.e(this, "是否在Rect中 : " + hitRect.contains(point.x, point.y));
 		return hitRect.contains(point.x, point.y);
 	}
 
 	private int valueOfAngle(float angle) {
 		float valueRange = (this.maxValue - this.minValue);
 		int value = (int) (Math.ceil(angle * valueRange / 360.0) + this.minValue);
-		// Log.e(TAG, "valueOfAngle : " + value);
+		// L.e(this, "valueOfAngle : " + value);
 		return value;
 	}
 
@@ -346,7 +346,7 @@ public class BaoCircleSlider extends View {
 		if (point.x > circleCenter.x) {
 			angle = 360 - angle;
 		}
-		// Log.e(TAG, "点击处的角度是 : " + angle);
+		// L.e(this, "点击处的角度是 : " + angle);
 		return angle;
 
 	}
@@ -360,12 +360,12 @@ public class BaoCircleSlider extends View {
 		double radian = Math.toRadians(normalAngle);
 		int x1 = (int) (circleCenter.x + radius * Math.cos(radian));
 		int y1 = (int) (circleCenter.y + radius * Math.sin(radian));
-		// Log.e(TAG, "getWidth() : " + getWidth());
-		// Log.e(TAG, "circleCenter.x : " + circleCenter.x +
+		// L.e(this, "getWidth() : " + getWidth());
+		// L.e(this, "circleCenter.x : " + circleCenter.x +
 		// );
-		// Log.e(TAG, "circleCenter.x : " + circleCenter.x +
+		// L.e(this, "circleCenter.x : " + circleCenter.x +
 		// "");
-		// Log.e(TAG, "circleCenter.y : " + circleCenter.y +
+		// L.e(this, "circleCenter.y : " + circleCenter.y +
 		// "");
 		Point point = new Point(x1, y1);
 		return point;
@@ -394,7 +394,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_DOWN:
 
-			// Log.e(TAG, "1event : ACTION_DOWN");
+			// L.e(this, "1event : ACTION_DOWN");
 
 			isInCtrlIcon = isTouchInCtrlIconView(touchPoint);
 			isOnline = isOnLine(touchPoint);
@@ -412,7 +412,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_MOVE:
 
-			// Log.e(TAG, "22event : ACTION_MOVE");
+			// L.e(this, "22event : ACTION_MOVE");
 
 			getParent().requestDisallowInterceptTouchEvent(true);
 			if (isTouchCtrlIcon) {
@@ -423,7 +423,7 @@ public class BaoCircleSlider extends View {
 				if (offset > 40) {
 					return true; // 控制值的变化，避免从最大值跳到最小值等情况
 				}
-				// Log.e(TAG, "angle - preAngle = " + (angle - preAngle));
+				// L.e(this, "angle - preAngle = " + (angle - preAngle));
 				// if (Math.abs(angle - preAngle) >= 4) {
 				isAdd = (angle > preAngle);
 				// }
@@ -433,7 +433,7 @@ public class BaoCircleSlider extends View {
 				setShowMinusImageView(!isAdd);
 				dealWithTouchPoint(touchPoint);
 				// setValue(currentValue); // 使ctrlIconView滚动,for test
-				// Log.e(TAG, "currentValue : " + currentValue);
+				// L.e(this, "currentValue : " + currentValue);
 				if (circleSliderListener != null) {
 					circleSliderListener.needChangeValue(
 							(int) this.currentValue, isAdd);
@@ -443,7 +443,7 @@ public class BaoCircleSlider extends View {
 
 		case MotionEvent.ACTION_UP:
 
-			// Log.e(TAG, "333event : ACTION_UP");
+			// L.e(this, "333event : ACTION_UP");
 
 			if (isTouchCtrlIcon) {
 				float angle = angleOfTouchPoint(touchPoint);
@@ -462,11 +462,11 @@ public class BaoCircleSlider extends View {
 				ctrlIconView.getHitRect(hitRect);
 				float currentAngle = angleOfTouchPoint(new Point(
 						hitRect.centerX(), hitRect.centerY()));
-				// Log.e(TAG, "点击处的angle : " + angle);
-				// Log.e(TAG, "当前圆点的currentAngle : " + currentAngle);
+				// L.e(this, "点击处的angle : " + angle);
+				// L.e(this, "当前圆点的currentAngle : " + currentAngle);
 				boolean isAdd = angle > currentAngle;
 				int pad = isAdd ? +1 : -1;
-				// Log.e(TAG, "ANGLE是 : " + isAdd);
+				// L.e(this, "ANGLE是 : " + isAdd);
 				currentValue = value + pad;
 				// setValue(currentValue); // 使ctrlIconView滚动, for test
 				changingValue = true;
@@ -573,13 +573,13 @@ public class BaoCircleSlider extends View {
 			showCtrlIconView = false;
 		}
 		invalidate();
-		// Log.e(TAG, "setVisibility调用了 : " + (visibility == View.VISIBLE));
+		// L.e(this, "setVisibility调用了 : " + (visibility == View.VISIBLE));
 	}
 
 	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
-		// Log.e(TAG, "onDetachedFromWindow()执行了");
+		// L.e(this, "onDetachedFromWindow()执行了");
 
 		((BitmapDrawable) ctrlIconView.getDrawable()).getBitmap().recycle();
 		((BitmapDrawable) addImageView.getDrawable()).getBitmap().recycle();

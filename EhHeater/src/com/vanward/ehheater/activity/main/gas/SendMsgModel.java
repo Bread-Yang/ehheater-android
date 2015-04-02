@@ -1,10 +1,10 @@
 package com.vanward.ehheater.activity.main.gas;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.view.BathSettingDialogUtil.BathSettingVo;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -104,7 +104,7 @@ public class SendMsgModel {
 	// DIY设置指令下发
 
 	public static void setDIYModel(int i, final GasCustomSetVo gasCustomSetVo) {
-		Log.e(TAG, "SendMsgModel.setDIYModel() : " + gasCustomSetVo.getSendId() + " :  "+ gasCustomSetVo.getTempter()
+		L.e(SendMsgModel.class, "SendMsgModel.setDIYModel() : " + gasCustomSetVo.getSendId() + " :  "+ gasCustomSetVo.getTempter()
 				+ " :  " + gasCustomSetVo.getWaterval());
 		// generated.SendGasWaterHeaterDIYSettingReq(arg0, arg1, arg2, arg3,
 		// arg4)

@@ -1,7 +1,6 @@
 package com.vanward.ehheater.util;
 
 import java.io.InputStream;
-import java.util.Calendar;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -13,8 +12,6 @@ import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
 
 public class HttpConnectUtil {
 
@@ -38,7 +35,7 @@ public class HttpConnectUtil {
 //			paras.setParameter("expendType", expendType); 
 			
 
-			Log.e(TAG, "queryParas: " + did2query + "-" + dateTime2query + "-" + resultType + "-" + expendType);
+			L.e(HttpConnectUtil.class, "queryParas: " + did2query + "-" + dateTime2query + "-" + resultType + "-" + expendType);
 			
 //			paras.setParameter("did", "EohJ73eV37ABqVPm4jZcNT");
 //			paras.setParameter("dateTime", Calendar.getInstance().getTimeInMillis());
@@ -71,7 +68,7 @@ public class HttpConnectUtil {
 		JSONArray jr = new JSONArray(input);
 		for (int i = 0; i<jr.length(); i++) {
 			JSONObject jo = jr.getJSONObject(i);
-			Log.e(TAG, "theString: " + jo.getString("amount") + "-" + jo.getString("time"));
+			L.e(HttpConnectUtil.class, "theString: " + jo.getString("amount") + "-" + jo.getString("time"));
 		}
 		
 	}

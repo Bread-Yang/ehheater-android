@@ -813,7 +813,7 @@ public class WheelView extends View {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		// Log.e(TAG, "onMeasure被调用了");
+		// L.e(this, "onMeasure被调用了");
 		// LogOnMeasureInfo(widthMeasureSpec, heightMeasureSpec);
 
 		int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -880,12 +880,12 @@ public class WheelView extends View {
 		int widthSpecSize2Dp = PxUtil.px2dip(getContext(), widthSpecSize);
 		int heightSpecSize2Dp = PxUtil.px2dip(getContext(), heightSpecSize);
 
-		// Log.e(TAG, widthSpecModelString);
+		// L.e(this, widthSpecModelString);
 		// Log.e"TAG, heightSpecModeString);
-		// Log.e(TAG, widthSpecSize + "px");
-		// Log.e(TAG, heightSpecSize + "px");
-		// Log.e(TAG, widthSpecSize2Dp + "dp");
-		// Log.e(TAG, heightSpecSize2Dp + "dp");
+		// L.e(this, widthSpecSize + "px");
+		// L.e(this, heightSpecSize + "px");
+		// L.e(this, widthSpecSize2Dp + "dp");
+		// L.e(this, heightSpecSize2Dp + "dp");
 	}
 
 	@Override
@@ -910,7 +910,7 @@ public class WheelView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		// Log.e(TAG, "onDraw被调用了");
+		// L.e(this, "onDraw被调用了");
 //		drawCenterRect(canvas);
 
 		if (viewAdapter != null && viewAdapter.getItemsCount() > 0) {
@@ -1030,7 +1030,7 @@ public class WheelView extends View {
 		// int offset = (int) (getItemHeight() / 2);
 		int offset = (int) (getHeight() / visibleItems / 2);
 		// int offset = (int) (getItemHeight() / 2 * 0.8);
-		// Log.e(TAG, (getItemHeight() / 2) + "");
+		// L.e(this, (getItemHeight() / 2) + "");
 		float plus_offset = 3 * scale + 0.5f;
 		int left_offset = 0;
 		int top_offset = (int) (center - offset + plus_offset);
@@ -1264,7 +1264,7 @@ public class WheelView extends View {
 	 * @return true if items are rebuilt
 	 */
 	private boolean rebuildItems() {
-		// Log.e(TAG, "rebuildItems被调用了");
+		// L.e(this, "rebuildItems被调用了");
 		boolean updated = false;
 		ItemsRange range = getItemsRange();
 		if (itemsLayout != null) {
@@ -1330,7 +1330,7 @@ public class WheelView extends View {
 	 * Builds view for measuring
 	 */
 	private void buildViewForMeasuring() { // 初始化一次,起码调用四次以上,因为onMeasure()被调用四次以上
-		// Log.e(TAG, "buildViewForMeasuring被调用了");
+		// L.e(this, "buildViewForMeasuring被调用了");
 		// clear all items
 		if (itemsLayout != null) {
 			recycle.recycleItems(itemsLayout, firstItem, new ItemsRange());
@@ -1357,7 +1357,7 @@ public class WheelView extends View {
 	 * @return true if corresponding item exists and is added
 	 */
 	private boolean addViewItem(int index, boolean first) {
-		// Log.e(TAG, "addViewItem被调用了");
+		// L.e(this, "addViewItem被调用了");
 		View view = getItemView(index);
 
 		// Camera mCamera = new Camera();
@@ -1368,7 +1368,7 @@ public class WheelView extends View {
 
 		// view.setRotationX(60);
 
-		// Log.e(TAG, "是否是Identity : " + view.getMatrix().isIdentity());
+		// L.e(this, "是否是Identity : " + view.getMatrix().isIdentity());
 
 		if (view != null) {
 			if (first) {
@@ -1405,7 +1405,7 @@ public class WheelView extends View {
 	 * @return item view or empty view if index is out of bounds
 	 */
 	private View getItemView(int index) {
-		// Log.e(TAG, "getItemView被调用了");
+		// L.e(this, "getItemView被调用了");
 		if (viewAdapter == null || viewAdapter.getItemsCount() == 0) {
 			return null;
 		}

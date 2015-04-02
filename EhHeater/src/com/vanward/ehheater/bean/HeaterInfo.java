@@ -1,11 +1,9 @@
 package com.vanward.ehheater.bean;
 
-import android.nfc.Tag;
-import android.util.Log;
-
-import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
-
 import net.tsz.afinal.annotation.sqlite.Id;
+
+import com.vanward.ehheater.util.L;
+import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 
 public class HeaterInfo {
 
@@ -33,10 +31,10 @@ public class HeaterInfo {
 
 	public HeaterInfo(XpgEndpoint endpoint) {
 
-		Log.e(TAG, "返回的endpoint的mac是 " + endpoint.getSzMac().toLowerCase());
-		Log.e(TAG, "返回的endpoint的did是 " + endpoint.getSzDid());
-		Log.e(TAG, "返回的endpoint的passcode是 " + endpoint.getSzPasscode());
-		Log.e(TAG, "返回的endpoint的productKey是 " + endpoint.getSzProductKey());
+		L.e(this, "返回的endpoint的mac是 " + endpoint.getSzMac().toLowerCase());
+		L.e(this, "返回的endpoint的did是 " + endpoint.getSzDid());
+		L.e(this, "返回的endpoint的passcode是 " + endpoint.getSzPasscode());
+		L.e(this, "返回的endpoint的productKey是 " + endpoint.getSzProductKey());
 		
 		setMac(endpoint.getSzMac().toLowerCase());
 		setDid(endpoint.getSzDid());

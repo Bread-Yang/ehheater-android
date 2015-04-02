@@ -38,7 +38,6 @@ import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.activity.info.InfoTipActivity;
 import com.vanward.ehheater.activity.info.InformationActivity;
-import com.vanward.ehheater.activity.main.gas.GasPatternActivity;
 import com.vanward.ehheater.application.EhHeaterApplication;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.BaseDao;
@@ -49,6 +48,7 @@ import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.ErrorUtils;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SwitchDeviceUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
 import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
@@ -124,7 +124,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e(TAG, "GasMainActivity的onCreate执行了");
+		L.e(this, "GasMainActivity的onCreate执行了");
 		initSlidingMenu();
 		setContentView(R.layout.activity_gas_main);
 		initView(savedInstanceState);
@@ -155,7 +155,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		Log.e(TAG, "GasMainActivity的onNewIntent执行了");
+		L.e(this, "GasMainActivity的onNewIntent执行了");
 		setIntent(intent);
 	}
 
@@ -166,7 +166,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		ErrorUtils.isMainActivityActive = false;
 		ErrorUtils.isFurnaceMainActivityActive = false;
 
-		Log.e(TAG, "GasMainActivity的onResume调用了");
+		L.e(this, "GasMainActivity的onResume调用了");
 
 		String mac = getIntent().getStringExtra("mac");
 		if (!TextUtils.isEmpty(mac)
@@ -178,7 +178,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.e(TAG, "onPause()");
+		L.e(this, "onPause()");
 		deviceSwitchSuccessDialog.dismiss();
 	}
 
@@ -200,7 +200,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.e(TAG, "重连之后onActivityResult调用了");
+		L.e(this, "重连之后onActivityResult调用了");
 
 		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
 				&& resultCode == RESULT_OK) {
@@ -298,7 +298,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private long connectTime = 10000;
 
 	private void queryState() {
-		Log.e(TAG, "queryState()");
+		L.e(this, "queryState()");
 
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
@@ -321,7 +321,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private boolean stateQueried;
 
 	private void dealDisConnect() {
-		Log.e(TAG, "dealDisConnect被调用了");
+		L.e(this, "dealDisConnect被调用了");
 		isSendingCommand = false;
 		tv_tempter.setText("--");
 		tv_mode.setText("--模式");
@@ -347,14 +347,14 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	protected void onStop() {
-		Log.e(TAG, "onStop()");
+		L.e(this, "onStop()");
 		super.onStop();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.e(TAG, "onDestroy()");
+		L.e(this, "onDestroy()");
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
@@ -447,7 +447,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 
-			Log.e(TAG, "ivTitleBtnRigh执行了");
+			L.e(this, "ivTitleBtnRigh执行了");
 
 			if (tv_tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
@@ -673,7 +673,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.e(TAG, "onConnectEvent@ConnectActivity" + connId + "-" + event);
+		L.e(this, "onConnectEvent@ConnectActivity" + connId + "-" + event);
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
@@ -687,7 +687,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
-		Log.e(TAG, "重连之后OnGasWaterHeaterStatusResp调用了");
+		L.e(this, "重连之后OnGasWaterHeaterStatusResp调用了");
 
 		if (nConnId != Global.connectId) {
 			return;
@@ -722,7 +722,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp,
 			int nConnId) {
 		super.OnDeviceOnlineStateResp(pResp, nConnId);
-		Log.e(TAG, "OnDeviceOnlineStateResp isOnline == " + pResp.getIsOnline());
+		L.e(this, "OnDeviceOnlineStateResp isOnline == " + pResp.getIsOnline());
 		if (pResp.getIsOnline() == 0) {
 			onConnectEvent(Global.connectId, -7);
 		}
@@ -735,7 +735,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 */
 	private void dealMode(GasWaterHeaterStatusResp_t pResp) {
 
-		Log.e(TAG, "重连之后dealMode调用了");
+		L.e(this, "重连之后dealMode调用了");
 
 		((View) sumwater.getParent()).setVisibility(View.GONE);
 
@@ -747,8 +747,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 		currentModeCode = pResp.getFunction_state();
 
-		Log.e(TAG, "pResp.getFunction_state() == " + pResp.getFunction_state());
-		Log.e(TAG, "pResp.getCustomFunction() == " + pResp.getCustomFunction());
+		L.e(this, "pResp.getFunction_state() == " + pResp.getFunction_state());
+		L.e(this, "pResp.getCustomFunction() == " + pResp.getCustomFunction());
 
 		switch (pResp.getFunction_state()) {
 		case 1:
@@ -818,7 +818,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	private void temptertureDeal(final GasWaterHeaterStatusResp_t pResp) {
-		Log.e(TAG, "返回的当前温度是 : " + pResp.getTargetTemperature());
+		L.e(this, "返回的当前温度是 : " + pResp.getTargetTemperature());
 		if (!circle_slider.isDraging() && !isSendingCommand) {
 			circle_slider.setValue(pResp.getTargetTemperature());
 			// circularView.setTargerdegree(pResp.getTargetTemperature());
@@ -895,17 +895,17 @@ public class GasMainActivity extends BaseBusinessActivity implements
 									+ AccountService
 											.getUserId(GasMainActivity.this)
 									+ "'");
-			Log.e(TAG, "GasCustomSetVo的大小是" + list.size());
-			Log.e(TAG, "pResp.getCustomFunction() == " + pResp.getCustomFunction());
+			L.e(this, "GasCustomSetVo的大小是" + list.size());
+			L.e(this, "pResp.getCustomFunction() == " + pResp.getCustomFunction());
 			if (list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					GasCustomSetVo customSetVo = list.get(i);
 					if (customSetVo.getSendId() == pResp.getCustomFunction()) {
 						customSetVo.setTempter(pResp.getTargetTemperature());
-						Log.e(TAG, "getTargetTemperature : " + pResp.getTargetTemperature());
-						Log.e(TAG, "customSetVo.getName : " + customSetVo.getName());
-						Log.e(TAG, "customSetVo.getTempter : " + customSetVo.getTempter());
-						Log.e(TAG, "customSetVo.getSendId : " + customSetVo.getSendId());
+						L.e(this, "getTargetTemperature : " + pResp.getTargetTemperature());
+						L.e(this, "customSetVo.getName : " + customSetVo.getName());
+						L.e(this, "customSetVo.getTempter : " + customSetVo.getTempter());
+						L.e(this, "customSetVo.getSendId : " + customSetVo.getSendId());
 						new BaseDao(this).getDb().update(customSetVo);
 						String name = customSetVo.getName();
 						tv_mode.setText(name);
@@ -1191,7 +1191,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void needChangeValue(int value, boolean isAdd) {
-		Log.e(TAG, "isAdd : " + isAdd);
+		L.e(this, "isAdd : " + isAdd);
 		boolean isLarger = value > circle_slider.getValue();
 		if (value > circle_max_value) {
 			if (isHeating) {

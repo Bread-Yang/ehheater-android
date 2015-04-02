@@ -17,7 +17,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -46,11 +45,10 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.CheckOnlineUtil;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.IntelligentPatternUtil;
-import com.vanward.ehheater.util.PxUtil;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SwitchDeviceUtil;
 import com.vanward.ehheater.util.TcpPacketCheckUtil;
 import com.vanward.ehheater.view.BaoCircleSlider;
@@ -127,7 +125,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e(TAG, "onCreate执行了");
+		L.e(this, "onCreate执行了");
 		initSlidingMenu();
 		setContentView(R.layout.activity_main);
 		initView();
@@ -287,21 +285,21 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		Log.e(TAG, "onNewIntent()");
+		L.e(this, "onNewIntent()");
 		setIntent(intent);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e(TAG, "onResume()");
+		L.e(this, "onResume()");
 		ErrorUtils.isMainActivityActive = true;
 		ErrorUtils.isGasMainActivityActive = false;
 		ErrorUtils.isFurnaceMainActivityActive = false;
 		canupdateView = true;
 
 		String mac = getIntent().getStringExtra("mac");
-		Log.e(TAG, "onResume : mac : " + mac);
+		L.e(this, "onResume : mac : " + mac);
 
 		if (mac != null && !"".equals(mac)
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
@@ -312,20 +310,20 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.e(TAG, "onPause()");
+		L.e(this, "onPause()");
 		deviceSwitchSuccessDialog.dismiss();
 	}
 
 	@Override
 	protected void onStop() {
-		Log.e(TAG, "onStop()");
+		L.e(this, "onStop()");
 		super.onStop();
 	};
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.e(TAG, "onDestroy()");
+		L.e(this, "onDestroy()");
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
@@ -575,7 +573,7 @@ public class MainActivity extends BaseBusinessActivity implements
 										+ "'");
 
 				if (list.size() > 0) {
-					Log.e(TAG, "设置自定义名字");
+					L.e(this, "设置自定义名字");
 					for (int i = 0; i < list.size(); i++) {
 						CustomSetVo customSetVo = list.get(i);
 
@@ -592,7 +590,7 @@ public class MainActivity extends BaseBusinessActivity implements
 						}
 					}
 				} else {
-					Log.e(TAG, "自定义模式");
+					L.e(this, "自定义模式");
 					tv_mode.setText("自定义模式");
 				}
 
@@ -670,7 +668,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	private void freezeProofing(StateResp_t date) {
-		Log.e(TAG, "防冻报警 : " + date.getError());
+		L.e(this, "防冻报警 : " + date.getError());
 		if (date.getError() == 160) {
 			iv_error.setVisibility(View.VISIBLE);
 			iv_error.setBackgroundResource(R.drawable.main_tip);
@@ -706,7 +704,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	private void meibangWran(final StateResp_t date) {
-		Log.e(TAG, "镁棒提示 : " + date.getHeating_tube_time());
+		L.e(this, "镁棒提示 : " + date.getHeating_tube_time());
 		if (date.getHeating_tube_time() > 800 * 60) {
 			iv_error.setVisibility(View.VISIBLE);
 			iv_error.setBackgroundResource(R.drawable.main_tip);
@@ -744,7 +742,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	 * @param pResp
 	 */
 	private void waterWarn(final StateResp_t date) {
-		Log.e(TAG, "水质提醒：" + date.getMachine_not_heating_time());
+		L.e(this, "水质提醒：" + date.getMachine_not_heating_time());
 		if (date.getMachine_not_heating_time() > 9 * 24 * 60) {
 			iv_error.setVisibility(View.VISIBLE);
 			iv_error.setBackgroundResource(R.drawable.main_tip);
@@ -784,7 +782,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		waterWarn(date);
 		// oxygenWarning(pResp);
 		System.out.println("错误码：" + date.getError() + "  ");
-		Log.e(TAG, "错误码：" + date.getError());
+		L.e(this, "错误码：" + date.getError());
 		if (date.getError() != 0 && date.getError() != 160) { // 不是防冻
 			isError = true;
 			iv_error.setVisibility(View.VISIBLE);
@@ -841,7 +839,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
 		super.OnStateResp(pResp, nConnId);
-		Log.e(TAG, "OnStateResp()");
+		L.e(this, "OnStateResp()");
 		pResp.getError();
 
 		dealErrorWarnIcon(pResp);
@@ -853,7 +851,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp,
 			int nConnId) {
 		super.OnDeviceOnlineStateResp(pResp, nConnId);
-		Log.e(TAG, "OnDeviceOnlineStateResp isOnline == " + pResp.getIsOnline());
+		L.e(this, "OnDeviceOnlineStateResp isOnline == " + pResp.getIsOnline());
 		if (pResp.getIsOnline() == 0) {
 			onConnectEvent(Global.connectId, -7);
 		}
@@ -862,8 +860,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
-		Log.e(TAG, "电热的onTcpPacket()执行了");
-		Log.e(TAG, "剩余热水百分比" + new EhState(data).getRemainingHotWaterAmount());
+		L.e(this, "电热的onTcpPacket()执行了");
+		L.e(this, "剩余热水百分比" + new EhState(data).getRemainingHotWaterAmount());
 		if (connId != Global.connectId) {
 			return;
 		}
@@ -899,9 +897,9 @@ public class MainActivity extends BaseBusinessActivity implements
 			// 非常奇怪 智能模式设置成功，可是返回值 确实1 跟p0 文档不符合。设置进去的时候是2 ，晨浴模式成功。
 			int mode = new EhState(data).getFunctionState();
 			currentModeCode = mode;
-			Log.e(TAG, "打印前");
-			Log.e(TAG, "断线之后返回的mode是 : " + mode);
-			Log.e(TAG, "打印后");
+			L.e(this, "打印前");
+			L.e(this, "断线之后返回的mode是 : " + mode);
+			L.e(this, "打印后");
 
 			if (mode == 1) {
 				changeTojishiModeUpdateUI(data);
@@ -1036,7 +1034,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.e(TAG, "onConnectEvent@MainActivity:" + connId + "-" + event);
+		L.e(this, "onConnectEvent@MainActivity:" + connId + "-" + event);
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开

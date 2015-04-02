@@ -15,7 +15,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
@@ -24,7 +23,6 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
@@ -37,6 +35,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 import com.vanward.ehheater.view.wheelview.WheelView;
@@ -251,13 +250,13 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				int day = c.get(Calendar.DAY_OF_MONTH);
 				int second = c.get(Calendar.SECOND);
 
-				Log.e(TAG, "year : " + year);
-				Log.e(TAG, "month : " + month);
-				Log.e(TAG, "day : " + day);
-				Log.e(TAG, "hour : " + currentHour);
-				Log.e(TAG, "minute : " + currentMinute);
-				Log.e(TAG, "second : " + second );
-				Log.e(TAG, "timestamp: " + c.getTimeInMillis());
+				L.e(this, "year : " + year);
+				L.e(this, "month : " + month);
+				L.e(this, "day : " + day);
+				L.e(this, "hour : " + currentHour);
+				L.e(this, "minute : " + currentMinute);
+				L.e(this, "second : " + second );
+				L.e(this, "timestamp: " + c.getTimeInMillis());
 
 				c.set(year, month, day, setHour, setMinute, 0);
 
@@ -270,11 +269,11 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 				editModel.setDateTime(timestamp);
 
-				// Log.e(TAG, "timestamp是 : " + timestamp);
+				// L.e(this, "timestamp是 : " + timestamp);
 				//
 				String time = dateFormat.format(new Date(timestamp));
 				//
-				// Log.e(TAG, "time 是 : " + time);
+				// L.e(this, "time 是 : " + time);
 
 				editModel.setTemper(String.valueOf(seekBar.getProgress() + 35));
 
@@ -319,23 +318,23 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				Gson gson = new Gson();
 				String json = gson.toJson(editModel);
 
-				Log.e(TAG, "提交的json数据是 : " + json);
+				L.e(this, "提交的json数据是 : " + json);
 
 				AjaxParams params = new AjaxParams();
 				params.put("data", json);
-				Log.e(TAG, "isOverride : " +  isOverride);
+				L.e(this, "isOverride : " +  isOverride);
 				if (isOverride) {
 					params.put("ignoreConflict", "true");
 				}
 
-				Log.e(TAG, "提交URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
+				L.e(this, "提交URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 				mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 						.executePost(params, new AjaxCallBack<String>() {
 
 							@Override
 							public void onSuccess(String jsonString) {
 								super.onSuccess(jsonString);
-								Log.e(TAG, "编辑或者保存返回的json数据是 : " + jsonString);
+								L.e(this, "编辑或者保存返回的json数据是 : " + jsonString);
 								isOverride = false;
 								try {
 									JSONObject json = new JSONObject(jsonString);
@@ -354,7 +353,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 												+ AccountService
 														.getUserId(getBaseContext());
 										
-										Log.e(TAG, "查看是否需要增加功率的URL : " + Consts.REQUEST_BASE_URL
+										L.e(this, "查看是否需要增加功率的URL : " + Consts.REQUEST_BASE_URL
 														+ requestURL);
 
 										mHttpFriend
@@ -368,7 +367,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 																	String jsonString) {
 																super.onSuccess(jsonString);
 
-																Log.e(TAG,
+																L.e(this,
 																		"功率需要增加的请求返回来的数据是 : "
 																				+ jsonString);
 																try {

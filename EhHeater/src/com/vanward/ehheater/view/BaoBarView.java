@@ -7,10 +7,10 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.L;
 
 public class BaoBarView extends View {
 
@@ -543,9 +543,9 @@ public class BaoBarView extends View {
 	}
 
 	public void setxOffset(float xOffset) {
-		Log.e(TAG, "xoffset : " + xOffset);
-		Log.e(TAG, "xGridPad : " + xGridPad);
-		Log.e(TAG, "plotArea.right - plotArea.left : "
+		L.e(this, "xoffset : " + xOffset);
+		L.e(this, "xGridPad : " + xGridPad);
+		L.e(this, "plotArea.right - plotArea.left : "
 				+ (plotArea.right - plotArea.left));
 		if (xOffset + getWidth() - plotArea.right - plotArea.left > xGridPad * 48) {
 			return;

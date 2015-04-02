@@ -87,7 +87,6 @@ public class EasyLinkWifiManager
 	{
 		int ipval=	mWifiInfo.getIpAddress();
 		String ipString = String.format("%d.%d.%d.%d", (ipval & 0xff),(ipval >> 8 & 0xff),(ipval >> 16 & 0xff),	(ipval >> 24 & 0xff));
-		Log.i("EasyLinkPort", "ipString: "+ ipString);
 		return ipString.toString();
 	}
 
@@ -100,7 +99,6 @@ public class EasyLinkWifiManager
 		int gatwayVal=	mWifiManager.getDhcpInfo().gateway;
 		
 		String string = (String.format("%d.%d.%d.%d", (gatwayVal & 0xff),(gatwayVal >> 8 & 0xff),(gatwayVal >> 16 & 0xff),	(gatwayVal >> 24 & 0xff))).toString();
-		Log.i("EasyLinkPort", "getGatewayIpAddress: "+ string);
 		
 		return string;
 	}

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +27,7 @@ import com.vanward.ehheater.notification.PollingUtils;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -74,8 +74,8 @@ public class WelcomeActivity extends GeneratedActivity {
 
 		MobclickAgent.updateOnlineConfig(this);
 
-		// 每5分钟请求一次
-		PollingUtils.startPollingService(this, 20, PollingService.class,
+		// 每60秒请求一次
+		PollingUtils.startPollingService(this, 60, PollingService.class,
 				PollingService.ACTION);
 	}
 
@@ -151,7 +151,7 @@ public class WelcomeActivity extends GeneratedActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.e(TAG, "onActivityResult(RESULT_OK = -1):" + requestCode + "~"
+		L.e(this, "onActivityResult(RESULT_OK = -1):" + requestCode + "~"
 				+ resultCode);
 
 		// if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {

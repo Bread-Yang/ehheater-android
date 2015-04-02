@@ -107,8 +107,8 @@ public class HttpFriend {
 		fh.configCookieStore(pcs);
 		// Gson gson = new Gson();
 		// String json = gson.toJson(this.bean);
-		// Log.e(TAG, "地址是 : " + this.url);
-		// Log.e(TAG, "executePostJson发送过去的json数据是 : " + json);
+		// L.e(this, "地址是 : " + this.url);
+		// L.e(this, "executePostJson发送过去的json数据是 : " + json);
 		// AjaxParams params = new AjaxParams();
 		// params.put("data", json);
 		showRequestDialog(callBack);

@@ -5,7 +5,6 @@ import java.util.List;
 import net.tsz.afinal.FinalActivity;
 import net.tsz.afinal.annotation.view.ViewInject;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,6 +20,7 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.service.AccountService;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
 
@@ -136,7 +136,7 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 					.findAllByWhere(GasCustomSetVo.class,
 							" uid = '" + AccountService.getUserId(this) + "'");
 			for (GasCustomSetVo item : list) {
-				Log.e(TAG, "customSetVo的sendId是 : " + item.getSendId());
+				L.e(this, "customSetVo的sendId是 : " + item.getSendId());
 			}
 			if (list.size() == 0) {
 				customSetVo.setSendId(1);
@@ -210,10 +210,10 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 			break;
 		case R.id.ivTitleBtnRigh:
 			final GasCustomSetVo customSetVo = getData();
-			Log.e(TAG,
+			L.e(this,
 					"提交的customSetVo.getWaterval() : "
 							+ customSetVo.getWaterval());
-			Log.e(TAG,
+			L.e(this,
 					"提交的customSetVo.getTempter() : " + customSetVo.getTempter());
 			if (customSetVo != null) {
 				if (oldGasCustomSetVo != null) {

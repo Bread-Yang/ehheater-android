@@ -80,7 +80,7 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.e(TAG, "onCreate()");
+		L.e(this, "onCreate()");
 
 		DialogUtil.instance().dismissDialog();
 
@@ -100,7 +100,7 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e(TAG, "onResume()");
+		L.e(this, "onResume()");
 		DialogUtil.instance().dismissDialog();
 		isActived = true;
 	}
@@ -117,7 +117,7 @@ public class ConnectActivity extends GeneratedActivity {
 	};
 
 	private void initTemporaryFields() {
-		Log.e(TAG, "initTemporaryFields()执行了");
+		L.e(this, "initTemporaryFields()执行了");
 		connType = Integer.MAX_VALUE;
 		currentLanSearchingState = LAN_NONE;
 		tempConnId = -1;
@@ -134,7 +134,7 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	private void connectToDevice() {
-		Log.e(TAG, "connectToDevice()");
+		L.e(this, "connectToDevice()");
 
 		DialogUtil.instance().dismissDialog();
 
@@ -153,7 +153,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 		@Override
 		public boolean handleMessage(Message msg) {
-			Log.e(TAG, "timeoutHandler执行了");
+			L.e(this, "timeoutHandler执行了");
 			// if (!jobDone) {
 			setOfflineResult();
 			// }
@@ -171,24 +171,24 @@ public class ConnectActivity extends GeneratedActivity {
 	 */
 	private void tryConnectBySmallCycle(final int scanInterval, int timeOut,
 			final TimerTask t) {
-		Log.e(TAG, "tryConnectBySmallCycle()");
+		L.e(this, "tryConnectBySmallCycle()");
 
-		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()前");
+		L.e(this, "XPG_WAN_LAN.LAN.swigValue()前");
 		connType = XPG_WAN_LAN.LAN.swigValue();
-		Log.e(TAG, "XPG_WAN_LAN.LAN.swigValue()后");
+		L.e(this, "XPG_WAN_LAN.LAN.swigValue()后");
 
-		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()前");
+		L.e(this, "XPGConnectClient.xpgcStartDiscovery()前");
 		XPGConnectClient.xpgcStartDiscovery();
-		Log.e(TAG, "XPGConnectClient.xpgcStartDiscovery()后");
+		L.e(this, "XPGConnectClient.xpgcStartDiscovery()后");
 
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()前");
+				L.e(this, "XPGConnectClient.xpgcStopDiscovery()前");
 				XPGConnectClient.xpgcStopDiscovery();
-				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()后");
+				L.e(this, "XPGConnectClient.xpgcStopDiscovery()后");
 				if (currentLanSearchingState == LAN_SEARCHING && t != null) {
-					Log.e(TAG, "执行了这里面...............");
+					L.e(this, "执行了这里面...............");
 					new Timer().schedule(t, (long) (scanInterval * 1.2));
 					currentLanSearchingState = LAN_NONE;
 				}
@@ -197,15 +197,15 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	private void tryConnectByBigCycle() {
-		Log.e(TAG, "tryConnectByBigCycle()");
+		L.e(this, "tryConnectByBigCycle()");
 
 		connType = XPG_WAN_LAN.MQTT.swigValue();
 
-		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()前");
+		L.e(this, "XPGConnectClient.xpgcLogin2Wan()前");
 		// XPGConnectClient.xpgcLogin2Wan(
 		// AccountService.getUserId(getBaseContext()),
 		// AccountService.getUserPsw(getBaseContext()), "", "");
-		Log.e(TAG, "XPGConnectClient.xpgcLogin2Wan()后");
+		L.e(this, "XPGConnectClient.xpgcLogin2Wan()后");
 		// XPGConnShortCuts.connect2big();
 
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
@@ -224,7 +224,7 @@ public class ConnectActivity extends GeneratedActivity {
 	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) {
 		super.onV4GetMyBindings(errorCode, endpoint);
 
-		Log.e(TAG,
+		L.e(this,
 				"onV4GetMyBindings: mac : " + endpoint.getSzMac() + "- did : "
 						+ endpoint.getSzDid() + "- isOnline : "
 						+ endpoint.getIsOnline());
@@ -248,7 +248,7 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
-		Log.e(TAG, "onDeviceFound()");
+		L.e(this, "onDeviceFound()");
 		if (null == endpoint) {
 			return;
 		}
@@ -259,7 +259,7 @@ public class ConnectActivity extends GeneratedActivity {
 		if (connType == XPG_WAN_LAN.LAN.swigValue()
 				|| directConnectAfterEasyLink) {
 
-			Log.e(TAG,
+			L.e(this,
 					"onDeviceFound@ConnectActivity(SMALL): "
 							+ endpoint.getSzMac() + "-" + endpoint.getSzDid()
 							+ "-" + endpoint.getIsOnline());
@@ -271,39 +271,39 @@ public class ConnectActivity extends GeneratedActivity {
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();
 
-			Log.e(TAG, "返回的endpoint.getSzMac()是否为null : " + (null == macFound));
-			Log.e(TAG,
+			L.e(this, "返回的endpoint.getSzMac()是否为null : " + (null == macFound));
+			L.e(this,
 					"返回的endpoint.getSzMac()是否为空字符串 : " + ("".equals(macFound)));
 
-			Log.e(TAG, "endpoint.getSzDid() : " + endpoint.getSzDid());
+			L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
 
-			Log.e(TAG, "mMac : " + mMac.toLowerCase());
-			Log.e(TAG, "endpoint.getSzMac().toLowerCase() : "
+			L.e(this, "mMac : " + mMac.toLowerCase());
+			L.e(this, "endpoint.getSzMac().toLowerCase() : "
 					+ endpoint.getSzMac().toLowerCase());
-			Log.e(TAG, "endpoint.getSzDid(): " + endpoint.getSzDid());
+			L.e(this, "endpoint.getSzDid(): " + endpoint.getSzDid());
 
 			if (!TextUtils.isEmpty(macFound)
 					&& macFound.equals(mMac.toLowerCase())) {
 				didRetrieved = didFound;
-				Log.e(TAG, "onDeviceFound:found target, connecting by small");
+				L.e(this, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
-				Log.e(TAG, "XPGConnShortCuts.connect2small()前");
+				L.e(this, "XPGConnShortCuts.connect2small()前");
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
-				Log.e(TAG, "XPGConnShortCuts.connect2small()后");
+				L.e(this, "XPGConnShortCuts.connect2small()后");
 				// XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
 
-				Log.e(TAG, "didRetrieved : " + didRetrieved);
-				Log.e(TAG, "endpoint.getAddr() : " + endpoint.getAddr());
+				L.e(this, "didRetrieved : " + didRetrieved);
+				L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
 
 				currentLanSearchingState = LAN_FOUND;
-				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()前");
+				L.e(this, "XPGConnectClient.xpgcStopDiscovery()前");
 				XPGConnectClient.xpgcStopDiscovery();
-				Log.e(TAG, "XPGConnectClient.xpgcStopDiscovery()后");
+				L.e(this, "XPGConnectClient.xpgcStopDiscovery()后");
 			}
 
 		} else if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
 
-			Log.e(TAG,
+			L.e(this,
 					"onDeviceFound@ConnectActivity(BIG): mac : "
 							+ endpoint.getSzMac() + "- did : "
 							+ endpoint.getSzDid() + "- isOnline : "
@@ -326,20 +326,20 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	public void connectDirectlyAfterEasyLink() {
-		Log.e(TAG, "connectDirectlyAfterEasyLink()执行了");
+		L.e(this, "connectDirectlyAfterEasyLink()执行了");
 		didRetrieved = new SharedPreferUtils(this).get(ShareKey.CurDeviceDid,
 				"");
 		String ip = new SharedPreferUtils(this).get(ShareKey.CurDeviceAddress,
 				"");
 
-		Log.e(TAG, "didRetrieved : " + didRetrieved);
+		L.e(this, "didRetrieved : " + didRetrieved);
 		connType = XPG_WAN_LAN.LAN.swigValue();
-		Log.e(TAG, "ip : " + ip);
+		L.e(this, "ip : " + ip);
 
 		timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 		XPGConnShortCuts.connect2small(ip);
 		// XPGConnectClient.xpgcLogin2Lan(ip, null);
-		Log.e(TAG, "执行了");
+		L.e(this, "执行了");
 	}
 
 	@Override
@@ -363,8 +363,8 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
-		Log.e(TAG, "onWanLoginResp()执行了");
-		Log.e(TAG, "onWanLoginResp@ConnectActivity : result : " + result
+		L.e(this, "onWanLoginResp()执行了");
+		L.e(this, "onWanLoginResp@ConnectActivity : result : " + result
 				+ " connId : " + connId);
 		tempConnId = connId;
 		switch (result) {
@@ -395,7 +395,7 @@ public class ConnectActivity extends GeneratedActivity {
 			// if in, check online state, if online, enable ctrl, setresult, if
 			// offline, enter app with offline state
 			// if not in, can't control -- enter app with offline state
-			Log.e(TAG, "generated.SendBindingGetV2Req");
+			L.e(this, "generated.SendBindingGetV2Req");
 			generated.SendBindingGetV2Req(tempConnId);
 			break;
 		}
@@ -405,13 +405,13 @@ public class ConnectActivity extends GeneratedActivity {
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
 		tempConnId = connId;
-		Log.e(TAG, "onConnectEvent回调了");
-		Log.e(TAG, "onConnectEvent@ConnectActivity" + connId + "-" + event);
+		L.e(this, "onConnectEvent回调了");
+		L.e(this, "onConnectEvent@ConnectActivity" + connId + "-" + event);
 
-		Log.e(TAG, "是否小循环连接 : " + (connType == XPG_WAN_LAN.LAN.swigValue()));
-		Log.e(TAG, "是否大循环连接 : " + (connType == XPG_WAN_LAN.MQTT.swigValue()));
+		L.e(this, "是否小循环连接 : " + (connType == XPG_WAN_LAN.LAN.swigValue()));
+		L.e(this, "是否大循环连接 : " + (connType == XPG_WAN_LAN.MQTT.swigValue()));
 
-		Log.e(TAG, "mPasscode : " + mPasscode);
+		L.e(this, "mPasscode : " + mPasscode);
 
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
 
@@ -419,34 +419,34 @@ public class ConnectActivity extends GeneratedActivity {
 				if (isActived) {
 					generated.SendPasscodeReq(tempConnId);
 				}
-				Log.e(TAG, "onConnectEvent:requesting passcode");
+				L.e(this, "onConnectEvent:requesting passcode");
 			} else {
-				Log.e(TAG, "XPGConnectClient.xpgcLogin()前");
+				L.e(this, "XPGConnectClient.xpgcLogin()前");
 				XPGConnectClient.xpgcLogin(tempConnId, null, mPasscode);
-				Log.e(TAG, "XPGConnectClient.xpgcLogin()后");
+				L.e(this, "XPGConnectClient.xpgcLogin()后");
 			}
 		}
 
 		// if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
 		// XPGConnectClient.xpgcLogin(tempConnId, getUserId(), getUserPsw());
-		// Log.e(TAG, "onConnectEvent:connecting by big");
+		// L.e(this, "onConnectEvent:connecting by big");
 		// }
 	}
 
 	@Override
 	public void OnPasscodeResp(PasscodeResp_t pResp, int nConnId) {
 		super.OnPasscodeResp(pResp, nConnId);
-		Log.e(TAG, "OnPasscodeResp()回调了");
+		L.e(this, "OnPasscodeResp()回调了");
 
 		tempConnId = nConnId;
 
 		passcodeRetrieved = generated.XpgData2String(pResp.getPasscode());
 
-		Log.e(TAG, "OnPasscodeResp: connecting by small");
+		L.e(this, "OnPasscodeResp: connecting by small");
 
-		Log.e(TAG, "OnPasscodeResp@XPGConnectClient.xpgcLogin()前");
+		L.e(this, "OnPasscodeResp@XPGConnectClient.xpgcLogin()前");
 		XPGConnectClient.xpgcLogin(tempConnId, null, passcodeRetrieved);
-		Log.e(TAG, "OnPasscodeResp@XPGConnectClient.xpgcLogin()后");
+		L.e(this, "OnPasscodeResp@XPGConnectClient.xpgcLogin()后");
 
 		// pResp.delete();
 	}
@@ -454,7 +454,7 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void OnLanLoginResp(LanLoginResp_t pResp, int nConnId) {
 		super.OnLanLoginResp(pResp, nConnId);
-		Log.e(TAG, "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
+		L.e(this, "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
 
 		if (pResp.getResult() == 0) {
 			jobDone = true;
@@ -484,8 +484,8 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-		Log.e(TAG, "onLoginCloudResp()回调了");
-		Log.e(TAG, "onLoginCloudResp@ConnectActivity: result : " + result
+		L.e(this, "onLoginCloudResp()回调了");
+		L.e(this, "onLoginCloudResp@ConnectActivity: result : " + result
 				+ " mac : " + mac);
 		// switch (result) {
 		// case 0: // 可以控制
@@ -522,7 +522,7 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	private void doAfterBindingDevicesReceivedFromMQTT(List<XpgEndpoint> devList) {
-		Log.e(TAG, "doAfterBindingDevicesReceivedFromMQTT()");
+		L.e(this, "doAfterBindingDevicesReceivedFromMQTT()");
 		jobDone = true;
 		boolean isBinded = false;
 		for (XpgEndpoint ep : devList) {
@@ -532,12 +532,12 @@ public class ConnectActivity extends GeneratedActivity {
 
 				passcodeRetrieved = ep.getSzPasscode();
 				didRetrieved = ep.getSzDid();
-				Log.e(TAG, mMac + " isOnline? " + ep.getIsOnline());
+				L.e(this, mMac + " isOnline? " + ep.getIsOnline());
 
 				if (ep.getIsOnline() == 1) {
 					// is online
-					Log.e(TAG, "XPGConnectClient.xpgcEnableCtrl()执行了");
-					Log.e(TAG, "xpgcEnableCtrl.xpgcLogin()前");
+					L.e(this, "XPGConnectClient.xpgcEnableCtrl()执行了");
+					L.e(this, "xpgcEnableCtrl.xpgcLogin()前");
 					// XPGConnectClient.xpgcEnableCtrl(tempConnId,
 					// ep.getSzDid(),
 					// ep.getSzPasscode());
@@ -545,7 +545,7 @@ public class ConnectActivity extends GeneratedActivity {
 							AccountService.getUserId(getBaseContext()),
 							AccountService.getUserPsw(getBaseContext()),
 							ep.getSzDid(), ep.getSzPasscode());
-					Log.e(TAG, "xpgcEnableCtrl.xpgcLogin()后");
+					L.e(this, "xpgcEnableCtrl.xpgcLogin()后");
 					return;
 				} else {
 					// is offline
@@ -560,18 +560,18 @@ public class ConnectActivity extends GeneratedActivity {
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 
-			Log.e(TAG, "HeaterInfoService.setBinding()执行了");
+			L.e(this, "HeaterInfoService.setBinding()执行了");
 			HeaterInfoService.setBinding(this, curHeater.getDid(),
 					curHeater.getPasscode());
 		} else {
 			// is offline
 			setOfflineResult();
-			Log.e(TAG, mMac + " isOnline? " + "未绑定此设备");
+			L.e(this, mMac + " isOnline? " + "未绑定此设备");
 		}
 	}
 
 	private void setOfflineResult() {
-		Log.e(TAG, "setOfflineResult()");
+		L.e(this, "setOfflineResult()");
 		Intent data = new Intent();
 		data.putExtra(Consts.INTENT_EXTRA_CONNID, tempConnId);
 		data.putExtra(Consts.INTENT_EXTRA_ISONLINE, false);
@@ -600,12 +600,12 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	private void initTargetDeviceInfo() {
-		Log.e(TAG, "initTargetDeviceInfo()执行了");
+		L.e(this, "initTargetDeviceInfo()执行了");
 		if (!getIntent().getBooleanExtra(
 				EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK, false)) {
 			mMac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
 
-			Log.e(TAG, "getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC) : "
+			L.e(this, "getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC) : "
 					+ getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC));
 
 			if (TextUtils.isEmpty(mMac)) {
@@ -643,12 +643,12 @@ public class ConnectActivity extends GeneratedActivity {
 		@Override
 		public boolean handleMessage(Message msg) {
 
-			Log.e(TAG,
+			L.e(this,
 					"NetworkStatusUtil.isConnectedByMobileData(getBaseContext() : "
 							+ NetworkStatusUtil
 									.isConnectedByMobileData(getBaseContext()));
 
-			Log.e(TAG,
+			L.e(this,
 					"NetworkStatusUtil.isConnectedByWifi(getBaseContext()) : "
 							+ NetworkStatusUtil
 									.isConnectedByWifi(getBaseContext()));
@@ -662,7 +662,7 @@ public class ConnectActivity extends GeneratedActivity {
 				if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
 					// 先试小循环, 不行则大
 					currentLanSearchingState = LAN_SEARCHING;
-					Log.e(TAG, "小循环");
+					L.e(this, "小循环");
 					if (getIntent()
 							.getBooleanExtra(
 									EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK,
@@ -684,7 +684,7 @@ public class ConnectActivity extends GeneratedActivity {
 					}
 				} else if (NetworkStatusUtil
 						.isConnectedByMobileData(getBaseContext())) {
-					Log.e(TAG, "大循环");
+					L.e(this, "大循环");
 					// 只能大循环
 					tryConnectByBigCycle();
 				}
@@ -763,11 +763,11 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.e(TAG, "onActivityResult()执行了");
-		Log.e(TAG, "在外面");
+		L.e(this, "onActivityResult()执行了");
+		L.e(this, "在外面");
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING
 				&& resultCode == RESULT_OK) {
-			Log.e(TAG, "在里面");
+			L.e(this, "在里面");
 			onDeviceFoundCounter = 0;
 			jobDone = false;
 			tryConnectByBigCycle();

@@ -64,30 +64,20 @@ public class BounceScrollView extends ScrollView {
 				isCount = false;
 			}
 			break;
-		/***
-		 * 排除出第�?��移动计算，因为第�?��无法得知y坐标�?在MotionEvent.ACTION_DOWN中获取不到，
-		 * 因为此时是MyScrollView的touch事件传�?到到了LIstView的孩子item上面.�?��从第二次计算�?��.
-		 * 然�?我们也要进行初始化，就是第一次移动的时�?让滑动距离归0. 之后记录准确了就正常执行.
-		 */
 		case MotionEvent.ACTION_MOVE:
 			final float preY = y;// 按下时的y坐标
 			float nowY = ev.getY();// 时时y坐标
 			int deltaY = (int) (preY - nowY);// 滑动距离
 			if (!isCount) {
-				deltaY = 0; // 在这里要�?.
+				deltaY = 0; 
 			}
 
 			y = nowY;
-			// 当滚动到�?��或�?�?��时就不会再滚动，这时移动布局
 			if (isNeedMove()) {
-				// 初始化头部矩�?
 				if (normal.isEmpty()) {
-					// 保存正常的布�?���?
 					normal.set(inner.getLeft(), inner.getTop(),
 							inner.getRight(), inner.getBottom());
 				}
-//				Log.e("jj", "矩形�? + inner.getLeft() + "," + inner.getTop()
-//						+ "," + inner.getRight() + "," + inner.getBottom());
 				// 移动布局
 				inner.layout(inner.getLeft(), inner.getTop() - deltaY / 2,
 						inner.getRight(), inner.getBottom() - deltaY / 2);

@@ -5,46 +5,35 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import u.aly.w;
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
 import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.HttpConnectUtil;
 import com.vanward.ehheater.util.HttpFriend;
+import com.vanward.ehheater.util.L;
 
 public class InfoAccumulatedWaterChartView extends LinearLayout implements
 		OnClickListener, OnCheckedChangeListener {
@@ -455,7 +444,7 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 						}
 						jsonArray.put(jsonOBJ);
 						jsonArray2.put(jsonOBJ2);
-						Log.e(TAG, "JSON是 : " + jsonArray2.toString());
+						L.e(this, "JSON是 : " + jsonArray2.toString());
 					}
 					// 赋值name
 					namelistjson = jsonArray.toString();

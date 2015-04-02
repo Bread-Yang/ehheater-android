@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">万和云智能</string>
-    <string name="version">版本：v 1.0.0 B 0.21</string>
+    <string name="version">版本：v 1.0.0 B 0.22</string>
     <string name="heater">热水器</string>
     <string name="account">用户名</string>
     <string name="password">密码</string>
@@ -136,6 +136,8 @@
     <string name="heater_wifi_ssid">XPG-GAgent</string>
     <string name="setup_step3_eh">在关机状态下, 长按热水器节能键3秒, 蜂鸣器响一声之后松手, 并点击下一步</string>
     <string name="setup_step3_st">在关机状态下, 按热水器预设键一下, 听到蜂鸣之后, 点击下一步</string>
+    <string name="apply_model">适用型号：H型号、L型号、S型号</string>
+    <string name="vanward_site">http://www.vanward.com</string>
 
     <!-- 壁挂炉用到的字段 -->
 
@@ -156,6 +158,7 @@
     <string name="shutdown">已关机</string>
     <string name="standby">待机中</string>
     <string name="gas_consumption">燃气耗量</string>
+    <string name="gas_consumption_title">燃气耗量(方)</string>
     <string name="realtime_consumption">实时耗量</string>
     <string name="accumulated_consumption">累计耗量</string>
     <string name="mode">模式</string>
@@ -186,6 +189,7 @@
     <string name="appointment_conflict">亲，请问是否要覆盖%1$s的预约%2$s</string>
     <string name="override">覆盖</string>
     <string name="furnace_appointment_full">亲，壁挂炉的预约已经满了哦！</string>
+    <string name="appointment_execute_tomorrow">预约时间已过，您的预约将明天执行</string>
     <string name="heater_appointment_full">亲，热水器的预约已经满了哦！</string>
     <string name="edit_nickname">修改用户名</string>
     <string name="switch_summer">您确定要切换到夏季模式？</string>
@@ -223,12 +227,12 @@
         1. 请进入 设置 > Wifi, 选择<font color=#FE6C18>XPG-GAgent</font><br>2. 输入密码:<font color=#FE6C18>123456789</font> <br>3. 完成后请返回此界面, 将自动跳转到下一步
     	]]>  
     </string>
-    <string name="about_wanward">
+    <string name="about_vanward">
         <![CDATA[
         <font color=#FE6C18>&#160;&#160;&#160;&#160;&#160;&#160;&#160;广东万和新电气股份有限公司</font>成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。</string>
     	]]>
     </string>
-    <string name="wanward_profile">
+    <string name="vanward_profile">
         <![CDATA[ 
         &#160;&#160;&#160;&#160;&#160;&#160;&#160万和是国内A股上市公司（股票代码：002543），1992年以中国第一台水控式燃气热水器起家，已发展成为国内生产规模最大的热水器、热水/供暖系统、厨房电器制造商及领先品牌，是国内仅有的两个“全球十大热水器品牌”之一。万和也是国家火炬计划重点高新技术企业、住建部授予的国家住宅产业化基地、中国航天事业合作伙伴。万和正通过致力清洁能源（燃气）及可再生能源（太阳能、空气能）的创新、高效利用，打造“全球领先的燃气具以及生活热水系统供应商”。
         ]]> 

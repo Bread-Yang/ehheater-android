@@ -200,7 +200,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						public void onSuccess(String jsonString) {
-							Log.e(TAG, "请求昵称返回的数据是 : " + jsonString);
+							L.e(this, "请求昵称返回的数据是 : " + jsonString);
 							JSONObject json;
 							try {
 								json = new JSONObject(jsonString);
@@ -258,7 +258,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		Log.e(TAG, "onConnectEvent@LoginActivity@: " + connId + "-" + event);
+		L.e(this, "onConnectEvent@LoginActivity@: " + connId + "-" + event);
 		tempConnId = connId;
 
 		if (event == XPG_RESULT.ERROR_NONE.swigValue()) { // 建立连接成功
@@ -297,7 +297,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						public void onSuccess(String jsonString) {
-							Log.e(TAG, "请求昵称返回的数据是 : " + jsonString);
+							L.e(this, "请求昵称返回的数据是 : " + jsonString);
 							JSONObject json;
 							try {
 								json = new JSONObject(jsonString);
@@ -356,12 +356,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		if (endpoint == null) {
-			Log.e(TAG, "endpoint为null,返回");
+			L.e(this, "endpoint为null,返回");
 			return;
 		}
 
 		if (endpoint.getIsDisabled() == 1) {
-			Log.e(TAG, "endpoint.getIsDisabled() == 1,返回");
+			L.e(this, "endpoint.getIsDisabled() == 1,返回");
 			return;
 		}
 
@@ -371,11 +371,11 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
-		Log.e(TAG, "onDeviceFound:HeaterInfo Downloaded: " + hi);
+		L.e(this, "onDeviceFound:HeaterInfo Downloaded: " + hi);
 
 		if (!(hser.isValidDevice(hi))) {
 			// 非有效设备, 不予保存
-			Log.e(TAG, "非有效设备, 不予保存");
+			L.e(this, "非有效设备, 不予保存");
 			return;
 		}
 
@@ -439,22 +439,22 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		super.onDeviceFound(endpoint);
 
 		if (endpoint == null) {
-			Log.e(TAG, "endpoint为null,返回");
+			L.e(this, "endpoint为null,返回");
 			return;
 		}
 
 		if (endpoint.getIsDisabled() == 1) {
-			Log.e(TAG, "endpoint.getIsDisabled() == 1,返回");
+			L.e(this, "endpoint.getIsDisabled() == 1,返回");
 			return;
 		}
 
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
-		Log.e(TAG, "onDeviceFound:HeaterInfo Downloaded: " + hi);
+		L.e(this, "onDeviceFound:HeaterInfo Downloaded: " + hi);
 
 		if (!(hser.isValidDevice(hi))) {
 			// 非有效设备, 不予保存
-			Log.e(TAG, "非有效设备, 不予保存");
+			L.e(this, "非有效设备, 不予保存");
 			return;
 		}
 

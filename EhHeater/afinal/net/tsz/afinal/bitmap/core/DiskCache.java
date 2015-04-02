@@ -77,6 +77,8 @@ import java.util.zip.Adler32;
 
 import android.util.Log;
 
+import com.vanward.ehheater.util.L;
+
 public class DiskCache implements Closeable {
     private static final String TAG = DiskCache.class.getSimpleName();
 
@@ -467,7 +469,7 @@ public class DiskCache implements Closeable {
                     writeInt(mIndexHeader, IH_ACTIVE_ENTRIES, mActiveEntries);
                     updateIndexHeader();
                 } catch (Throwable t) {
-                    Log.e(TAG, "cannot copy over");
+                    L.e(this, "cannot copy over");
                 }
                 return true;
             }
@@ -606,7 +608,7 @@ public class DiskCache implements Closeable {
         if (count == mActiveEntries) {
             return count;
         } else {
-            Log.e(TAG, "wrong active count: " + mActiveEntries + " vs " + count);
+            L.e(this, "wrong active count: " + mActiveEntries + " vs " + count);
             return -1;  // signal failure.
         }
     }
