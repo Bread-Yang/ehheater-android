@@ -26,7 +26,7 @@ public class BaoBarView extends View {
 		/** 横坐标刻度 */
 		public String xAxisTitleOfIndex(BaoBarView barView, int index);
 	}
-
+	
 	public static enum BaoTouchArea {
 		BaoTouch_None, BaoTouch_SetValue, BaoTouch_Scroll
 	};
