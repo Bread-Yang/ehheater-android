@@ -136,6 +136,7 @@
     <string name="heater_wifi_ssid">XPG-GAgent</string>
     <string name="setup_step3_eh">在关机状态下, 长按热水器节能键3秒, 蜂鸣器响一声之后松手, 并点击下一步</string>
     <string name="setup_step3_st">在关机状态下, 按热水器预设键一下, 听到蜂鸣之后, 点击下一步</string>
+    <string name="touch_to_move_axis">左右可移动横轴</string>
     <string name="apply_model">适用型号：H型号、L型号、S型号</string>
     <string name="vanward_site">http://www.vanward.com</string>
 

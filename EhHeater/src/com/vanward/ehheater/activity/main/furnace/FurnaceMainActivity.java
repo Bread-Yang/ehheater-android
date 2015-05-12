@@ -318,6 +318,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
     @Override
     public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
         super.OnDERYStatusResp(pResp, nConnId);
+        
+        L.e(this, "OnDERYStatusResp()返回的nConnId : " + nConnId);
+        
         DialogUtil.dismissDialog();
         Log.d(TAG, pResp.getError() + "....");
         // Toast.makeText(this, "这是错误" + pResp.getError(),
@@ -373,6 +376,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
         super.onConnectEvent(connId, event);
         L.e(this, "onConnectEvent@FurnaceMainActivity回调了");
         if (connId == Global.connectId && event == -7) { // -7:offline, 0 :
+        	L.e(this, "壁挂炉不在线!!! @onConnectEvent()");
             // online
             isPowerOffOrOffline = true;
 
@@ -837,7 +841,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("ConnectActivity", "onActivityResult()执行了");
+        L.e(this, "onActivityResult()执行了");
+        
+        L.e(this, "requestCode : " + requestCode);
 
         if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
                 && resultCode == RESULT_OK) {
@@ -862,6 +868,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
             }
 
             new HeaterInfoDao(getBaseContext()).save(curHeater);
+            
+            L.e(this, "壁挂炉是否在线 : " + isOnline);
 
             if (isOnline) {
                 Global.connectId = connId;
@@ -871,8 +879,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
                         .shouldExecuteBinding(curHeater);
 
                 if (shouldExecuteBinding) {
+                	L.e(this, " HeaterInfoService.setBinding(this, did, passcode)执行了");
                     HeaterInfoService.setBinding(this, did, passcode);
                 } else {
+                	L.e(this, " Consts.REQUESTCODE_CONNECT_ACTIVITY 查询 queryState()");
                     queryState();
                 }
 
@@ -922,6 +932,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
         }
 
         if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
+        	
+        	L.e(this, "Consts.REQUESTCODE_UPLOAD_BINDING里面执行了");
 
             HeaterInfoService hser = new HeaterInfoService(getBaseContext());
             HeaterInfo curHeater = hser.getCurrentSelectedHeater();
@@ -932,22 +944,24 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
                         curHeater.getMac(), true);
             }
 
+            L.e(this, " Consts.REQUESTCODE_UPLOAD_BINDING 查询 queryState()");
             queryState();
 
         }
     }
 
-    private boolean stateQueried;
-
     /**
      * 多少秒后没有回调
      */
     private static long connectTime = 10000;
+    
+    private boolean stateQueried = false;
 
     private void queryState() {
+    	L.e(this, "queryState()执行了");
+    	
         // DialogUtil.instance().showQueryingDialog(this);
         DialogUtil.instance().showLoadingDialog(this, "");
-        stateQueried = false;
         generated.SendDERYRefreshReq(Global.connectId);
         mSlidingMenu.postDelayed(new Runnable() {
 
@@ -960,7 +974,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
                                 FurnaceMainActivity.this);
                     }
                 }
-
             }
         }, connectTime);
     }

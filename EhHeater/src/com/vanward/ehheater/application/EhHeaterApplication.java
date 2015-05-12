@@ -63,7 +63,7 @@ public class EhHeaterApplication extends Application  implements ClientListener{
 
 	@Override
 	public void onConnectEvent(int connId, int event) {
-		L.e(this, "onConnectEvent@EhHeaterApplication@: " + connId + "-" + event);
+		L.e(this, "onConnectEvent@EhHeaterApplication@: " + connId + " - " + event);
 	}
 
 	@Override

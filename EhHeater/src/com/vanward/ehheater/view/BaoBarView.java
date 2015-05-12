@@ -8,8 +8,10 @@ import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.BitmapThumbUtil;
 import com.vanward.ehheater.util.L;
 
 public class BaoBarView extends View {
@@ -37,6 +39,8 @@ public class BaoBarView extends View {
 	private float limitMaxValue;
 	private float xOffset;
 	private BaoBarViewAdapter adapter;
+	
+	private ImageView bottomTipsView;
 
 	private UIEdgeInsets plotArea;
 	private float yAxisWidth;
@@ -84,6 +88,15 @@ public class BaoBarView extends View {
 	}
 
 	private void configureDefaultProperty() {
+		if (bottomTipsView == null) {
+			bottomTipsView = new ImageView(getContext());
+			bottomTipsView.setImageBitmap(BitmapThumbUtil
+					.decodeSampledBitmapFromResource(getResources(),
+							R.drawable.icon_yidong, 100, 100));
+			
+			bottomTipsView.layout(0, 0, 100, 100);
+		}
+		
 		xAxisPaint = new Paint();
 		xAxisPaint.setAntiAlias(true);
 		xAxisPaint.setStrokeWidth(dp2Pixel(1));
@@ -110,9 +123,9 @@ public class BaoBarView extends View {
 		barPaint = new Paint();
 		barPaint.setStrokeWidth(1);
 
-		float top = dp2Pixel(40);
+		float top = dp2Pixel(35);
 		float left = dp2Pixel(35);
-		float bottom = dp2Pixel(45);
+		float bottom = dp2Pixel(80);
 		float right = dp2Pixel(35);
 		plotArea = new UIEdgeInsets(top, left, bottom, right);
 
@@ -506,6 +519,8 @@ public class BaoBarView extends View {
 		// 画轴
 		drawXAxisOfContext(canvas);
 		drawYAxisOfContext(canvas);
+		
+//		bottomTipsView.draw(canvas);
 	}
 
 	// pragma mark -- getter and setter

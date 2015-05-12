@@ -11,7 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
+import com.xtremeprog.xpgconnect.generated.generated;
 
 public class InfoErrorActivity extends Activity implements OnClickListener {
 
@@ -19,7 +21,7 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 	private Button rightbButton;
 	private TextView name, time, detail;
 	private Dialog dialog_dial;
-	private Button btn_contact;
+	private Button btn_reset, btn_contact;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,9 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		rightbButton.setVisibility(View.GONE);
 		btn_contact = (Button) findViewById(R.id.btn_contact);
+		btn_reset = (Button) findViewById(R.id.btn_reset);
 		btn_contact.setOnClickListener(this);
+		btn_reset.setOnClickListener(this);
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		TextView title = (TextView) findViewById(R.id.ivTitleName);
 		title.setText("信息");
@@ -68,6 +72,9 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 		switch (view.getId()) {
 		case R.id.btn_contact:
 			dialog_dial.show();
+			break;
+		case R.id.btn_reset:
+			generated.SendDERYResetErrorReq(Global.connectId);
 			break;
 		case R.id.ivTitleBtnLeft:
 			finish();

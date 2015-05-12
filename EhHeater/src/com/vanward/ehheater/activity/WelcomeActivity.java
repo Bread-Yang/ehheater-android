@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.activity.main.MainActivity;
@@ -28,6 +29,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.L;
+import com.vanward.ehheater.util.PingUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -38,6 +40,13 @@ public class WelcomeActivity extends GeneratedActivity {
 	private final String TAG = "WelcomeActivity";
 
 	private TextView mTvInfo;
+
+	Handler mHandler = new Handler() {
+
+		public void handleMessage(Message msg) {
+
+		};
+	};
 
 	@Override
 	public void onBackPressed() {
@@ -79,7 +88,7 @@ public class WelcomeActivity extends GeneratedActivity {
 				PollingService.ACTION);
 	}
 
-	public HeaterInfo getCurrentDevice() {    
+	public HeaterInfo getCurrentDevice() {
 
 		if (curHeater == null) {
 			curHeater = new HeaterInfoService(getBaseContext())
@@ -105,7 +114,7 @@ public class WelcomeActivity extends GeneratedActivity {
 	 * 返回STATE_NORMAL
 	 */
 	private void checkLoginAndCurrentDeviceStatus(Context context,
-			Handler flowHandler) {
+			final Handler flowHandler) {
 
 		if (!AccountService.isLogged(context)) {
 			// 未登录, 跳转到登录页面
@@ -113,39 +122,64 @@ public class WelcomeActivity extends GeneratedActivity {
 			// return STATE_JUMPED_OUT;
 			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);
 			return;
+		} else { // 之前已登录
+			L.e(this, "这里执行了");
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					if (PingUtil.ping(WelcomeActivity.this)) { // 可以上外网
+						L.e(this, "只能上外网");
+						// XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
+						// AccountService.getUserId(getBaseContext()),
+						// AccountService.getUserPsw(getBaseContext()));
+						Intent intent = new Intent(WelcomeActivity.this,
+								LoginActivity.class);
+						intent.putExtra("queryDevicesListAgain", true);
+						startActivityForResult(intent, Consts.REQUESTCODE_LOGIN);
+					} else { // 只能用内网
+						L.e(this, "只能上内网");
+						if (getCurrentDevice() == null) {
+							// 无当前设备, 跳转到选择/新增设备页面
+							// startActivity(new Intent(this,
+							// EasyLinkConfigureActivity.class));
+							// return STATE_JUMPED_OUT;
+							HeaterInfoService hser = new HeaterInfoService(
+									WelcomeActivity.this);
+
+							List<HeaterInfo> allEIDevices = new HeaterInfoDao(
+									getBaseContext())
+									.getAllDeviceOfType(HeaterType.ELECTRIC_HEATER);
+							if (allEIDevices != null & allEIDevices.size() > 0) {
+								hser.setCurrentSelectedHeater(allEIDevices.get(
+										0).getMac());
+								flowHandler.sendEmptyMessage(STATE_NORMAL);
+								return;
+							}
+
+							List<HeaterInfo> allGasDevices = new HeaterInfoDao(
+									getBaseContext())
+									.getAllDeviceOfType(HeaterType.GAS_HEATER);
+
+							if (allGasDevices != null
+									& allGasDevices.size() > 0) {
+								hser.setCurrentSelectedHeater(allGasDevices
+										.get(0).getMac());
+								flowHandler.sendEmptyMessage(STATE_NORMAL);
+								return;
+							}
+
+							flowHandler
+									.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
+							return;
+						}
+
+						flowHandler.sendEmptyMessage(STATE_NORMAL);
+						return;
+					}
+				}
+			}).start();
 		}
-
-		// 已登录
-
-		if (getCurrentDevice() == null) {
-			// 无当前设备, 跳转到选择/新增设备页面
-			// startActivity(new Intent(this, EasyLinkConfigureActivity.class));
-			// return STATE_JUMPED_OUT;
-			HeaterInfoService hser = new HeaterInfoService(this);
-
-			List<HeaterInfo> allEIDevices = new HeaterInfoDao(getBaseContext())
-					.getAllDeviceOfType(HeaterType.ELECTRIC_HEATER);
-			if (allEIDevices != null & allEIDevices.size() > 0) {
-				hser.setCurrentSelectedHeater(allEIDevices.get(0).getMac());
-				flowHandler.sendEmptyMessage(STATE_NORMAL);
-				return;
-			}
-
-			List<HeaterInfo> allGasDevices = new HeaterInfoDao(getBaseContext())
-					.getAllDeviceOfType(HeaterType.GAS_HEATER);
-
-			if (allGasDevices != null & allGasDevices.size() > 0) {
-				hser.setCurrentSelectedHeater(allGasDevices.get(0).getMac());
-				flowHandler.sendEmptyMessage(STATE_NORMAL);
-				return;
-			}
-
-			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
-			return;
-		}
-
-		flowHandler.sendEmptyMessage(STATE_NORMAL);
-		return;
 	}
 
 	@Override
@@ -167,6 +201,8 @@ public class WelcomeActivity extends GeneratedActivity {
 		// }
 
 		if (requestCode == Consts.REQUESTCODE_LOGIN) {
+			
+			L.e(this, "这里执行了啊");
 
 			if (resultCode == RESULT_OK) {
 				flowHandler.sendEmptyMessage(STATE_NORMAL);
@@ -209,7 +245,8 @@ public class WelcomeActivity extends GeneratedActivity {
 			case STATE_NORMAL:
 				HeaterInfoService heaterService = new HeaterInfoService(
 						getBaseContext());
-				SharedPreferUtils spu = new SharedPreferUtils(WelcomeActivity.this);
+				SharedPreferUtils spu = new SharedPreferUtils(
+						WelcomeActivity.this);
 				String did = heaterService.getCurrentSelectedHeater().getDid();
 				String mac = heaterService.getCurrentSelectedHeater().getMac();
 				HeaterType type = heaterService.getCurHeaterType();
@@ -217,7 +254,7 @@ public class WelcomeActivity extends GeneratedActivity {
 				case ELECTRIC_HEATER:
 					spu.put(ShareKey.PollingElectricHeaterDid, did);
 					spu.put(ShareKey.PollingElectricHeaterMac, mac);
-					
+
 					startActivity(new Intent(getBaseContext(),
 							MainActivity.class));
 					finish();
@@ -225,7 +262,7 @@ public class WelcomeActivity extends GeneratedActivity {
 				case GAS_HEATER:
 					spu.put(ShareKey.PollingGasHeaterDid, did);
 					spu.put(ShareKey.PollingGasHeaterMac, mac);
-					
+
 					startActivity(new Intent(getBaseContext(),
 							GasMainActivity.class));
 					finish();
@@ -233,7 +270,7 @@ public class WelcomeActivity extends GeneratedActivity {
 				case FURNACE:
 					spu.put(ShareKey.PollingFurnaceDid, did);
 					spu.put(ShareKey.PollingFurnaceMac, mac);
-					
+
 					startActivity(new Intent(getBaseContext(),
 							FurnaceMainActivity.class));
 					finish();

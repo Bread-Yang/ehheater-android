@@ -256,7 +256,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
         params.put("data", json2.toString());
 
         L.e(this, "请求的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
-
+        
         mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
                 params, new AjaxCallBack<String>() {
                     @Override

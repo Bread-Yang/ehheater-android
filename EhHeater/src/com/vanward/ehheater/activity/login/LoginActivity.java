@@ -8,6 +8,8 @@ import net.tsz.afinal.http.AjaxCallBack;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import u.aly.l;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -93,6 +95,24 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		};
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				receiver, filter);
+		
+		if (getIntent().getBooleanExtra("queryDevicesListAgain", false)) {   // 用之前登录过的账号密码重新请求设备列表
+			
+			String userName = AccountService.getUserId(getBaseContext());
+			String psw = AccountService.getUserPsw(getBaseContext());
+			
+			et_user.setText(userName);
+			et_pwd.setText(psw);
+			
+			new SharedPreferUtils(getBaseContext()).clear();
+			new HeaterInfoService(getBaseContext()).deleteAllHeaters();
+			
+			L.e(this, "userName : " + userName);
+			L.e(this, "psw : " + psw);
+			
+			DialogUtil.instance().showLoadingDialog(this, "正在登录，请稍后...");
+			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, userName, psw);
+		}
 	}
 
 	@Override
@@ -350,6 +370,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) {
 		L.e(this, "onV4GetMyBindings()");
+		
+		L.e(this, "errorCode : " + errorCode);
 
 		if (errorCode != 0) {
 			return;

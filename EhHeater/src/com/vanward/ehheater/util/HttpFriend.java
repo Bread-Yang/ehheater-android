@@ -116,14 +116,14 @@ public class HttpFriend {
 
 			@Override
 			public void onSuccess(String jsonString) {
-				dismissRequestDialog();
 				callBack.onSuccess(jsonString);
+				dismissRequestDialog();
 			}
 
 			@Override
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
-				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
+				dismissRequestDialog();
 				if (showTips) {
 					if (!((Activity)mContext).isFinishing()) {
 						serverFailureDialog.show();
@@ -175,14 +175,14 @@ public class HttpFriend {
 
 			@Override
 			public void onSuccess(String jsonString) {
-				dismissRequestDialog();
 				callBack.onSuccess(jsonString);
+				dismissRequestDialog();
 			}
 
 			@Override
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
-				dismissRequestDialog();
 				callBack.onFailure(t, errorNo, strMsg);
+				dismissRequestDialog();
 				if (showTips) {
 					if (!((Activity)mContext).isFinishing()) {
 						serverFailureDialog.show();
@@ -237,14 +237,14 @@ public class HttpFriend {
 
 				@Override
 				public void onSuccess(String jsonString) {
-					dismissRequestDialog();
 					callBack.onSuccess(jsonString);
+					dismissRequestDialog();
 				}
 
 				@Override
 				public void onFailure(Throwable t, int errorNo, String strMsg) {
-					dismissRequestDialog();
 					callBack.onFailure(t, errorNo, strMsg);
+					dismissRequestDialog();
 					if (showTips) {
 						if (!((Activity)mContext).isFinishing()) {
 							serverFailureDialog.show();
