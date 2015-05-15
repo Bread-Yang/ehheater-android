@@ -10,6 +10,7 @@ import org.apache.http.cookie.Cookie;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Handler;
 import android.widget.Toast;
 
 import com.vanward.ehheater.R;
@@ -40,6 +41,9 @@ public class HttpFriend {
 	public boolean showTips = true;
 
 	private Dialog serverFailureDialog;
+
+	/** 单位: 秒 */
+	public int delaySeconds = 0;
 
 	/**
 	 * 
@@ -125,11 +129,11 @@ public class HttpFriend {
 				callBack.onFailure(t, errorNo, strMsg);
 				dismissRequestDialog();
 				if (showTips) {
-					if (!((Activity)mContext).isFinishing()) {
+					if (!((Activity) mContext).isFinishing()) {
 						serverFailureDialog.show();
 					}
-//					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
-//							.show();
+					// Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+					// .show();
 				}
 			}
 
@@ -184,11 +188,11 @@ public class HttpFriend {
 				callBack.onFailure(t, errorNo, strMsg);
 				dismissRequestDialog();
 				if (showTips) {
-					if (!((Activity)mContext).isFinishing()) {
+					if (!((Activity) mContext).isFinishing()) {
 						serverFailureDialog.show();
 					}
-//					Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
-//							.show();
+					// Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+					// .show();
 				}
 			}
 
@@ -246,11 +250,11 @@ public class HttpFriend {
 					callBack.onFailure(t, errorNo, strMsg);
 					dismissRequestDialog();
 					if (showTips) {
-						if (!((Activity)mContext).isFinishing()) {
+						if (!((Activity) mContext).isFinishing()) {
 							serverFailureDialog.show();
 						}
-//						Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
-//								.show();
+						// Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+						// .show();
 					}
 
 				}
@@ -308,7 +312,13 @@ public class HttpFriend {
 		if (mContext instanceof Activity) {
 			if (!((Activity) mContext).isFinishing()) {
 				if (loadingDialog != null) {
-					loadingDialog.dismiss();
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							loadingDialog.dismiss();
+						}
+					}, delaySeconds * 1000);
 				}
 			}
 		}

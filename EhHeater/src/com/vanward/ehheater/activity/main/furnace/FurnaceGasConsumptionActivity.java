@@ -133,6 +133,9 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
 				"highChartsJavaScriptInterface");
 		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
+		
+		mHttpFriend = HttpFriend.create(this);
+		mHttpFriend.delaySeconds = 2;
 
 		getDataForRealtime(3);
 
@@ -313,7 +316,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	String forResult;
 
 	private String getDataForAccumulated() {
-		mHttpFriend = HttpFriend.create(this);
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
 
@@ -365,8 +367,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	}
 
 	private String getDataForRealtime(final int ir) {
-		mHttpFriend = HttpFriend.create(this);
-
 		// String requestURL =
 		// "http://vanward.xtremeprog.com/EhHeaterWeb/getFurnaceHourGas?did=dVfu4XXcUCbE93Z2mu4PyZ";
 		String requestURL = "getFurnaceHourGas?did=" + did;
