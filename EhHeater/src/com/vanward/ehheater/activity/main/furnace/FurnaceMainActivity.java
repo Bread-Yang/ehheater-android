@@ -103,6 +103,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
     private ImageView faultTipIv;
 
     private static boolean isError = false;
+    
+    private boolean isBinding;
 
     private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -321,7 +323,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
         
         L.e(this, "OnDERYStatusResp()返回的nConnId : " + nConnId);
         
-        DialogUtil.dismissDialog();
+        Log.e(TAG, "DialogUtil.dismissDialog()调用了");
+        if (!isBinding) {
+        	 DialogUtil.dismissDialog();
+        }
         Log.d(TAG, pResp.getError() + "....");
         // Toast.makeText(this, "这是错误" + pResp.getError(),
         // Toast.LENGTH_SHORT).show();
@@ -877,13 +882,21 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
                 boolean shouldExecuteBinding = HeaterInfoService
                         .shouldExecuteBinding(curHeater);
-
+                
                 if (shouldExecuteBinding) {
-                	L.e(this, " HeaterInfoService.setBinding(this, did, passcode)执行了");
+                	DialogUtil.instance().showLoadingDialog(this, "");
                     HeaterInfoService.setBinding(this, did, passcode);
+                    isBinding = true;
+                    new Handler().postDelayed(new Runnable() {
+						
+						@Override
+						public void run() {
+							isBinding = false;
+						}
+					}, 20000);
                 } else {
                 	L.e(this, " Consts.REQUESTCODE_CONNECT_ACTIVITY 查询 queryState()");
-                    queryState();
+                	 queryState();
                 }
 
                 if (getIntent().getBooleanExtra("switchSuccess", false)
@@ -937,6 +950,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
             HeaterInfoService hser = new HeaterInfoService(getBaseContext());
             HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+            
+            isBinding = false;
 
             if (resultCode == RESULT_OK) {
                 // binded

@@ -296,6 +296,7 @@ public class ConnectActivity extends GeneratedActivity {
 				L.e(this, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 				L.e(this, "XPGConnShortCuts.connect2small()前");
+				L.e(this, "要连接设备的IP : " + endpoint.getAddr());
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
 				L.e(this, "XPGConnShortCuts.connect2small()后");
 				// XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
@@ -349,6 +350,7 @@ public class ConnectActivity extends GeneratedActivity {
 		timeoutHandler.sendEmptyMessageDelayed(0, 10000);
 		
 		L.e(this, "XPGConnShortCuts.connect2small(ip)执行了");
+		L.e(this, "要连接设备的IP : " + ip);
 		XPGConnShortCuts.connect2small(ip);
 		// XPGConnectClient.xpgcLogin2Lan(ip, null);
 		L.e(this, "执行了");

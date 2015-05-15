@@ -41,10 +41,63 @@ public class WelcomeActivity extends GeneratedActivity {
 
 	private TextView mTvInfo;
 
+	private final int HANDLE_OUTSIDE_NETWORK = 0;
+	private final int HANDLE_INSIDE_NETWORK = 1;
+
 	Handler mHandler = new Handler() {
 
 		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case HANDLE_OUTSIDE_NETWORK:
+				L.e(this, "只能上外网");
+				// XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
+				// AccountService.getUserId(getBaseContext()),
+				// AccountService.getUserPsw(getBaseContext()));
+				Intent intent = new Intent(WelcomeActivity.this,
+						LoginActivity.class);
+				intent.putExtra("queryDevicesListAgain", true);
+				startActivityForResult(intent, Consts.REQUESTCODE_LOGIN);
+				break;
+			case HANDLE_INSIDE_NETWORK:
+				L.e(this, "只能上内网");
+				if (getCurrentDevice() == null) {
+					// 无当前设备, 跳转到选择/新增设备页面
+					// startActivity(new Intent(this,
+					// EasyLinkConfigureActivity.class));
+					// return STATE_JUMPED_OUT;
+					HeaterInfoService hser = new HeaterInfoService(
+							WelcomeActivity.this);
 
+					List<HeaterInfo> allEIDevices = new HeaterInfoDao(
+							getBaseContext())
+							.getAllDeviceOfType(HeaterType.ELECTRIC_HEATER);
+					if (allEIDevices != null & allEIDevices.size() > 0) {
+						hser.setCurrentSelectedHeater(allEIDevices.get(
+								0).getMac());
+						flowHandler.sendEmptyMessage(STATE_NORMAL);
+						return;
+					}
+
+					List<HeaterInfo> allGasDevices = new HeaterInfoDao(
+							getBaseContext())
+							.getAllDeviceOfType(HeaterType.GAS_HEATER);
+
+					if (allGasDevices != null
+							& allGasDevices.size() > 0) {
+						hser.setCurrentSelectedHeater(allGasDevices
+								.get(0).getMac());
+						flowHandler.sendEmptyMessage(STATE_NORMAL);
+						return;
+					}
+
+					flowHandler
+							.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
+					return;
+				}
+
+				flowHandler.sendEmptyMessage(STATE_NORMAL);
+				break;
+			}
 		};
 	};
 
@@ -129,53 +182,9 @@ public class WelcomeActivity extends GeneratedActivity {
 				@Override
 				public void run() {
 					if (PingUtil.ping(WelcomeActivity.this)) { // 可以上外网
-						L.e(this, "只能上外网");
-						// XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
-						// AccountService.getUserId(getBaseContext()),
-						// AccountService.getUserPsw(getBaseContext()));
-						Intent intent = new Intent(WelcomeActivity.this,
-								LoginActivity.class);
-						intent.putExtra("queryDevicesListAgain", true);
-						startActivityForResult(intent, Consts.REQUESTCODE_LOGIN);
+						mHandler.sendEmptyMessage(HANDLE_OUTSIDE_NETWORK);
 					} else { // 只能用内网
-						L.e(this, "只能上内网");
-						if (getCurrentDevice() == null) {
-							// 无当前设备, 跳转到选择/新增设备页面
-							// startActivity(new Intent(this,
-							// EasyLinkConfigureActivity.class));
-							// return STATE_JUMPED_OUT;
-							HeaterInfoService hser = new HeaterInfoService(
-									WelcomeActivity.this);
-
-							List<HeaterInfo> allEIDevices = new HeaterInfoDao(
-									getBaseContext())
-									.getAllDeviceOfType(HeaterType.ELECTRIC_HEATER);
-							if (allEIDevices != null & allEIDevices.size() > 0) {
-								hser.setCurrentSelectedHeater(allEIDevices.get(
-										0).getMac());
-								flowHandler.sendEmptyMessage(STATE_NORMAL);
-								return;
-							}
-
-							List<HeaterInfo> allGasDevices = new HeaterInfoDao(
-									getBaseContext())
-									.getAllDeviceOfType(HeaterType.GAS_HEATER);
-
-							if (allGasDevices != null
-									& allGasDevices.size() > 0) {
-								hser.setCurrentSelectedHeater(allGasDevices
-										.get(0).getMac());
-								flowHandler.sendEmptyMessage(STATE_NORMAL);
-								return;
-							}
-
-							flowHandler
-									.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
-							return;
-						}
-
-						flowHandler.sendEmptyMessage(STATE_NORMAL);
-						return;
+						mHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK);
 					}
 				}
 			}).start();

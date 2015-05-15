@@ -441,6 +441,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					// finish();
 
 					setResult(RESULT_OK);
+					DialogUtil.instance().dismissDialog();
 					finish();
 				}
 			}, 2000);

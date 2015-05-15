@@ -24,7 +24,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	
 	private static final String TAG = "DummySendBindingReqActivity";
 	
-	int tempConnId;
+	int tempConnId = -1;
 	
 	private String username;
 	private String userpsw;
@@ -61,6 +61,10 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
 			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, username, userpsw);
 		} else {
+			L.e(this, "Consts.VANWARD_APP_ID : " + Consts.VANWARD_APP_ID);
+			L.e(this, "Global.token : " + Global.token);
+			L.e(this, "did2bind : " + did2bind);
+			L.e(this, "passcode2bind : " + passcode2bind);
 			XPGConnectClient.xpgc4BindDevice(Consts.VANWARD_APP_ID, Global.token, did2bind, passcode2bind, "");
 		}
 		
@@ -77,7 +81,9 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
+		if (tempConnId != -1) {
+			XPGConnectClient.xpgcDisconnectAsync(tempConnId);
+		}
 		XPGConnectClient.RemoveActivity(this);
 	}
 	
@@ -111,6 +117,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	@Override
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
+		
 		L.e(this, "onV4Login()");
 		L.e(this, "result : " + result);
 		L.e(this, "connId : " + connId);

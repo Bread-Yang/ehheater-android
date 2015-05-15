@@ -124,7 +124,7 @@ public class HeaterInfoService {
 			L.e(this, "getHeaterType的hinfo为null");
 			return HeaterType.Unknown;
 		}
-		L.e(this, hinfo.getProductKey());
+//		L.e(this, hinfo.getProductKey());
 		if (Consts.ELECTRIC_HEATER_P_KEY.equals(hinfo.getProductKey())) {
 			return HeaterType.ELECTRIC_HEATER;
 		} else if (Consts.GAS_HEATER_P_KEY.equals(hinfo.getProductKey())) {
