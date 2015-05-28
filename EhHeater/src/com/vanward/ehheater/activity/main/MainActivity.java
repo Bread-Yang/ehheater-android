@@ -298,12 +298,12 @@ public class MainActivity extends BaseBusinessActivity implements
 		ErrorUtils.isFurnaceMainActivityActive = false;
 		canupdateView = true;
 
-		String mac = getIntent().getStringExtra("mac");
-		L.e(this, "onResume : mac : " + mac);
+		String did = getIntent().getStringExtra("did");
+		L.e(this, "did : " + did);
 
-		if (mac != null && !"".equals(mac)
+		if (did != null && !"".equals(did)
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
-			SwitchDeviceUtil.switchDevice(mac, this);
+			SwitchDeviceUtil.switchDevice(did, this);
 		}
 	}
 

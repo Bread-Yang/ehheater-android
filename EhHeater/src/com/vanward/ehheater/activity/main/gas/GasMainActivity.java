@@ -168,10 +168,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 		L.e(this, "GasMainActivity的onResume调用了");
 
-		String mac = getIntent().getStringExtra("mac");
-		if (!TextUtils.isEmpty(mac)
+		String did = getIntent().getStringExtra("did");
+		if (!TextUtils.isEmpty(did)
 				&& !getIntent().getBooleanExtra("newActivity", false)) {
-			SwitchDeviceUtil.switchDevice(mac, this);
+			SwitchDeviceUtil.switchDevice(did, this);
 		}
 	}
 

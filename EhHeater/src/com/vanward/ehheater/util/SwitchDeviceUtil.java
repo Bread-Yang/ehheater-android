@@ -15,10 +15,12 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 
 public class SwitchDeviceUtil {
 
-	public static void switchDevice(String mac, Activity activity) {
+	public static void switchDevice(String did, Activity activity) {
 
+//		HeaterInfo newHeaterInfo = new HeaterInfoDao(activity)
+//				.getHeaterByMac(mac);
 		HeaterInfo newHeaterInfo = new HeaterInfoDao(activity)
-				.getHeaterByMac(mac);
+		.getHeaterByDid(did);
 		HeaterInfo shareheaterInfo = new HeaterInfoService(activity)
 				.getCurrentSelectedHeater();
 		
@@ -41,7 +43,7 @@ public class SwitchDeviceUtil {
 			HeaterType oriHeaterType = hser.getCurHeaterType();
 			HeaterType newHeaterType = hser.getHeaterType(newHeaterInfo);
 
-			hser.setCurrentSelectedHeater(mac);
+			hser.setCurrentSelectedHeater(newHeaterInfo.getMac());
 
 			AlterDeviceHelper.newHeaterType = newHeaterType;
 			AlterDeviceHelper.typeChanged = !newHeaterType

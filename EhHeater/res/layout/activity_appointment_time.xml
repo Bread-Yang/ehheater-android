@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.vanward.ehheater"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/home_bg"
@@ -8,11 +8,11 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:background="@drawable/layerlist_appointment_time_wheel_bg_without_left_top_right_border"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <com.vanward.ehheater.view.wheelview.WheelView
             android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
             android:text="分"
             android:textSize="25sp" />
     </LinearLayout>
-    
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
@@ -111,8 +111,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/activity_background"
-        android:onClick="onClick"
         android:clickable="true"
+        android:onClick="onClick"
         android:padding="10dp" >
 
         <TextView
@@ -139,10 +139,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/never"
             android:layout_toLeftOf="@+id/imageView1"
             android:layout_toRightOf="@+id/TextView04"
             android:gravity="right"
+            android:text="@string/never"
             android:textColor="@color/appointment_text_color"
             android:textSize="15sp" />
     </RelativeLayout>
@@ -170,7 +170,7 @@
             android:text="@string/number"
             android:textColor="@color/appointment_text_color"
             android:textSize="20sp" />
-        
+
         <ToggleButton
             android:id="@+id/tb_switch"
             android:layout_width="55dp"
@@ -181,7 +181,6 @@
             android:background="@drawable/selector_bg_furnace_on_or_off"
             android:textOff=""
             android:textOn="" />
-
     </RelativeLayout>
 
     <View
@@ -306,8 +305,8 @@
                 android:progressDrawable="@drawable/seekbarhint_style"
                 android:thumb="@drawable/seekbarhint_thumb"
                 android:thumbOffset="10dp"
-                app:popupStyle="follow"
                 app:minValueTips="50"
+                app:popupStyle="follow"
                 app:popupWidth="100dp"
                 app:yOffset="-15dp" />
 
@@ -372,8 +371,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@drawable/radio_selector"
-                android:text="  2kw"
                 android:checked="true"
+                android:text="  2kw"
                 android:textColor="@drawable/selector_text_color_radiobutton"
                 android:textSize="18sp" />
 

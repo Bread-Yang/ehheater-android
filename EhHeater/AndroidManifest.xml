@@ -1,22 +1,34 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vanward.ehheater"
     android:versionCode="1"
-    android:versionName="b022">
+    android:versionName="b022" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
 
+    <permission
+        android:name="com.vanward.ehheater.permission.JPUSH_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.vanward.ehheater.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -26,26 +38,93 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppBaseTheme">
+        android:theme="@style/AppBaseTheme" >
 
         <!-- Polling Service -->
-        <service android:name=".notification.PollingService">
+        <!--
+        <service android:name=".notification.PollingService" >
             <intent-filter>
                 <action android:name="com.vanward.service.PollingService" />
             </intent-filter>
         </service>
+        -->
 
-        <receiver android:name=".util.wifi.ConnectChangeReceiver">
+
+        <!-- Required JPush SDK 核心功能 -->
+        <service
+            android:name="cn.jpush.android.service.PushService"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTER" />
+                <action android:name="cn.jpush.android.intent.REPORT" />
+                <action android:name="cn.jpush.android.intent.PushService" />
+                <action android:name="cn.jpush.android.intent.PUSH_TIME" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="cn.jpush.android.service.DownloadService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name="cn.jpush.android.service.PushReceiver"
+            android:enabled="true" >
+            <intent-filter android:priority="1000" > <!-- since 1.3.5 -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!-- since 1.3.5 -->
+                <category android:name="com.vanward.ehheater" /> <!-- since 1.3.5 -->
+            </intent-filter> <!-- since 1.3.5 -->
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.MyJPushReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!-- Required  用户注册SDK的intent -->
+                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!-- Required  用户接收SDK消息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
+                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
+                <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <category android:name="com.vanward.ehheater" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".util.wifi.ConnectChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
+        <!-- Required JPush SDK核心功能 -->
+        <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
+
+        <activity
+            android:name="cn.jpush.android.ui.PushActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.ui.PushActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.vanward.ehheater" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.WelcomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/custom_dialog2">
+            android:theme="@style/custom_dialog2" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,156 +134,208 @@
         <activity
             android:name=".activity.main.TestActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".util.ErrorUtils"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.configure.ConnectActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/custom_dialog2"></activity>
+            android:theme="@style/custom_dialog2" >
+        </activity>
         <activity
             android:name=".activity.feedback.FeedbackActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.login.LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.info.SelectDeviceActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.user.RegisterActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.user.FindPasswordActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.gas.GasMainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnaceMainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnacePatternActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnaceSeasonActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnaceIntelligentControlActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentList4ExhibitionActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentTimeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnaceAppointmentTime4ExhibitionActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.furnace.FurnaceGasConsumptionActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.gas.GasAddPatternActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.EIAddPatternActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.gas.GasPatternActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.main.EIPatternActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.info.InfoErrorActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.info.InfoTipActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.appointment.AppointmentListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.appointment.AppointmentTimeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.appointment.AppointmentDaysActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.appointment.AppointmentNumberActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.info.InformationActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.configure.EasyLinkConfigureActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateUnspecified|adjustResize"></activity>
+            android:windowSoftInputMode="stateUnspecified|adjustResize" >
+        </activity>
         <activity
             android:name=".activity.configure.DummySendBindingReqActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/custom_dialog2"></activity>
+            android:theme="@style/custom_dialog2" >
+        </activity>
         <activity
             android:name=".activity.configure.AutoConfigureFailActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.configure.ManualConfStep1Activity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.configure.ManualConfStep2Activity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.configure.ManualConfigFailActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.more.HeaterManagementActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.more.HelpActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.more.AboutActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.more.RemindSettingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.more.AccountManagementActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.more.ChangeNicknameActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name=".activity.more.ChangePasswordActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" >
+        </activity>
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="541b9732fd98c55f32058e39"></meta-data>
+            android:value="541b9732fd98c55f32058e39" >
+        </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Channel ID" />
+
+        <!-- Required  . Enable it you can get statistics data with channel -->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="14dca68d2de796a30faffbc8" />
     </application>
 
 </manifest>

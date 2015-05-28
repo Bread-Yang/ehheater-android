@@ -27,6 +27,17 @@ public class HeaterInfoDao extends BaseDao {
 			return null;
 		}
 	}
+	
+	public HeaterInfo getHeaterByDid(String did) {
+		List<HeaterInfo> result = getDb().findAllByWhere(HeaterInfo.class,
+				" did = '" + did + "'");
+
+		if (result != null && result.size() > 0) {
+			return result.get(0);
+		} else {
+			return null;
+		}
+	}
 
 	public void save(HeaterInfo heater) {
 		L.e(this, "saving heater(allow empty passcode): " + heater);

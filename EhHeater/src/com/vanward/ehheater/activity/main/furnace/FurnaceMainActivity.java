@@ -1014,10 +1014,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
         ErrorUtils.isMainActivityActive = false;
         ErrorUtils.isGasMainActivityActive = false;
         isError = false;
-        String mac = getIntent().getStringExtra("mac");
-        L.e(this, "mac : " + mac);
-        if (mac != null && !getIntent().getBooleanExtra("newActivity", false)) {
-            SwitchDeviceUtil.switchDevice(mac, this);
+        
+        String did = getIntent().getStringExtra("did");
+        L.e(this, "did : " + did);
+        if (did != null && !getIntent().getBooleanExtra("newActivity", false)) {
+            SwitchDeviceUtil.switchDevice(did, this);
         }
     }
 
