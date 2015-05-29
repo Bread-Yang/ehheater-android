@@ -1,5 +1,8 @@
 package com.vanward.ehheater.activity.info;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +11,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.login.LoginActivity;
+import com.vanward.ehheater.util.L;
 
 public class SelectDeviceActivity extends Activity implements OnClickListener {
 	TextView name, time, detail;
@@ -46,7 +53,11 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		if (arg0.getId() == R.id.ivTitleBtnLeft) {
+			Set<String> tagSet = new LinkedHashSet<String>();
+			JPushInterface.setTags(getApplicationContext(), tagSet, mAliasCallback);
 			if (getIntent().getBooleanExtra("isDeleteAll", false)) {
+//				JPushInterface.setAlias(getApplicationContext(), "", mAliasCallback);
+				
 				Intent intent = new Intent(this, LoginActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
@@ -93,4 +104,27 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
+
+	private final TagAliasCallback mAliasCallback = new TagAliasCallback() {
+
+        @Override
+        public void gotResult(int code, String alias, Set<String> tags) {
+            String logs ;
+            switch (code) {
+            case 0:
+                logs = "Set tag and alias success";
+                
+                break;
+                
+            case 6002:
+                logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+//                	mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS, alias), 1000 * 60);
+                break;
+            
+            default:
+                logs = "Failed with errorCode = " + code;
+            }
+        }
+	};
+
 }

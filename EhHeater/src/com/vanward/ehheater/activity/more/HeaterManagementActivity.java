@@ -2,6 +2,11 @@ package com.vanward.ehheater.activity.more;
 
 import java.util.List;
 
+import net.tsz.afinal.http.AjaxCallBack;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +39,7 @@ import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.AlterDeviceHelper;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.DialogUtil;
+import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.PingWebsiteUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
@@ -396,7 +402,35 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 		if (errorCode == 0) {
 			DialogUtil.dismissDialog();
+
+			HttpFriend httpFriend = HttpFriend.create(this);
+
+			String requestURL = "userinfo/saveAlias?did="
+					+ macOfHeaterBeingDeleted + "&uid="
+							+ AccountService.getUserId(getBaseContext())+ "&isLogout=true";
 			
+			L.e(this, "requestURL : " + requestURL);
+			
+			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					null, new AjaxCallBack<String>() {
+						public void onSuccess(String jsonString) {
+							JSONObject json;
+							try {
+								json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									L.e(HeaterManagementActivity.this, "删除已经上传到到志聪的JPush服务器的设备成功");
+								} else if ("402".equals(responseCode)) {
+									L.e(HeaterManagementActivity.this, "删除已经上传到到志聪的JPush服务器的设备失败");
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						};
+
+					});
+
 			new HeaterInfoService(getBaseContext())
 					.deleteHeater(macOfHeaterBeingDeleted);
 			deleted();

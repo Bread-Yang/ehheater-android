@@ -1,12 +1,20 @@
 package com.vanward.ehheater.activity.more;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
@@ -93,6 +101,11 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 
 		new SharedPreferUtils(getBaseContext()).clear();
 		new HeaterInfoService(getBaseContext()).deleteAllHeaters();
+//		JPushInterface.setAlias(getApplicationContext(), "", mAliasCallback);
+		
+		Set<String> tagSet = new LinkedHashSet<String>();
+		JPushInterface.setTags(getApplicationContext(), tagSet, mAliasCallback);
+		
 		/*AccountService.setUser(this, null, null);*/
 		/*AccountService.setUser(this, AccountService.getUserId(getBaseContext()), null);*/
 
@@ -132,5 +145,27 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 
 		}
 	}
+	
+	private final TagAliasCallback mAliasCallback = new TagAliasCallback() {
+
+        @Override
+        public void gotResult(int code, String alias, Set<String> tags) {
+            String logs ;
+            switch (code) {
+            case 0:
+                logs = "Set tag and alias success";
+                
+                break;
+                
+            case 6002:
+                logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+//                	mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS, alias), 1000 * 60);
+                break;
+            
+            default:
+                logs = "Failed with errorCode = " + code;
+            }
+        }
+	};
 
 }

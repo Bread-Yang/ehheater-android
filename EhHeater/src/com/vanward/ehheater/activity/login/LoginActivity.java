@@ -1,5 +1,7 @@
 package com.vanward.ehheater.activity.login;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,6 +16,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +24,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
@@ -54,6 +60,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	TextView mTvReg, tv_find_passcode;
 
 	SharedPreferUtils spu;
+	
+	boolean setJPushAliasSuccess = false;
 
 	@Override
 	public void onBackPressed() {
@@ -150,7 +158,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			mLoginTimeoutTimer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					if (!loginCloudResponseTriggered) {
+					if (!(loginCloudResponseTriggered && setJPushAliasSuccess)) {
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
@@ -199,6 +207,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onV4Login(int errorCode, String uid, String token,
 			String expire_at) {
+		L.e(this, "onV4Login()");
 		if (errorCode == 0) {
 			Global.uid = uid;
 			Global.token = token;
@@ -210,6 +219,13 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			if (mLoginTimeoutTimer != null) {
 				mLoginTimeoutTimer.cancel();
 			}
+			
+			L.e(this, "et_user.getText().toString().trim() : " + et_user.getText().toString().trim());
+//			JPushInterface.setAlias(getApplicationContext(), et_user.getText().toString().trim(), mAliasCallback);
+			
+			Set<String> tagSet = new LinkedHashSet<String>();
+			tagSet.add(et_user.getText().toString().trim());
+			JPushInterface.setTags(getApplicationContext(), tagSet, mAliasCallback);
 
 			// 获取昵称
 			HttpFriend httpFriend = HttpFriend.create(this);
@@ -301,7 +317,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
-
+		L.e(this, "onLoginCloudResp()");
+		
 		loginCloudResponseTriggered = true;
 		if (mLoginTimeoutTimer != null) {
 			mLoginTimeoutTimer.cancel();
@@ -449,6 +466,34 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		hser.saveDownloadedHeater(hi);
+		
+		HttpFriend httpFriend = HttpFriend.create(this);
+
+		String requestURL = "userinfo/saveAlias?did="
+				+ endpoint.getSzDid() + "&uid=" + et_user.getText().toString().trim() + "&isLogout=false";
+		
+		L.e(LoginActivity.this, "上传的requestURL : " + requestURL);
+		
+		httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+				null, new AjaxCallBack<String>() {
+					public void onSuccess(String jsonString) {
+						JSONObject json;
+						try {
+							json = new JSONObject(jsonString);
+							String responseCode = json
+									.getString("responseCode");
+							if ("200".equals(responseCode)) {
+								L.e(LoginActivity.this, "上传设备到志聪的JPush服务器成功");
+							} else if ("402".equals(responseCode)) {
+								L.e(LoginActivity.this, "上传设备到志聪的JPush服务器失败");
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					};
+
+				});
+		
 		if (preSelectedDeviceMac.equals(hi.getMac())) {
 			spu.put(ShareKey.CurDeviceMac, hi.getMac());
 		}
@@ -559,4 +604,46 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			}
 		}
 	}
+	
+	private static final int MSG_SET_ALIAS = 1001;
+	
+	private final TagAliasCallback mAliasCallback = new TagAliasCallback() {
+
+        @Override
+        public void gotResult(int code, String alias, Set<String> tags) {
+            String logs ;
+            switch (code) {
+            case 0:
+                logs = "Set tag and alias success";
+                Log.i(TAG, logs);
+                
+                setJPushAliasSuccess = true;
+                break;
+                
+            case 6002:
+                logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+                Log.i(TAG, logs);
+//                	mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS, alias), 1000 * 60);
+                break;
+            
+            default:
+                logs = "Failed with errorCode = " + code;
+                Log.e(TAG, logs);
+            }
+        }
+        
+        private final Handler mHandler = new Handler() {
+            @Override
+            public void handleMessage(android.os.Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                case MSG_SET_ALIAS:
+                    Log.d(TAG, "Set alias in handler.");
+                    JPushInterface.setAliasAndTags(getApplicationContext(), (String) msg.obj, null, mAliasCallback);
+                    break;
+                }
+            }
+        };
+	    
+	};
 }
