@@ -10,8 +10,6 @@ import net.tsz.afinal.http.AjaxCallBack;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import u.aly.l;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,11 +18,13 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -60,8 +60,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	TextView mTvReg, tv_find_passcode;
 
 	SharedPreferUtils spu;
-	
+
+	int timeoutSecond = 20000;
+
 	boolean setJPushAliasSuccess = false;
+
+	boolean loginSuccess = false;
 
 	@Override
 	public void onBackPressed() {
@@ -91,6 +95,30 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		spu = new SharedPreferUtils(getBaseContext());
 		preSelectedDeviceMac = spu.get(ShareKey.CurDeviceMac, "");
 
+		findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+			}
+		});
+
+		findViewById(R.id.llt_root).setOnFocusChangeListener(
+				new OnFocusChangeListener() {
+
+					@Override
+					public void onFocusChange(View arg0, boolean hasFocus) {
+						if (hasFocus) {
+							((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+									.hideSoftInputFromWindow(
+											LoginActivity.this
+													.getCurrentFocus()
+													.getWindowToken(),
+											InputMethodManager.HIDE_NOT_ALWAYS);
+						}
+					}
+				});
+
 		IntentFilter filter = new IntentFilter(
 				Consts.INTENT_FILTER_KILL_LOGIN_ACTIVITY);
 		BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -103,23 +131,42 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		};
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				receiver, filter);
-		
-		if (getIntent().getBooleanExtra("queryDevicesListAgain", false)) {   // 用之前登录过的账号密码重新请求设备列表
-			
+
+		if (getIntent().getBooleanExtra("queryDevicesListAgain", false)) { // 用之前登录过的账号密码重新请求设备列表
+
 			String userName = AccountService.getUserId(getBaseContext());
 			String psw = AccountService.getUserPsw(getBaseContext());
-			
+
 			et_user.setText(userName);
 			et_pwd.setText(psw);
-			
+
 			new SharedPreferUtils(getBaseContext()).clear();
 			new HeaterInfoService(getBaseContext()).deleteAllHeaters();
-			
+
 			L.e(this, "userName : " + userName);
 			L.e(this, "psw : " + psw);
-			
+
 			DialogUtil.instance().showLoadingDialog(this, "正在登录，请稍后...");
 			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, userName, psw);
+
+			loginCloudResponseTriggered = false;
+
+			mLoginTimeoutTimer = new Timer();
+			mLoginTimeoutTimer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					if (!(loginCloudResponseTriggered && setJPushAliasSuccess)) {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								DialogUtil.dismissDialog();
+								Toast.makeText(getBaseContext(), "登录超时！", 3000)
+										.show();
+							}
+						});
+					}
+				}
+			}, timeoutSecond);
 		}
 	}
 
@@ -141,6 +188,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			break;
 		case R.id.login_btn:
 
+			L.e(this, "登陆之前");
+
 			if (!NetworkStatusUtil.isConnected(this)) {
 				Toast.makeText(this, R.string.check_network, Toast.LENGTH_LONG)
 						.show();
@@ -153,7 +202,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				return;
 			}
 			DialogUtil.instance().showLoadingDialog(this, "正在登录，请稍后...");
+
 			loginCloudResponseTriggered = false;
+
 			mLoginTimeoutTimer = new Timer();
 			mLoginTimeoutTimer.schedule(new TimerTask() {
 				@Override
@@ -163,13 +214,13 @@ public class LoginActivity extends EhHeaterBaseActivity {
 							@Override
 							public void run() {
 								DialogUtil.dismissDialog();
-								Toast.makeText(getBaseContext(), "登录超时", 3000)
+								Toast.makeText(getBaseContext(), "登录超时！", 3000)
 										.show();
 							}
 						});
 					}
 				}
-			}, 9000);
+			}, timeoutSecond);
 			// XPGConnShortCuts.connect2big();
 			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, et_user
 					.getText().toString(), et_pwd.getText().toString());
@@ -199,7 +250,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if ("".equals(et_user.getText().toString())) {
 			et_user.setText(AccountService.getUserId(this));
 		}
-		// et_pwd.setText("");
+		et_pwd.setText("123456");
 
 		XPGConnectClient.AddActivity(this);
 	}
@@ -207,8 +258,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onV4Login(int errorCode, String uid, String token,
 			String expire_at) {
-		L.e(this, "onV4Login()");
+		L.e(this, "onV4Login() : errorCode : " + errorCode);
 		if (errorCode == 0) {
+			loginSuccess = true;
+
 			Global.uid = uid;
 			Global.token = token;
 
@@ -219,13 +272,16 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			if (mLoginTimeoutTimer != null) {
 				mLoginTimeoutTimer.cancel();
 			}
-			
-			L.e(this, "et_user.getText().toString().trim() : " + et_user.getText().toString().trim());
-//			JPushInterface.setAlias(getApplicationContext(), et_user.getText().toString().trim(), mAliasCallback);
-			
+
+			L.e(this, "et_user.getText().toString().trim() : "
+					+ et_user.getText().toString().trim());
+			// JPushInterface.setAlias(getApplicationContext(),
+			// et_user.getText().toString().trim(), mAliasCallback);
+
 			Set<String> tagSet = new LinkedHashSet<String>();
 			tagSet.add(et_user.getText().toString().trim());
-			JPushInterface.setTags(getApplicationContext(), tagSet, mAliasCallback);
+			JPushInterface.setTags(getApplicationContext(), tagSet,
+					mAliasCallback);
 
 			// 获取昵称
 			HttpFriend httpFriend = HttpFriend.create(this);
@@ -284,6 +340,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		} else {
 			// 登录失败
+			mLoginTimeoutTimer.cancel();
 			DialogUtil.dismissDialog();
 			Toast.makeText(getBaseContext(),
 					GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), 3000)
@@ -318,7 +375,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	public void onLoginCloudResp(int result, String mac) {
 		super.onLoginCloudResp(result, mac);
 		L.e(this, "onLoginCloudResp()");
-		
+
 		loginCloudResponseTriggered = true;
 		if (mLoginTimeoutTimer != null) {
 			mLoginTimeoutTimer.cancel();
@@ -387,7 +444,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) {
 		L.e(this, "onV4GetMyBindings()");
-		
+
 		L.e(this, "errorCode : " + errorCode);
 
 		if (errorCode != 0) {
@@ -465,17 +522,19 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		}
 
+		L.e(this, "hser.saveDownloadedHeater(hi)调用了");
 		hser.saveDownloadedHeater(hi);
-		
+
 		HttpFriend httpFriend = HttpFriend.create(this);
 
-		String requestURL = "userinfo/saveAlias?did="
-				+ endpoint.getSzDid() + "&uid=" + et_user.getText().toString().trim() + "&isLogout=false";
-		
+		String requestURL = "userinfo/saveAlias?did=" + endpoint.getSzDid()
+				+ "&uid=" + et_user.getText().toString().trim()
+				+ "&isLogout=false";
+
 		L.e(LoginActivity.this, "上传的requestURL : " + requestURL);
-		
-		httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-				null, new AjaxCallBack<String>() {
+
+		httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(null,
+				new AjaxCallBack<String>() {
 					public void onSuccess(String jsonString) {
 						JSONObject json;
 						try {
@@ -493,7 +552,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					};
 
 				});
-		
+
 		if (preSelectedDeviceMac.equals(hi.getMac())) {
 			spu.put(ShareKey.CurDeviceMac, hi.getMac());
 		}
@@ -505,6 +564,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onDeviceFound(XpgEndpoint endpoint) {
 		super.onDeviceFound(endpoint);
+
+		L.e(this, "onDeviceFound()");
 
 		if (endpoint == null) {
 			L.e(this, "endpoint为null,返回");
@@ -604,46 +665,48 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			}
 		}
 	}
-	
+
 	private static final int MSG_SET_ALIAS = 1001;
-	
+
 	private final TagAliasCallback mAliasCallback = new TagAliasCallback() {
 
-        @Override
-        public void gotResult(int code, String alias, Set<String> tags) {
-            String logs ;
-            switch (code) {
-            case 0:
-                logs = "Set tag and alias success";
-                Log.i(TAG, logs);
-                
-                setJPushAliasSuccess = true;
-                break;
-                
-            case 6002:
-                logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
-                Log.i(TAG, logs);
-//                	mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS, alias), 1000 * 60);
-                break;
-            
-            default:
-                logs = "Failed with errorCode = " + code;
-                Log.e(TAG, logs);
-            }
-        }
-        
-        private final Handler mHandler = new Handler() {
-            @Override
-            public void handleMessage(android.os.Message msg) {
-                super.handleMessage(msg);
-                switch (msg.what) {
-                case MSG_SET_ALIAS:
-                    Log.d(TAG, "Set alias in handler.");
-                    JPushInterface.setAliasAndTags(getApplicationContext(), (String) msg.obj, null, mAliasCallback);
-                    break;
-                }
-            }
-        };
-	    
+		@Override
+		public void gotResult(int code, String alias, Set<String> tags) {
+			String logs;
+			switch (code) {
+			case 0:
+				logs = "Set tag and alias success";
+				Log.i(TAG, logs);
+
+				setJPushAliasSuccess = true;
+				break;
+
+			case 6002:
+				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+				Log.i(TAG, logs);
+				// mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS,
+				// alias), 1000 * 60);
+				break;
+
+			default:
+				logs = "Failed with errorCode = " + code;
+				Log.e(TAG, logs);
+			}
+		}
+
+		private final Handler mHandler = new Handler() {
+			@Override
+			public void handleMessage(android.os.Message msg) {
+				super.handleMessage(msg);
+				switch (msg.what) {
+				case MSG_SET_ALIAS:
+					Log.d(TAG, "Set alias in handler.");
+					JPushInterface.setAliasAndTags(getApplicationContext(),
+							(String) msg.obj, null, mAliasCallback);
+					break;
+				}
+			}
+		};
+
 	};
 }

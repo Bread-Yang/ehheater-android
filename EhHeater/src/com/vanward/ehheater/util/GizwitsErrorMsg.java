@@ -5,7 +5,7 @@ public enum GizwitsErrorMsg {
 	E2(9002,"product_key invalid","product key无效"),
 	E3(9003,"appid invalid","appid无效"),
 	E4(9004,"token invalid","token无效"),
-	E5(9005,"user not exist","用户名不存在"),
+	E5(9005,"user not exist","用户名不存在!"),
 	E6(9006,"token expired","token已过期"),
 	E7(9007,"m2m_id invalid","m2m_id无效"),
 	E8(9008,"server error","服务器错误"),
@@ -20,7 +20,7 @@ public enum GizwitsErrorMsg {
 	E17(9017,"device not bound!","设备未绑定"),
 	E18(9018,"phone unavailable!","手机不可用"),
 	E19(9019,"username unavailable!","用户名不可用"),
-	E20(9020,"username or password error!","用户名或者密码错误");
+	E20(9020,"username or password error!","登录失败,密码错误!");
 	
 private String EngDescript,CHNDescript;
 private int num;

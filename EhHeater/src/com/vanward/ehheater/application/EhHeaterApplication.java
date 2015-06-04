@@ -30,7 +30,7 @@ public class EhHeaterApplication extends Application implements ClientListener {
 
 		XPGConnectClient.initClient(this);
 		
-		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
+		JPushInterface.setDebugMode(false); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush
 
 		// 加这行显示log详情

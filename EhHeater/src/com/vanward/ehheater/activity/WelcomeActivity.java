@@ -12,6 +12,8 @@ import android.os.Message;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
@@ -307,12 +309,14 @@ public class WelcomeActivity extends GeneratedActivity {
 	protected void onResume() {
 		super.onResume();
 		MobclickAgent.onResume(this);
+		JPushInterface.onResume(this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
+		JPushInterface.onPause(this);
 	}
 
 	private final static int STATE_NORMAL = 1;

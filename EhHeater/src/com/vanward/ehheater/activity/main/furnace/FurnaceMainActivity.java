@@ -1016,7 +1016,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
         isError = false;
         
         String did = getIntent().getStringExtra("did");
-        L.e(this, "did : " + did);
+//        L.e(this, "did : " + did);
         if (did != null && !getIntent().getBooleanExtra("newActivity", false)) {
             SwitchDeviceUtil.switchDevice(did, this);
         }

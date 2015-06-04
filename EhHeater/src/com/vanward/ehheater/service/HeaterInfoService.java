@@ -46,8 +46,12 @@ public class HeaterInfoService {
 		generateDefaultName(heater);
 		changeDuplicatedName(heater);
 		heater.setBinded(1);
+		
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
-		hdao.save(heater);
+		HeaterInfo old = hdao.getHeaterByMac(heater.getMac());  // 如果之前已经保存过,就不保存了
+		if (old == null) {
+			hdao.save(heater);
+		}
 	}
 
 	public void updateDid(String mac, String did) {
@@ -146,16 +150,17 @@ public class HeaterInfoService {
 		HeaterType type = getHeaterType(hinfo);
 		int count = new HeaterInfoDao(context).getHeaterCountOfType(type);
 
-		if (count == 0) {
-			hinfo.setName(type.defName);
-		} else {
-			hinfo.setName(type.defName + " (" + (count + 1) + ")");
-		}
+//		if (count == 0) {
+		hinfo.setName(type.defName);
+//		} 
+//		else {
+//			hinfo.setName(type.defName + " (" + (count + 1) + ")");
+//		}
 
 	}
 
 	public void changeDuplicatedName(HeaterInfo hinfo) {
-		duplicates = 1;
+		duplicates = 0;
 		origName = hinfo.getName();
 		recurseChangeDuplicatedName(hinfo);
 	}
@@ -174,10 +179,7 @@ public class HeaterInfoService {
 		if (nameExists) {
 			hinfo.setName(origName + " (" + duplicates + ")");
 			recurseChangeDuplicatedName(hinfo);
-		} else {
-
 		}
-
 	}
 
 	int duplicates;

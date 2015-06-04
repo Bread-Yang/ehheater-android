@@ -171,6 +171,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		super.onTcpPacket(data, connId);
 		L.e(this, "onTcpPacket被调用了");
 		reconnectHandler.removeMessages(0);
+		reconnectHandler.removeMessages(1);
 	}
 
 	@Override

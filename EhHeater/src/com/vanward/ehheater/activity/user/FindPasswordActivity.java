@@ -10,6 +10,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -51,6 +52,30 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 		btn_acquire_captcha = (Button) findViewById(R.id.btn_acquire_captcha);
 		btn_confirm = (Button) findViewById(R.id.btn_confirm);
 		cb_show_psw = (CheckBox) findViewById(R.id.cb_show_psw);
+		
+		findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+			}
+		});
+		
+		findViewById(R.id.llt_root).setOnFocusChangeListener(
+				new OnFocusChangeListener() {
+
+					@Override
+					public void onFocusChange(View arg0, boolean hasFocus) {
+						if (hasFocus) {
+							((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+									.hideSoftInputFromWindow(
+											FindPasswordActivity.this
+													.getCurrentFocus()
+													.getWindowToken(),
+											InputMethodManager.HIDE_NOT_ALWAYS);
+						}
+					}
+				});
 
 		cb_show_psw.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override

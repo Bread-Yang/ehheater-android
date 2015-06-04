@@ -50,7 +50,7 @@ public class ConnectActivity extends GeneratedActivity {
 	/** 小循环扫描设备周期,ms */
 	private final static int defaultScanInterval = 2000;
 
-	private final static int defaultScanTimeout = 8000;
+	private final static int defaultScanTimeout = 10000;
 
 	private final static int LAN_NONE = 0;
 	private final static int LAN_SEARCHING = 1;
@@ -190,7 +190,7 @@ public class ConnectActivity extends GeneratedActivity {
 			public void run() {
 				L.e(this, "XPGConnectClient.xpgcStopDiscovery()前");
 				XPGConnectClient.xpgcStopDiscovery();
-				L.e(this, "XPGConnectClient.xpgcStopDiscovery()后");
+				L.e(this, "XPGConnectClient.xpgcStopeasonDiscovery()后");
 				if (currentLanSearchingState == LAN_SEARCHING && t != null) {
 					L.e(this, "执行了这里面...............");
 					new Timer().schedule(t, (long) (scanInterval * 1.2));
@@ -221,7 +221,7 @@ public class ConnectActivity extends GeneratedActivity {
 					Global.token, 20, 0);
 		}
 
-		timeoutHandler.sendEmptyMessageDelayed(0, 45000);
+		timeoutHandler.sendEmptyMessageDelayed(0, 30000);
 	}
 
 	@Override

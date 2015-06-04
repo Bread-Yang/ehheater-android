@@ -50,7 +50,6 @@ public class HeaterInfoDao extends BaseDao {
 			heater.setId(old.getId());
 			getDb().update(heater);
 		}
-
 	}
 
 	public List<HeaterInfo> getAll() {
