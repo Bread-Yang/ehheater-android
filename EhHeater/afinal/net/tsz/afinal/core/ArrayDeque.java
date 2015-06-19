@@ -9,11 +9,17 @@ package net.tsz.afinal.core;
 // removed link to collections framework docs
 // END android-note
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Stack;
 
 /**
  * Resizable-array implementation of the {@link Deque} interface.  Array

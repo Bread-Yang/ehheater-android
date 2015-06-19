@@ -2,7 +2,6 @@ package com.vanward.ehheater.application;
 
 import android.app.Application;
 import android.graphics.Typeface;
-
 import cn.jpush.android.api.JPushInterface;
 
 import com.vanward.ehheater.statedata.EhState;

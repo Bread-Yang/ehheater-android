@@ -2,9 +2,6 @@ package com.vanward.ehheater.model;
 
 import java.io.Serializable;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 public class AppointmentVo4Exhibition implements Serializable {
 
 	/**

@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import u.aly.l;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -18,17 +16,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import com.vanward.ehheater.BuildConfig;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
-import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
@@ -602,12 +595,13 @@ public class ConnectActivity extends GeneratedActivity {
 
 		// 如果服务器上没有该设备，则再上传绑定关系
 		if (!isBinded) {
-			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-
-			L.e(this, "HeaterInfoService.setBinding()执行了");
-			HeaterInfoService.setBinding(this, curHeater.getDid(),
-					curHeater.getPasscode());
+//			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+//			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+//
+//			L.e(this, "HeaterInfoService.setBinding()执行了");
+//			HeaterInfoService.setBinding(this, curHeater.getDid(),
+//					curHeater.getPasscode());
+			setOfflineResult();
 		} else {
 			// is offline
 			setOfflineResult();

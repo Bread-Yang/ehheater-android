@@ -1,7 +1,5 @@
 package com.vanward.ehheater.view;
 
-import java.util.List;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;

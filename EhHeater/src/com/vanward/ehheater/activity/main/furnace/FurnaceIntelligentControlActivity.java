@@ -232,6 +232,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
             json2.put("uid", uid);
             // json2.put("passcode", "123");
             json2.put("passcode", passcode);
+            L.e(this, "passcode : " + passcode);
             // json2.put("loopflag", 1);
             if ("0000000".equals(loop)) {
                 json2.put("loopflag", 0);
@@ -249,7 +250,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
             e1.printStackTrace();
         }
 
-        L.e(this, json2.toString());
+        L.e(FurnaceIntelligentControlActivity.this, json2.toString());
 
         AjaxParams params = new AjaxParams();
 
@@ -301,6 +302,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
         AjaxParams params = new AjaxParams();
         params.put("data", gson.toJson(highChar_data));
+        
+        L.e(this, "requestURL : " + requestURL);
 
         mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
                 params, new AjaxCallBack<String>() {
@@ -474,7 +477,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
     private void init() {
         did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
         uid = AccountService.getUserId(getBaseContext());
-        passcode = AccountService.getUserPsw(getBaseContext());
+        passcode = new HeaterInfoService(this).getCurrentSelectedHeater().getPasscode();
+       
 
         sp = getSharedPreferences("results", 0);
         editor = sp.edit();
@@ -490,7 +494,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
         }
         bbv.setAdapter(this);
 
-        saveDialog = BaoDialogShowUtil.getInstance(this)
+        saveDialog = BaoDialogShowUtil.getInstance(getApplicationContext())
                 .createDialogWithTwoButton(R.string.confirm_save,
                         BaoDialogShowUtil.DEFAULT_RESID,
                         BaoDialogShowUtil.DEFAULT_RESID, new OnClickListener() {

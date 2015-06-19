@@ -1,10 +1,10 @@
 package com.vanward.ehheater.service;
 
-import com.vanward.ehheater.util.SharedPreferUtils;
-import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
-
 import android.content.Context;
 import android.text.TextUtils;
+
+import com.vanward.ehheater.util.SharedPreferUtils;
+import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 
 public class AccountService {
 	

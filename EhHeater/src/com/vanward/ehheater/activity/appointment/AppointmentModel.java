@@ -1,13 +1,11 @@
 package com.vanward.ehheater.activity.appointment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import com.vanward.ehheater.util.db.DBService;
-
 import android.content.Context;
-import android.provider.MediaStore.Video;
+
+import com.vanward.ehheater.util.db.DBService;
 
 public class AppointmentModel {
 	private Context context;

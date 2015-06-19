@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
@@ -133,7 +132,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		wv_chart.addJavascriptInterface(new HighChartsJavaScriptInterface(),
 				"highChartsJavaScriptInterface");
 		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
-		
+
 		mHttpFriend = HttpFriend.create(this);
 		mHttpFriend.delaySeconds = 2;
 
@@ -225,19 +224,26 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 					L.e(this,
 							"joTemp.getString('amount') : "
 									+ joTemp.getString("amount"));
-					if ("".equals(joTemp.getString("amount"))) {
+					if ("".equals(joTemp.getString("amount"))
+							|| "0".equals(joTemp.getString("amount"))) {
 						sb.append("\"\"");
 					} else {
-						int amount = Integer.valueOf(joTemp.getString("amount")) / 10; 
-						sb.append(amount);
+						int amount = Integer
+								.valueOf(joTemp.getString("amount")) / 10;
+						if (0 == amount) {
+							sb.append("\"\"");
+						} else {
+							sb.append(amount);
+						}
 					}
 					sb.append("},");
-
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 			sb.append("]");
+
+			L.e(this, "sb.toString() : " + sb.toString());
 
 			return sb.toString();
 		}
@@ -322,6 +328,8 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		// String requestURL =
 		// "getFurnaceYearGas?did=dVfu4XXcUCbE93Z2mu4PyZ&year=2014";
 		String requestURL = "getFurnaceYearGas?did=" + did + "&year=" + year;
+		
+		L.e(this, "请求累计耗量的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
 				null, new AjaxCallBack<String>() {
@@ -370,6 +378,8 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		// String requestURL =
 		// "http://vanward.xtremeprog.com/EhHeaterWeb/getFurnaceHourGas?did=dVfu4XXcUCbE93Z2mu4PyZ";
 		String requestURL = "getFurnaceHourGas?did=" + did;
+		
+		L.e(this, "请求实时耗量的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
 				null, new AjaxCallBack<String>() {

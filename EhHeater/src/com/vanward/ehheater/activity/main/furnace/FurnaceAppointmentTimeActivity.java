@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -172,6 +171,7 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
                             @Override
                             public void onClick(View v) {
+                            	appointmentFullDialog.dismiss();
                                 finish();
                             }
                         });
@@ -181,6 +181,7 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 							
 							@Override
 							public void onClick(View v) {
+								appointmentExecuteTomorrowDialog.dismiss();
 								finish();
 							}
 						});
@@ -375,6 +376,12 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
                 int currentHour = c.get(Calendar.HOUR_OF_DAY);
                 int currentMinute = c.get(Calendar.MINUTE);
                 
+                L.e(this, "currentHour : " + currentHour);
+                L.e(this, "currentMinute : " + currentMinute);
+                
+                L.e(this, "setHour : " + setHour);
+                L.e(this, "setMinute : " + setMinute);
+                
                 final boolean isBeforeCurrentTime = setHour < currentHour
                         || ((setHour == currentHour) && (setMinute <= currentMinute));
 
@@ -456,6 +463,8 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
                 Gson gson = new Gson();
                 String json = gson.toJson(editModel);
+                
+                L.e(this, "data : " + json);
 
                 AjaxParams params = new AjaxParams();
                 params.put("data", json);

@@ -1,9 +1,9 @@
 package com.vanward.ehheater.dao;
 
-import com.vanward.ehheater.util.db.DBService;
-
 import net.tsz.afinal.FinalDb;
 import android.content.Context;
+
+import com.vanward.ehheater.util.db.DBService;
 
 
 public class BaseDao {

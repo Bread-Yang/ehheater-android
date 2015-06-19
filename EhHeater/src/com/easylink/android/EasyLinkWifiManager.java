@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.util.Log;
 /**
  * Wifi manager class for getting the WIFI details and SSID gateway parameters
  * @author raviteja
@@ -87,6 +86,7 @@ public class EasyLinkWifiManager
 	{
 		int ipval=	mWifiInfo.getIpAddress();
 		String ipString = String.format("%d.%d.%d.%d", (ipval & 0xff),(ipval >> 8 & 0xff),(ipval >> 16 & 0xff),	(ipval >> 24 & 0xff));
+
 		return ipString.toString();
 	}
 
@@ -97,10 +97,7 @@ public class EasyLinkWifiManager
 	public  String getGatewayIpAddress()
 	{
 		int gatwayVal=	mWifiManager.getDhcpInfo().gateway;
-		
-		String string = (String.format("%d.%d.%d.%d", (gatwayVal & 0xff),(gatwayVal >> 8 & 0xff),(gatwayVal >> 16 & 0xff),	(gatwayVal >> 24 & 0xff))).toString();
-		
-		return string;
+		return (String.format("%d.%d.%d.%d", (gatwayVal & 0xff),(gatwayVal >> 8 & 0xff),(gatwayVal >> 16 & 0xff),	(gatwayVal >> 24 & 0xff))).toString();
 	}
 
 	/**

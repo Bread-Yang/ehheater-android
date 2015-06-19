@@ -11,12 +11,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.service.HeaterInfoService;
 
 public class AboutActivity extends Activity {
 
 	private Button btn_check_update;
 	private Button rightbButton;
-	private TextView tv_vanward_site;
+	private TextView tv_vanward_site, tv_model;
 	private View leftbutton;
 
 	@Override
@@ -26,6 +28,14 @@ public class AboutActivity extends Activity {
 		findViewById();
 		setListener();
 		init();
+		
+		 HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+		 
+		
+		// 当前设备是壁挂炉才显示型号文本
+		if (!hser.getCurrentSelectedHeater().getProductKey().equals(Consts.FURNACE_PRODUCT_KEY)) {
+			tv_model.setVisibility(View.INVISIBLE);
+		}
 	}
 
 	private void findViewById() {
@@ -33,11 +43,11 @@ public class AboutActivity extends Activity {
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
 		tv_vanward_site = ((TextView) findViewById(R.id.tv_vanward_site));
+		tv_model = ((TextView) findViewById(R.id.tv_model));
 		rightbButton.setVisibility(View.GONE);
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		TextView title = (TextView) findViewById(R.id.ivTitleName);
 		title.setText("关于");
-
 	}
 
 	private void setListener() {

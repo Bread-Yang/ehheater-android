@@ -10,7 +10,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;

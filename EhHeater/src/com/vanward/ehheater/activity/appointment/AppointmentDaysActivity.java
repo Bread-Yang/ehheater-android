@@ -12,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 
 public class AppointmentDaysActivity extends Activity implements
 		OnClickListener {

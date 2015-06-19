@@ -2,8 +2,6 @@ package com.vanward.ehheater.statedata;
 
 import java.util.Arrays;
 
-import android.util.Log;
-
 public class EhState {
 	
 	private static final String TAG = "EhState";

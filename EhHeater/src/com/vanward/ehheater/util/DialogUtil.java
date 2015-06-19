@@ -13,11 +13,9 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
-import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
-import com.xtremeprog.xpgconnect.generated.generated;
 
 public class DialogUtil {
 	private static DialogUtil dialogUtil;

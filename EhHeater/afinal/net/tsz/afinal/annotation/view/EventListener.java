@@ -18,7 +18,6 @@ package net.tsz.afinal.annotation.view;
 import java.lang.reflect.Method;
 
 import net.tsz.afinal.exception.ViewException;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;

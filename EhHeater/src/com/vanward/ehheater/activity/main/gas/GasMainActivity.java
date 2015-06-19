@@ -78,7 +78,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	private BaoCircleSlider circle_slider;
 
-	private ImageView iv_wave, hotImgeImageView, modeimg; 
+	private ImageView iv_wave, hotImgeImageView, modeimg;
 	private AnimationDrawable animationDrawable;
 	private RelativeLayout content;
 
@@ -109,10 +109,11 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private Button mode;
 
 	private CountDownTimer mCountDownTimer;
-
+	
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			L.e(this, "heaterNameChangeReceiver()");
 			if (isFinishing()) {
 				return;
 			}
@@ -233,20 +234,31 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			if (isOnline) {
 				Global.connectId = connId;
 				Global.checkOnlineConnId = -1;
+				
 				boolean shouldExecuteBinding = HeaterInfoService
 						.shouldExecuteBinding(curHeater);
+				
+				if (shouldExecuteBinding) {
+					DialogUtil.instance().showLoadingDialog(this, "");
+					HeaterInfoService.setBinding(this, did, passcode);
+					isBinding = true;
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							isBinding = false;
+						}
+					}, 20000);
+				} else {
+					queryState();
+				}
 
 				if (ison) {
-					rightButton.setBackgroundResource(R.drawable.icon_shut_enable);
+					rightButton
+							.setBackgroundResource(R.drawable.icon_shut_enable);
 				} else {
 					rightButton
 							.setBackgroundResource(R.drawable.icon_shut_disable);
-				}
-
-				if (shouldExecuteBinding) {
-					HeaterInfoService.setBinding(this, did, passcode);
-				} else {
-					queryState();
 				}
 
 				if (getIntent().getBooleanExtra("switchSuccess", false)
@@ -262,7 +274,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Global.checkOnlineConnId = connId;
 				changeToOfflineUI();
 
-				if (isActived) {
+//				if (isActived) {
 					DialogUtil.instance().showReconnectDialog(new Runnable() {
 						@Override
 						public void run() {
@@ -270,7 +282,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 									hser.getCurrentSelectedHeaterMac());
 						}
 					}, this);
-				}
+//				}
 			}
 
 			if (!conntext.contains("reconnect")) {
@@ -282,12 +294,16 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			
+			isBinding = false;
 
 			if (resultCode == RESULT_OK) {
 				// binded
 				new HeaterInfoService(getBaseContext()).updateBinded(
 						curHeater.getMac(), true);
 			}
+			
+			L.e(this, " Consts.REQUESTCODE_UPLOAD_BINDING 查询 queryState()");
 			queryState();
 		}
 	}
@@ -302,7 +318,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
-		stateQueried = false;
 		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
 		rightButton.postDelayed(new Runnable() {
 			@Override
@@ -678,6 +693,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			changeToOfflineUI();
+
+			// 收到主动断开,重连一次
+			connectCurDevice("");
 		}
 	}
 
@@ -688,13 +706,16 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
 		L.e(this, "重连之后OnGasWaterHeaterStatusResp调用了");
+		
+		if (!isBinding) {
+			DialogUtil.dismissDialog();
+		}
 
 		if (nConnId != Global.connectId) {
 			return;
 		}
 
 		stateQueried = true;
-		DialogUtil.dismissDialog();
 
 		dealMode(pResp);
 		temptertureDeal(pResp);
@@ -896,16 +917,25 @@ public class GasMainActivity extends BaseBusinessActivity implements
 											.getUserId(GasMainActivity.this)
 									+ "'");
 			L.e(this, "GasCustomSetVo的大小是" + list.size());
-			L.e(this, "pResp.getCustomFunction() == " + pResp.getCustomFunction());
+			L.e(this,
+					"pResp.getCustomFunction() == " + pResp.getCustomFunction());
 			if (list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					GasCustomSetVo customSetVo = list.get(i);
 					if (customSetVo.getSendId() == pResp.getCustomFunction()) {
 						customSetVo.setTempter(pResp.getTargetTemperature());
-						L.e(this, "getTargetTemperature : " + pResp.getTargetTemperature());
-						L.e(this, "customSetVo.getName : " + customSetVo.getName());
-						L.e(this, "customSetVo.getTempter : " + customSetVo.getTempter());
-						L.e(this, "customSetVo.getSendId : " + customSetVo.getSendId());
+						L.e(this,
+								"getTargetTemperature : "
+										+ pResp.getTargetTemperature());
+						L.e(this,
+								"customSetVo.getName : "
+										+ customSetVo.getName());
+						L.e(this,
+								"customSetVo.getTempter : "
+										+ customSetVo.getTempter());
+						L.e(this,
+								"customSetVo.getSendId : "
+										+ customSetVo.getSendId());
 						new BaseDao(this).getDb().update(customSetVo);
 						String name = customSetVo.getName();
 						tv_mode.setText(name);

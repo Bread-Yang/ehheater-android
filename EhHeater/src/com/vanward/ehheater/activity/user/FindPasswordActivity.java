@@ -1,11 +1,9 @@
 package com.vanward.ehheater.activity.user;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -36,6 +34,14 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 	private Button btn_acquire_captcha, btn_confirm;
 
 	private CheckBox cb_show_psw;
+	
+	private Handler timeoutHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			DialogUtil.dismissDialog();
+			Toast.makeText(getBaseContext(), "请求超时，请重试！",
+					Toast.LENGTH_SHORT).show();
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +58,15 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 		btn_acquire_captcha = (Button) findViewById(R.id.btn_acquire_captcha);
 		btn_confirm = (Button) findViewById(R.id.btn_confirm);
 		cb_show_psw = (CheckBox) findViewById(R.id.cb_show_psw);
-		
+
 		findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
-				
+
 			}
 		});
-		
+
 		findViewById(R.id.llt_root).setOnFocusChangeListener(
 				new OnFocusChangeListener() {
 
@@ -164,12 +170,8 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 					DialogUtil.instance().showLoadingDialog(
 							FindPasswordActivity.this, "正在修改密码,请稍后...");
 
-					new Timer().schedule(new TimerTask() {
-						@Override
-						public void run() {
-							DialogUtil.dismissDialog();
-						}
-					}, 9000);
+					
+					timeoutHandler.sendEmptyMessageDelayed(0, 9000);
 
 					XPGConnectClient.xpgc4RecoverPwdByPhone(
 							Consts.VANWARD_APP_ID, et_phone.getText()
@@ -214,13 +216,13 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 			Toast.makeText(getBaseContext(), R.string.psw_6_to_18, 1000).show();
 			return false;
 		}
-		
+
 		if (!confirmPswNotEmpty) {
 			Toast.makeText(getBaseContext(), R.string.please_input_confirm_psw,
 					1000).show();
 			return false;
 		}
-		
+
 		if (!pswMatch) {
 			Toast.makeText(getBaseContext(), R.string.new_pwd_error, 1000)
 					.show();
@@ -235,7 +237,9 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 		L.e(this, "onV4RecoverPwdByPhone()");
 
 		super.onV4RecoverPwdByPhone(errorCode);
-
+		
+		timeoutHandler.removeMessages(0);
+		
 		DialogUtil.dismissDialog();
 		if (errorCode == 0) {
 			Toast.makeText(getBaseContext(), "修改密码成功", 3000).show();

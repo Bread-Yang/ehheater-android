@@ -6,18 +6,13 @@ import java.util.TimerTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.L;
-import com.vanward.ehheater.util.PxUtil;
-import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.BindingSetResp_t;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
-import com.xtremeprog.xpgconnect.generated.XPG_RESULT;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class DummySendBindingReqActivity extends GeneratedActivity {

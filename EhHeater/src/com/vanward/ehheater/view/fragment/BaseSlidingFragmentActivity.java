@@ -1,13 +1,11 @@
 package com.vanward.ehheater.view.fragment;
 
-import com.vanward.ehheater.activity.EhHeaterBaseActivity;
-
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+
+import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 
 public class BaseSlidingFragmentActivity extends EhHeaterBaseActivity implements
 		SlidingActivityBase {

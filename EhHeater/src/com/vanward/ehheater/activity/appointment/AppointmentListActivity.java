@@ -12,19 +12,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.main.SendMsgModel;
 import com.vanward.ehheater.util.db.DBService;
 import com.vanward.ehheater.view.swipelistview.SwipeListView;
 

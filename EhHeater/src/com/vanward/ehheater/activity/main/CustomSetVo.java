@@ -1,7 +1,6 @@
 package com.vanward.ehheater.activity.main;
 
 import net.tsz.afinal.annotation.sqlite.Id;
-import android.R.integer;
 
 public class CustomSetVo {
 

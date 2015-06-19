@@ -1,7 +1,6 @@
 package com.vanward.ehheater.activity.appointment;
 
 import net.tsz.afinal.annotation.sqlite.Id;
-import android.R.integer;
 
 public class AppointMentVo {
 	@Id

@@ -17,7 +17,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -263,6 +265,31 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 			if (mType == HeaterType.FURNACE) {
 				tv_tips.setText(R.string.set_device_tip3_eh_furnace);
 			}
+			
+			v.findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+
+				}
+			});
+			
+			v.findViewById(R.id.llt_root).setOnFocusChangeListener(
+					new OnFocusChangeListener() {
+
+						@Override
+						public void onFocusChange(View view, boolean hasFocus) {
+							if (hasFocus) {
+								((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+										.hideSoftInputFromWindow(
+												EasyLinkConfigureActivity.this
+														.getCurrentFocus()
+														.getWindowToken(),
+												InputMethodManager.HIDE_NOT_ALWAYS);
+							} else {
+							}
+						}
+					});
 
 			applyCurWifiSsid();
 			break;

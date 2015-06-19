@@ -11,13 +11,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import cn.jpush.android.api.JPushInterface;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.activity.main.MainActivity;
@@ -186,7 +184,8 @@ public class WelcomeActivity extends GeneratedActivity {
 					if (PingUtil.ping(WelcomeActivity.this)) { // 可以上外网
 						mHandler.sendEmptyMessage(HANDLE_OUTSIDE_NETWORK);
 					} else { // 只能用内网
-						mHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK);
+						mHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK); 
+//						flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);   // 现在改成了只能用外网登录
 					}
 				}
 			}).start();

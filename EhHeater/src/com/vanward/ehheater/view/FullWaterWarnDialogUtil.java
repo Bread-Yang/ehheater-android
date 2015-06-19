@@ -1,23 +1,13 @@
 package com.vanward.ehheater.view;
 
-import java.util.List;
-
-import net.tsz.afinal.annotation.sqlite.Id;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.MoringSeVo;
-import com.vanward.ehheater.activity.main.gas.SendMsgModel;
-import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 
 public class FullWaterWarnDialogUtil {

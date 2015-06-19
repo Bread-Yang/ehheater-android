@@ -7,17 +7,11 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.main.CustomSetVo;
-import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
-import com.vanward.ehheater.view.wheelview.WheelView;
-import com.vanward.ehheater.view.wheelview.adapters.AbstractWheelTextAdapter;
-import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
 
 public class AddPatternNameDialogUtil {
 

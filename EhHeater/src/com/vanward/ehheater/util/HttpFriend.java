@@ -39,6 +39,8 @@ public class HttpFriend {
 	private BaoTimeoutDailog loadingDialog;
 
 	public boolean showTips = true;
+	
+	public boolean showDialog = true;
 
 	private Dialog serverFailureDialog;
 
@@ -297,28 +299,34 @@ public class HttpFriend {
 	}
 
 	private void showRequestDialog(AjaxCallBack callBack) {
-		if (mContext instanceof Activity) {
-			if (!((Activity) mContext).isFinishing()) {
-				if (loadingDialog == null) {
-					loadingDialog = BaoDialogShowUtil.getInstance(mContext)
-							.createLoadingDialog();
+		if (showDialog) {
+			if (mContext instanceof Activity) {
+				if (!((Activity) mContext).isFinishing()) {
+					if (loadingDialog == null) {
+						loadingDialog = BaoDialogShowUtil.getInstance(mContext)
+								.createLoadingDialog();
+					}
+					if (!((Activity) mContext).isFinishing()) {
+						loadingDialog.show(callBack);
+					}
 				}
-				loadingDialog.show(callBack);
 			}
 		}
 	}
 
 	private void dismissRequestDialog() {
-		if (mContext instanceof Activity) {
-			if (!((Activity) mContext).isFinishing()) {
-				if (loadingDialog != null) {
-					new Handler().postDelayed(new Runnable() {
+		if (showDialog) {
+			if (mContext instanceof Activity) {
+				if (!((Activity) mContext).isFinishing()) {
+					if (loadingDialog != null) {
+						new Handler().postDelayed(new Runnable() {
 
-						@Override
-						public void run() {
-							loadingDialog.dismiss();
-						}
-					}, delaySeconds * 1000);
+							@Override
+							public void run() {
+								loadingDialog.dismiss();
+							}
+						}, delaySeconds * 1000);
+					}
 				}
 			}
 		}

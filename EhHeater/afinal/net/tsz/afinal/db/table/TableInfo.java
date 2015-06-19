@@ -18,6 +18,7 @@ package net.tsz.afinal.db.table;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
+
 import net.tsz.afinal.exception.DbException;
 import net.tsz.afinal.utils.ClassUtils;
 import net.tsz.afinal.utils.FieldUtils;

@@ -2,7 +2,6 @@ package com.vanward.ehheater.view;
 
 import java.util.List;
 
-import u.aly.l;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.CustomSetVo;
 import com.vanward.ehheater.activity.main.gas.GasCustomSetVo;
 import com.vanward.ehheater.dao.BaseDao;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;

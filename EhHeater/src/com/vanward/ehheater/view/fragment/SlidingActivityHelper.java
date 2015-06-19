@@ -1,7 +1,5 @@
 package com.vanward.ehheater.view.fragment;
 
-import com.vanward.ehheater.R;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +7,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+
+import com.vanward.ehheater.R;
 
 
 public class SlidingActivityHelper {

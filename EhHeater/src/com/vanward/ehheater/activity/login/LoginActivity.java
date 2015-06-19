@@ -67,6 +67,16 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 	boolean loginSuccess = false;
 
+	boolean isTimeout = false;
+
+	private Handler acquireDeviceListTimeout = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			DialogUtil.dismissDialog();
+			Toast.makeText(getBaseContext(), "获取设备列表超时！", 3000)
+					.show();
+		};
+	};
+
 	@Override
 	public void onBackPressed() {
 		android.os.Process.killProcess(android.os.Process.myPid());
@@ -162,6 +172,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 								DialogUtil.dismissDialog();
 								Toast.makeText(getBaseContext(), "登录超时！", 3000)
 										.show();
+								isTimeout = true;
 							}
 						});
 					}
@@ -190,6 +201,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 			L.e(this, "登陆之前");
 
+			isTimeout = false;
+
 			if (!NetworkStatusUtil.isConnected(this)) {
 				Toast.makeText(this, R.string.check_network, Toast.LENGTH_LONG)
 						.show();
@@ -216,6 +229,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 								DialogUtil.dismissDialog();
 								Toast.makeText(getBaseContext(), "登录超时！", 3000)
 										.show();
+								isTimeout = true;
 							}
 						});
 					}
@@ -250,7 +264,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if ("".equals(et_user.getText().toString())) {
 			et_user.setText(AccountService.getUserId(this));
 		}
-		et_pwd.setText("123456");
+//		et_pwd.setText("111111");
 
 		XPGConnectClient.AddActivity(this);
 	}
@@ -259,6 +273,11 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	public void onV4Login(int errorCode, String uid, String token,
 			String expire_at) {
 		L.e(this, "onV4Login() : errorCode : " + errorCode);
+
+		if (isTimeout) {
+			return;
+		}
+
 		if (errorCode == 0) {
 			loginSuccess = true;
 
@@ -285,6 +304,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 			// 获取昵称
 			HttpFriend httpFriend = HttpFriend.create(this);
+			httpFriend.showTips = false;
 
 			String requestURL = "userinfo/getUsageInformation?uid="
 					+ et_user.getText().toString().trim();
@@ -327,16 +347,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					20, 0);
 
 			onDeviceFoundTriggered = false;
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					if (!onDeviceFoundTriggered) {
-						DialogUtil.dismissDialog();
-						startActivity(new Intent(getBaseContext(),
-								SelectDeviceActivity.class));
-					}
-				}
-			}, 6000);
+			
+			acquireDeviceListTimeout.sendEmptyMessageDelayed(0, 20000);
 
 		} else {
 			// 登录失败
@@ -384,6 +396,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if (result == 0 || result == 1) {
 			// 获取昵称
 			HttpFriend httpFriend = HttpFriend.create(this);
+			httpFriend.showTips = false;
 
 			String requestURL = "userinfo/getUsageInformation?uid="
 					+ et_user.getText().toString().trim();
@@ -423,17 +436,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			// AccountService.setPendingUser(getBaseContext(), et_user.getText()
 			// .toString(), et_pwd.getText().toString());
 			generated.SendBindingGetV2Req(tempConnId);
+
 			onDeviceFoundTriggered = false;
-			new Timer().schedule(new TimerTask() {
-				@Override
-				public void run() {
-					if (!onDeviceFoundTriggered) {
-						DialogUtil.dismissDialog();
-						startActivity(new Intent(getBaseContext(),
-								SelectDeviceActivity.class));
-					}
-				}
-			}, 6000);
+
+			acquireDeviceListTimeout.sendEmptyMessageDelayed(0, 20000);
 		} else {
 			// 登录失败
 			DialogUtil.dismissDialog();
@@ -441,12 +447,16 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 	}
 
+	boolean notBindedDevice = true;
+
 	@Override
 	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) {
 		L.e(this, "onV4GetMyBindings()");
 
 		L.e(this, "errorCode : " + errorCode);
 
+		acquireDeviceListTimeout.removeMessages(0);
+		
 		if (errorCode != 0) {
 			return;
 		}
@@ -456,12 +466,25 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			return;
 		}
 
+		L.e(this, "(endpoint.getIsDisabled() : " + (endpoint.getIsDisabled()));
 		if (endpoint.getIsDisabled() == 1) {
 			L.e(this, "endpoint.getIsDisabled() == 1,返回");
 			return;
 		}
 
 		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
+			L.e(this, "该用户还没有绑定设备，跳进设备配置界面");
+			new Handler().postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					if (notBindedDevice) {
+						DialogUtil.dismissDialog();
+						startActivity(new Intent(getBaseContext(),
+								SelectDeviceActivity.class));
+					}
+				}
+			}, 3000);
 			return;
 		}
 
@@ -474,6 +497,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			L.e(this, "非有效设备, 不予保存");
 			return;
 		}
+		
+		notBindedDevice = false;
 
 		SharedPreferUtils spu = new SharedPreferUtils(this);
 		if (hser.getHeaterType(hi).equals(HeaterType.ELECTRIC_HEATER)) {
@@ -526,6 +551,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		hser.saveDownloadedHeater(hi);
 
 		HttpFriend httpFriend = HttpFriend.create(this);
+		httpFriend.showTips = false;
 
 		String requestURL = "userinfo/saveAlias?did=" + endpoint.getSzDid()
 				+ "&uid=" + et_user.getText().toString().trim()

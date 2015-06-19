@@ -30,6 +30,7 @@ public class FirstTimeConfig2 {
 	int waitForAckSocketTimeout;
 	private FirstTimeConfigListener m_listener = null;
 	Thread sendingThread;
+	Thread ackWaitThread;
 	private boolean isListenSocketGracefullyClosed;
 	Thread mDnsThread;
 
@@ -137,7 +138,7 @@ public class FirstTimeConfig2 {
 	}
 
 	private void sendSync() throws SocketException, Exception {
-		// this.ssid = "JCG������������������";
+		// this.ssid = "JCG��ϡ��������·����";
 
 		byte[] syncLBuffer = this.syncLString.getBytes();
 		byte[] syncHBuffer = this.syncHString.getBytes();
@@ -261,6 +262,18 @@ public class FirstTimeConfig2 {
 			}
 		});
 		this.sendingThread.start();
+
+		// this.ackWaitThread = new Thread(new Runnable() {
+		// public void run() {
+		// try {
+		// FirstTimeConfig.this.waitForAck();
+		// } catch (Exception e) {
+		// new FirstTimeConfig.NotifyThread(
+		// FirstTimeConfig.this.m_listener, e);
+		// }
+		// }
+		// });
+		// this.ackWaitThread.start();
 	}
 
 	public void stopTransmitting() throws Exception {
@@ -270,6 +283,8 @@ public class FirstTimeConfig2 {
 		this.stopSending = true;
 		if (Thread.currentThread() != this.sendingThread)
 			this.sendingThread.join();
+		if (Thread.currentThread() != this.ackWaitThread)
+			this.ackWaitThread.join();
 	}
 
 	private void waitForAck() throws Exception {

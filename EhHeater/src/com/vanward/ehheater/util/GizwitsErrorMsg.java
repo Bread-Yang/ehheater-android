@@ -18,7 +18,7 @@ public enum GizwitsErrorMsg {
 	E15(9015,"form invalid!","表单无效"),
 	E16(9016,"did or passcode invalid!","did或者passcode无效"),
 	E17(9017,"device not bound!","设备未绑定"),
-	E18(9018,"phone unavailable!","手机不可用"),
+	E18(9018,"phone unavailable!","该号码无效或已被注册。"),
 	E19(9019,"username unavailable!","用户名不可用"),
 	E20(9020,"username or password error!","登录失败,密码错误!");
 	

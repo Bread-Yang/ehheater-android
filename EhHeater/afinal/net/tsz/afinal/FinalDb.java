@@ -17,7 +17,6 @@ package net.tsz.afinal;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.String;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,16 +31,13 @@ import net.tsz.afinal.db.sqlite.SqlInfo;
 import net.tsz.afinal.db.table.KeyValue;
 import net.tsz.afinal.db.table.ManyToOne;
 import net.tsz.afinal.db.table.OneToMany;
-import net.tsz.afinal.db.table.Property;
 import net.tsz.afinal.db.table.TableInfo;
 import net.tsz.afinal.exception.DbException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.TextUtils;
 import android.util.Log;
 
 public class FinalDb {

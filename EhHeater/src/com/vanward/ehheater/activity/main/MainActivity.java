@@ -110,10 +110,11 @@ public class MainActivity extends BaseBusinessActivity implements
 	private boolean canupdateView = false;
 
 	private int currentTemp;
-
+	
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			L.e(this, "heaterNameChangeReceiver()");
 			if (isFinishing()) {
 				return;
 			}
@@ -200,7 +201,16 @@ public class MainActivity extends BaseBusinessActivity implements
 						.shouldExecuteBinding(curHeater);
 
 				if (shouldExecuteBinding) {
+					DialogUtil.instance().showLoadingDialog(this, "");
 					HeaterInfoService.setBinding(this, did, passcode);
+					isBinding = true;
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							isBinding = false;
+						}
+					}, 20000);
 				} else {
 					queryState();
 				}
@@ -243,6 +253,8 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			
+			isBinding = false;
 
 			if (resultCode == RESULT_OK) {
 				// binded
@@ -264,7 +276,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	private void queryState() {
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
-		stateQueried = false;
 		generated.SendStateReq(Global.connectId);
 		rightButton.postDelayed(new Runnable() {
 			@Override
@@ -884,7 +895,9 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			stateQueried = true;
-			DialogUtil.dismissDialog();
+			if (!isBinding) {
+				DialogUtil.dismissDialog();
+			}
 			// llt_power.setEnabled(true);
 			btn_power.setSelected(false);
 			setTempture(data);
@@ -1039,6 +1052,9 @@ public class MainActivity extends BaseBusinessActivity implements
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			changeToOfflineUI();
+
+			// 收到主动断开,重连一次
+			connectCurDevice("");
 		}
 
 	}

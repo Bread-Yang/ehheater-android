@@ -1,10 +1,8 @@
 package com.vanward.ehheater.activity.main;
 
-import com.vanward.ehheater.dao.BaseDao;
-
-import net.tsz.afinal.annotation.sqlite.Id;
-import net.tsz.afinal.annotation.sqlite.Table;
 import android.content.Context;
+
+import com.vanward.ehheater.dao.BaseDao;
 
 public class MorningSettingModel {
 

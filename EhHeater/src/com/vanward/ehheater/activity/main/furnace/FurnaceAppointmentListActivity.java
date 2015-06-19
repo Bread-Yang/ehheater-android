@@ -134,6 +134,8 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 		String requestURL = "userinfo/getAppointmentList?did=" + did + "&uid="
 				+ uid;
+		
+		L.e(this, "请求的requestURL : " + requestURL);
 
 		// String requestURL =
 		// "userinfo/getAppointmentList?did=LWFWwtEcFWJ5hSBPXrVXFS&uid=q1231";
@@ -154,6 +156,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 	private void extractDataFromJson(String jsonString) {
 		try {
+			L.e(this, "请求返回的jsonString是 : " + jsonString);
 			JSONObject json = new JSONObject(jsonString);
 			String responseCode = json.getString("responseCode");
 			if ("200".equals(responseCode)) {
@@ -360,16 +363,20 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 					Gson gson = new Gson();
 					String json = gson.toJson(model);
-
+					
 					AjaxParams params = new AjaxParams();
 					params.put("data", json);
 //					params.put("ignoreConflict", "true");
+					
+					L.e(FurnaceAppointmentListActivity.this, "data : " + json);
 					
 					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 							.executePost(params, new AjaxCallBack<String>() {
 								@Override
 								public void onSuccess(String t) {
 									super.onSuccess(t);
+									
+									L.e(FurnaceAppointmentListActivity.this, "改变状态返回的数据是 : " + t);
 
 
 									if ((Integer) view.getTag() == 1) {

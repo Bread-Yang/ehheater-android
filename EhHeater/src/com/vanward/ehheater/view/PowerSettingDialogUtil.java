@@ -9,9 +9,6 @@ import android.widget.RadioGroup;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
-import com.vanward.ehheater.view.wheelview.WheelView;
-import com.vanward.ehheater.view.wheelview.adapters.AbstractWheelTextAdapter;
-import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
 
 public class PowerSettingDialogUtil {
 

@@ -131,7 +131,7 @@ public class BaoDialogShowUtil {
 	static class BaoTimeoutDailog extends Dialog {
 
 		private CountDownTimer countDown;
-		
+
 		private boolean isDetach = false;
 
 		public BaoTimeoutDailog(Context context) {
@@ -167,19 +167,21 @@ public class BaoDialogShowUtil {
 			countDown.start();
 			super.show();
 		}
-		
+
 		public void show(final AjaxCallBack callBack) {
 			countDown = new CountDownTimer(30000, 1000) {
-				
+
 				@Override
 				public void onTick(long millisUntilFinished) {
-					
+
 				}
-				
+
 				@Override
 				public void onFinish() {
 					if (!isDetach) {
-						dismiss();
+						if (isShowing()) {
+							dismiss();
+						}
 						callBack.onTimeout();
 					}
 					countDown = null;

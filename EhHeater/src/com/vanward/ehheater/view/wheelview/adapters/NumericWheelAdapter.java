@@ -16,9 +16,9 @@
 
 package com.vanward.ehheater.view.wheelview.adapters;
 
-import com.vanward.ehheater.view.wheelview.WheelView;
-
 import android.content.Context;
+
+import com.vanward.ehheater.view.wheelview.WheelView;
 
 /**
  * Numeric Wheel adapter.(整数)

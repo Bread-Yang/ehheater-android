@@ -7,6 +7,9 @@
 package net.tsz.afinal.core;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
 
 // BEGIN android-note
 // removed link to collections framework docs

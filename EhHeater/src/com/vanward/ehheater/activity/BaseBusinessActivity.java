@@ -1,7 +1,12 @@
 package com.vanward.ehheater.activity;
 
+import java.util.List;
+
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -63,6 +68,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	private Dialog dialog_exit;
 
+	protected boolean isBinding;
+
 	private BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -111,6 +118,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			} else {
 				// 如果当前未建立连接, 直接调用此方法
+				L.e(this,
+						"alterDeviceDueToDeleteReceiver : AlterDeviceHelper.alterDevice();");
 				AlterDeviceHelper.alterDevice();
 			}
 		}
@@ -136,10 +145,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 						DialogUtil.instance().showLoadingDialog(
 								BaseBusinessActivity.this, "");
 					}
-					generated.SendStateReq(Global.connectId);
-					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
-					reconnectHandler.removeMessages(0);
 				}
+				generated.SendStateReq(Global.connectId);
+				reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
+				reconnectHandler.removeMessages(0);
 				break;
 			case 1:
 				changeToOfflineUI();
@@ -172,6 +181,15 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		L.e(this, "onTcpPacket被调用了");
 		reconnectHandler.removeMessages(0);
 		reconnectHandler.removeMessages(1);
+		
+		 ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);  
+	       List<RunningTaskInfo> list = am.getRunningTasks(1);  
+	       if (list != null && list.size() > 0) {  
+	           ComponentName cpn = list.get(0).topActivity;  
+//	           if (className.equals(cpn.getClassName())) {  
+//	           }  
+	           L.e(this, "最上面运行的class是 : " + cpn.getClassName());
+	       }  
 	}
 
 	@Override
@@ -331,38 +349,41 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			// offline ui
 			changeToOfflineUI();
 
+			// 收到主动断开,重连一次
+			connectCurDevice("");
 		}
 
-//		if (pResp.getIsOnline() == 1) {
-//
-//			if (paused) {
-//				shouldReconnect = true;
-//			} else {
-//				connectCurDevice("连接已断开, 正在重新连接...");
-//			}
-//		}
+		// if (pResp.getIsOnline() == 1) {
+		//
+		// if (paused) {
+		// shouldReconnect = true;
+		// } else {
+		// connectCurDevice("连接已断开, 正在重新连接...");
+		// }
+		// }
 
 	}
 
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		L.e(this, "onConnectEvent@BaseBusinessActivity: connId : " + connId + " event : "
-				+ event);
+		L.e(this, "onConnectEvent@BaseBusinessActivity: connId : " + connId
+				+ " event : " + event);
 
 		if (connId == Global.connectId && event == -7) {
 
 			if (AlterDeviceHelper.hostActivity != null) {
+				L.e(this, "onConnectEvent() : AlterDeviceHelper.alterDevice();");
 				AlterDeviceHelper.alterDevice();
 				return;
 			}
 
 			// 连接断开
-//			if (paused) {
-//				shouldReconnect = true;
-//			} else {
-//				connectCurDevice("连接已断开, 正在重新连接...");
-//			}
+			// if (paused) {
+			// shouldReconnect = true;
+			// } else {
+			// connectCurDevice("连接已断开, 正在重新连接...");
+			// }
 
 		}
 
@@ -397,13 +418,17 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	protected void connectCurDevice() {
 		L.e(this, "connectCurDevice()@BaseBusinessActivity:");
-		DialogUtil.dismissDialog();
 		connectCurDevice("");
 	}
 
 	protected void connectCurDevice(String connectText) {
 		L.e(this, "connectCurDevice(String)@BaseBusinessActivity:");
-		DialogUtil.dismissDialog();
+		if (!NetworkStatusUtil.isConnected(getApplicationContext())) {
+			return;
+		}
+		if (!isBinding) {
+//			DialogUtil.dismissDialog();
+		}
 		String mac = new HeaterInfoService(getBaseContext())
 				.getCurrentSelectedHeaterMac();
 		String userId = AccountService.getUserId(getBaseContext());

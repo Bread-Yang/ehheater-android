@@ -1,9 +1,9 @@
 package net.tsz.afinal.db.sqlite;
 
-import net.tsz.afinal.FinalDb;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import net.tsz.afinal.FinalDb;
 
 /**
  *

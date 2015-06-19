@@ -3,11 +3,6 @@ package com.vanward.ehheater.util;
 
 
 import android.content.Context;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.view.WindowManager;
-import android.widget.TextView;
 
 public class PxUtil {
 

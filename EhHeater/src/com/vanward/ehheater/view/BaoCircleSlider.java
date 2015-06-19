@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.Region;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;

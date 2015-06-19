@@ -6,8 +6,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import android.util.Log;
-
 public class PingWebsiteUtil {
 
 	private static boolean ping(String addr, int port) {

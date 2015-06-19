@@ -1,10 +1,11 @@
 package com.vanward.ehheater.activity.more;
 
+import net.tsz.afinal.http.AjaxCallBack;
+import net.tsz.afinal.http.AjaxParams;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import net.tsz.afinal.http.AjaxCallBack;
-import net.tsz.afinal.http.AjaxParams;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,7 +17,6 @@ import android.widget.Toast;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.SharedPreferUtils;

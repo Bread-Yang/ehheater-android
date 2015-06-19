@@ -1,9 +1,7 @@
 package com.vanward.ehheater.activity.main;
 
 import android.app.Activity;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.widget.ImageView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.view.BaoCircleSlider;

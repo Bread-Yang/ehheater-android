@@ -223,21 +223,47 @@
     <string name="cannot_connect">无法连接设备，\n请注意设备与手机的网络状态</string>
     <string name="confirm_save">是否保存修改？</string>
     <string name="server_failure">请求数据错误</string>
-    <string name="manual_operation_step"> 
-        <![CDATA[ 
+    <string name="manual_operation_step">
+<![CDATA[ 
         1. 请进入 设置 > Wifi, 选择<font color=#FE6C18>XPG-GAgent</font><br>2. 输入密码:<font color=#FE6C18>123456789</font> <br>3. 完成后请返回此界面, 将自动跳转到下一步
-    	]]>  
+    	]]>
     </string>
     <string name="about_vanward">
-        <![CDATA[
+<![CDATA[
         <font color=#FE6C18>&#160;&#160;&#160;&#160;&#160;&#160;&#160;广东万和新电气股份有限公司</font>成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。</string>
     	]]>
     </string>
     <string name="vanward_profile">
-        <![CDATA[ 
+<![CDATA[ 
         &#160;&#160;&#160;&#160;&#160;&#160;&#160万和是国内A股上市公司（股票代码：002543），1992年以中国第一台水控式燃气热水器起家，已发展成为国内生产规模最大的热水器、热水/供暖系统、厨房电器制造商及领先品牌，是国内仅有的两个“全球十大热水器品牌”之一。万和也是国家火炬计划重点高新技术企业、住建部授予的国家住宅产业化基地、中国航天事业合作伙伴。万和正通过致力清洁能源（燃气）及可再生能源（太阳能、空气能）的创新、高效利用，打造“全球领先的燃气具以及生活热水系统供应商”。
-        ]]> 
+        ]]>
     </string>
-
+    <string name="config_title">Device Configuration</string>
+    <string name="footer_title">DESIGNED AND DEVELOPED BY</string>
+    <string name="password_hint">Password </string>
+    <string name="ssid_label">SSID</string>
+    <string name="gatewayip">Gateway IP Address</string>
+    <string name="key_label">Key</string>
+    <string name="devicename_label">Device Name</string>
+    <string name="start_label_1">Start 1.0</string>
+    <string name="start_label_2">Start 2.0</string>
+    <string name="stop_label">Stop</string>
+    <string name="back_label">Back</string>
+    <string name="about_us_label">About Us</string>
+    <string name="contact_label">Contact</string>
+    <string name="about_us_desc_para_two">We continue to shatter traditional paradigms thanks largely to our dedication to and belief in quality ,communicative design.</string>
+    <string name="about_us_content">Rav</string>
+    <string name="alert_easylink_title">Easylink Alert</string>
+    <string name="alert_invalid_input_title">Invalid input</string>
+    <string name="alert_successfully_connected">Easylink App Connected Successfully</string>
+    <string name="alert_connection_failed">Failed to configure EMW device</string>
+    <string name="alert_connection_timeout">Connection to EMW was timed out.Please try again</string>
+    <string name="alert_successfully_failed">Failed to configure EMW device</string>
+    <string name="alert_no_network_title">No Network</string>
+    <string name="alert_invalid_password_msg">Please enter valid password</string>
+    <string name="alert_invalid_gatewayip_msg">Please enter valid Gateway IP address</string>
+    <string name="alert_invalid_ssid_mesg">Please enter valid SSID</string>
+    <string name="alert_invalid_key_mesg">Please enter valid Key exactly 16 characters</string>
+    <string name="alert_no_wifi_mesg">WiFi not available.Please check your WiFi connection.</string>
 
 </resources>

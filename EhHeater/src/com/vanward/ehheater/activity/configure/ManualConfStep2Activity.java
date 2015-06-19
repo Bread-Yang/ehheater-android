@@ -244,6 +244,8 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 				killerIntent);
 
 		Intent intent = null;
+		
+		boolean directLinkAfterEasyLink = true;
 
 		switch (hser.getHeaterType(hinfo)) {
 
@@ -252,6 +254,8 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			intent = new Intent(getBaseContext(), MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK,
+					directLinkAfterEasyLink);
 
 			XPGConnectClient.RemoveActivity(this);
 			finish();
@@ -264,6 +268,8 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			intent = new Intent(getBaseContext(), GasMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK,
+					directLinkAfterEasyLink);
 
 			XPGConnectClient.RemoveActivity(this);
 			finish();
@@ -276,6 +282,8 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 			intent = new Intent(getBaseContext(), FurnaceMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra(EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK,
+					directLinkAfterEasyLink);
 
 			XPGConnectClient.RemoveActivity(this);
 			finish();

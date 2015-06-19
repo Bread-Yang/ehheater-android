@@ -3,7 +3,6 @@ package com.vanward.ehheater.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.vanward.ehheater.activity.configure.ConnectActivity;

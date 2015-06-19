@@ -1,9 +1,6 @@
 package com.vanward.ehheater.view.fragment;
 
 
-import com.vanward.ehheater.R;
-import com.vanward.ehheater.view.fragment.SlidingMenu.CanvasTransformer;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,6 +13,9 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.vanward.ehheater.R;
+import com.vanward.ehheater.view.fragment.SlidingMenu.CanvasTransformer;
 
 
 public class CustomViewBehind extends ViewGroup {

@@ -8,7 +8,6 @@ import java.util.TimerTask;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.vanward.ehheater.activity.global.Global;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;

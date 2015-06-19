@@ -19,7 +19,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 import org.apache.http.HttpEntity;
 
 public class StringEntityHandler {

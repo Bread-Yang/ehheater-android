@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -154,6 +153,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 		if (hinfo == null) {
 			// 删光了
+			
+			L.e(this, "onBackPressed()删光了");
 
 			Intent intent = new Intent(getBaseContext(),
 					SelectDeviceActivity.class);
@@ -169,6 +170,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 		} else {
 
 			super.onBackPressed();
+			
+			L.e(this, "onBackPressed()的时候跳转");
 
 			if (shouldAlter) {
 				shouldAlter = false;
@@ -404,6 +407,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			DialogUtil.dismissDialog();
 
 			HttpFriend httpFriend = HttpFriend.create(this);
+			
+			httpFriend.showDialog = false;
 
 			String requestURL = "userinfo/saveAlias?did="
 					+ macOfHeaterBeingDeleted + "&uid="
@@ -483,10 +488,13 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 				shouldAlter = true;
 
-				// LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
-				// new Intent(Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
+				finish();
+				LocalBroadcastManager
+						.getInstance(getBaseContext())
+						.sendBroadcast(
+								new Intent(
+										Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
 			}
-
 		}
 
 		adapter.setList(new HeaterInfoDao(getBaseContext()).getAll());
@@ -496,6 +504,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
 				heaterNameIntent);
+		
+		L.e(this, "sendBroadcast(heaterNameIntent");
 
 		// HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hinfo = hser.getCurrentSelectedHeater();

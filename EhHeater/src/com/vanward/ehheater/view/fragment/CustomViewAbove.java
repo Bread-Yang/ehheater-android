@@ -3,10 +3,6 @@ package com.vanward.ehheater.view.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vanward.ehheater.view.fragment.SlidingMenu.OnClosedListener;
-import com.vanward.ehheater.view.fragment.SlidingMenu.OnOpenedListener;
-
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -29,6 +25,9 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
+
+import com.vanward.ehheater.view.fragment.SlidingMenu.OnClosedListener;
+import com.vanward.ehheater.view.fragment.SlidingMenu.OnOpenedListener;
 
 
 //import com.slidingmenu.lib.SlidingMenu.OnCloseListener;

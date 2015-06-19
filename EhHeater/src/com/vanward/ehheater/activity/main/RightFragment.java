@@ -1,24 +1,14 @@
 package com.vanward.ehheater.activity.main;
 
-import com.vanward.ehheater.R;
-
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
-import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.vanward.ehheater.R;
 
 public class RightFragment extends Fragment implements OnClickListener {
 

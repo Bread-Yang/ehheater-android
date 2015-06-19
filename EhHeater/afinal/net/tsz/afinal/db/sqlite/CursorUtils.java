@@ -23,8 +23,6 @@ import net.tsz.afinal.db.table.ManyToOne;
 import net.tsz.afinal.db.table.OneToMany;
 import net.tsz.afinal.db.table.Property;
 import net.tsz.afinal.db.table.TableInfo;
-
-
 import android.database.Cursor;
 
 public class CursorUtils {
