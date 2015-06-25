@@ -19,13 +19,13 @@ public class ErrorUtils extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		L.e(this, "ErrorUtils的onCreate()执行了");
+		L.e(this, "ErrorUtils的onCreate()");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		L.e(this, "ErrorUtils的onResume()执行了");
+		L.e(this, "ErrorUtils的onResume()");
 		Intent originalIntent = getIntent();
 		HeaterType device_type = (HeaterType) originalIntent
 				.getSerializableExtra("device_type");

@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.tsz.afinal.FinalHttp;
 import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONException;
@@ -14,6 +15,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -33,6 +35,9 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
+import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
+import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.activity.user.FindPasswordActivity;
 import com.vanward.ehheater.activity.user.RegisterActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -44,6 +49,8 @@ import com.vanward.ehheater.util.GizwitsErrorMsg;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
+import com.vanward.ehheater.util.PingUtil;
+import com.vanward.ehheater.util.PingWebsiteUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -69,11 +76,112 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 	boolean isTimeout = false;
 
+	boolean isPingTimeout = false;
+
+	private final int HANDLE_OUTSIDE_NETWORK = 0;
+	private final int HANDLE_INSIDE_NETWORK = 1;
+
 	private Handler acquireDeviceListTimeout = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			DialogUtil.dismissDialog();
-			Toast.makeText(getBaseContext(), "获取设备列表超时！", 3000)
-					.show();
+			Toast.makeText(getBaseContext(), "获取设备列表超时！", 3000).show();
+		};
+	};
+
+	private Handler loginHandler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case HANDLE_OUTSIDE_NETWORK: // 可以上外网
+				loginCloudResponseTriggered = false;
+
+				mLoginTimeoutTimer = new Timer();
+				mLoginTimeoutTimer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						if (!(loginCloudResponseTriggered && setJPushAliasSuccess)) {
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									DialogUtil.dismissDialog();
+									Toast.makeText(getBaseContext(), "登录超时！",
+											3000).show();
+									isTimeout = true;
+								}
+							});
+						}
+					}
+				}, timeoutSecond);
+				// XPGConnShortCuts.connect2big();
+				
+				new SharedPreferUtils(getBaseContext()).clear();
+				new HeaterInfoService(getBaseContext()).deleteAllHeaters();
+				
+				XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, et_user
+						.getText().toString(), et_pwd.getText().toString());
+				break;
+
+			case HANDLE_INSIDE_NETWORK:
+				L.e(LoginActivity.this, "上内网");
+
+				String loginUserName = et_user.getText().toString().trim();
+				String loginPsw = et_pwd.getText().toString().trim();
+
+				String userName = AccountService.getUserId(getBaseContext());
+				String psw = AccountService.getUserPsw(getBaseContext());
+
+//				L.e(LoginActivity.this, "userName : " + userName);
+//				L.e(LoginActivity.this, "psw : " + psw);
+//				L.e(LoginActivity.this, "loginUserName : " + loginUserName);
+//				L.e(LoginActivity.this, "loginPsw : " + loginPsw);
+
+				if (loginUserName.equals(userName) && loginPsw.equals(psw)) {
+					Set<String> tagSet = new LinkedHashSet<String>();
+					tagSet.add(et_user.getText().toString().trim());
+					JPushInterface.setTags(getApplicationContext(), tagSet,
+							mAliasCallback);
+
+					HeaterInfoService heaterService = new HeaterInfoService(
+							getBaseContext());
+					SharedPreferUtils spu = new SharedPreferUtils(
+							LoginActivity.this);
+					String did = heaterService.getCurrentSelectedHeater()
+							.getDid();
+					String mac = heaterService.getCurrentSelectedHeater()
+							.getMac();
+					HeaterType type = heaterService.getCurHeaterType();
+					switch (type) {
+					case ELECTRIC_HEATER:
+						spu.put(ShareKey.PollingElectricHeaterDid, did);
+						spu.put(ShareKey.PollingElectricHeaterMac, mac);
+
+						startActivity(new Intent(getBaseContext(),
+								MainActivity.class));
+						finish();
+						break;
+					case GAS_HEATER:
+						spu.put(ShareKey.PollingGasHeaterDid, did);
+						spu.put(ShareKey.PollingGasHeaterMac, mac);
+
+						startActivity(new Intent(getBaseContext(),
+								GasMainActivity.class));
+						finish();
+						break;
+					case FURNACE:
+						spu.put(ShareKey.PollingFurnaceDid, did);
+						spu.put(ShareKey.PollingFurnaceMac, mac);
+
+						startActivity(new Intent(getBaseContext(),
+								FurnaceMainActivity.class));
+						finish();
+						break;
+					}
+				} else {
+					DialogUtil.dismissDialog();
+					Toast.makeText(LoginActivity.this, "通过内网登录的账号和密码错误",
+							Toast.LENGTH_LONG).show();
+				}
+				break;
+			}
 		};
 	};
 
@@ -199,8 +307,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			break;
 		case R.id.login_btn:
 
-			L.e(this, "登陆之前");
-
 			isTimeout = false;
 
 			if (!NetworkStatusUtil.isConnected(this)) {
@@ -209,35 +315,51 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				return;
 			}
 
-			if (et_user.getText().length() <= 0
-					|| et_pwd.getText().length() <= 0) {
+			final String loginUserName = et_user.getText().toString().trim();
+			final String loginPsw = et_pwd.getText().toString().trim();
+
+			if (loginUserName.length() <= 0 || loginPsw.length() <= 0) {
 				Toast.makeText(this, "请输入账号和密码", Toast.LENGTH_LONG).show();
 				return;
 			}
 			DialogUtil.instance().showLoadingDialog(this, "正在登录，请稍后...");
 
-			loginCloudResponseTriggered = false;
+			final CountDownTimer timer = new CountDownTimer(5000, 1000) {
 
-			mLoginTimeoutTimer = new Timer();
-			mLoginTimeoutTimer.schedule(new TimerTask() {
 				@Override
-				public void run() {
-					if (!(loginCloudResponseTriggered && setJPushAliasSuccess)) {
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								DialogUtil.dismissDialog();
-								Toast.makeText(getBaseContext(), "登录超时！", 3000)
-										.show();
-								isTimeout = true;
-							}
-						});
+				public void onTick(long arg0) {
+
+				}
+
+				@Override
+				public void onFinish() {
+					isPingTimeout = true;
+					loginHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK);
+				}
+			}.start();
+
+			FinalHttp finalHttp = new FinalHttp();
+			finalHttp.configTimeout(5000);
+
+			finalHttp.get("http://www.baidu.com", new AjaxCallBack<String>() {
+				@Override
+				public void onSuccess(String t) { // 可以上外网
+					super.onSuccess(t);
+
+					timer.cancel();
+					loginHandler.sendEmptyMessage(HANDLE_OUTSIDE_NETWORK);
+				}
+
+				@Override
+				public void onFailure(Throwable t, int errorNo, String strMsg) { // 只能上内网
+					super.onFailure(t, errorNo, strMsg);
+					if (!isPingTimeout) {
+						timer.cancel();
+						loginHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK);
 					}
 				}
-			}, timeoutSecond);
-			// XPGConnShortCuts.connect2big();
-			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, et_user
-					.getText().toString(), et_pwd.getText().toString());
+			});
+
 			break;
 		case R.id.tv_register:
 			startActivity(new Intent(this, RegisterActivity.class));
@@ -264,7 +386,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		if ("".equals(et_user.getText().toString())) {
 			et_user.setText(AccountService.getUserId(this));
 		}
-//		et_pwd.setText("111111");
+		// et_pwd.setText("111111");
 
 		XPGConnectClient.AddActivity(this);
 	}
@@ -347,7 +469,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					20, 0);
 
 			onDeviceFoundTriggered = false;
-			
+
 			acquireDeviceListTimeout.sendEmptyMessageDelayed(0, 20000);
 
 		} else {
@@ -453,27 +575,22 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) {
 		L.e(this, "onV4GetMyBindings()");
 
-		L.e(this, "errorCode : " + errorCode);
-
 		acquireDeviceListTimeout.removeMessages(0);
-		
+
 		if (errorCode != 0) {
 			return;
 		}
 
 		if (endpoint == null) {
-			L.e(this, "endpoint为null,返回");
 			return;
 		}
 
-		L.e(this, "(endpoint.getIsDisabled() : " + (endpoint.getIsDisabled()));
 		if (endpoint.getIsDisabled() == 1) {
 			L.e(this, "endpoint.getIsDisabled() == 1,返回");
 			return;
 		}
 
 		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
-			L.e(this, "该用户还没有绑定设备，跳进设备配置界面");
 			new Handler().postDelayed(new Runnable() {
 
 				@Override
@@ -490,14 +607,14 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(endpoint);
-		L.e(this, "onDeviceFound:HeaterInfo Downloaded: " + hi);
+		L.e(this, "返回的设备信息: " + hi);
 
 		if (!(hser.isValidDevice(hi))) {
 			// 非有效设备, 不予保存
 			L.e(this, "非有效设备, 不予保存");
 			return;
 		}
-		
+
 		notBindedDevice = false;
 
 		SharedPreferUtils spu = new SharedPreferUtils(this);
@@ -547,7 +664,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		}
 
-		L.e(this, "hser.saveDownloadedHeater(hi)调用了");
 		hser.saveDownloadedHeater(hi);
 
 		HttpFriend httpFriend = HttpFriend.create(this);

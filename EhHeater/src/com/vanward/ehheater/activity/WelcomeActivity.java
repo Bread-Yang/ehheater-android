@@ -4,9 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
@@ -29,7 +33,7 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.L;
-import com.vanward.ehheater.util.PingUtil;
+import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -43,23 +47,33 @@ public class WelcomeActivity extends GeneratedActivity {
 
 	private final int HANDLE_OUTSIDE_NETWORK = 0;
 	private final int HANDLE_INSIDE_NETWORK = 1;
+	
+	boolean isPingTimeout = false;
+	
+	public static final String IS_LOGOUT_TO_WELCOME = "is_logout_to_welcome";
 
 	Handler mHandler = new Handler() {
 
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case HANDLE_OUTSIDE_NETWORK:
-				L.e(this, "只能上外网");
+				L.e(this, "能上外网");
 				// XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
 				// AccountService.getUserId(getBaseContext()),
 				// AccountService.getUserPsw(getBaseContext()));
 				Intent intent = new Intent(WelcomeActivity.this,
 						LoginActivity.class);
-				intent.putExtra("queryDevicesListAgain", true);
+				if (!getIntent().getBooleanExtra(IS_LOGOUT_TO_WELCOME, false)) {
+					intent.putExtra("queryDevicesListAgain", true);
+				}
 				startActivityForResult(intent, Consts.REQUESTCODE_LOGIN);
 				break;
 			case HANDLE_INSIDE_NETWORK:
 				L.e(this, "只能上内网");
+				if (getIntent().getBooleanExtra(IS_LOGOUT_TO_WELCOME, false)) {
+					flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);
+					return;
+				}
 				if (getCurrentDevice() == null) {
 					// 无当前设备, 跳转到选择/新增设备页面
 					// startActivity(new Intent(this,
@@ -72,8 +86,8 @@ public class WelcomeActivity extends GeneratedActivity {
 							getBaseContext())
 							.getAllDeviceOfType(HeaterType.ELECTRIC_HEATER);
 					if (allEIDevices != null & allEIDevices.size() > 0) {
-						hser.setCurrentSelectedHeater(allEIDevices.get(
-								0).getMac());
+						hser.setCurrentSelectedHeater(allEIDevices.get(0)
+								.getMac());
 						flowHandler.sendEmptyMessage(STATE_NORMAL);
 						return;
 					}
@@ -82,16 +96,14 @@ public class WelcomeActivity extends GeneratedActivity {
 							getBaseContext())
 							.getAllDeviceOfType(HeaterType.GAS_HEATER);
 
-					if (allGasDevices != null
-							& allGasDevices.size() > 0) {
-						hser.setCurrentSelectedHeater(allGasDevices
-								.get(0).getMac());
+					if (allGasDevices != null & allGasDevices.size() > 0) {
+						hser.setCurrentSelectedHeater(allGasDevices.get(0)
+								.getMac());
 						flowHandler.sendEmptyMessage(STATE_NORMAL);
 						return;
 					}
 
-					flowHandler
-							.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
+					flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_CONFIGURE);
 					return;
 				}
 
@@ -126,7 +138,7 @@ public class WelcomeActivity extends GeneratedActivity {
 			setContentView(R.layout.activity_welcome);
 			mTvInfo = (TextView) findViewById(R.id.aw_tv);
 		}
-
+		
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -141,6 +153,8 @@ public class WelcomeActivity extends GeneratedActivity {
 				PollingService.ACTION);
 	}
 
+	HeaterInfo curHeater;
+
 	public HeaterInfo getCurrentDevice() {
 
 		if (curHeater == null) {
@@ -150,8 +164,6 @@ public class WelcomeActivity extends GeneratedActivity {
 
 		return curHeater;
 	}
-
-	HeaterInfo curHeater;
 
 	public static String testTime() {
 		SimpleDateFormat sdf = new SimpleDateFormat("mm:ss'.'SSS");
@@ -169,6 +181,13 @@ public class WelcomeActivity extends GeneratedActivity {
 	private void checkLoginAndCurrentDeviceStatus(Context context,
 			final Handler flowHandler) {
 
+		if (!NetworkStatusUtil.isConnected(this)) {
+			Toast.makeText(this, R.string.check_network, Toast.LENGTH_LONG)
+					.show();
+			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);
+			return;
+		}
+
 		if (!AccountService.isLogged(context)) {
 			// 未登录, 跳转到登录页面
 			// startActivity(new Intent(this, LoginActivity.class));
@@ -176,21 +195,62 @@ public class WelcomeActivity extends GeneratedActivity {
 			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);
 			return;
 		} else { // 之前已登录
-			L.e(this, "这里执行了");
-			new Thread(new Runnable() {
+			FinalHttp finalHttp = new FinalHttp();
+			finalHttp.configTimeout(5000);
+			
+			final CountDownTimer timer = new CountDownTimer(5000, 1000) {
 
 				@Override
-				public void run() {
-					if (PingUtil.ping(WelcomeActivity.this)) { // 可以上外网
-						mHandler.sendEmptyMessage(HANDLE_OUTSIDE_NETWORK);
-					} else { // 只能用内网
-						mHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK); 
-//						flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);   // 现在改成了只能用外网登录
+				public void onTick(long arg0) {
+
+				}
+
+				@Override
+				public void onFinish() {
+					isPingTimeout = true;
+					mHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK);
+				}
+			}.start();
+
+			
+			finalHttp.get("http://www.baidu.com", new AjaxCallBack<String>() {
+				@Override
+				public void onSuccess(String t) {
+					super.onSuccess(t);
+					timer.cancel();
+					mHandler.sendEmptyMessage(HANDLE_OUTSIDE_NETWORK);
+				}
+				
+				@Override
+				public void onFailure(Throwable t, int errorNo, String strMsg) {
+					super.onFailure(t, errorNo, strMsg);
+					if (!isPingTimeout) {
+						timer.cancel();
+						mHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK);
+						// flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);
+						// 现在改成了只能用外网登录
 					}
 				}
-			}).start();
+			});
+//			new Thread(new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					if (PingUtil.ping(WelcomeActivity.this)) { // 可以上外网
+//						
+//					} else { // 只能用内网
+//						
+//					}
+//				}
+//			}).start();
 		}
 	}
+
+	Handler pingHandler = new Handler() {
+		public void handleMessage(Message msg) {
+
+		};
+	};
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -211,8 +271,6 @@ public class WelcomeActivity extends GeneratedActivity {
 		// }
 
 		if (requestCode == Consts.REQUESTCODE_LOGIN) {
-			
-			L.e(this, "这里执行了啊");
 
 			if (resultCode == RESULT_OK) {
 				flowHandler.sendEmptyMessage(STATE_NORMAL);

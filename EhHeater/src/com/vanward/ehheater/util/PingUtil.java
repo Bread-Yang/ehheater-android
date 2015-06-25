@@ -3,6 +3,8 @@ package com.vanward.ehheater.util;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
 import android.content.Context;
 
 public class PingUtil {

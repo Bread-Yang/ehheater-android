@@ -556,7 +556,7 @@ public class PollingService extends Service {
 
 				@Override
 				public void run() {
-//					L.e(this, "PollingThread执行了");
+//					L.e(this, "PollingThread");
 					// checkAppointment();
 					if ("".equals(AccountService.getUserPsw(getBaseContext()))) {
 						// electic heater

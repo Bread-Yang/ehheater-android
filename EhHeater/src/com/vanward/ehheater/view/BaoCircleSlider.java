@@ -578,7 +578,7 @@ public class BaoCircleSlider extends View {
 	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
-		// L.e(this, "onDetachedFromWindow()执行了");
+		// L.e(this, "onDetachedFromWindow()");
 
 		((BitmapDrawable) ctrlIconView.getDrawable()).getBitmap().recycle();
 		((BitmapDrawable) addImageView.getDrawable()).getBitmap().recycle();

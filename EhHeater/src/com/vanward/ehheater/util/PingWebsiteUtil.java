@@ -8,7 +8,7 @@ import java.net.SocketAddress;
 
 public class PingWebsiteUtil {
 
-	private static boolean ping(String addr, int port) {
+	public static boolean ping(String addr, int port) {
 		boolean exists = false;
 		Socket sock = null;
 
@@ -34,6 +34,7 @@ public class PingWebsiteUtil {
 			}
 		}
 		
+		L.e(PingWebsiteUtil.class, "返回的exists是 : " + exists);
 		return exists;
 	}
 	

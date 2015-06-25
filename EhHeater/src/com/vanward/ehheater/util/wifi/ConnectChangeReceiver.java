@@ -16,7 +16,6 @@ public class ConnectChangeReceiver extends BroadcastReceiver {
 	public static final String CONNECTED = "CONNECTED";
 
 	public void onReceive(Context context, Intent intent) {
-		L.e(this, "onReceive执行了");
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 

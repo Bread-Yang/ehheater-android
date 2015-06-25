@@ -24,8 +24,10 @@ public class AccountService {
 	
 	public static void setUser(Context context, String uid, String psw) {
 		SharedPreferUtils spu = new SharedPreferUtils(context);
-		spu.put(ShareKey.UserId, uid);
-		spu.put(ShareKey.UserPsw, psw);
+		if (!"".equals(uid) && !"".equals(psw)) {
+			spu.put(ShareKey.UserId, uid);
+			spu.put(ShareKey.UserPsw, psw);
+		}
 	}
 	
 	public static String getPendingUserId(Context context) {

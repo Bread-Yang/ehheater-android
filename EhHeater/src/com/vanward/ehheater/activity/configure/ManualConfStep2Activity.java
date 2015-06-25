@@ -139,7 +139,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 
 	@Override
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
-		L.e(this, TAG + "的onEasyLinkResp执行了");
+		L.e(this, "onEasyLinkResp()");
 		// if (dialog_easylink.isShowing()) {
 		//
 		// L.e(this, "打印productKey前");
@@ -163,7 +163,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 	@Override
 	public void onAirLinkResp(XpgEndpoint endpoint) {
 		super.onAirLinkResp(endpoint);
-		L.e(this, TAG + "的onAirLinkResp执行了");
+		L.e(this, TAG + "的onAirLinkResp");
 		if (dialog_easylink.isShowing()) {
 
 			L.e(this, "打印productKey前");
@@ -333,7 +333,7 @@ public class ManualConfStep2Activity extends EhHeaterBaseActivity {
 	public void OnOnboardingSetResp(OnboardingSetResp_t pResp) {
 		super.OnOnboardingSetResp(pResp);
 
-		L.e(this, "OnOnboardingSetResp执行了");
+		L.e(this, "OnOnboardingSetResp()");
 
 		if (mTimer != null) {
 			mTimer.cancel();

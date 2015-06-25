@@ -114,7 +114,6 @@ public class ConnectActivity extends GeneratedActivity {
 	};
 
 	private void initTemporaryFields() {
-		L.e(this, "initTemporaryFields()执行了");
 		connType = Integer.MAX_VALUE;
 		currentLanSearchingState = LAN_NONE;
 		tempConnId = -1;
@@ -150,7 +149,6 @@ public class ConnectActivity extends GeneratedActivity {
 
 		@Override
 		public boolean handleMessage(Message msg) {
-			L.e(this, "timeoutHandler执行了");
 			// if (!jobDone) {
 			setOfflineResult();
 			// }
@@ -170,22 +168,17 @@ public class ConnectActivity extends GeneratedActivity {
 			final TimerTask t) {
 		L.e(this, "tryConnectBySmallCycle()");
 
-		L.e(this, "XPG_WAN_LAN.LAN.swigValue()前");
 		connType = XPG_WAN_LAN.LAN.swigValue();
-		L.e(this, "XPG_WAN_LAN.LAN.swigValue()后");
 
-		L.e(this, "XPGConnectClient.xpgcStartDiscovery()前");
+		L.e(this, "XPGConnectClient.xpgcStartDiscovery()");
 		XPGConnectClient.xpgcStartDiscovery();
-		L.e(this, "XPGConnectClient.xpgcStartDiscovery()后");
 
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				L.e(this, "XPGConnectClient.xpgcStopDiscovery()前");
+				L.e(this, "XPGConnectClient.xpgcStopDiscovery()");
 				XPGConnectClient.xpgcStopDiscovery();
-				L.e(this, "XPGConnectClient.xpgcStopeasonDiscovery()后");
 				if (currentLanSearchingState == LAN_SEARCHING && t != null) {
-					L.e(this, "执行了这里面...............");
 					new Timer().schedule(t, (long) (scanInterval * 1.2));
 					currentLanSearchingState = LAN_NONE;
 				}
@@ -198,11 +191,9 @@ public class ConnectActivity extends GeneratedActivity {
 
 		connType = XPG_WAN_LAN.MQTT.swigValue();
 
-		L.e(this, "XPGConnectClient.xpgcLogin2Wan()前");
 		// XPGConnectClient.xpgcLogin2Wan(
 		// AccountService.getUserId(getBaseContext()),
 		// AccountService.getUserPsw(getBaseContext()), "", "");
-		L.e(this, "XPGConnectClient.xpgcLogin2Wan()后");
 		// XPGConnShortCuts.connect2big();
 
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
@@ -288,19 +279,17 @@ public class ConnectActivity extends GeneratedActivity {
 				didRetrieved = didFound;
 				L.e(this, "onDeviceFound:found target, connecting by small");
 				timeoutHandler.sendEmptyMessageDelayed(0, 5000);
-				L.e(this, "XPGConnShortCuts.connect2small()前");
 				L.e(this, "要连接设备的IP : " + endpoint.getAddr());
+				L.e(this, "XPGConnShortCuts.connect2small()");
 				XPGConnShortCuts.connect2small(endpoint.getAddr());
-				L.e(this, "XPGConnShortCuts.connect2small()后");
 				// XPGConnectClient.xpgcLogin2Lan(endpoint.getAddr(), null);
 
 				L.e(this, "didRetrieved : " + didRetrieved);
 				L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
 
 				currentLanSearchingState = LAN_FOUND;
-				L.e(this, "XPGConnectClient.xpgcStopDiscovery()前");
+				L.e(this, "XPGConnectClient.xpgcStopDiscovery()");
 				XPGConnectClient.xpgcStopDiscovery();
-				L.e(this, "XPGConnectClient.xpgcStopDiscovery()后");
 			}
 
 		} else if (connType == XPG_WAN_LAN.MQTT.swigValue()) {
@@ -328,7 +317,7 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	public void connectDirectlyAfterEasyLink() {
-		L.e(this, "connectDirectlyAfterEasyLink()执行了");
+		L.e(this, "connectDirectlyAfterEasyLink()");
 		
 		didRetrieved = new SharedPreferUtils(this).get(ShareKey.CurDeviceDid,
 				"");
@@ -342,11 +331,10 @@ public class ConnectActivity extends GeneratedActivity {
 
 		timeoutHandler.sendEmptyMessageDelayed(0, 10000);
 		
-		L.e(this, "XPGConnShortCuts.connect2small(ip)执行了");
+		L.e(this, "XPGConnShortCuts.connect2small(ip)");
 		L.e(this, "要连接设备的IP : " + ip);
 		XPGConnShortCuts.connect2small(ip);
 		// XPGConnectClient.xpgcLogin2Lan(ip, null);
-		L.e(this, "执行了");
 	}
 
 	@Override
@@ -370,7 +358,6 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void onWanLoginResp(int result, int connId) {
 		super.onWanLoginResp(result, connId);
-		L.e(this, "onWanLoginResp()执行了");
 		L.e(this, "onWanLoginResp@ConnectActivity : result : " + result
 				+ " connId : " + connId);
 		tempConnId = connId;
@@ -434,9 +421,8 @@ public class ConnectActivity extends GeneratedActivity {
 				}
 				L.e(this, "onConnectEvent:requesting passcode");
 			} else {
-				L.e(this, "XPGConnectClient.xpgcLogin()前");
+				L.e(this, "XPGConnectClient.xpgcLogin()");
 				XPGConnectClient.xpgcLogin(tempConnId, null, mPasscode);
-				L.e(this, "XPGConnectClient.xpgcLogin()后");
 			}
 		}
 
@@ -467,9 +453,8 @@ public class ConnectActivity extends GeneratedActivity {
 			L.e(this, "请求回到的passcode为空");
 		}
 		
-		L.e(this, "OnPasscodeResp@XPGConnectClient.xpgcLogin()前");
+		L.e(this, "XPGConnectClient.xpgcLogin()");
 		XPGConnectClient.xpgcLogin(tempConnId, null, passcodeRetrieved);
-		L.e(this, "OnPasscodeResp@XPGConnectClient.xpgcLogin()后");
 
 		// pResp.delete();
 	}
@@ -564,8 +549,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 				if (ep.getIsOnline() == 1) {
 					// is online
-					L.e(this, "XPGConnectClient.xpgcEnableCtrl()执行了");
-					L.e(this, "xpgcEnableCtrl.xpgcLogin()前");
+					L.e(this, "XPGConnectClient.xpgcEnableCtrl()");
 					// XPGConnectClient.xpgcEnableCtrl(tempConnId,
 					// ep.getSzDid(),
 					// ep.getSzPasscode());
@@ -577,13 +561,13 @@ public class ConnectActivity extends GeneratedActivity {
 					L.e(this, "ep.getSzPasscode() : " + ep.getSzPasscode());
 					String userName = "2$" + Consts.VANWARD_APP_ID + "$"
 							+ Global.uid;
+					L.e(this, "XPGConnectClient.xpgcLogin2Wan()");
 					XPGConnectClient.xpgcLogin2Wan(userName, Global.token,
 							ep.getSzDid(), ep.getSzPasscode());
 					// XPGConnectClient.xpgcLogin2Wan(
 					// AccountService.getUserId(getBaseContext()),
 					// AccountService.getUserPsw(getBaseContext()),
 					// ep.getSzDid(), ep.getSzPasscode());
-					L.e(this, "xpgcEnableCtrl.xpgcLogin()后");
 					return;
 				} else {
 					// is offline
@@ -598,7 +582,7 @@ public class ConnectActivity extends GeneratedActivity {
 //			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 //			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
 //
-//			L.e(this, "HeaterInfoService.setBinding()执行了");
+//			L.e(this, "HeaterInfoService.setBinding()");
 //			HeaterInfoService.setBinding(this, curHeater.getDid(),
 //					curHeater.getPasscode());
 			setOfflineResult();
@@ -639,7 +623,6 @@ public class ConnectActivity extends GeneratedActivity {
 	}
 
 	private void initTargetDeviceInfo() {
-		L.e(this, "initTargetDeviceInfo()执行了");
 		if (!getIntent().getBooleanExtra(
 				EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK, false)) {
 			mMac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
@@ -680,7 +663,7 @@ public class ConnectActivity extends GeneratedActivity {
 	private void checkLoginAndCurrentDeviceStatus(Context context,
 			Handler flowHandler) {
 		
-		L.e(this, "checkLoginAndCurrentDeviceStatus()执行了");
+		L.e(this, "checkLoginAndCurrentDeviceStatus()");
 
 		flowHandler.sendEmptyMessage(STATE_NORMAL);
 		return;
@@ -704,7 +687,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 			case STATE_NORMAL:
 				
-				L.e(this, "flowHandler 的 STATE_NORMAL Message执行了");
+				L.e(this, "flowHandler 的 STATE_NORMAL Message");
 
 				DialogUtil.instance().dismissDialog();
 
@@ -812,7 +795,6 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		L.e(this, "onActivityResult()执行了");
 		L.e(this, "在外面");
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING
 				&& resultCode == RESULT_OK) {

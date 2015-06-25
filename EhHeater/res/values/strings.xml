@@ -188,6 +188,8 @@
     <string name="requesting_http">正在请求,请稍后...</string>
     <string name="edit_appointment">编辑预约</string>
     <string name="appointment_conflict">亲，请问是否要覆盖%1$s的预约%2$s</string>
+    <string name="update_tips">万和云智能有新版本更新!</string>
+    <string name="update">更新</string>
     <string name="override">覆盖</string>
     <string name="furnace_appointment_full">亲，壁挂炉的预约已经满了哦！</string>
     <string name="appointment_execute_tomorrow">预约时间已过，您的预约将明天执行</string>

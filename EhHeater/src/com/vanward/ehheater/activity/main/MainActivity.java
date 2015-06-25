@@ -126,7 +126,6 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		L.e(this, "onCreate执行了");
 		initSlidingMenu();
 		setContentView(R.layout.activity_main);
 		initView();
@@ -871,7 +870,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
-		L.e(this, "电热的onTcpPacket()执行了");
+		L.e(this, "电热的onTcpPacket()");
 		L.e(this, "剩余热水百分比" + new EhState(data).getRemainingHotWaterAmount());
 		if (connId != Global.connectId) {
 			return;

@@ -74,7 +74,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			L.e(this, "wifiConnectedReceiver的onReceive()执行了");
+			L.e(this, "wifiConnectedReceiver的onReceive()");
 			boolean isConnected = intent.getBooleanExtra("isConnected", false);
 			if (isConnected) {
 				if (isActived) {
@@ -95,7 +95,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private BroadcastReceiver deviceOnlineReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			L.e(this, "deviceOnlineReceiver的onReceive()执行了");
+			L.e(this, "deviceOnlineReceiver的onReceive()");
 			if (isFinishing()) {
 				return;
 			}
@@ -106,7 +106,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private BroadcastReceiver alterDeviceDueToDeleteReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			L.e(this, "alterDeviceDueToDeleteReceiver的onReceive()执行了");
+			L.e(this, "alterDeviceDueToDeleteReceiver的onReceive()");
 			if (isFinishing()) {
 				return;
 			}
@@ -128,7 +128,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private BroadcastReceiver logoutReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			L.e(this, "logoutReceiver的onReceive()执行了");
+			L.e(this, "logoutReceiver的onReceive()");
 			XPGConnectClient.RemoveActivity(BaseBusinessActivity.this);
 		}
 	};
@@ -188,7 +188,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	           ComponentName cpn = list.get(0).topActivity;  
 //	           if (className.equals(cpn.getClassName())) {  
 //	           }  
-	           L.e(this, "最上面运行的class是 : " + cpn.getClassName());
 	       }  
 	}
 
@@ -272,7 +271,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		if (shouldReconnect) {
 			shouldReconnect = false;
-			L.e(this, "onResume里面执行了connectCurDevice()");
 			connectCurDevice("连接已断开, 正在重新连接...");
 		}
 

@@ -125,7 +125,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		L.e(this, "GasMainActivity的onCreate执行了");
 		initSlidingMenu();
 		setContentView(R.layout.activity_gas_main);
 		initView(savedInstanceState);
@@ -156,7 +155,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		L.e(this, "GasMainActivity的onNewIntent执行了");
 		setIntent(intent);
 	}
 
@@ -461,8 +459,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			mSlidingMenu.showMenu(true);
 			break;
 		case R.id.ivTitleBtnRigh:
-
-			L.e(this, "ivTitleBtnRigh执行了");
 
 			if (tv_tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线

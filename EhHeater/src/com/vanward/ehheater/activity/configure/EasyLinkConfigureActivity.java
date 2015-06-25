@@ -89,7 +89,6 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		L.e(this, "onCreate执行了");
 	}
 
 	@Override
@@ -148,13 +147,11 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);
-		L.e(this, "onNewIntent执行了");
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		L.e(this, "onResume执行了");
 		applyCurWifiSsid();
 
 		// if (curindex == 3 && !dialog_easylink.isShowing()) {

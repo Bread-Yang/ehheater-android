@@ -32,8 +32,6 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		L.e(this, "onCreate()执行了");
-		
 //		setContentView(initContentView());
 		
 		username = getIntent().getStringExtra(Consts.INTENT_EXTRA_USERNAME);

@@ -96,9 +96,8 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
 				new Intent(Consts.INTENT_FILTER_KILL_MAIN_ACTIVITY));
 
-		new SharedPreferUtils(getBaseContext()).clear();
-		new HeaterInfoService(getBaseContext()).deleteAllHeaters();
-//		JPushInterface.setAlias(getApplicationContext(), "", mAliasCallback);
+//		new SharedPreferUtils(getBaseContext()).clear();
+//		new HeaterInfoService(getBaseContext()).deleteAllHeaters();
 		
 		Set<String> tagSet = new LinkedHashSet<String>();
 		JPushInterface.setTags(getApplicationContext(), tagSet, mAliasCallback);
@@ -106,7 +105,9 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 		/*AccountService.setUser(this, null, null);*/
 		/*AccountService.setUser(this, AccountService.getUserId(getBaseContext()), null);*/
 
-		startActivity(new Intent(getBaseContext(), WelcomeActivity.class));
+		Intent intent = new Intent(getBaseContext(), WelcomeActivity.class);
+		intent.putExtra(WelcomeActivity.IS_LOGOUT_TO_WELCOME, true);
+		startActivity(intent);
 		finish();
 	}
 

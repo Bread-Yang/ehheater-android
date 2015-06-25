@@ -849,7 +849,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		L.e(this, "onActivityResult()执行了");
 
 		L.e(this, "requestCode : " + requestCode);
 
@@ -950,7 +949,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
 
-			L.e(this, "Consts.REQUESTCODE_UPLOAD_BINDING里面执行了");
+			L.e(this, "Consts.REQUESTCODE_UPLOAD_BINDING里面");
 
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
@@ -977,7 +976,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private boolean stateQueried = false;
 
 	private void queryState() {
-		L.e(this, "queryState()执行了");
 
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
@@ -1013,7 +1011,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		L.e(this, "onResume()执行了");
 		ErrorUtils.isFurnaceMainActivityActive = true;
 		ErrorUtils.isMainActivityActive = false;
 		ErrorUtils.isGasMainActivityActive = false;

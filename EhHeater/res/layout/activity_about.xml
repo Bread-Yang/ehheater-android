@@ -17,61 +17,47 @@
         android:layout_height="50dp"
         android:layout_below="@+id/include1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/about_logo" />
 
     <TextView
         android:id="@+id/tv_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_check_update"
-        android:layout_alignLeft="@+id/btn_check_update"
-        android:layout_alignRight="@+id/btn_check_update"
         android:layout_below="@+id/imageView1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:gravity="left"
         android:text="@string/vanward_profile"
         android:textColor="#ff808080"
         android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btn_check_update"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/selector_yellow_bg"
-        android:gravity="center"
-        android:text="@string/check_update"
-        android:textColor="@color/white"
-        android:visibility="invisible" />
-
     <TextView
         android:id="@+id/tv_model"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_above="@+id/tv_vanward_site"
-        android:layout_marginTop="44dp"
+        android:layout_centerHorizontal="true"
         android:text="@string/apply_model"
         android:textColor="@color/appointment_text_color"
         android:textSize="18sp" />
+
     <TextView
         android:id="@+id/tv_vanward_site"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_above="@+id/textView2"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
         android:text="@string/vanward_site"
         android:textColor="#1D20E8"
         android:textSize="17sp" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_above="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:text="@string/version"
@@ -82,12 +68,24 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_check_update"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
         android:text="支持android:2.3以上"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_marginBottom="20dp"
         android:textColor="#ff808080"
         android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_check_update"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/selector_yellow_bg"
+        android:gravity="center"
+        android:text="@string/check_update"
+        android:textColor="@color/white"
+        android:visibility="visible" />
 
 </RelativeLayout>
