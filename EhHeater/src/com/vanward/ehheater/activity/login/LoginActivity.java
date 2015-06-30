@@ -41,6 +41,7 @@ import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.activity.user.FindPasswordActivity;
 import com.vanward.ehheater.activity.user.RegisterActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.dao.AccountDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
@@ -112,12 +113,14 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					}
 				}, timeoutSecond);
 				// XPGConnShortCuts.connect2big();
-				
+
 				new SharedPreferUtils(getBaseContext()).clear();
 				new HeaterInfoService(getBaseContext()).deleteAllHeaters();
-				
+
+				L.e(LoginActivity.this, "XPGConnectClient.xpgc4Login()前");
 				XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, et_user
 						.getText().toString(), et_pwd.getText().toString());
+				L.e(LoginActivity.this, "XPGConnectClient.xpgc4Login()后");
 				break;
 
 			case HANDLE_INSIDE_NETWORK:
@@ -129,10 +132,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				String userName = AccountService.getUserId(getBaseContext());
 				String psw = AccountService.getUserPsw(getBaseContext());
 
-//				L.e(LoginActivity.this, "userName : " + userName);
-//				L.e(LoginActivity.this, "psw : " + psw);
-//				L.e(LoginActivity.this, "loginUserName : " + loginUserName);
-//				L.e(LoginActivity.this, "loginPsw : " + loginPsw);
+				// L.e(LoginActivity.this, "userName : " + userName);
+				// L.e(LoginActivity.this, "psw : " + psw);
+				// L.e(LoginActivity.this, "loginUserName : " + loginUserName);
+				// L.e(LoginActivity.this, "loginPsw : " + loginPsw);
 
 				if (loginUserName.equals(userName) && loginPsw.equals(psw)) {
 					Set<String> tagSet = new LinkedHashSet<String>();
@@ -153,7 +156,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					case ELECTRIC_HEATER:
 						spu.put(ShareKey.PollingElectricHeaterDid, did);
 						spu.put(ShareKey.PollingElectricHeaterMac, mac);
-
+						L.e(this, "跳进了电热水器");
 						startActivity(new Intent(getBaseContext(),
 								MainActivity.class));
 						finish();
@@ -382,6 +385,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		L.e(this, "onResume()");
 
 		if ("".equals(et_user.getText().toString())) {
 			et_user.setText(AccountService.getUserId(this));
@@ -389,6 +393,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		// et_pwd.setText("111111");
 
 		XPGConnectClient.AddActivity(this);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		L.e(this, "onNewIntent()");
 	}
 
 	@Override
@@ -463,6 +473,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			SharedPreferUtils.saveUsername(this, et_user.getText().toString());
 			AccountService.setUser(getBaseContext(), et_user.getText()
 					.toString(), et_pwd.getText().toString());
+//			new AccountDao(getApplicationContext())
+//					.saveLoginAccountIntoDatabaseForInsideLogin(et_user
+//							.getText().toString().trim(), et_pwd.getText()
+//							.toString().trim());
 
 			// generated.SendBindingGetV2Req(tempConnId);
 			XPGConnectClient.xpgc4GetMyBindings(Consts.VANWARD_APP_ID, token,

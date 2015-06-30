@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
@@ -25,6 +26,7 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		L.e(this, "onCreate()");
 		setContentView(R.layout.activity_base);
 		initUI();
 		initListener();

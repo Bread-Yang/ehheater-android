@@ -268,7 +268,7 @@ public class ConnectActivity extends GeneratedActivity {
 					+ ("".equals(macFound)));
 
 			L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
-
+			
 			L.e(this, "mMac : " + mMac.toLowerCase());
 			L.e(this, "endpoint.getSzMac().toLowerCase() : "
 					+ endpoint.getSzMac().toLowerCase());
@@ -318,7 +318,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 	public void connectDirectlyAfterEasyLink() {
 		L.e(this, "connectDirectlyAfterEasyLink()");
-		
+
 		didRetrieved = new SharedPreferUtils(this).get(ShareKey.CurDeviceDid,
 				"");
 		String ip = new SharedPreferUtils(this).get(ShareKey.CurDeviceAddress,
@@ -326,11 +326,11 @@ public class ConnectActivity extends GeneratedActivity {
 
 		L.e(this, "didRetrieved : " + didRetrieved);
 		L.e(this, "ip : " + ip);
-		
+
 		connType = XPG_WAN_LAN.LAN.swigValue();
 
 		timeoutHandler.sendEmptyMessageDelayed(0, 10000);
-		
+
 		L.e(this, "XPGConnShortCuts.connect2small(ip)");
 		L.e(this, "要连接设备的IP : " + ip);
 		XPGConnShortCuts.connect2small(ip);
@@ -401,15 +401,15 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		
+
 		L.e(this, "onConnectEvent回调了");
 		L.e(this, "onConnectEvent@ConnectActivity" + connId + "-" + event);
-		
+
 		L.e(this, "是否小循环连接 : " + (connType == XPG_WAN_LAN.LAN.swigValue()));
 		L.e(this, "是否大循环连接 : " + (connType == XPG_WAN_LAN.MQTT.swigValue()));
 
 		L.e(this, "mPasscode : " + mPasscode);
-		
+
 		tempConnId = connId;
 
 		if (connType == XPG_WAN_LAN.LAN.swigValue()) {
@@ -435,24 +435,24 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void OnPasscodeResp(PasscodeResp_t pResp, int nConnId) {
 		super.OnPasscodeResp(pResp, nConnId);
-		
+
 		L.e(this, "OnPasscodeResp()回调了");
-		
+
 		L.e(this, "OnPasscodeResp()返回的nConnId : " + nConnId);
 
 		tempConnId = nConnId;
 
 		passcodeRetrieved = generated.XpgData2String(pResp.getPasscode());
-		
+
 		L.e(this, "passcodeRetrieved == null : " + (passcodeRetrieved == null));
 		L.e(this, "passcodeRetrieved 是否为空 : " + ("".equals(passcodeRetrieved)));
-		
+
 		L.e(this, "请求回来的passcode是 : passcodeRetrieved ==  " + passcodeRetrieved);
 
 		if (passcodeRetrieved == null || "".equals(passcodeRetrieved)) {
 			L.e(this, "请求回到的passcode为空");
 		}
-		
+
 		L.e(this, "XPGConnectClient.xpgcLogin()");
 		XPGConnectClient.xpgcLogin(tempConnId, null, passcodeRetrieved);
 
@@ -462,11 +462,11 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	public void OnLanLoginResp(LanLoginResp_t pResp, int nConnId) {
 		super.OnLanLoginResp(pResp, nConnId);
-		
+
 		L.e(this, "OnLanLoginResp@ConnectActivity: " + pResp.getResult());
-		
+
 		L.e(this, "OnLanLoginResp()返回的nConnId : " + nConnId);
-		
+
 		tempConnId = nConnId;
 
 		if (pResp.getResult() == 0) {
@@ -545,7 +545,7 @@ public class ConnectActivity extends GeneratedActivity {
 
 				passcodeRetrieved = ep.getSzPasscode();
 				didRetrieved = ep.getSzDid();
-				L.e(this, mMac + " isOnline? " + ep.getIsOnline());
+				L.e(this, mMac + " isOnline ? " + ep.getIsOnline());
 
 				if (ep.getIsOnline() == 1) {
 					// is online
@@ -579,12 +579,12 @@ public class ConnectActivity extends GeneratedActivity {
 
 		// 如果服务器上没有该设备，则再上传绑定关系
 		if (!isBinded) {
-//			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-//			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-//
-//			L.e(this, "HeaterInfoService.setBinding()");
-//			HeaterInfoService.setBinding(this, curHeater.getDid(),
-//					curHeater.getPasscode());
+			// HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			// HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+			//
+			// L.e(this, "HeaterInfoService.setBinding()");
+			// HeaterInfoService.setBinding(this, curHeater.getDid(),
+			// curHeater.getPasscode());
 			setOfflineResult();
 		} else {
 			// is offline
@@ -626,7 +626,7 @@ public class ConnectActivity extends GeneratedActivity {
 		if (!getIntent().getBooleanExtra(
 				EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK, false)) {
 			mMac = getIntent().getStringExtra(Consts.INTENT_EXTRA_MAC);
-			
+
 			L.e(this, "mMac == null : " + (mMac == null));
 			L.e(this, "mMac为空 : " + ("".equals(mMac)));
 
@@ -640,9 +640,9 @@ public class ConnectActivity extends GeneratedActivity {
 
 		mPasscode = passcodeRetrieved = getIntent().getStringExtra(
 				Consts.INTENT_EXTRA_PASSCODE);
-		
+
 		L.e(this, "mPasscode : " + mPasscode);
-		
+
 		String connectText = getIntent().getStringExtra(
 				Consts.INTENT_EXTRA_CONNECT_TEXT);
 	}
@@ -662,7 +662,7 @@ public class ConnectActivity extends GeneratedActivity {
 	 */
 	private void checkLoginAndCurrentDeviceStatus(Context context,
 			Handler flowHandler) {
-		
+
 		L.e(this, "checkLoginAndCurrentDeviceStatus()");
 
 		flowHandler.sendEmptyMessage(STATE_NORMAL);
@@ -686,7 +686,7 @@ public class ConnectActivity extends GeneratedActivity {
 			switch (msg.what) {
 
 			case STATE_NORMAL:
-				
+
 				L.e(this, "flowHandler 的 STATE_NORMAL Message");
 
 				DialogUtil.instance().dismissDialog();

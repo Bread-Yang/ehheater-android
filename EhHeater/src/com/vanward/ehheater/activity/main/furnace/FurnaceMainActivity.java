@@ -50,6 +50,8 @@ import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
 import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
+import com.xtremeprog.xpgconnect.generated.EasylinkResp_t;
+import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
 
 public class FurnaceMainActivity extends BaseBusinessActivity implements
@@ -322,7 +324,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 		L.e(this, "OnDERYStatusResp()返回的nConnId : " + nConnId);
 
-		Log.e(TAG, "DialogUtil.dismissDialog()调用了");
 		if (!isBinding) {
 			DialogUtil.dismissDialog();
 		}
@@ -682,6 +683,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	private void sendToMsgAfterThreeSeconds(final int value,
 			final boolean isBathMode) {
+		L.e(this, "sendToMsgAfterThreeSeconds");
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 			mCountDownTimer = null;
@@ -849,7 +851,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-
+		L.e(this, "onActivityResult()");
 		L.e(this, "requestCode : " + requestCode);
 
 		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
@@ -976,6 +978,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	private boolean stateQueried = false;
 
 	private void queryState() {
+		L.e(this, "queryState()");
 
 		// DialogUtil.instance().showQueryingDialog(this);
 		DialogUtil.instance().showLoadingDialog(this, "");
@@ -994,7 +997,29 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			}
 		}, connectTime);
 	}
-
+	
+	@Override
+	public void onAirLinkResp(XpgEndpoint endpoint) {
+		super.onAirLinkResp(endpoint);
+		L.e(this, "onAirLinkResp()");
+		
+		L.e(this, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
+		L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
+		L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
+		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
+	}
+	
+	@Override
+	public void onEasyLinkResp(XpgEndpoint endpoint) {
+		super.onEasyLinkResp(endpoint);
+		L.e(this, "onEasyLinkResp(XpgEndpoint endpoint)");
+		
+		L.e(this, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
+		L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
+		L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
+		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
+	}
+	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -1011,6 +1036,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		L.e(this, "onResume()");
 		ErrorUtils.isFurnaceMainActivityActive = true;
 		ErrorUtils.isMainActivityActive = false;
 		ErrorUtils.isGasMainActivityActive = false;
@@ -1128,7 +1154,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	protected void changeToOfflineUI() {
-
 		try {
 			statusResp = null;
 			tv_status.setText(R.string.offline);

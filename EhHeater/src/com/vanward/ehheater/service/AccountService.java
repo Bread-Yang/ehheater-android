@@ -43,5 +43,4 @@ public class AccountService {
 		spu.put(ShareKey.PendingUserId, pendingUid);
 		spu.put(ShareKey.PendingUserPsw, pendingPsw);
 	}
-
 }

@@ -1,5 +1,6 @@
 package com.vanward.ehheater.activity.main.furnace;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -228,12 +229,15 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 							|| "0".equals(joTemp.getString("amount"))) {
 						sb.append("\"\"");
 					} else {
-						int amount = Integer
-								.valueOf(joTemp.getString("amount")) / 10;
-						if (0 == amount) {
+						BigDecimal dividend = new BigDecimal(10);
+						BigDecimal amount = new BigDecimal(joTemp.getString("amount")).divide(dividend);
+//						int amount = Integer
+//								.valueOf(joTemp.getString("amount")) / 10;
+						L.e(this, "amount : " + amount);
+						if (amount.compareTo(new BigDecimal(0)) == 0) {
 							sb.append("\"\"");
 						} else {
-							sb.append(amount);
+							sb.append(amount.toString());
 						}
 					}
 					sb.append("},");

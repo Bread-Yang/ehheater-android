@@ -47,9 +47,9 @@ public class WelcomeActivity extends GeneratedActivity {
 
 	private final int HANDLE_OUTSIDE_NETWORK = 0;
 	private final int HANDLE_INSIDE_NETWORK = 1;
-	
+
 	boolean isPingTimeout = false;
-	
+
 	public static final String IS_LOGOUT_TO_WELCOME = "is_logout_to_welcome";
 
 	Handler mHandler = new Handler() {
@@ -79,6 +79,9 @@ public class WelcomeActivity extends GeneratedActivity {
 					// startActivity(new Intent(this,
 					// EasyLinkConfigureActivity.class));
 					// return STATE_JUMPED_OUT;
+					
+					L.e(this, "选择电热或者燃热,木有选择壁挂炉");
+					
 					HeaterInfoService hser = new HeaterInfoService(
 							WelcomeActivity.this);
 
@@ -138,7 +141,7 @@ public class WelcomeActivity extends GeneratedActivity {
 			setContentView(R.layout.activity_welcome);
 			mTvInfo = (TextView) findViewById(R.id.aw_tv);
 		}
-		
+
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -149,8 +152,8 @@ public class WelcomeActivity extends GeneratedActivity {
 		MobclickAgent.updateOnlineConfig(this);
 
 		// 每60秒请求一次
-		PollingUtils.startPollingService(this, 60, PollingService.class,
-				PollingService.ACTION);
+//		PollingUtils.startPollingService(this, 60, PollingService.class,
+//				PollingService.ACTION);
 	}
 
 	HeaterInfo curHeater;
@@ -195,9 +198,6 @@ public class WelcomeActivity extends GeneratedActivity {
 			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);
 			return;
 		} else { // 之前已登录
-			FinalHttp finalHttp = new FinalHttp();
-			finalHttp.configTimeout(5000);
-			
 			final CountDownTimer timer = new CountDownTimer(5000, 1000) {
 
 				@Override
@@ -210,39 +210,45 @@ public class WelcomeActivity extends GeneratedActivity {
 					isPingTimeout = true;
 					mHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK);
 				}
-			}.start();
+			};
 
-			
+			FinalHttp finalHttp = new FinalHttp();
+
 			finalHttp.get("http://www.baidu.com", new AjaxCallBack<String>() {
 				@Override
 				public void onSuccess(String t) {
 					super.onSuccess(t);
 					timer.cancel();
-					mHandler.sendEmptyMessage(HANDLE_OUTSIDE_NETWORK);
+					if (!isPingTimeout) {
+						mHandler.sendEmptyMessage(HANDLE_OUTSIDE_NETWORK);
+					}
 				}
-				
+
 				@Override
 				public void onFailure(Throwable t, int errorNo, String strMsg) {
 					super.onFailure(t, errorNo, strMsg);
+					timer.cancel();
 					if (!isPingTimeout) {
-						timer.cancel();
 						mHandler.sendEmptyMessage(HANDLE_INSIDE_NETWORK);
 						// flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);
 						// 现在改成了只能用外网登录
 					}
 				}
 			});
-//			new Thread(new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					if (PingUtil.ping(WelcomeActivity.this)) { // 可以上外网
-//						
-//					} else { // 只能用内网
-//						
-//					}
-//				}
-//			}).start();
+
+			timer.start();
+
+			// new Thread(new Runnable() {
+			//
+			// @Override
+			// public void run() {
+			// if (PingUtil.ping(WelcomeActivity.this)) { // 可以上外网
+			//
+			// } else { // 只能用内网
+			//
+			// }
+			// }
+			// }).start();
 		}
 	}
 
@@ -311,6 +317,8 @@ public class WelcomeActivity extends GeneratedActivity {
 				break;
 
 			case STATE_NORMAL:
+				L.e(this, "STATE_NORMAL()被选择");
+				
 				HeaterInfoService heaterService = new HeaterInfoService(
 						getBaseContext());
 				SharedPreferUtils spu = new SharedPreferUtils(
@@ -320,6 +328,7 @@ public class WelcomeActivity extends GeneratedActivity {
 				HeaterType type = heaterService.getCurHeaterType();
 				switch (type) {
 				case ELECTRIC_HEATER:
+					L.e(this, "跳进了电热水器");
 					spu.put(ShareKey.PollingElectricHeaterDid, did);
 					spu.put(ShareKey.PollingElectricHeaterMac, mac);
 
@@ -367,6 +376,7 @@ public class WelcomeActivity extends GeneratedActivity {
 		super.onResume();
 		MobclickAgent.onResume(this);
 		JPushInterface.onResume(this);
+		isPingTimeout = false;
 	}
 
 	@Override

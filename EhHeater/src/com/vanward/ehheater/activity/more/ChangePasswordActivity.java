@@ -9,6 +9,8 @@ import android.app.Dialog;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -21,6 +23,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.GizwitsErrorMsg;
@@ -61,6 +64,30 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 		et_password = (EditText) findViewById(R.id.password);
 		et_new_password = (EditText) findViewById(R.id.new_password);
 		et_new_password_confirm = (EditText) findViewById(R.id.new_password_confirm);
+		
+		findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+			}
+		});
+
+		findViewById(R.id.llt_root).setOnFocusChangeListener(
+				new OnFocusChangeListener() {
+
+					@Override
+					public void onFocusChange(View arg0, boolean hasFocus) {
+						if (hasFocus) {
+							((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+									.hideSoftInputFromWindow(
+											ChangePasswordActivity.this
+													.getCurrentFocus()
+													.getWindowToken(),
+											InputMethodManager.HIDE_NOT_ALWAYS);
+						}
+					}
+				});
 	}
 
 	private void setListener() {

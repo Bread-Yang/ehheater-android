@@ -103,7 +103,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 		JPushInterface.setTags(getApplicationContext(), tagSet, mAliasCallback);
 		
 		/*AccountService.setUser(this, null, null);*/
-		/*AccountService.setUser(this, AccountService.getUserId(getBaseContext()), null);*/
+		AccountService.setUser(this, AccountService.getUserId(getBaseContext()), null);
 
 		Intent intent = new Intent(getBaseContext(), WelcomeActivity.class);
 		intent.putExtra(WelcomeActivity.IS_LOGOUT_TO_WELCOME, true);

@@ -65,6 +65,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	private boolean paused = false;
 
 	protected boolean isActived = false;
+	
+	private boolean firstSendStateReq = true;
 
 	private Dialog dialog_exit;
 
@@ -140,15 +142,20 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		public void dispatchMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				if (!DialogUtil.instance().getIsShowing()) {
-					if (isActived) {
-						DialogUtil.instance().showLoadingDialog(
-								BaseBusinessActivity.this, "");
+				if (firstSendStateReq) {
+					if (!DialogUtil.instance().getIsShowing()) {
+						if (isActived) {
+							DialogUtil.instance().showLoadingDialog(
+									BaseBusinessActivity.this, "");
+						}
 					}
+					firstSendStateReq = false;
+					L.e(BaseBusinessActivity.this, "generated.SendStateReq(Global.connectId)调用了");
+					generated.SendStateReq(Global.connectId);
+					
+					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
+					reconnectHandler.removeMessages(0);
 				}
-				generated.SendStateReq(Global.connectId);
-				reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
-				reconnectHandler.removeMessages(0);
 				break;
 			case 1:
 				changeToOfflineUI();
@@ -179,6 +186,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	public void onTcpPacket(byte[] data, int connId) {
 		super.onTcpPacket(data, connId);
 		L.e(this, "onTcpPacket被调用了");
+		firstSendStateReq = true;
 		reconnectHandler.removeMessages(0);
 		reconnectHandler.removeMessages(1);
 		
@@ -206,7 +214,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		L.e(this, "onCreate");
+		L.e(this, "onCreate()");
 		super.onCreate(savedInstanceState);
 
 		shouldReconnect = false;

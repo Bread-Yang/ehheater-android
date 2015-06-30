@@ -87,30 +87,35 @@ public class AboutActivity extends Activity {
 			public void onClick(View arg0) {
 
 				try {
-					final int currentVersion = getPackageManager().getPackageInfo(
-							"com.vanward.ehheater", 0).versionCode;
+					final int currentVersion = getPackageManager()
+							.getPackageInfo("com.vanward.ehheater", 0).versionCode;
 
 					String requestURL = "checkVersion";
 
-//					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-					mHttpFriend.toUrl("http://enaiter.xtremeprog.com/EnaiterWeb/checkVersion?versionCode=1")
+//					mHttpFriend.toUrl("http://enaiter.xtremeprog.com/EnaiterWeb/checkVersion?versionCode=1")
+					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 							.executePost(null, new AjaxCallBack<String>() {
 								@Override
 								public void onSuccess(String jsonString) {
 									JSONObject json;
-									L.e(AboutActivity.this, "返回的json数据是 : " + jsonString);
+									L.e(AboutActivity.this, "返回的json数据是 : "
+											+ jsonString);
 									try {
 										json = new JSONObject(jsonString);
 										String responseCode = json
 												.getString("responseCode");
-										L.e(AboutActivity.this, "responseCode : " + responseCode);
+										L.e(AboutActivity.this,
+												"responseCode : "
+														+ responseCode);
 										if ("200".equals(responseCode)) {
 											JSONObject result = json
 													.getJSONObject("result");
-											
-											int lastestVersionCode = result.getInt("versionCode");
-											
-											downloadAPKUrl = result.getString("path");
+
+											int lastestVersionCode = result
+													.getInt("versionCode");
+
+											downloadAPKUrl = result
+													.getString("path");
 											if (lastestVersionCode > currentVersion) {
 												updateTipsDialog.show();
 											}
