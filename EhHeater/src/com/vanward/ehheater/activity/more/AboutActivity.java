@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
@@ -92,7 +93,7 @@ public class AboutActivity extends Activity {
 
 					String requestURL = "checkVersion";
 
-//					mHttpFriend.toUrl("http://enaiter.xtremeprog.com/EnaiterWeb/checkVersion?versionCode=1")
+					// mHttpFriend.toUrl("http://enaiter.xtremeprog.com/EnaiterWeb/checkVersion?versionCode=1")
 					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 							.executePost(null, new AjaxCallBack<String>() {
 								@Override

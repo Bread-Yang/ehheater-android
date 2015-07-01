@@ -16,6 +16,7 @@ public class HeaterInfo {
 
 	// @Id
 	String mac;
+	String uid;
 	String did;
 	String passcode;
 
@@ -29,7 +30,7 @@ public class HeaterInfo {
 
 	}
 
-	public HeaterInfo(XpgEndpoint endpoint) {
+	public HeaterInfo(String uid, XpgEndpoint endpoint) {
 
 		L.e(this, "返回的endpoint的mac是 " + endpoint.getSzMac().toLowerCase());
 		L.e(this, "返回的endpoint的did是 " + endpoint.getSzDid());
@@ -44,7 +45,7 @@ public class HeaterInfo {
 		setPort(endpoint.getPort());
 		setFwVersion(endpoint.getSzFwVer());
 		setProductKey(endpoint.getSzProductKey());
-
+		setUid(uid);
 	}
 
 	@Override
@@ -74,6 +75,14 @@ public class HeaterInfo {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public void setName(String name) {

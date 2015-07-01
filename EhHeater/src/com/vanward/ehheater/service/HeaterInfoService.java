@@ -1,5 +1,7 @@
 package com.vanward.ehheater.service;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +16,9 @@ import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 
 public class HeaterInfoService {
-	
+
 	private static final String TAG = "HeaterInfoService";
-	
+
 	Context context;
 
 	public HeaterInfoService(Context context) {
@@ -42,35 +44,35 @@ public class HeaterInfoService {
 	 * 
 	 * @param heater
 	 */
-	public void saveDownloadedHeater(HeaterInfo heater) {
+	public void saveDownloadedHeaterByUid(String uid, HeaterInfo heater) {
 		generateDefaultName(heater);
 		changeDuplicatedName(heater);
 		heater.setBinded(1);
-		
+
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
-		HeaterInfo old = hdao.getHeaterByMac(heater.getMac());  // 如果之前已经保存过,就不保存了
+		HeaterInfo old = hdao.getHeaterByUidAndMac(uid, heater.getMac()); // 如果之前已经保存过,就不保存了
 		if (old == null) {
 			hdao.save(heater);
 		}
 	}
 
-	public void updateDid(String mac, String did) {
+	public void updateDidByUid(String uid, String mac, String did) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
-		HeaterInfo he = hdao.getHeaterByMac(mac);
+		HeaterInfo he = hdao.getHeaterByUidAndMac(uid, mac);
 		he.setDid(did);
 		hdao.save(he);
 	}
 
-	public void updatePasscode(String mac, String passcode) {
+	public void updatePasscode(String uid, String mac, String passcode) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
-		HeaterInfo he = hdao.getHeaterByMac(mac);
+		HeaterInfo he = hdao.getHeaterByUidAndMac(uid, mac);
 		he.setPasscode(passcode);
 		hdao.save(he);
 	}
 
-	public void updateBinded(String mac, boolean isBinded) {
+	public void updateBindedByUid(String uid, String mac, boolean isBinded) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
-		HeaterInfo he = hdao.getHeaterByMac(mac);
+		HeaterInfo he = hdao.getHeaterByUidAndMac(uid, mac);
 		he.setBinded(isBinded ? 1 : 0);
 		hdao.save(he);
 	}
@@ -79,7 +81,18 @@ public class HeaterInfoService {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
 		String curSelectMac = new SharedPreferUtils(context).get(
 				ShareKey.CurDeviceMac, "");
-		return hdao.getHeaterByMac(curSelectMac);
+		HeaterInfo currentHeater = hdao.getHeaterByUidAndMac(
+				AccountService.getUserId(context), curSelectMac);
+		if (currentHeater == null) {
+			List<HeaterInfo> devices = hdao.getHeaterByUid(AccountService
+					.getUserId(context));
+			if (devices != null && devices.size() > 0) {
+				return devices.get(devices.size() - 1);
+			} else {
+				return null;
+			}
+		}
+		return currentHeater;
 	}
 
 	public void setCurrentSelectedHeater(String macAddress) {
@@ -90,25 +103,26 @@ public class HeaterInfoService {
 		return new SharedPreferUtils(context).get(ShareKey.CurDeviceMac, "");
 	}
 
-	public void deleteHeater(String mac) {
+	public void deleteHeaterByUid(String uid, String mac) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
-		HeaterInfo hi = hdao.getHeaterByMac(mac);
-		if(hi == null) {
+		HeaterInfo hi = hdao.getHeaterByUidAndMac(uid, mac);
+		if (hi == null) {
 			return;
 		}
 		hdao.getDb().deleteById(HeaterInfo.class, hi.getId());
 	}
 
-	public void deleteAllHeaters() {
+	public void deleteAllHeatersByUid(String uid) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
-		// hdao.getDb().deleteAll(HeaterInfo.class);
-		hdao.getDb().dropTable(HeaterInfo.class);
-		hdao.getDb().createTable(HeaterInfo.class);
+		// hdao.getDb().dropTable(HeaterInfo.class);
+		// hdao.getDb().createTable(HeaterInfo.class);
+		hdao.getDb().deleteByWhere(HeaterInfo.class, " uid = '" + uid + "'");
 	}
 
 	public enum HeaterType {
 
-		ELECTRIC_HEATER(Consts.ELECTRIC_HEATER_DEFAULT_NAME, Consts.ELECTRIC_HEATER_P_KEY), GAS_HEATER(
+		ELECTRIC_HEATER(Consts.ELECTRIC_HEATER_DEFAULT_NAME,
+				Consts.ELECTRIC_HEATER_P_KEY), GAS_HEATER(
 				Consts.GAS_HEATER_DEFAULT_NAME, Consts.GAS_HEATER_P_KEY), FURNACE(
 				Consts.FURNACE_DEFAULT_NAME, Consts.FURNACE_PRODUCT_KEY), Unknown(
 				Consts.HEATER_DEFAULT_NAME, "");
@@ -123,20 +137,19 @@ public class HeaterInfoService {
 	}
 
 	public HeaterType getHeaterType(HeaterInfo hinfo) {
-		
+
 		if (hinfo == null) {
 			L.e(this, "getHeaterType的hinfo为null");
 			return HeaterType.Unknown;
 		}
-//		L.e(this, hinfo.getProductKey());
+		// L.e(this, hinfo.getProductKey());
 		if (Consts.ELECTRIC_HEATER_P_KEY.equals(hinfo.getProductKey())) {
 			return HeaterType.ELECTRIC_HEATER;
 		} else if (Consts.GAS_HEATER_P_KEY.equals(hinfo.getProductKey())) {
 			return HeaterType.GAS_HEATER;
 		} else if (Consts.FURNACE_PRODUCT_KEY.equals(hinfo.getProductKey())) {
 			return HeaterType.FURNACE;
-		}
-		else {
+		} else {
 			return HeaterType.Unknown;
 		}
 
@@ -148,14 +161,14 @@ public class HeaterInfoService {
 
 	public void generateDefaultName(HeaterInfo hinfo) {
 		HeaterType type = getHeaterType(hinfo);
-		int count = new HeaterInfoDao(context).getHeaterCountOfType(type);
+		// int count = new HeaterInfoDao(context).getHeaterCountOfType(type);
 
-//		if (count == 0) {
+		// if (count == 0) {
 		hinfo.setName(type.defName);
-//		} 
-//		else {
-//			hinfo.setName(type.defName + " (" + (count + 1) + ")");
-//		}
+		// }
+		// else {
+		// hinfo.setName(type.defName + " (" + (count + 1) + ")");
+		// }
 
 	}
 
@@ -174,8 +187,8 @@ public class HeaterInfoService {
 		// return (just do nothing)
 
 		duplicates++;
-		boolean nameExists = new HeaterInfoDao(context).nameExists(hinfo
-				.getName());
+		boolean nameExists = new HeaterInfoDao(context)
+				.isDeviceNameExistsByUid(hinfo.getUid(), hinfo.getName());
 		if (nameExists) {
 			hinfo.setName(origName + " (" + duplicates + ")");
 			recurseChangeDuplicatedName(hinfo);
@@ -184,28 +197,32 @@ public class HeaterInfoService {
 
 	int duplicates;
 	String origName;
-	
-	
+
 	public static boolean shouldExecuteBinding(HeaterInfo hinfo) {
-		return hinfo.getBinded() == 0 && !TextUtils.isEmpty(hinfo.getPasscode()) && !TextUtils.isEmpty(hinfo.getDid());
+		return hinfo.getBinded() == 0
+				&& !TextUtils.isEmpty(hinfo.getPasscode())
+				&& !TextUtils.isEmpty(hinfo.getDid());
 	}
-	
+
 	public static void setBinding(Activity act, String did, String passcode) {
-		
+
 		Intent intent = new Intent();
 		intent.setClass(act.getBaseContext(), DummySendBindingReqActivity.class);
-		
-		intent.putExtra(Consts.INTENT_EXTRA_USERNAME, AccountService.getUserId(act.getBaseContext()));
-		intent.putExtra(Consts.INTENT_EXTRA_USERPSW, AccountService.getUserPsw(act.getBaseContext()));
+
+		intent.putExtra(Consts.INTENT_EXTRA_USERNAME,
+				AccountService.getUserId(act.getBaseContext()));
+		intent.putExtra(Consts.INTENT_EXTRA_USERPSW,
+				AccountService.getUserPsw(act.getBaseContext()));
 		intent.putExtra(Consts.INTENT_EXTRA_DID2BIND, did);
 		intent.putExtra(Consts.INTENT_EXTRA_PASSCODE2BIND, passcode);
-		
+
 		act.startActivityForResult(intent, Consts.REQUESTCODE_UPLOAD_BINDING);
-		
+
 	}
-	
+
 	/**
 	 * 设备是否有效, 即检查productkey是否为电热, 燃热, 壁挂炉等
+	 * 
 	 * @param hinfo
 	 * @return
 	 */

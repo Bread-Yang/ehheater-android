@@ -195,7 +195,7 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			}
 			if (isInputValid()) {
 				if (TextUtils.isEmpty(et_captcha.getText().toString())) {
-					Toast.makeText(getBaseContext(), "请输入验证码", 1000).show();
+					Toast.makeText(getBaseContext(), "请输入验证码！", 1000).show();
 					return;
 				}
 				DialogUtil.instance().showLoadingDialog(this, "正在验证，请稍后...");
@@ -253,13 +253,10 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 			params.put("uid", et_phone.getText().toString());
 			params.put("userName", et_nickname.getText().toString());
 
-			// JPushInterface.setAlias(getApplicationContext(),
-			// mEtPhone.getText().toString().trim(), mAliasCallback);
-
-			Set<String> tagSet = new LinkedHashSet<String>();
-			tagSet.add(et_phone.getText().toString().trim());
-			JPushInterface.setTags(getApplicationContext(), tagSet,
-					mAliasCallback);
+//			Set<String> tagSet = new LinkedHashSet<String>();
+//			tagSet.add(et_phone.getText().toString().trim());
+//			JPushInterface.setTags(getApplicationContext(), tagSet,
+//					mAliasCallback);
 
 			mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					params, new AjaxCallBack<String>() {
@@ -470,6 +467,5 @@ public class RegisterActivity extends EhHeaterBaseActivity {
 				}
 			}
 		};
-
 	};
 }

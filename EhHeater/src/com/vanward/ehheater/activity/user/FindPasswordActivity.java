@@ -1,5 +1,6 @@
 package com.vanward.ehheater.activity.user;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,6 +36,8 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 	private Button btn_acquire_captcha, btn_confirm;
 
 	private CheckBox cb_show_psw;
+	
+	private Dialog changePswSuccessdialog;
 	
 	private Handler timeoutHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -58,7 +62,14 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 		btn_acquire_captcha = (Button) findViewById(R.id.btn_acquire_captcha);
 		btn_confirm = (Button) findViewById(R.id.btn_confirm);
 		cb_show_psw = (CheckBox) findViewById(R.id.cb_show_psw);
+		
+		final Dialog dialog = new Dialog(this, R.style.custom_dialog);
+		dialog.setContentView(R.layout.dialog_find_passcode_success);
 
+		changePswSuccessdialog = dialog;
+		
+		changePswSuccessdialog.show();
+		
 		findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -142,8 +153,10 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 					}
 				}.start();
 
+				L.e(this, "XPGConnectClient.xpgc4GetMobileAuthCode()前");
 				XPGConnectClient.xpgc4GetMobileAuthCode(Consts.VANWARD_APP_ID,
 						et_phone.getText().toString());
+				L.e(this, "XPGConnectClient.xpgc4GetMobileAuthCode()后");
 
 				((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
 						.hideSoftInputFromWindow(FindPasswordActivity.this
@@ -164,7 +177,7 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 
 				if (isInputValid()) {
 					if (TextUtils.isEmpty(et_captcha.getText().toString())) {
-						Toast.makeText(getBaseContext(), "请输入验证码", 1000).show();
+						Toast.makeText(getBaseContext(), "请输入验证码！", 1000).show();
 						return;
 					}
 					DialogUtil.instance().showLoadingDialog(
@@ -242,11 +255,26 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 		
 		DialogUtil.dismissDialog();
 		if (errorCode == 0) {
-			Toast.makeText(getBaseContext(), "修改密码成功", 3000).show();
 			Intent intent = new Intent();
 			intent.putExtra("account", et_phone.getText().toString());
 			setResult(RESULT_OK, intent);
-			finish();
+			changePswSuccessdialog.show();
+			
+			new CountDownTimer(4000, 1000) {
+
+				@Override
+				public void onTick(long millisUntilFinished) {
+					((TextView) changePswSuccessdialog
+							.findViewById(R.id.tv_countdown_time))
+							.setText(millisUntilFinished / 1000 + "");
+				}
+
+				@Override
+				public void onFinish() {
+					changePswSuccessdialog.dismiss();
+					finish();
+				}
+			}.start();
 		} else {
 			Toast.makeText(getBaseContext(),
 					GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), 3000)

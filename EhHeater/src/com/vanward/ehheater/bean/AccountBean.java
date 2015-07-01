@@ -8,6 +8,7 @@ public class AccountBean {
 	int id;
 	String userName;
 	String passcode;
+	String nickName;
 	
 	public AccountBean() {
 		
@@ -44,5 +45,13 @@ public class AccountBean {
 	}
 	public void setPasscode(String passcode) {
 		this.passcode = passcode;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 }

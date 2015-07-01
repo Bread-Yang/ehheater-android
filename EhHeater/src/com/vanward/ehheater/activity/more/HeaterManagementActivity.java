@@ -113,7 +113,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 						});
 
 		adapter = new HeaterAdapter(
-				new HeaterInfoDao(getBaseContext()).getAll());
+				new HeaterInfoDao(getBaseContext()).getAllByUid(AccountService
+						.getUserId(getApplicationContext())));
 		lv_listview.setAdapter(adapter);
 		shouldAlter = false;
 	}
@@ -153,7 +154,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 		if (hinfo == null) {
 			// 删光了
-			
+
 			L.e(this, "onBackPressed()删光了");
 
 			Intent intent = new Intent(getBaseContext(),
@@ -170,7 +171,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 		} else {
 
 			super.onBackPressed();
-			
+
 			L.e(this, "onBackPressed()的时候跳转");
 
 			if (shouldAlter) {
@@ -285,8 +286,9 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 	private void deleteHeater() {
 		if (TextUtils.isEmpty(didOfHeaterBeingDeleted)) {
 			// local delete
-			new HeaterInfoService(getBaseContext())
-					.deleteHeater(macOfHeaterBeingDeleted);
+			new HeaterInfoService(getBaseContext()).deleteHeaterByUid(
+					AccountService.getUserId(getApplicationContext()),
+					macOfHeaterBeingDeleted);
 			deleted();
 		} else {
 			// server delete
@@ -407,15 +409,16 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			DialogUtil.dismissDialog();
 
 			HttpFriend httpFriend = HttpFriend.create(this);
-			
+
 			httpFriend.showDialog = false;
 
 			String requestURL = "userinfo/saveAlias?did="
 					+ macOfHeaterBeingDeleted + "&uid="
-							+ AccountService.getUserId(getBaseContext())+ "&isLogout=true";
-			
+					+ AccountService.getUserId(getBaseContext())
+					+ "&isLogout=true";
+
 			L.e(this, "requestURL : " + requestURL);
-			
+
 			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
 					null, new AjaxCallBack<String>() {
 						public void onSuccess(String jsonString) {
@@ -425,9 +428,11 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 								String responseCode = json
 										.getString("responseCode");
 								if ("200".equals(responseCode)) {
-									L.e(HeaterManagementActivity.this, "删除已经上传到到志聪的JPush服务器的设备成功");
+									L.e(HeaterManagementActivity.this,
+											"删除已经上传到到志聪的JPush服务器的设备成功");
 								} else if ("402".equals(responseCode)) {
-									L.e(HeaterManagementActivity.this, "删除已经上传到到志聪的JPush服务器的设备失败");
+									L.e(HeaterManagementActivity.this,
+											"删除已经上传到到志聪的JPush服务器的设备失败");
 								}
 							} catch (JSONException e) {
 								e.printStackTrace();
@@ -436,8 +441,9 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 					});
 
-			new HeaterInfoService(getBaseContext())
-					.deleteHeater(macOfHeaterBeingDeleted);
+			new HeaterInfoService(getBaseContext()).deleteHeaterByUid(
+					AccountService.getUserId(getApplicationContext()),
+					macOfHeaterBeingDeleted);
 			deleted();
 		}
 		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
@@ -451,8 +457,9 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 		DialogUtil.dismissDialog();
 
 		// if (pResp.getResult() == 0) {
-		new HeaterInfoService(getBaseContext())
-				.deleteHeater(macOfHeaterBeingDeleted);
+		new HeaterInfoService(getBaseContext()).deleteHeaterByUid(
+				AccountService.getUserId(getApplicationContext()),
+				macOfHeaterBeingDeleted);
 		deleted();
 		// } else {
 		// Toast.makeText(getBaseContext(), R.string.failure,
@@ -470,7 +477,9 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 		if (getCurDeviceMac(getBaseContext()).equals(macOfHeaterBeingDeleted)) {
 			// 删除的设备是当前选定的设备, 此时有2种可能, 1 删光了, 2 未删光 需切换至别的设备
 
-			List<HeaterInfo> all = new HeaterInfoDao(getBaseContext()).getAll();
+			List<HeaterInfo> all = new HeaterInfoDao(getBaseContext())
+					.getAllByUid(AccountService
+							.getUserId(getApplicationContext()));
 			if (all == null || all.size() == 0) {
 				// 删光了
 				hser.setCurrentSelectedHeater("");
@@ -497,14 +506,15 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			}
 		}
 
-		adapter.setList(new HeaterInfoDao(getBaseContext()).getAll());
+		adapter.setList(new HeaterInfoDao(getBaseContext())
+				.getAllByUid(AccountService.getUserId(getApplicationContext())));
 		adapter.notifyDataSetChanged();
 
 		Intent heaterNameIntent = new Intent(
 				Consts.INTENT_FILTER_HEATER_NAME_CHANGED);
 		LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
 				heaterNameIntent);
-		
+
 		L.e(this, "sendBroadcast(heaterNameIntent");
 
 		// HeaterInfoService hser = new HeaterInfoService(getBaseContext());

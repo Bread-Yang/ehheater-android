@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Dialog;
+import android.os.CountDownTimer;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,7 +47,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 	private EditText et_password, et_new_password, et_new_password_confirm;
 
 	private Dialog changePswSuccessdialog;
-	
+
 	private boolean isFailure;
 
 	@Override
@@ -64,7 +65,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 		et_password = (EditText) findViewById(R.id.password);
 		et_new_password = (EditText) findViewById(R.id.new_password);
 		et_new_password_confirm = (EditText) findViewById(R.id.new_password_confirm);
-		
+
 		findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -241,7 +242,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 		// XPGConnectClient.xpgcLogin2Wan(
 		// AccountService.getUserId(getBaseContext()),
 		// AccountService.getUserPsw(getBaseContext()), "", "");
-//		XPGConnShortCuts.connect2big();
+		// XPGConnShortCuts.connect2big();
 
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
 			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
@@ -255,17 +256,17 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 					et_new_password.getText().toString());
 		}
 
-	}  
+	}
 
 	@Override
 	public void onV4Login(int errorCode, String uid, String token,
 			String expire_at) {
 		L.e(this, "onV4Login()");
 		L.e(this, "errorCode : " + errorCode);
-		if (errorCode == 0) { 
+		if (errorCode == 0) {
 			Global.uid = uid;
 			Global.token = token;
-			
+
 			L.e(this, "uid : " + Global.uid);
 			L.e(this, "token : " + Global.token);
 			L.e(this, "app_id : " + Consts.VANWARD_APP_ID);
@@ -311,7 +312,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 				.String2XpgData(AccountService.getUserId(getBaseContext())),
 				generated.String2XpgData(newPsw));
 	}
-	
+
 	@Override
 	public void onV4ChangeUserPwd(int errorCode, String updatedAt) {
 		super.onV4ChangeUserPwd(errorCode, updatedAt);
@@ -328,7 +329,7 @@ public class ChangePasswordActivity extends EhHeaterBaseActivity {
 					.show();
 		}
 	}
-	
+
 	@Override
 	public void OnUserPwdChangeResp(UserPwdChangeResp_t pResp, int nConnId) {
 		super.OnUserPwdChangeResp(pResp, nConnId);

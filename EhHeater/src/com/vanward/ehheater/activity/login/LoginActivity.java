@@ -50,8 +50,7 @@ import com.vanward.ehheater.util.GizwitsErrorMsg;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
-import com.vanward.ehheater.util.PingUtil;
-import com.vanward.ehheater.util.PingWebsiteUtil;
+
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -114,9 +113,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				}, timeoutSecond);
 				// XPGConnShortCuts.connect2big();
 
-				new SharedPreferUtils(getBaseContext()).clear();
-				new HeaterInfoService(getBaseContext()).deleteAllHeaters();
-
 				L.e(LoginActivity.this, "XPGConnectClient.xpgc4Login()前");
 				XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID, et_user
 						.getText().toString(), et_pwd.getText().toString());
@@ -129,17 +125,23 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				String loginUserName = et_user.getText().toString().trim();
 				String loginPsw = et_pwd.getText().toString().trim();
 
-				String userName = AccountService.getUserId(getBaseContext());
-				String psw = AccountService.getUserPsw(getBaseContext());
+				// String userName = AccountService.getUserId(getBaseContext());
+				// String psw = AccountService.getUserPsw(getBaseContext());
 
-				// L.e(LoginActivity.this, "userName : " + userName);
-				// L.e(LoginActivity.this, "psw : " + psw);
-				// L.e(LoginActivity.this, "loginUserName : " + loginUserName);
-				// L.e(LoginActivity.this, "loginPsw : " + loginPsw);
+				if (new AccountDao(getApplicationContext())
+						.isAccountHasLogined(loginUserName, loginPsw)) {
 
-				if (loginUserName.equals(userName) && loginPsw.equals(psw)) {
+					new SharedPreferUtils(getBaseContext()).put(
+							ShareKey.UserNickname, new AccountDao(
+									getApplicationContext())
+									.getNicknameByUid(loginUserName));
+					SharedPreferUtils.saveUsername(getApplicationContext(),
+							loginUserName);
+					AccountService.setUser(getBaseContext(), loginUserName,
+							loginPsw);
+
 					Set<String> tagSet = new LinkedHashSet<String>();
-					tagSet.add(et_user.getText().toString().trim());
+					tagSet.add(loginUserName);
 					JPushInterface.setTags(getApplicationContext(), tagSet,
 							mAliasCallback);
 
@@ -147,42 +149,50 @@ public class LoginActivity extends EhHeaterBaseActivity {
 							getBaseContext());
 					SharedPreferUtils spu = new SharedPreferUtils(
 							LoginActivity.this);
-					String did = heaterService.getCurrentSelectedHeater()
-							.getDid();
-					String mac = heaterService.getCurrentSelectedHeater()
-							.getMac();
-					HeaterType type = heaterService.getCurHeaterType();
-					switch (type) {
-					case ELECTRIC_HEATER:
-						spu.put(ShareKey.PollingElectricHeaterDid, did);
-						spu.put(ShareKey.PollingElectricHeaterMac, mac);
-						L.e(this, "跳进了电热水器");
-						startActivity(new Intent(getBaseContext(),
-								MainActivity.class));
-						finish();
-						break;
-					case GAS_HEATER:
-						spu.put(ShareKey.PollingGasHeaterDid, did);
-						spu.put(ShareKey.PollingGasHeaterMac, mac);
 
-						startActivity(new Intent(getBaseContext(),
-								GasMainActivity.class));
-						finish();
-						break;
-					case FURNACE:
-						spu.put(ShareKey.PollingFurnaceDid, did);
-						spu.put(ShareKey.PollingFurnaceMac, mac);
+					HeaterInfo currentHeater = heaterService
+							.getCurrentSelectedHeater();
 
+					if (currentHeater != null) {
+						String did = currentHeater.getDid();
+						String mac = currentHeater.getMac();
+						HeaterType type = heaterService.getCurHeaterType();
+						switch (type) {
+						case ELECTRIC_HEATER:
+							spu.put(ShareKey.PollingElectricHeaterDid, did);
+							spu.put(ShareKey.PollingElectricHeaterMac, mac);
+							L.e(this, "跳进了电热水器");
+							startActivity(new Intent(getBaseContext(),
+									MainActivity.class));
+							finish();
+							break;
+						case GAS_HEATER:
+							spu.put(ShareKey.PollingGasHeaterDid, did);
+							spu.put(ShareKey.PollingGasHeaterMac, mac);
+
+							startActivity(new Intent(getBaseContext(),
+									GasMainActivity.class));
+							finish();
+							break;
+						case FURNACE:
+							spu.put(ShareKey.PollingFurnaceDid, did);
+							spu.put(ShareKey.PollingFurnaceMac, mac);
+
+							startActivity(new Intent(getBaseContext(),
+									FurnaceMainActivity.class));
+							finish();
+							break;
+						}
+					} else {
 						startActivity(new Intent(getBaseContext(),
-								FurnaceMainActivity.class));
-						finish();
-						break;
+								SelectDeviceActivity.class));
 					}
 				} else {
 					DialogUtil.dismissDialog();
 					Toast.makeText(LoginActivity.this, "通过内网登录的账号和密码错误",
 							Toast.LENGTH_LONG).show();
 				}
+
 				break;
 			}
 		};
@@ -190,6 +200,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 	@Override
 	public void onBackPressed() {
+		// super.onBackPressed();
 		android.os.Process.killProcess(android.os.Process.myPid());
 	}
 
@@ -262,7 +273,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			et_pwd.setText(psw);
 
 			new SharedPreferUtils(getBaseContext()).clear();
-			new HeaterInfoService(getBaseContext()).deleteAllHeaters();
+			new HeaterInfoService(getBaseContext())
+					.deleteAllHeatersByUid(AccountService
+							.getUserId(getApplicationContext()));
 
 			L.e(this, "userName : " + userName);
 			L.e(this, "psw : " + psw);
@@ -424,18 +437,31 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				mLoginTimeoutTimer.cancel();
 			}
 
-			L.e(this, "et_user.getText().toString().trim() : "
-					+ et_user.getText().toString().trim());
 			// JPushInterface.setAlias(getApplicationContext(),
 			// et_user.getText().toString().trim(), mAliasCallback);
 
+			final String loginUid = et_user.getText().toString().trim();
+			String loginPsw = et_pwd.getText().toString().trim();
+
 			Set<String> tagSet = new LinkedHashSet<String>();
-			tagSet.add(et_user.getText().toString().trim());
+			tagSet.add(loginUid);
 			JPushInterface.setTags(getApplicationContext(), tagSet,
 					mAliasCallback);
 
+			// 0和1都是登录成功
+			new SharedPreferUtils(getBaseContext()).clear();
+			SharedPreferUtils.saveUsername(this, loginUid);
+			AccountService.setUser(getBaseContext(), loginUid, loginPsw);
+			new AccountDao(getApplicationContext())
+					.saveLoginAccountIntoDatabaseForInsideLogin(loginUid,
+							loginPsw);
+
+			new HeaterInfoService(getBaseContext())
+					.deleteAllHeatersByUid(AccountService
+							.getUserId(getApplicationContext()));
+
 			// 获取昵称
-			HttpFriend httpFriend = HttpFriend.create(this);
+			HttpFriend httpFriend = HttpFriend.create(getApplicationContext());
 			httpFriend.showTips = false;
 
 			String requestURL = "userinfo/getUsageInformation?uid="
@@ -458,6 +484,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 									new SharedPreferUtils(getBaseContext())
 											.put(ShareKey.UserNickname,
 													nickName);
+									new AccountDao(getApplicationContext())
+											.saveNicknameByUid(loginUid,
+													nickName);
 								} else if ("402".equals(responseCode)) {
 									new SharedPreferUtils(getBaseContext())
 											.put(ShareKey.UserNickname, "");
@@ -468,15 +497,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 						};
 
 					});
-
-			// 0和1都是登录成功
-			SharedPreferUtils.saveUsername(this, et_user.getText().toString());
-			AccountService.setUser(getBaseContext(), et_user.getText()
-					.toString(), et_pwd.getText().toString());
-//			new AccountDao(getApplicationContext())
-//					.saveLoginAccountIntoDatabaseForInsideLogin(et_user
-//							.getText().toString().trim(), et_pwd.getText()
-//							.toString().trim());
 
 			// generated.SendBindingGetV2Req(tempConnId);
 			XPGConnectClient.xpgc4GetMyBindings(Consts.VANWARD_APP_ID, token,
@@ -531,7 +551,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		if (result == 0 || result == 1) {
 			// 获取昵称
-			HttpFriend httpFriend = HttpFriend.create(this);
+			HttpFriend httpFriend = HttpFriend.create(getApplicationContext());
 			httpFriend.showTips = false;
 
 			String requestURL = "userinfo/getUsageInformation?uid="
@@ -620,7 +640,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-		HeaterInfo hi = new HeaterInfo(endpoint);
+		HeaterInfo hi = new HeaterInfo(
+				AccountService.getUserId(getApplicationContext()), endpoint);
 		L.e(this, "返回的设备信息: " + hi);
 
 		if (!(hser.isValidDevice(hi))) {
@@ -678,9 +699,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		}
 
-		hser.saveDownloadedHeater(hi);
+		hser.saveDownloadedHeaterByUid(
+				AccountService.getUserId(getApplicationContext()), hi);
 
-		HttpFriend httpFriend = HttpFriend.create(this);
+		HttpFriend httpFriend = HttpFriend.create(getApplicationContext());
 		httpFriend.showTips = false;
 
 		String requestURL = "userinfo/saveAlias?did=" + endpoint.getSzDid()
@@ -734,7 +756,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-		HeaterInfo hi = new HeaterInfo(endpoint);
+		HeaterInfo hi = new HeaterInfo(
+				AccountService.getUserId(getApplicationContext()), endpoint);
 		L.e(this, "onDeviceFound:HeaterInfo Downloaded: " + hi);
 
 		if (!(hser.isValidDevice(hi))) {
@@ -789,7 +812,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 		}
 
-		hser.saveDownloadedHeater(hi);
+		hser.saveDownloadedHeaterByUid(
+				AccountService.getUserId(getApplicationContext()), hi);
 		if (preSelectedDeviceMac.equals(hi.getMac())) {
 			spu.put(ShareKey.CurDeviceMac, hi.getMac());
 		}

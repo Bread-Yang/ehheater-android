@@ -31,6 +31,7 @@
     <string name="silence_remind">静默提醒</string>
     <string name="history">历史记录</string>
     <string name="account_management">账号管理</string>
+    <string name="reset_success">重置成功！</string>
     <string name="change_password">修改密码</string>
     <string name="edit_device_name">修改名称</string>
     <string name="change_bind_phone">修改绑定手机号码</string>

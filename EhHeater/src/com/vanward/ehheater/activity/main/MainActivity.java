@@ -110,7 +110,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	private boolean canupdateView = false;
 
 	private int currentTemp;
-	
+
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -252,12 +252,13 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			isBinding = false;
 
 			if (resultCode == RESULT_OK) {
 				// binded
-				new HeaterInfoService(getBaseContext()).updateBinded(
+				new HeaterInfoService(getBaseContext()).updateBindedByUid(
+						AccountService.getUserId(getApplicationContext()),
 						curHeater.getMac(), true);
 			}
 

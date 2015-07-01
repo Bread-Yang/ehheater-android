@@ -5,21 +5,27 @@ import java.util.List;
 
 import android.content.Context;
 
+import com.vanward.ehheater.bean.AccountBean;
 import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.L;
 
 public class HeaterInfoDao extends BaseDao {
 
-    private static final String TAG = "HeaterInfoDao";
+	private static final String TAG = "HeaterInfoDao";
 
 	public HeaterInfoDao(Context context) {
 		super(context);
 	}
 
-	public HeaterInfo getHeaterByMac(String mac) {
+	public List<HeaterInfo> getHeaterByUid(String uid) {
+		return getDb().findAllByWhere(HeaterInfo.class, " uid = '" + uid + "'");
+	}
+
+	public HeaterInfo getHeaterByUidAndMac(String uid, String mac) {
 		List<HeaterInfo> result = getDb().findAllByWhere(HeaterInfo.class,
-				" mac = '" + mac + "'");
+				" mac = '" + mac + "' and uid = '" + uid + "'");
 
 		if (result != null && result.size() > 0) {
 			return result.get(0);
@@ -27,10 +33,10 @@ public class HeaterInfoDao extends BaseDao {
 			return null;
 		}
 	}
-	
-	public HeaterInfo getHeaterByDid(String did) {
+
+	public HeaterInfo getHeaterByUidAndDid(String uid, String did) {
 		List<HeaterInfo> result = getDb().findAllByWhere(HeaterInfo.class,
-				" did = '" + did + "'");
+				" did = '" + did + "' and uid = '" + uid + "'");
 
 		if (result != null && result.size() > 0) {
 			return result.get(0);
@@ -43,7 +49,8 @@ public class HeaterInfoDao extends BaseDao {
 		L.e(this, "saving heater(allow empty passcode): " + heater);
 		// getDb().replace(heater);
 
-		HeaterInfo old = getHeaterByMac(heater.getMac());
+		HeaterInfo old = getHeaterByUidAndMac(
+				AccountService.getUserId(context), heater.getMac());
 		if (old == null) {
 			getDb().save(heater);
 		} else {
@@ -52,18 +59,22 @@ public class HeaterInfoDao extends BaseDao {
 		}
 	}
 
-	public List<HeaterInfo> getAll() {
-		return getDb().findAll(HeaterInfo.class);
+	public List<HeaterInfo> getAllByUid(String uid) {
+		return getDb().findAllByWhere(HeaterInfo.class,
+				" uid = '" + uid + "' and uid = '" + uid + "'");
 	}
 
-	public int getHeaterCountOfType(HeaterType type) {
+	public int getHeaterCountOfTypeByUid(String uid, HeaterType type) {
 		List<HeaterInfo> ret;
 
 		if (type == HeaterType.Unknown) {
-			return getUnknownHeaterCount();
+			return getUnknownHeaterCountByUid(uid);
 		} else {
-			ret = getDb().findAllByWhere(HeaterInfo.class,
-					" productKey = '" + type.pkey + "'");
+			ret = getDb()
+					.findAllByWhere(
+							HeaterInfo.class,
+							" productKey = '" + type.pkey + "' and uid = '"
+									+ uid + "'");
 		}
 
 		if (ret == null) {
@@ -73,19 +84,22 @@ public class HeaterInfoDao extends BaseDao {
 		}
 	}
 
-	public List<HeaterInfo> getAllDeviceOfType(HeaterType type) {
+	public List<HeaterInfo> getAllDeviceOfType(String uid, HeaterType type) {
 		List<HeaterInfo> deviceList;
 		if (type == HeaterType.Unknown) {
 			return null;
 		} else {
-			deviceList = getDb().findAllByWhere(HeaterInfo.class,
-					" productKey = '" + type.pkey + "'");
+			deviceList = getDb()
+					.findAllByWhere(
+							HeaterInfo.class,
+							" productKey = '" + type.pkey + "' and uid = '"
+									+ uid + "'");
 			return deviceList;
 		}
 	}
 
-	private int getUnknownHeaterCount() {
-		List<HeaterInfo> allHeaters = getAll();
+	private int getUnknownHeaterCountByUid(String uid) {
+		List<HeaterInfo> allHeaters = getAllByUid(uid);
 		int totalCount = 0;
 		if (allHeaters != null) {
 			totalCount = allHeaters.size();
@@ -97,22 +111,23 @@ public class HeaterInfoDao extends BaseDao {
 		int totalKnown = 0;
 		for (HeaterType type : allTypes) {
 			if (type != HeaterType.Unknown) {
-				totalKnown += getHeaterCountOfType(type);
+				totalKnown += getHeaterCountOfTypeByUid(uid, type);
 			}
 		}
 
 		return totalCount - totalKnown;
 	}
 
-	public boolean nameExists(String name) {
+	public boolean isDeviceNameExistsByUid(String uid, String deviceName) {
 		boolean ret = false;
 
-		List<HeaterInfo> all = getAll();
-		if (all == null) {
+		List<HeaterInfo> devices = getDb().findAllByWhere(HeaterInfo.class,
+				" uid = '" + uid + "'");
+		if (devices == null) {
 			return false;
 		} else {
-			for (HeaterInfo hinfo : all) {
-				if (name.equals(hinfo.getName())) {
+			for (HeaterInfo hinfo : devices) {
+				if (deviceName.equals(hinfo.getName())) {
 					return true;
 				}
 			}

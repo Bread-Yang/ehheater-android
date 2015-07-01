@@ -42,11 +42,31 @@ public class AccountDao extends BaseDao {
 	
 	public boolean isAccountHasLogined(String uid, String passcode) {
 		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
-				"uid = '" + uid + "' and passcode = '" + passcode + "'");
+				"userName = '" + uid + "' and passcode = '" + passcode + "'");
 		if (result != null && result.size() > 0) {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	public void saveNicknameByUid(String uid, String nickName) {
+		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
+				"userName = '" + uid + "'");
+		if (result != null && result.size() > 0) {
+			AccountBean bean = result.get(0);
+			bean.setNickName(nickName);
+			getDb().update(bean);
+		}
+	}
+	
+	public String getNicknameByUid(String uid) {
+		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
+				"userName = '" + uid + "'");
+		if (result != null && result.size() > 0) {
+			return result.get(0).getNickName();
+		} else {
+			return null;
 		}
 	}
 }

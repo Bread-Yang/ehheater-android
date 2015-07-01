@@ -533,7 +533,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 
 	private void finishingConfig(XpgEndpoint endpoint) {
 
-		HeaterInfo hinfo = new HeaterInfo(endpoint);
+		HeaterInfo hinfo = new HeaterInfo(AccountService.getUserId(getApplicationContext()), endpoint);
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 
 		if (!hser.isValidDevice(hinfo)) {
@@ -551,7 +551,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		Toast.makeText(getBaseContext(), "配置成功!", 1000).show();
 
 		HeaterInfoDao hdao = new HeaterInfoDao(this);
-		List<HeaterInfo> list = hdao.getAll();
+		List<HeaterInfo> list = hdao.getAllByUid(AccountService.getUserId(getApplicationContext()));
 
 		boolean flag = false;
 

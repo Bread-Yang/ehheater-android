@@ -32,6 +32,7 @@ import com.vanward.ehheater.activity.more.HelpActivity;
 import com.vanward.ehheater.activity.more.RemindSettingActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.vanward.ehheater.util.AlterDeviceHelper;
@@ -43,7 +44,7 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 
 public class LeftFragment extends LinearLayout implements
 		android.view.View.OnClickListener, OnItemClickListener {
-	
+
 	private static final String TAG = "LeftFragment";
 
 	private Button btn_user_manager, btn_device_manager, btn_tip, btn_help,
@@ -86,7 +87,8 @@ public class LeftFragment extends LinearLayout implements
 
 		DeviceAdapter deviceAdapter = new DeviceAdapter(getContext(),
 				R.layout.main_left_device_item,
-				new HeaterInfoDao(getContext()).getAll());
+				new HeaterInfoDao(getContext()).getAllByUid(AccountService
+						.getUserId(getContext())));
 		((ListView) findViewById(R.id.device_listview))
 				.setAdapter(deviceAdapter);
 		((ListView) findViewById(R.id.device_listview))
@@ -185,7 +187,8 @@ public class LeftFragment extends LinearLayout implements
 				holder1.devicename.setTextColor(0xFFF76F21);
 			} else {
 				holder1.checkImage.setVisibility(View.GONE);
-				holder1.devicename.setTextColor(R.color.black);
+				holder1.devicename.setTextColor(getResources().getColor(
+						R.color.black));
 			}
 			holder1.i = position;
 			return convertView;
@@ -233,21 +236,21 @@ public class LeftFragment extends LinearLayout implements
 			if (newHeaterType == HeaterType.ELECTRIC_HEATER) {
 				spu.put(ShareKey.PollingElectricHeaterDid, heaterInfo.getDid());
 				spu.put(ShareKey.PollingElectricHeaterMac, heaterInfo.getMac());
-				
+
 				L.e(this, "切换电热的did : " + heaterInfo.getDid());
 				L.e(this, "切换电热的mac : " + heaterInfo.getMac());
 				L.e(this, "切换电热的passcode : " + heaterInfo.getPasscode());
 			} else if (newHeaterType == HeaterType.GAS_HEATER) {
 				spu.put(ShareKey.PollingGasHeaterDid, heaterInfo.getDid());
 				spu.put(ShareKey.PollingGasHeaterMac, heaterInfo.getMac());
-				
+
 				L.e(this, "切换燃热的did : " + heaterInfo.getDid());
 				L.e(this, "切换燃热的mac : " + heaterInfo.getMac());
 				L.e(this, "切换燃热的passcode : " + heaterInfo.getPasscode());
 			} else if (newHeaterType == HeaterType.FURNACE) {
 				spu.put(ShareKey.PollingFurnaceDid, heaterInfo.getDid());
 				spu.put(ShareKey.PollingFurnaceMac, heaterInfo.getMac());
-				
+
 				L.e(this, "切换壁挂炉的did : " + heaterInfo.getDid());
 				L.e(this, "切换壁挂炉的mac : " + heaterInfo.getMac());
 				L.e(this, "切换壁挂炉的passcode : " + heaterInfo.getPasscode());

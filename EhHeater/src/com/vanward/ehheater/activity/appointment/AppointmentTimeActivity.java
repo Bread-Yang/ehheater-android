@@ -255,7 +255,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 				L.e(this, "day : " + day);
 				L.e(this, "hour : " + currentHour);
 				L.e(this, "minute : " + currentMinute);
-				L.e(this, "second : " + second );
+				L.e(this, "second : " + second);
 				L.e(this, "timestamp: " + c.getTimeInMillis());
 
 				c.set(year, month, day, setHour, setMinute, 0);
@@ -322,7 +322,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 
 				AjaxParams params = new AjaxParams();
 				params.put("data", json);
-				L.e(this, "isOverride : " +  isOverride);
+				L.e(this, "isOverride : " + isOverride);
 				if (isOverride) {
 					params.put("ignoreConflict", "true");
 				}
@@ -352,9 +352,10 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 										String requestURL = "userinfo/checkAppointmentStatue?uid="
 												+ AccountService
 														.getUserId(getBaseContext());
-										
-										L.e(this, "查看是否需要增加功率的URL : " + Consts.REQUEST_BASE_URL
-														+ requestURL);
+
+										L.e(this, "查看是否需要增加功率的URL : "
+												+ Consts.REQUEST_BASE_URL
+												+ requestURL);
 
 										mHttpFriend
 												.toUrl(Consts.REQUEST_BASE_URL

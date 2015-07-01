@@ -81,13 +81,13 @@ public class ConnectActivity extends GeneratedActivity {
 
 		DialogUtil.instance().dismissDialog();
 
-		if (BuildConfig.DEBUG) {
-			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-					.detectAll().penaltyLog().build());
-			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-					.detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
-					.penaltyLog().penaltyDeath().build());
-		}
+//		if (BuildConfig.DEBUG) {
+//			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//					.detectAll().penaltyLog().build());
+//			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//					.detectLeakedSqlLiteObjects().detectLeakedClosableObjects()
+//					.penaltyLog().penaltyDeath().build());
+//		}
 
 		setContentView(R.layout.activity_connect_as_dialog);
 
@@ -614,14 +614,6 @@ public class ConnectActivity extends GeneratedActivity {
 		finish();
 	}
 
-	private String getUserId() {
-		return getIntent().getStringExtra(Consts.INTENT_EXTRA_USERNAME);
-	}
-
-	private String getUserPsw() {
-		return getIntent().getStringExtra(Consts.INTENT_EXTRA_USERPSW);
-	}
-
 	private void initTargetDeviceInfo() {
 		if (!getIntent().getBooleanExtra(
 				EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK, false)) {
@@ -645,13 +637,6 @@ public class ConnectActivity extends GeneratedActivity {
 
 		String connectText = getIntent().getStringExtra(
 				Consts.INTENT_EXTRA_CONNECT_TEXT);
-	}
-
-	public static String testTime() {
-		SimpleDateFormat sdf = new SimpleDateFormat("mm:ss'.'SSS");
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(System.currentTimeMillis());
-		return sdf.format(c.getTime());
 	}
 
 	/**
@@ -795,10 +780,8 @@ public class ConnectActivity extends GeneratedActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		L.e(this, "在外面");
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING
 				&& resultCode == RESULT_OK) {
-			L.e(this, "在里面");
 			onDeviceFoundCounter = 0;
 			jobDone = false;
 			tryConnectByBigCycle();

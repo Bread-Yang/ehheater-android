@@ -8,6 +8,7 @@ import com.vanward.ehheater.activity.WelcomeActivity;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
@@ -19,7 +20,7 @@ public class SwitchDeviceUtil {
 //		HeaterInfo newHeaterInfo = new HeaterInfoDao(activity)
 //				.getHeaterByMac(mac);
 		HeaterInfo newHeaterInfo = new HeaterInfoDao(activity)
-		.getHeaterByDid(did);
+		.getHeaterByUidAndDid(AccountService.getUserId(activity), did);
 		HeaterInfo shareheaterInfo = new HeaterInfoService(activity)
 				.getCurrentSelectedHeater();
 		

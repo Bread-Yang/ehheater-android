@@ -44,7 +44,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 	private static final String TAG = "FurnaceAppointmentListActivity";
 
 	private SwipeListView lv_listview;
-	
+
 	private Button btn_add_appointment;
 
 	private AppointmentListAdapter adapter;
@@ -63,7 +63,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		setCenterViewWithNoScrollView(R.layout.activity_furnace_appointment_list);
 		setTopText(R.string.appointment);
 		setLeftButtonBackground(R.drawable.icon_back);
-//		setRightButtonBackground(R.drawable.icon_add);
+		// setRightButtonBackground(R.drawable.icon_add);
 		setRightButton(View.GONE);
 		findViewById();
 		setListener();
@@ -134,7 +134,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 		String requestURL = "userinfo/getAppointmentList?did=" + did + "&uid="
 				+ uid;
-		
+
 		L.e(this, "请求的requestURL : " + requestURL);
 
 		// String requestURL =
@@ -260,7 +260,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					int flag = model.getWeek().charAt(i);
 					if (flag == '1') {
 						switch (i) {
-						
+
 						case 0:
 							loopDays += getResources().getString(
 									R.string.Sunday);
@@ -299,8 +299,7 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					}
 				}
 				if (model.getWeek().charAt(0) == '1') {
-					loopDays += getResources().getString(
-							R.string.Sunday);
+					loopDays += getResources().getString(R.string.Sunday);
 				}
 			}
 			holder.tv_days.setText(loopDays);
@@ -352,32 +351,32 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 						model.setIsAppointmentOn(1);
 					}
 
-//					if (deviceType == HeaterType.EH_FURNACE) { 
-//						// 热水器多余的数据
-//						model.setPeopleNum("0");
-//
-//						model.setPower("0");
-//					}
-					
+					// if (deviceType == HeaterType.EH_FURNACE) {
+					// // 热水器多余的数据
+					// model.setPeopleNum("0");
+					//
+					// model.setPower("0");
+					// }
+
 					String requestURL = "userinfo/updateAppointment";
 
 					Gson gson = new Gson();
 					String json = gson.toJson(model);
-					
+
 					AjaxParams params = new AjaxParams();
 					params.put("data", json);
-//					params.put("ignoreConflict", "true");
-					
+					// params.put("ignoreConflict", "true");
+
 					L.e(FurnaceAppointmentListActivity.this, "data : " + json);
-					
+
 					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
 							.executePost(params, new AjaxCallBack<String>() {
 								@Override
 								public void onSuccess(String t) {
 									super.onSuccess(t);
-									
-									L.e(FurnaceAppointmentListActivity.this, "改变状态返回的数据是 : " + t);
 
+									L.e(FurnaceAppointmentListActivity.this,
+											"改变状态返回的数据是 : " + t);
 
 									if ((Integer) view.getTag() == 1) {
 										((ImageButton) view)

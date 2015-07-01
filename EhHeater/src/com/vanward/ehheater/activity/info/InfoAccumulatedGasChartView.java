@@ -29,6 +29,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
@@ -342,17 +343,16 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 								b = Math.round(Float.parseFloat(li.get(i)
 										.getAmount().equals("") ? "0" : li.get(
 										i).getAmount()));
-								L.e(this,
-										"li.get(i).getAmount() : "
-												+ li.get(i).getAmount());
+								L.e(this, "li.get(i).getAmount() : "
+										+ li.get(i).getAmount());
 								L.e(this, "b : " + b);
 								a = a + b + 0f;
 								jsonOBJ.put("name", li.get(i).getTime());
 								if (li.get(i).getAmount().equals("")) {
 									jsonOBJ2.put("data", "");
 								} else {
-									int round = Math.round(Float.parseFloat(li.get(i)
-											.getAmount()));
+									int round = Math.round(Float.parseFloat(li
+											.get(i).getAmount()));
 									if (Float.valueOf(li.get(i).getAmount()) == 0
 											|| round == 0) {
 										jsonOBJ2.put("data", "");

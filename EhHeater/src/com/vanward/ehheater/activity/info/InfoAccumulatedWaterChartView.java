@@ -31,6 +31,7 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
@@ -367,9 +368,9 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					namelistjson = jsonArray.toString();
 					// 赋值data
 					datalistjson = jsonArray2.toString();
-					
+
 					dtime = da2;
-					
+
 					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
 					Long l = new Long(da2);
 					Date da = new Date(l);
@@ -450,9 +451,9 @@ public class InfoAccumulatedWaterChartView extends LinearLayout implements
 					namelistjson = jsonArray.toString();
 					// 赋值data
 					datalistjson = jsonArray2.toString();
-					
+
 					dtime = da3;
-					
+
 					SimpleDateFormat sim = new SimpleDateFormat("yyyy年");
 					Long l = new Long(dtime);
 					Date da = new Date(l);

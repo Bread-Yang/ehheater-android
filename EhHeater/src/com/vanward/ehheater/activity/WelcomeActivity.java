@@ -79,15 +79,16 @@ public class WelcomeActivity extends GeneratedActivity {
 					// startActivity(new Intent(this,
 					// EasyLinkConfigureActivity.class));
 					// return STATE_JUMPED_OUT;
-					
+
 					L.e(this, "选择电热或者燃热,木有选择壁挂炉");
-					
+
 					HeaterInfoService hser = new HeaterInfoService(
 							WelcomeActivity.this);
 
 					List<HeaterInfo> allEIDevices = new HeaterInfoDao(
-							getBaseContext())
-							.getAllDeviceOfType(HeaterType.ELECTRIC_HEATER);
+							getBaseContext()).getAllDeviceOfType(
+							AccountService.getUserId(getApplicationContext()),
+							HeaterType.ELECTRIC_HEATER);
 					if (allEIDevices != null & allEIDevices.size() > 0) {
 						hser.setCurrentSelectedHeater(allEIDevices.get(0)
 								.getMac());
@@ -96,8 +97,9 @@ public class WelcomeActivity extends GeneratedActivity {
 					}
 
 					List<HeaterInfo> allGasDevices = new HeaterInfoDao(
-							getBaseContext())
-							.getAllDeviceOfType(HeaterType.GAS_HEATER);
+							getBaseContext()).getAllDeviceOfType(
+							AccountService.getUserId(getApplicationContext()),
+							HeaterType.GAS_HEATER);
 
 					if (allGasDevices != null & allGasDevices.size() > 0) {
 						hser.setCurrentSelectedHeater(allGasDevices.get(0)
@@ -152,8 +154,8 @@ public class WelcomeActivity extends GeneratedActivity {
 		MobclickAgent.updateOnlineConfig(this);
 
 		// 每60秒请求一次
-//		PollingUtils.startPollingService(this, 60, PollingService.class,
-//				PollingService.ACTION);
+		// PollingUtils.startPollingService(this, 60, PollingService.class,
+		// PollingService.ACTION);
 	}
 
 	HeaterInfo curHeater;
@@ -318,7 +320,7 @@ public class WelcomeActivity extends GeneratedActivity {
 
 			case STATE_NORMAL:
 				L.e(this, "STATE_NORMAL()被选择");
-				
+
 				HeaterInfoService heaterService = new HeaterInfoService(
 						getBaseContext());
 				SharedPreferUtils spu = new SharedPreferUtils(

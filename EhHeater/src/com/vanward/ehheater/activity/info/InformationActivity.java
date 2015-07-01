@@ -22,13 +22,14 @@ import android.widget.TextView;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 
 public class InformationActivity extends EhHeaterBaseActivity implements
 		OnPageChangeListener, OnClickListener {
-	
+
 	private static final String TAG = "InformationActivity";
 
 	private ImageView[] imageViews;
@@ -49,7 +50,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_information);
 		initView(this);
-		
+
 		if (isGas) {
 			try {
 				((InfoAccumulatedGasChartView) pageViews.get(1))
@@ -57,8 +58,8 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 			} catch (Exception e) {
 			}
 		}
-		
-		getdata(); 
+
+		getdata();
 	}
 
 	private void initView(Context context) {
@@ -199,20 +200,20 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 			}
 		}
 
-//		if (position == 1) {
-//			if (isGas) {
-//				try {
-//					((InfoAccumulatedGasChartView) pageViews.get(1))
-//							.selectDefault();
-//				} catch (Exception e) {
-//				}
-//			} else {
-//				getdata();
-//			}
-//		}
-//		if (position == 2 && isGas) {
-//			getdata();
-//		}
+		// if (position == 1) {
+		// if (isGas) {
+		// try {
+		// ((InfoAccumulatedGasChartView) pageViews.get(1))
+		// .selectDefault();
+		// } catch (Exception e) {
+		// }
+		// } else {
+		// getdata();
+		// }
+		// }
+		// if (position == 2 && isGas) {
+		// getdata();
+		// }
 	}
 
 	@Override
@@ -240,7 +241,7 @@ public class InformationActivity extends EhHeaterBaseActivity implements
 					+ heaterInfoService.getCurrentSelectedHeater().getDid();
 		}
 
-		L.e(this , "信息请求的url是 : " + url);
+		L.e(this, "信息请求的url是 : " + url);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + url).executeGet(null,
 				new AjaxCallBack<String>() {

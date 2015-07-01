@@ -38,6 +38,7 @@ import com.vanward.ehheater.activity.info.InfoErrorActivity;
 import com.vanward.ehheater.application.EhHeaterApplication;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.CheckOnlineUtil;
@@ -403,7 +404,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			btn_intellectual.setEnabled(false);
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_disable);
 			isOn = false;
-			
+
 			// 收到主动断开,重连一次
 			connectCurDevice("");
 		}
@@ -960,7 +961,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 			if (resultCode == RESULT_OK) {
 				// binded
-				new HeaterInfoService(getBaseContext()).updateBinded(
+				new HeaterInfoService(getBaseContext()).updateBindedByUid(
+						AccountService.getUserId(getApplicationContext()),
 						curHeater.getMac(), true);
 			}
 
@@ -997,29 +999,29 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			}
 		}, connectTime);
 	}
-	
+
 	@Override
 	public void onAirLinkResp(XpgEndpoint endpoint) {
 		super.onAirLinkResp(endpoint);
 		L.e(this, "onAirLinkResp()");
-		
+
 		L.e(this, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
 		L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
 		L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
 		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
 	}
-	
+
 	@Override
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
 		super.onEasyLinkResp(endpoint);
 		L.e(this, "onEasyLinkResp(XpgEndpoint endpoint)");
-		
+
 		L.e(this, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
 		L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
 		L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
 		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
 	}
-	
+
 	@Override
 	protected void onPause() {
 		super.onPause();

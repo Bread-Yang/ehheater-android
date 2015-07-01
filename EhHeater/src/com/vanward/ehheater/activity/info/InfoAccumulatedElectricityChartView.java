@@ -30,6 +30,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.ChartVo.Datavo;
 import com.vanward.ehheater.activity.info.ChartVo.Xvo;
+import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
@@ -256,7 +257,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 								jsonOBJ2.put("data", round);
 							}
 						}
-						
+
 						b = Math.round(Float.parseFloat(li.get(i).getAmount()
 								.equals("") ? "0" : li.get(i).getAmount()));
 						a = a + b + 0f;
@@ -310,8 +311,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 
 					@Override
 					public void onSuccess(String t) {
-						L.e(this, 
-								"getmessagemonth返回的数据是 : " + t);
+						L.e(this, "getmessagemonth返回的数据是 : " + t);
 						try {
 							JSONObject jsonObject = new JSONObject(t);
 							JSONArray array = jsonObject.getJSONArray("result");
@@ -365,8 +365,8 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 								if (li.get(i).getAmount().equals("")) {
 									jsonOBJ2.put("data", "");
 								} else {
-									int round = Math.round(Float.parseFloat(li.get(i)
-											.getAmount()));
+									int round = Math.round(Float.parseFloat(li
+											.get(i).getAmount()));
 									if (Float.valueOf(li.get(i).getAmount()) == 0
 											|| round == 0) {
 										jsonOBJ2.put("data", "");
@@ -374,7 +374,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 										jsonOBJ2.put("data", round);
 									}
 								}
-							
+
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}
@@ -406,7 +406,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 	public void getmessageyear(final long da3) {
 		String adid = new HeaterInfoService(context).getCurrentSelectedHeater()
 				.getDid();
-		
+
 		mHttpFriend.toUrl(
 				Consts.REQUEST_BASE_URL + "EhHeaterWeb/GasInfo/getgasdata?did="
 						+ adid + "&dateTime=" + da3
@@ -450,8 +450,8 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 								if (li.get(i).getAmount().equals("")) {
 									jsonOBJ2.put("data", "");
 								} else {
-									int round = Math.round(Float.parseFloat(li.get(i)
-											.getAmount()));
+									int round = Math.round(Float.parseFloat(li
+											.get(i).getAmount()));
 									if (Float.valueOf(li.get(i).getAmount()) == 0
 											|| round == 0) {
 										jsonOBJ2.put("data", "");
@@ -459,7 +459,7 @@ public class InfoAccumulatedElectricityChartView extends LinearLayout implements
 										jsonOBJ2.put("data", round);
 									}
 								}
-							
+
 								jsonArray.put(jsonOBJ);
 								jsonArray2.put(jsonOBJ2);
 							}

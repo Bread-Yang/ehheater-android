@@ -109,7 +109,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private Button mode;
 
 	private CountDownTimer mCountDownTimer;
-	
+
 	private BroadcastReceiver heaterNameChangeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -232,10 +232,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			if (isOnline) {
 				Global.connectId = connId;
 				Global.checkOnlineConnId = -1;
-				
+
 				boolean shouldExecuteBinding = HeaterInfoService
 						.shouldExecuteBinding(curHeater);
-				
+
 				if (shouldExecuteBinding) {
 					DialogUtil.instance().showLoadingDialog(this, "");
 					HeaterInfoService.setBinding(this, did, passcode);
@@ -272,15 +272,15 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Global.checkOnlineConnId = connId;
 				changeToOfflineUI();
 
-//				if (isActived) {
-					DialogUtil.instance().showReconnectDialog(new Runnable() {
-						@Override
-						public void run() {
-							CheckOnlineUtil.ins().start(getBaseContext(),
-									hser.getCurrentSelectedHeaterMac());
-						}
-					}, this);
-//				}
+				// if (isActived) {
+				DialogUtil.instance().showReconnectDialog(new Runnable() {
+					@Override
+					public void run() {
+						CheckOnlineUtil.ins().start(getBaseContext(),
+								hser.getCurrentSelectedHeaterMac());
+					}
+				}, this);
+				// }
 			}
 
 			if (!conntext.contains("reconnect")) {
@@ -292,15 +292,16 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
 			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-			
+
 			isBinding = false;
 
 			if (resultCode == RESULT_OK) {
 				// binded
-				new HeaterInfoService(getBaseContext()).updateBinded(
+				new HeaterInfoService(getBaseContext()).updateBindedByUid(
+						AccountService.getUserId(getApplicationContext()),
 						curHeater.getMac(), true);
 			}
-			
+
 			L.e(this, " Consts.REQUESTCODE_UPLOAD_BINDING 查询 queryState()");
 			queryState();
 		}
@@ -702,7 +703,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
 		L.e(this, "重连之后OnGasWaterHeaterStatusResp调用了");
-		
+
 		if (!isBinding) {
 			DialogUtil.dismissDialog();
 		}

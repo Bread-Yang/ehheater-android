@@ -230,9 +230,10 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 						sb.append("\"\"");
 					} else {
 						BigDecimal dividend = new BigDecimal(10);
-						BigDecimal amount = new BigDecimal(joTemp.getString("amount")).divide(dividend);
-//						int amount = Integer
-//								.valueOf(joTemp.getString("amount")) / 10;
+						BigDecimal amount = new BigDecimal(
+								joTemp.getString("amount")).divide(dividend);
+						// int amount = Integer
+						// .valueOf(joTemp.getString("amount")) / 10;
 						L.e(this, "amount : " + amount);
 						if (amount.compareTo(new BigDecimal(0)) == 0) {
 							sb.append("\"\"");
@@ -332,7 +333,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		// String requestURL =
 		// "getFurnaceYearGas?did=dVfu4XXcUCbE93Z2mu4PyZ&year=2014";
 		String requestURL = "getFurnaceYearGas?did=" + did + "&year=" + year;
-		
+
 		L.e(this, "请求累计耗量的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
@@ -382,7 +383,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		// String requestURL =
 		// "http://vanward.xtremeprog.com/EhHeaterWeb/getFurnaceHourGas?did=dVfu4XXcUCbE93Z2mu4PyZ";
 		String requestURL = "getFurnaceHourGas?did=" + did;
-		
+
 		L.e(this, "请求实时耗量的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 
 		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
