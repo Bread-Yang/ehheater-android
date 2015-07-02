@@ -53,8 +53,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
 	private ToggleButton tb_switch;
 
-	private HttpFriend mHttpFriend;
-
 	private CheckBox cb_Monday, cb_Thuesday, cb_Wednesday, cb_Thursday,
 			cb_Friday, cb_Saturday, cb_Sunday;
 
@@ -258,36 +256,66 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
 		L.e(this, "请求的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
 
-		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
-				params, new AjaxCallBack<String>() {
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
-						L.e(this, "请求成功后返回的数据是 : " + jsonString);
+		executeRequest(Consts.REQUEST_BASE_URL + requestURL, params, new AjaxCallBack<String>() {
+			@Override
+			public void onSuccess(String jsonString) {
+				super.onSuccess(jsonString);
+				L.e(this, "请求成功后返回的数据是 : " + jsonString);
 
-						try {
-							JSONObject json = new JSONObject(jsonString);
+				try {
+					JSONObject json = new JSONObject(jsonString);
 
-							String result = json.getString("responseCode");
-							saveToSharedPreferences(json2.toString());
-							if ("200".equals(result)) {
-								finish();
-							} else {
-								// 弹出对话框,提示是否重新提交
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
+					String result = json.getString("responseCode");
+					saveToSharedPreferences(json2.toString());
+					if ("200".equals(result)) {
+						finish();
+					} else {
+						// 弹出对话框,提示是否重新提交
 					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
 
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						String str = null;
-						// showDialog2(2);
-					}
-				});
+			@Override
+			public void onFailure(Throwable t, int errorNo,
+					String strMsg) {
+				super.onFailure(t, errorNo, strMsg);
+				String str = null;
+				// showDialog2(2);
+			}
+		});
+		
+//		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
+//				params, new AjaxCallBack<String>() {
+//					@Override
+//					public void onSuccess(String jsonString) {
+//						super.onSuccess(jsonString);
+//						L.e(this, "请求成功后返回的数据是 : " + jsonString);
+//
+//						try {
+//							JSONObject json = new JSONObject(jsonString);
+//
+//							String result = json.getString("responseCode");
+//							saveToSharedPreferences(json2.toString());
+//							if ("200".equals(result)) {
+//								finish();
+//							} else {
+//								// 弹出对话框,提示是否重新提交
+//							}
+//						} catch (JSONException e) {
+//							e.printStackTrace();
+//						}
+//					}
+//
+//					@Override
+//					public void onFailure(Throwable t, int errorNo,
+//							String strMsg) {
+//						super.onFailure(t, errorNo, strMsg);
+//						String str = null;
+//						// showDialog2(2);
+//					}
+//				});
 
 	}
 
@@ -305,41 +333,74 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
 		L.e(this, "requestURL : " + requestURL);
 
-		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
-				params, new AjaxCallBack<String>() {
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
-						L.e(this, "请求成功后返回的数据是 : " + jsonString);
-						L.e(this, "Sharedpreferences返回的数据是 : "
-								+ getFromSharedPreferences());
+		executeRequest(Consts.REQUEST_BASE_URL + requestURL, params, new AjaxCallBack<String>() {
+			@Override
+			public void onSuccess(String jsonString) {
+				super.onSuccess(jsonString);
+				L.e(this, "请求成功后返回的数据是 : " + jsonString);
+				L.e(this, "Sharedpreferences返回的数据是 : "
+						+ getFromSharedPreferences());
 
-						try {
-							JSONObject json = new JSONObject(jsonString);
+				try {
+					JSONObject json = new JSONObject(jsonString);
 
-							String result = json.getString("result");
-							forResult = result; // 存放返回结果
-							// extractDataFromJson(getFromSharedPreferences());
-							// extractDataFromJson(result); // 加载数据放到这里了
-							saveToSharedPreferences(result);
-							extractDataFromJson(getFromSharedPreferences());
-							if ("success".equals("result")) {
-								finish();
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
+					String result = json.getString("result");
+					forResult = result; // 存放返回结果
+					// extractDataFromJson(getFromSharedPreferences());
+					// extractDataFromJson(result); // 加载数据放到这里了
+					saveToSharedPreferences(result);
+					extractDataFromJson(getFromSharedPreferences());
+					if ("success".equals("result")) {
+						finish();
 					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
 
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						extractDataFromJson(getFromSharedPreferences());
-						// showDialog2(1);
-					}
-				});
-		L.e(this, " getData()执行完了");
+			@Override
+			public void onFailure(Throwable t, int errorNo,
+					String strMsg) {
+				super.onFailure(t, errorNo, strMsg);
+				extractDataFromJson(getFromSharedPreferences());
+				// showDialog2(1);
+			}
+		});
+		
+//		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
+//				params, new AjaxCallBack<String>() {
+//					@Override
+//					public void onSuccess(String jsonString) {
+//						super.onSuccess(jsonString);
+//						L.e(this, "请求成功后返回的数据是 : " + jsonString);
+//						L.e(this, "Sharedpreferences返回的数据是 : "
+//								+ getFromSharedPreferences());
+//
+//						try {
+//							JSONObject json = new JSONObject(jsonString);
+//
+//							String result = json.getString("result");
+//							forResult = result; // 存放返回结果
+//							// extractDataFromJson(getFromSharedPreferences());
+//							// extractDataFromJson(result); // 加载数据放到这里了
+//							saveToSharedPreferences(result);
+//							extractDataFromJson(getFromSharedPreferences());
+//							if ("success".equals("result")) {
+//								finish();
+//							}
+//						} catch (JSONException e) {
+//							e.printStackTrace();
+//						}
+//					}
+//
+//					@Override
+//					public void onFailure(Throwable t, int errorNo,
+//							String strMsg) {
+//						super.onFailure(t, errorNo, strMsg);
+//						extractDataFromJson(getFromSharedPreferences());
+//						// showDialog2(1);
+//					}
+//				});
 		return forResult;
 	}
 
@@ -451,7 +512,8 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 					break;
 				}
 			}
-
+			
+			bbv.invalidate();
 		} catch (Exception e) {
 			L.e(this, "没有数据返回");
 			isAdd = true;
@@ -513,7 +575,6 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 							}
 						});
 
-		mHttpFriend = HttpFriend.create(this);
 		// requestHttpData();
 
 		// extractDataFromJson(getTestData()); // for test
@@ -535,17 +596,28 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 
 		String requestURL = "";
 
-		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-				null, new AjaxCallBack<String>() {
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
-						L.e(this, "请求成功后返回的数据是 : " + jsonString);
+		executeRequest(Consts.REQUEST_BASE_URL + requestURL, null, new AjaxCallBack<String>() {
+			@Override
+			public void onSuccess(String jsonString) {
+				super.onSuccess(jsonString);
+				L.e(this, "请求成功后返回的数据是 : " + jsonString);
 
-						extractDataFromJson(jsonString);
+				extractDataFromJson(jsonString);
 
-					}
-				});
+			}
+		});
+		
+//		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+//				null, new AjaxCallBack<String>() {
+//					@Override
+//					public void onSuccess(String jsonString) {
+//						super.onSuccess(jsonString);
+//						L.e(this, "请求成功后返回的数据是 : " + jsonString);
+//
+//						extractDataFromJson(jsonString);
+//
+//					}
+//				});
 	}
 
 	class HighChartsJavaScriptInterface {

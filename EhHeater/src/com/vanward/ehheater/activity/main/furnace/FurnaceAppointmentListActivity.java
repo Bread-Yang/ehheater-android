@@ -49,8 +49,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 	private AppointmentListAdapter adapter;
 
-	private HttpFriend mHttpFriend;
-
 	private ArrayList<AppointmentVo> adapter_data = new ArrayList<AppointmentVo>();
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
@@ -118,8 +116,6 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 		HeaterInfoService service = new HeaterInfoService(getBaseContext());
 		deviceType = service.getHeaterType(service.getCurrentSelectedHeater());
 
-		mHttpFriend = HttpFriend.create(this);
-
 		// extractDataFromJson(getTestData()); // for test
 
 		// requestHttpData();
@@ -139,19 +135,31 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
 		// String requestURL =
 		// "userinfo/getAppointmentList?did=LWFWwtEcFWJ5hSBPXrVXFS&uid=q1231";
+		
+		executeRequest(Consts.REQUEST_BASE_URL + requestURL, null,  new AjaxCallBack<String>() {
+			@Override
+			public void onSuccess(String jsonString) {
+				super.onSuccess(jsonString);
 
-		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-				null, new AjaxCallBack<String>() {
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
+				extractDataFromJson(jsonString);
 
-						extractDataFromJson(jsonString);
+				lv_listview.setAdapter(new AppointmentListAdapter());
 
-						lv_listview.setAdapter(new AppointmentListAdapter());
+			}
+		});
 
-					}
-				});
+//		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+//				null, new AjaxCallBack<String>() {
+//					@Override
+//					public void onSuccess(String jsonString) {
+//						super.onSuccess(jsonString);
+//
+//						extractDataFromJson(jsonString);
+//
+//						lv_listview.setAdapter(new AppointmentListAdapter());
+//
+//					}
+//				});
 	}
 
 	private void extractDataFromJson(String jsonString) {
@@ -368,29 +376,51 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					// params.put("ignoreConflict", "true");
 
 					L.e(FurnaceAppointmentListActivity.this, "data : " + json);
+					
+					executeRequest(Consts.REQUEST_BASE_URL + requestURL, params, new AjaxCallBack<String>() {
+						@Override
+						public void onSuccess(String t) {
+							super.onSuccess(t);
 
-					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-							.executePost(params, new AjaxCallBack<String>() {
-								@Override
-								public void onSuccess(String t) {
-									super.onSuccess(t);
+							L.e(FurnaceAppointmentListActivity.this,
+									"改变状态返回的数据是 : " + t);
 
-									L.e(FurnaceAppointmentListActivity.this,
-											"改变状态返回的数据是 : " + t);
+							if ((Integer) view.getTag() == 1) {
+								((ImageButton) view)
+										.setImageResource(R.drawable.off);
+								model.setIsAppointmentOn(0);
+								view.setTag(0);
+							} else {
+								((ImageButton) view)
+										.setImageResource(R.drawable.on);
+								model.setIsAppointmentOn(1);
+								view.setTag(1);
+							}
+						}
+					});
 
-									if ((Integer) view.getTag() == 1) {
-										((ImageButton) view)
-												.setImageResource(R.drawable.off);
-										model.setIsAppointmentOn(0);
-										view.setTag(0);
-									} else {
-										((ImageButton) view)
-												.setImageResource(R.drawable.on);
-										model.setIsAppointmentOn(1);
-										view.setTag(1);
-									}
-								}
-							});
+//					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
+//							.executePost(params, new AjaxCallBack<String>() {
+//								@Override
+//								public void onSuccess(String t) {
+//									super.onSuccess(t);
+//
+//									L.e(FurnaceAppointmentListActivity.this,
+//											"改变状态返回的数据是 : " + t);
+//
+//									if ((Integer) view.getTag() == 1) {
+//										((ImageButton) view)
+//												.setImageResource(R.drawable.off);
+//										model.setIsAppointmentOn(0);
+//										view.setTag(0);
+//									} else {
+//										((ImageButton) view)
+//												.setImageResource(R.drawable.on);
+//										model.setIsAppointmentOn(1);
+//										view.setTag(1);
+//									}
+//								}
+//							});
 
 					// mHttpFriend.clearParams().postBean(model)
 					// .toUrl(Consts.REQUEST_BASE_URL + requestURL)
@@ -425,31 +455,56 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					String requestURL = "userinfo/deleteAppointment?appointmentId="
 							+ model.getAppointmentId();
 
-					mHttpFriend.clearParams()
-							.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-							.executeGet(null, new AjaxCallBack<String>() {
-								@Override
-								public void onSuccess(String jsonString) {
-									super.onSuccess(jsonString);
-									L.e(this, "删除预约返回的json数据是 : " + jsonString);
-									try {
-										JSONObject json;
-										json = new JSONObject(jsonString);
-										String responseCode = json
-												.getString("responseCode");
-										if ("200".equals(responseCode)) {
-											// adapter_data.remove(position);
-											// adapter.notifyDataSetChanged();
-											requestHttpData();
-										} else if ("503".equals(responseCode)) {
-											requestHttpData();
-										}
-									} catch (JSONException e) {
-										e.printStackTrace();
-									}
-
+					mHttpFriend.clearParams();
+					executeRequest(Consts.REQUEST_BASE_URL + requestURL, null, new AjaxCallBack<String>() {
+						@Override
+						public void onSuccess(String jsonString) {
+							super.onSuccess(jsonString);
+							L.e(this, "删除预约返回的json数据是 : " + jsonString);
+							try {
+								JSONObject json;
+								json = new JSONObject(jsonString);
+								String responseCode = json
+										.getString("responseCode");
+								if ("200".equals(responseCode)) {
+									// adapter_data.remove(position);
+									// adapter.notifyDataSetChanged();
+									requestHttpData();
+								} else if ("503".equals(responseCode)) {
+									requestHttpData();
 								}
-							});
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+
+						}
+					});
+					
+//					mHttpFriend.clearParams()
+//							.toUrl(Consts.REQUEST_BASE_URL + requestURL)
+//							.executeGet(null, new AjaxCallBack<String>() {
+//								@Override
+//								public void onSuccess(String jsonString) {
+//									super.onSuccess(jsonString);
+//									L.e(this, "删除预约返回的json数据是 : " + jsonString);
+//									try {
+//										JSONObject json;
+//										json = new JSONObject(jsonString);
+//										String responseCode = json
+//												.getString("responseCode");
+//										if ("200".equals(responseCode)) {
+//											// adapter_data.remove(position);
+//											// adapter.notifyDataSetChanged();
+//											requestHttpData();
+//										} else if ("503".equals(responseCode)) {
+//											requestHttpData();
+//										}
+//									} catch (JSONException e) {
+//										e.printStackTrace();
+//									}
+//
+//								}
+//							});
 				}
 			});
 

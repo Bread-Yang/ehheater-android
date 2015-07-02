@@ -40,7 +40,7 @@ public class HttpFriend {
 
 	public boolean showTips = true;
 	
-	public boolean showDialog = true;
+	public boolean showDialog = false;
 
 	private Dialog serverFailureDialog;
 
@@ -225,6 +225,11 @@ public class HttpFriend {
 				return callBack.isProgress();
 			}
 
+			@Override
+			public void onTimeout() {
+				callBack.onTimeout();
+				super.onTimeout();
+			}
 		});
 		return this;
 	}
