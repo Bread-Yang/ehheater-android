@@ -464,7 +464,27 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			HttpFriend httpFriend = HttpFriend.create(getApplicationContext());
 			httpFriend.showTips = false;
 
-			String requestURL = "userinfo/getUsageInformation?uid="
+			String requestURL = "userinfo/beforeSaveAlias?uid="
+					+ et_user.getText().toString().trim();
+
+			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+					null, new AjaxCallBack<String>() {
+						public void onSuccess(String jsonString) {
+							L.e(this, "删除了所有设备 : " + jsonString);
+							// JSONObject json;
+							// try {
+							// json = new JSONObject(jsonString);
+							// String responseCode = json
+							// .getString("responseCode");
+							// if ("200".equals(responseCode)) {
+							// }
+							// } catch (JSONException e) {
+							// e.printStackTrace();
+							// }
+						};
+					});
+
+			requestURL = "userinfo/getUsageInformation?uid="
 					+ et_user.getText().toString().trim();
 
 			httpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
@@ -495,7 +515,6 @@ public class LoginActivity extends EhHeaterBaseActivity {
 								e.printStackTrace();
 							}
 						};
-
 					});
 
 			// generated.SendBindingGetV2Req(tempConnId);

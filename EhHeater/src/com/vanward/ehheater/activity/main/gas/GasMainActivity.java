@@ -685,7 +685,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		L.e(this, "onConnectEvent@ConnectActivity" + connId + "-" + event);
+		L.e(this, "onConnectEvent() : connid : " + connId + " , event : " + event);
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
