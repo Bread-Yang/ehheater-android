@@ -11,12 +11,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.login.LoginActivity;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.SharedPreferUtils;
@@ -38,6 +41,31 @@ public class ChangeNicknameActivity extends EhHeaterBaseActivity {
 		findViewById();
 		setListener();
 		init();
+
+		findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+			}
+		});
+
+		findViewById(R.id.llt_root).setOnFocusChangeListener(
+				new OnFocusChangeListener() {
+
+					@Override
+					public void onFocusChange(View arg0, boolean hasFocus) {
+						if (hasFocus) {
+							((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+									.hideSoftInputFromWindow(
+											ChangeNicknameActivity.this
+													.getCurrentFocus()
+													.getWindowToken(),
+											InputMethodManager.HIDE_NOT_ALWAYS);
+						}
+					}
+				});
+
 	}
 
 	private void findViewById() {

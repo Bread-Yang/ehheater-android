@@ -68,8 +68,6 @@ public class FindPasswordActivity extends EhHeaterBaseActivity implements
 
 		changePswSuccessdialog = dialog;
 		
-		changePswSuccessdialog.show();
-		
 		findViewById(R.id.llt_root).setOnClickListener(new OnClickListener() {
 
 			@Override

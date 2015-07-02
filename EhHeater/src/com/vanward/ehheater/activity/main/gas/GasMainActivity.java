@@ -753,8 +753,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 */
 	private void dealMode(GasWaterHeaterStatusResp_t pResp) {
 
-		L.e(this, "重连之后dealMode调用了");
-
 		((View) sumwater.getParent()).setVisibility(View.GONE);
 
 		// 系统模式：0x01（舒适模式）、0x02（厨房模式）、0x03（浴缸模式）、0x04（节能模式）、
@@ -1218,7 +1216,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void needChangeValue(int value, boolean isAdd) {
-		L.e(this, "isAdd : " + isAdd);
 		boolean isLarger = value > circle_slider.getValue();
 		if (value > circle_max_value) {
 			if (isHeating) {
