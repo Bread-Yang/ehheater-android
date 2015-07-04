@@ -187,7 +187,7 @@ public class WelcomeActivity extends GeneratedActivity {
 			final Handler flowHandler) {
 
 		if (!NetworkStatusUtil.isConnected(this)) {
-			Toast.makeText(this, R.string.check_network, Toast.LENGTH_LONG)
+			Toast.makeText(this, R.string.check_network, Toast.LENGTH_SHORT)
 					.show();
 			flowHandler.sendEmptyMessage(STATE_JUMPED_OUT_TO_LOGIN);
 			return;

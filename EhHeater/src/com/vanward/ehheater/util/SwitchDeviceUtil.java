@@ -52,6 +52,7 @@ public class SwitchDeviceUtil {
 
 			if (Global.connectId > -1) {
 				// 触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
+				L.e(SwitchDeviceUtil.class, "XPGConnectClient.xpgcDisconnectAsync()");
 				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			} else {
 				// 如果当前未建立连接, 直接调用此方法

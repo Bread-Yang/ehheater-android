@@ -41,8 +41,6 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.CheckOnlineUtil;
-import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SwitchDeviceUtil;
@@ -123,7 +121,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initSlidingMenu();
-		setContentView(R.layout.activity_furnace_main);
+		setSlidingView(R.layout.activity_furnace_main);
 		findViewById();
 		setListener();
 		init();
@@ -146,12 +144,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 		if (getIntent().getBooleanExtra("newActivity", false)) {
 			String furnaceMac = getIntent().getStringExtra("mac");
-			connectDevice("", furnaceMac);
+//			connectDevice("", furnaceMac);
 		} else {
-			connectCurDevice();
+			connectToDevice();
 		}
-
-		// connectCurDevice();
 	}
 
 	// private void initSlidingMenu() {
@@ -325,9 +321,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 		L.e(this, "OnDERYStatusResp()返回的nConnId : " + nConnId);
 
-		if (!isBinding) {
-			DialogUtil.dismissDialog();
-		}
 		Log.d(TAG, pResp.getError() + "....");
 		// Toast.makeText(this, "这是错误" + pResp.getError(),
 		// Toast.LENGTH_SHORT).show();
@@ -406,7 +399,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			isOn = false;
 
 			// 收到主动断开,重连一次
-			connectCurDevice("");
+			connectToDevice();
 		}
 		/*
 		 * else if (connId == Global.connectId && event == 0) {
@@ -711,7 +704,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public void onClick(View view) {
-		super.onClick(view);
 		Intent intent;
 		switch (view.getId()) {
 		case R.id.ivTitleBtnLeft:
@@ -720,7 +712,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 		case R.id.ivTitleBtnRigh:
 			if (statusResp == null) {
-				DialogUtil.instance().showReconnectDialog(this);
+				dialog_reconnect.show();
 			} else {
 				if (isOn) {
 					// if (statusResp.getSeasonState() == 0) {
@@ -889,7 +881,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 						.shouldExecuteBinding(curHeater);
 
 				if (shouldExecuteBinding) {
-					DialogUtil.instance().showLoadingDialog(this, "");
 					HeaterInfoService.setBinding(this, did, passcode);
 					isBinding = true;
 					new Handler().postDelayed(new Runnable() {
@@ -918,16 +909,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 				Global.checkOnlineConnId = connId;
 
 				changeToOfflineUI();
-
-				// if (isActived) {
-				DialogUtil.instance().showReconnectDialog(new Runnable() {
-					@Override
-					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext(),
-								hser.getCurrentSelectedHeaterMac());
-					}
-				}, this);
-				// }
 			}
 
 			if (!conntext.contains("reconnect")) {
@@ -979,25 +960,25 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	private boolean stateQueried = false;
 
-	private void queryState() {
+	@Override
+	protected void queryState() {
 		L.e(this, "queryState()");
 
-		// DialogUtil.instance().showQueryingDialog(this);
-		DialogUtil.instance().showLoadingDialog(this, "");
+		rlt_loading.setVisibility(View.VISIBLE);
 		generated.SendDERYRefreshReq(Global.connectId);
-		mSlidingMenu.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				if (!stateQueried) {
-					changeToOfflineUI();
-					if (isActived) {
-						DialogUtil.instance().showReconnectDialog(
-								FurnaceMainActivity.this);
-					}
-				}
-			}
-		}, connectTime);
+//		mSlidingMenu.postDelayed(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				if (!stateQueried) {
+//					L.e(this, "@@@@@@@@@@@@@@@");
+//					changeToOfflineUI();
+//					if (isActived) {
+//						dialog_reconnect.show();
+//					}
+//				}
+//			}
+//		}, connectTime);
 	}
 
 	@Override
@@ -1011,16 +992,16 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
 	}
 
-	@Override
-	public void onEasyLinkResp(XpgEndpoint endpoint) {
-		super.onEasyLinkResp(endpoint);
-		L.e(this, "onEasyLinkResp(XpgEndpoint endpoint)");
-
-		L.e(this, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
-		L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
-		L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
-		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
-	}
+//	@Override
+//	public void onEasyLinkResp(XpgEndpoint endpoint) {
+//		super.onEasyLinkResp(endpoint);
+//		L.e(this, "onEasyLinkResp(XpgEndpoint endpoint)");
+//
+//		L.e(this, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
+//		L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
+//		L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
+//		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
+//	}
 
 	@Override
 	protected void onPause() {

@@ -45,8 +45,6 @@ import com.vanward.ehheater.dao.HeaterInfoDao;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.CheckOnlineUtil;
-import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SwitchDeviceUtil;
@@ -126,9 +124,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initSlidingMenu();
-		setContentView(R.layout.activity_gas_main);
+		setSlidingView(R.layout.activity_gas_main);
 		initView(savedInstanceState);
-		initData();
 		init();
 
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
@@ -138,12 +135,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (getIntent().getBooleanExtra("newActivity", false)) {
 			String gasMac = getIntent().getStringExtra("mac");
 			Log.e("notification传过来的gasMac是", gasMac);
-			connectDevice("", gasMac);
+//			connectDevice("", gasMac);
 		} else {
-			connectCurDevice();
+			connectToDevice();
 		}
-
-		// connectCurDevice();
 
 		switchHintShowed = false;
 
@@ -237,7 +232,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 						.shouldExecuteBinding(curHeater);
 
 				if (shouldExecuteBinding) {
-					DialogUtil.instance().showLoadingDialog(this, "");
+					rlt_loading.setVisibility(View.VISIBLE);
 					HeaterInfoService.setBinding(this, did, passcode);
 					isBinding = true;
 					new Handler().postDelayed(new Runnable() {
@@ -271,16 +266,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 				Global.connectId = -1;
 				Global.checkOnlineConnId = connId;
 				changeToOfflineUI();
-
-				// if (isActived) {
-				DialogUtil.instance().showReconnectDialog(new Runnable() {
-					@Override
-					public void run() {
-						CheckOnlineUtil.ins().start(getBaseContext(),
-								hser.getCurrentSelectedHeaterMac());
-					}
-				}, this);
-				// }
 			}
 
 			if (!conntext.contains("reconnect")) {
@@ -312,24 +297,23 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	 */
 	private long connectTime = 10000;
 
-	private void queryState() {
+	@Override
+	protected void queryState() {
 		L.e(this, "queryState()");
 
-		// DialogUtil.instance().showQueryingDialog(this);
-		DialogUtil.instance().showLoadingDialog(this, "");
+		rlt_loading.setVisibility(View.VISIBLE);
 		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-		rightButton.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (!stateQueried) {
-					if (isActived) {
-						DialogUtil.instance().showReconnectDialog(
-								GasMainActivity.this);
-					}
-					dealDisConnect();
-				}
-			}
-		}, connectTime);
+//		rightButton.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				if (!stateQueried) {
+//					if (isActived) {
+//						dialog_reconnect.show();
+//					}
+//					dealDisConnect();
+//				}
+//			}
+//		}, connectTime);
 	}
 
 	private boolean stateQueried;
@@ -361,14 +345,12 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	protected void onStop() {
-		L.e(this, "onStop()");
 		super.onStop();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		L.e(this, "onDestroy()");
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
@@ -464,7 +446,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			if (tv_tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
 
-				DialogUtil.instance().showReconnectDialog(this);
+				dialog_reconnect.show();
 				return;
 			}
 
@@ -685,14 +667,16 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		L.e(this, "onConnectEvent() : connid : " + connId + " , event : " + event);
+		L.e(this, "onConnectEvent() : connid : " + connId + " , event : "
+				+ event);
 
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
+			L.e(this, "@@@@@@@@@@@@@@@");
 			changeToOfflineUI();
 
 			// 收到主动断开,重连一次
-			connectCurDevice("");
+			connectToDevice();
 		}
 	}
 
@@ -703,10 +687,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
 		L.e(this, "重连之后OnGasWaterHeaterStatusResp调用了");
-
-		if (!isBinding) {
-			DialogUtil.dismissDialog();
-		}
 
 		if (nConnId != Global.connectId) {
 			return;

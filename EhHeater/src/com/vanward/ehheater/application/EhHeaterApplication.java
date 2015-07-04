@@ -8,6 +8,7 @@ import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.L;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
+import com.xtremeprog.xpgconnect.generated.XPG_CONFIG_KEY;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.listener.ClientListener;
 
@@ -33,7 +34,7 @@ public class EhHeaterApplication extends Application implements ClientListener {
 		JPushInterface.init(this); // 初始化 JPush
 
 		// 加这行显示log详情
-		// XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),3);
+		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),3);
 
 		// XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.DEVICE_FOUND_TIMER.swigValue(),5);
 

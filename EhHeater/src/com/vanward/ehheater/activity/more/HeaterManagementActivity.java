@@ -446,7 +446,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 					macOfHeaterBeingDeleted);
 			deleted();
 		}
-		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
+		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 	}
 
 	@Override

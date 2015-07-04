@@ -218,9 +218,11 @@ public class LeftFragment extends LinearLayout implements
 		HeaterInfo shareheaterInfo = new HeaterInfoService(getContext())
 				.getCurrentSelectedHeater();
 		if (heaterInfo == null || shareheaterInfo == null) {
+			L.e(this, "heaterInfo == null || shareheaterInfo == null");
 			return;
 		}
 		if (heaterInfo.getMac().equals(shareheaterInfo.getMac())) {
+			L.e(this, "heaterInfo.getMac().equals(shareheaterInfo.getMac())");
 			return;
 		} else {
 
@@ -266,13 +268,8 @@ public class LeftFragment extends LinearLayout implements
 
 			AlterDeviceHelper.hostActivity = hostActivity;
 
-			if (Global.connectId > -1) {
-				// 触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
-				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-			} else {
-				// 如果当前未建立连接, 直接调用此方法
-				AlterDeviceHelper.alterDevice();
-			}
+			AlterDeviceHelper.alterDevice();
+			
 		}
 	}
 

@@ -113,8 +113,8 @@ public class DialogUtil {
 							String userPsw = AccountService.getUserPsw(act);
 
 							dialog.dismiss();
-							ConnectActivity.connectToDevice(act, mac, passcode,
-									userId, userPsw);
+//							ConnectActivity.connectToDevice(act, mac, passcode,
+//									userId, userPsw);
 
 						}
 					});

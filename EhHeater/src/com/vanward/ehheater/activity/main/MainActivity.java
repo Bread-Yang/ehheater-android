@@ -45,7 +45,6 @@ import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.statedata.EhState;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.DialogUtil;
 import com.vanward.ehheater.util.ErrorUtils;
 import com.vanward.ehheater.util.IntelligentPatternUtil;
 import com.vanward.ehheater.util.L;
@@ -127,9 +126,8 @@ public class MainActivity extends BaseBusinessActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initSlidingMenu();
-		setContentView(R.layout.activity_main);
+		setSlidingView(R.layout.activity_main);
 		initView();
-		initData();
 
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver,
@@ -139,9 +137,9 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		if (getIntent().getBooleanExtra("newActivity", false)) {
 			String electicMac = getIntent().getStringExtra("mac");
-			connectDevice("", electicMac);
+//			connectDevice("", electicMac);
 		} else {
-			connectCurDevice();
+			connectToDevice();
 		}
 
 		// connectCurDevice();
@@ -200,7 +198,6 @@ public class MainActivity extends BaseBusinessActivity implements
 						.shouldExecuteBinding(curHeater);
 
 				if (shouldExecuteBinding) {
-					DialogUtil.instance().showLoadingDialog(this, "");
 					HeaterInfoService.setBinding(this, did, passcode);
 					isBinding = true;
 					new Handler().postDelayed(new Runnable() {
@@ -232,13 +229,7 @@ public class MainActivity extends BaseBusinessActivity implements
 				}
 
 				if (isActived) {
-					DialogUtil.instance().showReconnectDialog(new Runnable() {
-						@Override
-						public void run() {
-							// CheckOnlineUtil.ins().start(getBaseContext(),
-							// hser.getCurrentSelectedHeaterMac());
-						}
-					}, MainActivity.this);
+					dialog_reconnect.show();
 				}
 			}
 
@@ -273,22 +264,21 @@ public class MainActivity extends BaseBusinessActivity implements
 	 */
 	private static long connectTime = 10000;
 
-	private void queryState() {
-		// DialogUtil.instance().showQueryingDialog(this);
-		DialogUtil.instance().showLoadingDialog(this, "");
+	@Override
+	protected void queryState() {
+		rlt_loading.setVisibility(View.VISIBLE);
 		generated.SendStateReq(Global.connectId);
-		rightButton.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (!stateQueried) {
-					changeToOfflineUI();
-					if (isActived) {
-						DialogUtil.instance().showReconnectDialog(
-								MainActivity.this);
-					}
-				}
-			}
-		}, connectTime);
+//		rightButton.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				if (!stateQueried) {
+//					changeToOfflineUI();
+//					if (isActived) {
+//						dialog_reconnect.show();
+//					}
+//				}
+//			}
+//		}, connectTime);
 	}
 
 	private boolean stateQueried;
@@ -452,8 +442,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			if (target_tem.getText().toString().contains("--")) {
 				// 以此判定为不在线
-
-				DialogUtil.instance().showReconnectDialog(MainActivity.this);
+				dialog_reconnect.show();
 				return;
 			}
 
@@ -895,9 +884,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 		if (TcpPacketCheckUtil.isEhStateData(data)) {
 			stateQueried = true;
-			if (!isBinding) {
-				DialogUtil.dismissDialog();
-			}
 			// llt_power.setEnabled(true);
 			btn_power.setSelected(false);
 			setTempture(data);
@@ -1054,7 +1040,7 @@ public class MainActivity extends BaseBusinessActivity implements
 			changeToOfflineUI();
 
 			// 收到主动断开,重连一次
-			connectCurDevice("");
+			connectToDevice();
 		}
 
 	}

@@ -5,9 +5,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
-import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
-public class BaseSlidingFragmentActivity extends EhHeaterBaseActivity implements
+public class BaseSlidingFragmentActivity extends GeneratedActivity implements
 		SlidingActivityBase {
 
 	private SlidingActivityHelper mHelper;

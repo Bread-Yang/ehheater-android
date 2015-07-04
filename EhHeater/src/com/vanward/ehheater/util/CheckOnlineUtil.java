@@ -43,6 +43,7 @@ public class CheckOnlineUtil {
 	}
 	
 	public void reset(String mac) {
+		L.e(this, "reset()");
 		this.curmac = mac;
 		paused = false;
 		for (XpgEndpoint item : bindList) {
@@ -56,11 +57,12 @@ public class CheckOnlineUtil {
 	}
 	
 	public void start(Context context) {
+		L.e(this, "start()");
 		start(context, curmac);
 	}
 	
 	public void start(final Context context, final String checkMac) {
-		
+		L.e(this, "start()");
 		if (checkOnlineTimer != null) {
 			checkOnlineTimer.cancel();
 		}

@@ -33,6 +33,7 @@ import com.easylink.android.FirstTimeConfigListener;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.MainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
@@ -603,6 +604,8 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 				killerIntent);
 
 		Intent intent = null;
+		
+		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 
 		switch (hser.getHeaterType(hinfo)) {
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.main.MainActivity;
@@ -40,15 +41,17 @@ public class AlterDeviceHelper {
 	public static void alterDevice(Activity hostActivity, boolean typeChanged,
 			HeaterType newHeaterType) {
 
-		String userId = AccountService.getUserId(hostActivity);
-		String userPsw = AccountService.getUserPsw(hostActivity);
+		String userId = AccountService.getUserId(hostActivity.getApplicationContext());
+		String userPsw = AccountService.getUserPsw(hostActivity.getApplicationContext());
 
-		HeaterInfoService hser = new HeaterInfoService(hostActivity);
+		HeaterInfoService hser = new HeaterInfoService(hostActivity.getApplicationContext());
 
 		if (!typeChanged) {
-
-			ConnectActivity.connectToDevice(hostActivity, hser
-					.getCurrentSelectedHeater().getMac(), userId, userPsw);
+			
+//			ConnectActivity.connectToDevice(hostActivity, hser
+//					.getCurrentSelectedHeater().getMac(), userId, userPsw);
+			
+			((BaseBusinessActivity)hostActivity).connectToDevice();
 
 			LocalBroadcastManager
 					.getInstance(hostActivity.getBaseContext())
@@ -64,16 +67,19 @@ public class AlterDeviceHelper {
 			case ELECTRIC_HEATER:
 				intent.setClass(hostActivity, MainActivity.class);
 				hostActivity.startActivity(intent);
+				L.e(AlterDeviceHelper.class, "调用了hostActivity.finish()");
 				hostActivity.finish();
 				break;
 			case GAS_HEATER:
 				intent.setClass(hostActivity, GasMainActivity.class);
 				hostActivity.startActivity(intent);
+				L.e(AlterDeviceHelper.class, "调用了hostActivity.finish()");
 				hostActivity.finish();
 				break;
 			case FURNACE:
 				intent.setClass(hostActivity, FurnaceMainActivity.class);
 				hostActivity.startActivity(intent);
+				L.e(AlterDeviceHelper.class, "调用了hostActivity.finish()");
 				hostActivity.finish();
 				break;
 			default:
