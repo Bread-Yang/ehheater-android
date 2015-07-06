@@ -140,6 +140,10 @@
     <string name="touch_to_move_axis">左右可移动横轴</string>
     <string name="apply_model">适用型号：H型号、L型号、S型号</string>
     <string name="vanward_site">http://www.vanward.com</string>
+    <string name="connecting">连接中...</string>
+    <string name="waiting_device_response">设备没有响应,等待回应</string>
+    <string name="upload_bind_success">上传绑定关系成功!</string>
+    <string name="upload_bind_fail">上传绑定关系失败!请重新配置!</string>
 
     <!-- 壁挂炉用到的字段 -->
 
@@ -225,7 +229,7 @@
     <string name="magnesiarods_replace">镁棒更换</string>
     <string name="cannot_connect">无法连接设备，\n请注意设备与手机的网络状态</string>
     <string name="confirm_save">是否保存修改？</string>
-    <string name="server_failure">请求数据超时,请重试</string>
+    <string name="server_failure">无法连接服务器,请检查你的网络设置</string>
     <string name="manual_operation_step">
 <![CDATA[ 
         1. 请进入 设置 > Wifi, 选择<font color=#FE6C18>XPG-GAgent</font><br>2. 输入密码:<font color=#FE6C18>123456789</font> <br>3. 完成后请返回此界面, 将自动跳转到下一步

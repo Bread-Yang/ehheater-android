@@ -17,8 +17,8 @@
 
         <RelativeLayout
             android:id="@+id/rlt_loading"
-            android:visibility="gone"
             android:layout_width="fill_parent"
+            android:visibility="gone"
             android:layout_height="fill_parent" >
 
             <LinearLayout
@@ -37,11 +37,11 @@
                     android:layout_marginTop="8dp" />
 
                 <TextView
-                    android:id="@+id/awad_tv_2"
+                    android:id="@+id/tv_loading_tips"
                     android:layout_width="150dp"
                     android:layout_height="32dp"
                     android:gravity="center"
-                    android:text="连接中..."
+                    android:text="@string/waiting_device_response"
                     android:textColor="#fff" />
             </LinearLayout>
         </RelativeLayout>

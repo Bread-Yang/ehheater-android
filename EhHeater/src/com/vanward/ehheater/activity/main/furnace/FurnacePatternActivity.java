@@ -8,6 +8,8 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
+import com.vanward.ehheater.util.L;
+import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 
 public class FurnacePatternActivity extends EhHeaterBaseActivity {
 
@@ -103,6 +105,34 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 		} else if ("night".equals(heatingMode)) {
 			rg_heating_mode.check(R.id.rb_mode_night);
 		} else if ("outdoor".equals(heatingMode)) {
+			rg_heating_mode.check(R.id.rb_mode_outdoor);
+		}
+	}
+	
+	@Override
+	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
+		super.OnDERYStatusResp(pResp, nConnId);
+		
+		L.e(this, "OnDERYStatusResp()返回的nConnId : " + nConnId);
+		
+		if (pResp.getSeasonState() == 0) { // summer
+			llt_heating_mode.setVisibility(View.GONE);
+		} else { // winner
+			llt_heating_mode.setVisibility(View.VISIBLE);
+		}
+		
+		if (pResp.getBathMode() == 0) { // 0 - normal bath
+			rg_bath_mode.check(R.id.rb_mode_normal);
+		} else {
+			rg_bath_mode.check(R.id.rb_mode_comfort);
+		}
+		if (pResp.getHeatingMode() == 0xA0) { // 0xA0 - normal mode
+			rg_heating_mode.check(R.id.rb_model_default);
+		} else if (pResp.getHeatingMode() == 0xA1) { // 0xA1 - night
+			// mode
+			rg_heating_mode.check(R.id.rb_mode_night);
+		} else if (pResp.getHeatingMode() == 0xA2) { // 0xA2 - outdoor
+			// mode
 			rg_heating_mode.check(R.id.rb_mode_outdoor);
 		}
 	}

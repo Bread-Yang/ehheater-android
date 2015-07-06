@@ -6,7 +6,7 @@ import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.util.IntelligentPatternUtil;
 import com.xtremeprog.xpgconnect.generated.generated;
 
-public class SendMsgModel {
+public class ElectricHeaterSendCommandService {
 
 	// 晨浴模式
 	public static void changeToMorningWash(int num) {

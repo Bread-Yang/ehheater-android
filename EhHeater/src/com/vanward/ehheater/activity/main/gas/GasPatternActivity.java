@@ -114,27 +114,27 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 	public void onCheckedChanged(RadioGroup arg0, int arg1) {
 		switch (arg1) {
 		case R.id.radio0:
-			SendMsgModel.setToDIYMode();
+			GasHeaterSendCommandService.setToDIYMode();
 			finish();
 			break;
 		case R.id.radio1:
-			SendMsgModel.setToKictionMode();
+			GasHeaterSendCommandService.setToKictionMode();
 			finish();
 			break;
 		case R.id.radio2:
-			SendMsgModel.setToSolfMode();
+			GasHeaterSendCommandService.setToSolfMode();
 			finish();
 			break;
 		case R.id.radio3:
-			SendMsgModel.setToBathtubMode(this);
+			GasHeaterSendCommandService.setToBathtubMode(this);
 			finish();
 			break;
 		case R.id.radio4:
-			SendMsgModel.setToEnergyMode();
+			GasHeaterSendCommandService.setToEnergyMode();
 			finish();
 			break;
 		case R.id.radio5:
-			SendMsgModel.setToIntelligenceMode();
+			GasHeaterSendCommandService.setToIntelligenceMode();
 			finish();
 			break;
 		}
@@ -154,7 +154,7 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 			startActivity(intent);
 			break;
 		case R.id.radio3:
-			SendMsgModel.setToBathtubMode(this);
+			GasHeaterSendCommandService.setToBathtubMode(this);
 			finish();
 			break;
 		case R.id.imageView1:
@@ -163,7 +163,7 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 						@Override
 						public void oncall(View v) {
 							if (radio3.isChecked()) {
-								SendMsgModel
+								GasHeaterSendCommandService
 										.setToBathtubMode(GasPatternActivity.this);
 								finish();
 							}
@@ -370,14 +370,14 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 //																						customSetVo
 //																								.getId() + 1,
 //																						GasCustomSetVo.class);
-																		SendMsgModel
+																		GasHeaterSendCommandService
 																				.setDIYModel(
 																						customSetVo
 																								.getSendId(),
 																								tempcustomSetVo);
 																		finish();
 																	} else {
-																		SendMsgModel
+																		GasHeaterSendCommandService
 																				.setToSolfMode();
 																		finish();
 																	}
@@ -419,7 +419,7 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 				new BaseDao(GasPatternActivity.this).getDb().update(
 						customSetVo);
 				
-				SendMsgModel.setDIYModel(customSetVo.getSendId(), customSetVo);
+				GasHeaterSendCommandService.setDIYModel(customSetVo.getSendId(), customSetVo);
 				finish();
 			}
 		};

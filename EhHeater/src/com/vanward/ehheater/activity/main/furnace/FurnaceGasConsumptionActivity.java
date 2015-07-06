@@ -3,6 +3,7 @@ package com.vanward.ehheater.activity.main.furnace;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -48,6 +49,13 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	private ArrayList<String> realTimeXCategories = new ArrayList<>();
 	private ArrayList<Double> realTimeYDatas = new ArrayList<>();
 
+	private String[] defaultRealTimeXCategories = { "1436151300000",
+			"1436151600000", "1436151900000", "1436152200000", "1436152500000",
+			"1436152800000", "1436153100000", "1436153400000", "1436153700000",
+			"1436154000000", "1436154300000", "1436154600000" };
+	private double[] defaultRealTimeYDatas = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+			0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
 	/** 不在线或关机中实时耗量图表显示零数据。 */
 	private String offline_data = "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
 
@@ -60,10 +68,10 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	private String uid = "";
 
 	private boolean isPowerOffOrOffline;
-	
+
 	private Gson gson = new Gson();
 	String forResult;
-	
+
 	private Handler h3;
 	private TakeDataThread threadFor5minute;
 
@@ -95,6 +103,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 			@Override
 			public void onClick(View v) {
 				rb_accumulated_consumption.setChecked(true);
+				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
 				getDataForRealtime(3);
 			}
 		});
@@ -139,6 +148,8 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 		mHttpFriend.delaySeconds = 2;
 
+		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
+
 		getDataForRealtime(3);
 
 		h3 = new Handler() {
@@ -175,6 +186,12 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 		@JavascriptInterface
 		public String realTimeXCategories() {
+			L.e(this, "realTimeXCategories()");
+			if (realTimeXCategories.size() == 0) {
+				for (int i = 0; i < defaultRealTimeXCategories.length; i++) {
+					realTimeXCategories.add(defaultRealTimeXCategories[i]);
+				}
+			}
 			StringBuilder sb = new StringBuilder();
 			sb.append("[");
 			for (int i = 0; i < realTimeXCategories.size(); i++) {
@@ -201,6 +218,12 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 		@JavascriptInterface
 		public String realTimeDatas() {
+			L.e(this, "realTimeDatas()");
+			if (realTimeYDatas.size() == 0) {
+				for (int i = 0; i < defaultRealTimeYDatas.length; i++) {
+					realTimeYDatas.add(defaultRealTimeYDatas[i]);
+				}
+			}
 			StringBuilder sb = new StringBuilder();
 			sb.append("[");
 			for (int i = 0; i < realTimeYDatas.size(); i++) {
@@ -333,86 +356,88 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		String requestURL = "getFurnaceYearGas?did=" + did + "&year=" + year;
 
 		L.e(this, "请求累计耗量的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
-		
-		executeRequest(Consts.REQUEST_BASE_URL + requestURL, null, new AjaxCallBack<String>() {
-			@Override
-			public void onSuccess(String jsonString) {
-				super.onSuccess(jsonString);
-				L.e(this, "请求getFurnaceYearGas数据是 : " + jsonString);
 
-				try {
-					JSONObject json = new JSONObject(jsonString);
+		executeRequest(Consts.REQUEST_BASE_URL + requestURL, null,
+				new AjaxCallBack<String>() {
+					@Override
+					public void onSuccess(String jsonString) {
+						super.onSuccess(jsonString);
+						L.e(FurnaceGasConsumptionActivity.this,
+								"请求getFurnaceYearGas数据是 : " + jsonString);
 
-					String result = json.getString("result");
-					forResult = result; // 存放返回结果
-					rb_accumulated_consumption.setChecked(true);
-					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-					if ("success".equals("result")) {
-						finish();
+						try {
+							JSONObject json = new JSONObject(jsonString);
+
+							String result = json.getString("result");
+							forResult = result; // 存放返回结果
+							rb_accumulated_consumption.setChecked(true);
+							wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+							if ("success".equals("result")) {
+								finish();
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
 
-			@Override
-			public void onFailure(Throwable t, int errorNo,
-					String strMsg) {
-				super.onFailure(t, errorNo, strMsg);
-				L.e(FurnaceGasConsumptionActivity.this, "请求失败");
-				forResult = "";
-				rb_accumulated_consumption.setChecked(true);
-				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-			}
+					@Override
+					public void onFailure(Throwable t, int errorNo,
+							String strMsg) {
+						super.onFailure(t, errorNo, strMsg);
+						L.e(FurnaceGasConsumptionActivity.this, "请求失败");
+						forResult = "";
+						rb_accumulated_consumption.setChecked(true);
+						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+					}
 
-			@Override
-			public void onTimeout() {
-				super.onTimeout();
-				forResult = "";
-				rb_accumulated_consumption.setChecked(true);
-				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-			}
-		});
+					@Override
+					public void onTimeout() {
+						super.onTimeout();
+						forResult = "";
+						rb_accumulated_consumption.setChecked(true);
+						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+					}
+				});
 
-//		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
-//				null, new AjaxCallBack<String>() {
-//					@Override
-//					public void onSuccess(String jsonString) {
-//						super.onSuccess(jsonString);
-//						L.e(this, "请求getFurnaceYearGas数据是 : " + jsonString);
-//
-//						try {
-//							JSONObject json = new JSONObject(jsonString);
-//
-//							String result = json.getString("result");
-//							forResult = result; // 存放返回结果
-//							rb_accumulated_consumption.setChecked(true);
-//							wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-//							if ("success".equals("result")) {
-//								finish();
-//							}
-//						} catch (JSONException e) {
-//							e.printStackTrace();
-//						}
-//					}
-//
-//					@Override
-//					public void onFailure(Throwable t, int errorNo,
-//							String strMsg) {
-//						super.onFailure(t, errorNo, strMsg);
-//						forResult = "";
-//						rb_accumulated_consumption.setChecked(true);
-//						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-//					}
-//
-//					@Override
-//					public void onTimeout() {
-//						super.onTimeout();
-//						forResult = "";
-//						rb_accumulated_consumption.setChecked(true);
-//						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-//					}
-//				});
+		// mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
+		// null, new AjaxCallBack<String>() {
+		// @Override
+		// public void onSuccess(String jsonString) {
+		// super.onSuccess(jsonString);
+		// L.e(this, "请求getFurnaceYearGas数据是 : " + jsonString);
+		//
+		// try {
+		// JSONObject json = new JSONObject(jsonString);
+		//
+		// String result = json.getString("result");
+		// forResult = result; // 存放返回结果
+		// rb_accumulated_consumption.setChecked(true);
+		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+		// if ("success".equals("result")) {
+		// finish();
+		// }
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		//
+		// @Override
+		// public void onFailure(Throwable t, int errorNo,
+		// String strMsg) {
+		// super.onFailure(t, errorNo, strMsg);
+		// forResult = "";
+		// rb_accumulated_consumption.setChecked(true);
+		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+		// }
+		//
+		// @Override
+		// public void onTimeout() {
+		// super.onTimeout();
+		// forResult = "";
+		// rb_accumulated_consumption.setChecked(true);
+		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+		// }
+		// });
 		return forResult;
 	}
 
@@ -422,121 +447,123 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		String requestURL = "getFurnaceHourGas?did=" + did;
 
 		L.e(this, "请求实时耗量的URL是 : " + Consts.REQUEST_BASE_URL + requestURL);
-		
-		executeRequest(Consts.REQUEST_BASE_URL + requestURL, null, new AjaxCallBack<String>() {
-			@Override
-			public void onSuccess(String jsonString) {
-				super.onSuccess(jsonString);
-				L.e(this, "请求getFurnaceHourGas后返回的数据是 : " + jsonString);
 
-				try {
-					JSONObject json = new JSONObject(jsonString);
+		executeRequest(Consts.REQUEST_BASE_URL + requestURL, null,
+				new AjaxCallBack<String>() {
+					@Override
+					public void onSuccess(String jsonString) {
+						super.onSuccess(jsonString);
+						L.e(FurnaceGasConsumptionActivity.this,
+								"请求getFurnaceHourGas后返回的数据是 : " + jsonString);
 
-					realTimeYDatas.clear();
-					realTimeXCategories.clear();
+						try {
+							JSONObject json = new JSONObject(jsonString);
 
-					JSONArray result = json.getJSONArray("result");
-					for (int i = 0; i < result.length(); i++) {
-						JSONObject item = result.getJSONObject(i);
-						String time = realTimeDateFormat
-								.format(new Date(item.getLong("time")));
-						realTimeXCategories.add(time);
-						if (!item.getString("amount").equals("")) {
-							realTimeYDatas.add(Double.parseDouble(item
-									.getString("amount")) / 10);
-						} else {
-							realTimeYDatas.add(0.0);
+							realTimeYDatas.clear();
+							realTimeXCategories.clear();
+
+							JSONArray result = json.getJSONArray("result");
+							for (int i = 0; i < result.length(); i++) {
+								JSONObject item = result.getJSONObject(i);
+								String time = realTimeDateFormat
+										.format(new Date(item.getLong("time")));
+								realTimeXCategories.add(time);
+								if (!item.getString("amount").equals("")) {
+									realTimeYDatas.add(Double.parseDouble(item
+											.getString("amount")) / 10);
+								} else {
+									realTimeYDatas.add(0.0);
+								}
+							}
+							if (ir == 3) {
+								handlerForRealtime.sendEmptyMessage(3);
+							} else {
+								handlerForRealtime.sendEmptyMessage(2);
+							}
+
+							if ("success".equals("result")) {
+								finish();
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
 						}
 					}
-					if (ir == 3) {
+
+					@Override
+					public void onFailure(Throwable t, int errorNo,
+							String strMsg) {
+						super.onFailure(t, errorNo, strMsg);
+						realTimeXCategories.clear();
+						realTimeYDatas.clear();
 						handlerForRealtime.sendEmptyMessage(3);
-					} else {
-						handlerForRealtime.sendEmptyMessage(2);
 					}
 
-					if ("success".equals("result")) {
-						finish();
+					@Override
+					public void onTimeout() {
+						super.onTimeout();
+						// realTimeXCategories.clear();
+						realTimeYDatas.clear();
+						handlerForRealtime.sendEmptyMessage(3);
 					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
+				});
 
-			@Override
-			public void onFailure(Throwable t, int errorNo,
-					String strMsg) {
-				super.onFailure(t, errorNo, strMsg);
-				realTimeXCategories.clear();
-				realTimeYDatas.clear();
-				handlerForRealtime.sendEmptyMessage(3);
-			}
-
-			@Override
-			public void onTimeout() {
-				super.onTimeout();
-				// realTimeXCategories.clear();
-				realTimeYDatas.clear();
-				handlerForRealtime.sendEmptyMessage(3);
-			}
-		});
-
-//		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
-//				null, new AjaxCallBack<String>() {
-//					@Override
-//					public void onSuccess(String jsonString) {
-//						super.onSuccess(jsonString);
-//						L.e(this, "请求getFurnaceHourGas后返回的数据是 : " + jsonString);
-//
-//						try {
-//							JSONObject json = new JSONObject(jsonString);
-//
-//							realTimeYDatas.clear();
-//							realTimeXCategories.clear();
-//
-//							JSONArray result = json.getJSONArray("result");
-//							for (int i = 0; i < result.length(); i++) {
-//								JSONObject item = result.getJSONObject(i);
-//								String time = realTimeDateFormat
-//										.format(new Date(item.getLong("time")));
-//								realTimeXCategories.add(time);
-//								if (!item.getString("amount").equals("")) {
-//									realTimeYDatas.add(Double.parseDouble(item
-//											.getString("amount")) / 10);
-//								} else {
-//									realTimeYDatas.add(0.0);
-//								}
-//							}
-//							if (ir == 3) {
-//								handlerForRealtime.sendEmptyMessage(3);
-//							} else {
-//								handlerForRealtime.sendEmptyMessage(2);
-//							}
-//
-//							if ("success".equals("result")) {
-//								finish();
-//							}
-//						} catch (JSONException e) {
-//							e.printStackTrace();
-//						}
-//					}
-//
-//					@Override
-//					public void onFailure(Throwable t, int errorNo,
-//							String strMsg) {
-//						super.onFailure(t, errorNo, strMsg);
-//						realTimeXCategories.clear();
-//						realTimeYDatas.clear();
-//						handlerForRealtime.sendEmptyMessage(3);
-//					}
-//
-//					@Override
-//					public void onTimeout() {
-//						super.onTimeout();
-//						// realTimeXCategories.clear();
-//						realTimeYDatas.clear();
-//						handlerForRealtime.sendEmptyMessage(3);
-//					}
-//				});
+		// mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
+		// null, new AjaxCallBack<String>() {
+		// @Override
+		// public void onSuccess(String jsonString) {
+		// super.onSuccess(jsonString);
+		// L.e(this, "请求getFurnaceHourGas后返回的数据是 : " + jsonString);
+		//
+		// try {
+		// JSONObject json = new JSONObject(jsonString);
+		//
+		// realTimeYDatas.clear();
+		// realTimeXCategories.clear();
+		//
+		// JSONArray result = json.getJSONArray("result");
+		// for (int i = 0; i < result.length(); i++) {
+		// JSONObject item = result.getJSONObject(i);
+		// String time = realTimeDateFormat
+		// .format(new Date(item.getLong("time")));
+		// realTimeXCategories.add(time);
+		// if (!item.getString("amount").equals("")) {
+		// realTimeYDatas.add(Double.parseDouble(item
+		// .getString("amount")) / 10);
+		// } else {
+		// realTimeYDatas.add(0.0);
+		// }
+		// }
+		// if (ir == 3) {
+		// handlerForRealtime.sendEmptyMessage(3);
+		// } else {
+		// handlerForRealtime.sendEmptyMessage(2);
+		// }
+		//
+		// if ("success".equals("result")) {
+		// finish();
+		// }
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		//
+		// @Override
+		// public void onFailure(Throwable t, int errorNo,
+		// String strMsg) {
+		// super.onFailure(t, errorNo, strMsg);
+		// realTimeXCategories.clear();
+		// realTimeYDatas.clear();
+		// handlerForRealtime.sendEmptyMessage(3);
+		// }
+		//
+		// @Override
+		// public void onTimeout() {
+		// super.onTimeout();
+		// // realTimeXCategories.clear();
+		// realTimeYDatas.clear();
+		// handlerForRealtime.sendEmptyMessage(3);
+		// }
+		// });
 
 		L.e(this, " getDataForShiShi()执行完了");
 		return forResult;

@@ -8,7 +8,7 @@ import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.view.BathSettingDialogUtil.BathSettingVo;
 import com.xtremeprog.xpgconnect.generated.generated;
 
-public class SendMsgModel {
+public class GasHeaterSendCommandService {
 
 	private static final String TAG = "SendMsgModel";
 
@@ -104,7 +104,7 @@ public class SendMsgModel {
 	// DIY设置指令下发
 
 	public static void setDIYModel(int i, final GasCustomSetVo gasCustomSetVo) {
-		L.e(SendMsgModel.class, "SendMsgModel.setDIYModel() : " + gasCustomSetVo.getSendId() + " :  "+ gasCustomSetVo.getTempter()
+		L.e(GasHeaterSendCommandService.class, "SendMsgModel.setDIYModel() : " + gasCustomSetVo.getSendId() + " :  "+ gasCustomSetVo.getTempter()
 				+ " :  " + gasCustomSetVo.getWaterval());
 		// generated.SendGasWaterHeaterDIYSettingReq(arg0, arg1, arg2, arg3,
 		// arg4)

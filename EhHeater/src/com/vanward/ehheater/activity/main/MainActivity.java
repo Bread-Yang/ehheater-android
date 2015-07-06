@@ -266,7 +266,6 @@ public class MainActivity extends BaseBusinessActivity implements
 
 	@Override
 	protected void queryState() {
-		rlt_loading.setVisibility(View.VISIBLE);
 		generated.SendStateReq(Global.connectId);
 //		rightButton.postDelayed(new Runnable() {
 //			@Override
@@ -418,7 +417,7 @@ public class MainActivity extends BaseBusinessActivity implements
 
 			@Override
 			public void onFinish() {
-				SendMsgModel.setTempter(value);
+				ElectricHeaterSendCommandService.setTempter(value);
 				tv_tempter.setText(value + "");
 				if (currentModeCode == 7) { // 智能模式
 					IntelligentPatternUtil.addLastTemperature(
@@ -452,13 +451,13 @@ public class MainActivity extends BaseBusinessActivity implements
 						.nextButtonCall(new NextButtonCall() {
 							@Override
 							public void oncall(View v) {
-								SendMsgModel.closeDevice();
+								ElectricHeaterSendCommandService.closeDevice();
 								DeviceOffUtil.instance(MainActivity.this)
 										.dissmiss();
 							}
 						}).showDialog();
 			} else {
-				SendMsgModel.openDevice();
+				ElectricHeaterSendCommandService.openDevice();
 			}
 
 			break;
@@ -612,7 +611,7 @@ public class MainActivity extends BaseBusinessActivity implements
 	}
 
 	private void Tojishi() {
-		SendMsgModel.changeToJishiMode();
+		ElectricHeaterSendCommandService.changeToJishiMode();
 	}
 
 	private void setPower() {
@@ -627,7 +626,7 @@ public class MainActivity extends BaseBusinessActivity implements
 						int i = PowerSettingDialogUtil.instance(
 								MainActivity.this).getPower();
 						System.out.println("0x00: " + (short) (0x00 + i));
-						SendMsgModel.setPower(i);
+						ElectricHeaterSendCommandService.setPower(i);
 						if (currentModeCode == 7) { // 智能模式
 							IntelligentPatternUtil.addLastPower(
 									MainActivity.this, i);
@@ -1025,7 +1024,7 @@ public class MainActivity extends BaseBusinessActivity implements
 		openView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				SendMsgModel.openDevice();
+				ElectricHeaterSendCommandService.openDevice();
 			}
 		});
 	}

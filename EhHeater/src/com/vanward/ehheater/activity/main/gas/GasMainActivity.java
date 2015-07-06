@@ -184,7 +184,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 							@Override
 							public void onClick(View v) {
-								SendMsgModel.setToSolfMode();
+								GasHeaterSendCommandService.setToSolfMode();
 								fullWaterDialog.dismiss();
 							}
 						});
@@ -232,7 +232,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 						.shouldExecuteBinding(curHeater);
 
 				if (shouldExecuteBinding) {
-					rlt_loading.setVisibility(View.VISIBLE);
 					HeaterInfoService.setBinding(this, did, passcode);
 					isBinding = true;
 					new Handler().postDelayed(new Runnable() {
@@ -301,7 +300,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	protected void queryState() {
 		L.e(this, "queryState()");
 
-		rlt_loading.setVisibility(View.VISIBLE);
 		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
 //		rightButton.postDelayed(new Runnable() {
 //			@Override
@@ -445,7 +443,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 			if (tv_tempter.getText().toString().contains("--")) {
 				// 以此判定为不在线
-
 				dialog_reconnect.show();
 				return;
 			}
@@ -455,14 +452,14 @@ public class GasMainActivity extends BaseBusinessActivity implements
 						.nextButtonCall(new NextButtonCall() {
 							@Override
 							public void oncall(View v) {
-								SendMsgModel.closeDevice();
+								GasHeaterSendCommandService.closeDevice();
 								DeviceOffUtil.instance(GasMainActivity.this)
 										.dissmiss();
 							}
 						}).showDialog();
 				return;
 			} else {
-				SendMsgModel.openDevice();
+				GasHeaterSendCommandService.openDevice();
 			}
 
 			break;
@@ -659,7 +656,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		openView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				SendMsgModel.openDevice();
+				GasHeaterSendCommandService.openDevice();
 			}
 		});
 	}
@@ -1082,7 +1079,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public boolean onLongClick(View arg0) {
-		SendMsgModel.setToSolfMode();
+		GasHeaterSendCommandService.setToSolfMode();
 		return true;
 	}
 
@@ -1106,7 +1103,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 							(short) curGasCustomVo.getSendId(), (short) value,
 							(short) curGasCustomVo.getWaterval());
 				} else {
-					SendMsgModel.setTempter(value);
+					GasHeaterSendCommandService.setTempter(value);
 				}
 				isSendingCommand = false;
 				tv_tempter.setText(value + "");

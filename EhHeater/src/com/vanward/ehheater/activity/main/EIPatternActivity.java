@@ -145,17 +145,17 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 
 	// 设置到智能模式
 	private void setToIntelligenceMode() {
-		SendMsgModel.changeToIntelligenceModeWash(this);
+		ElectricHeaterSendCommandService.changeToIntelligenceModeWash(this);
 	}
 
 	// 设置到自定义模式
 	private void setToCustomMode() {
-		SendMsgModel.changeToZidingyiMode();
+		ElectricHeaterSendCommandService.changeToZidingyiMode();
 	}
 
 	// 设置到夜电模式
 	private void setToNightMode() {
-		SendMsgModel.changeNightMode();
+		ElectricHeaterSendCommandService.changeNightMode();
 	}
 
 	// 设置到晨浴模式
@@ -163,9 +163,9 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 		MoringSeVo moringSeVo = MorningSettingModel.getInstance(this)
 				.getSetting(Global.current_did);
 		if (moringSeVo == null) {
-			SendMsgModel.changeToMorningWash(1);
+			ElectricHeaterSendCommandService.changeToMorningWash(1);
 		} else {
-			SendMsgModel.changeToMorningWash(moringSeVo.getPeople());
+			ElectricHeaterSendCommandService.changeToMorningWash(moringSeVo.getPeople());
 		}
 		finish();
 	}
@@ -441,13 +441,13 @@ public class EIPatternActivity extends EhHeaterBaseActivity implements
 //			}
 
 			L.e(this, "自定义");
-			SendMsgModel.changeToZidingyiMode();
+			ElectricHeaterSendCommandService.changeToZidingyiMode();
 			Thread.sleep(700);
 			L.e(this, "自定义 pow: " + customSetVo.getPower());
-			SendMsgModel.setPower(customSetVo.getPower());
+			ElectricHeaterSendCommandService.setPower(customSetVo.getPower());
 			Thread.sleep(700);
 			L.e(this, "自定义 Tem: " + customSetVo.getTempter());
-			SendMsgModel.setTempter(customSetVo.getTempter());
+			ElectricHeaterSendCommandService.setTempter(customSetVo.getTempter());
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();

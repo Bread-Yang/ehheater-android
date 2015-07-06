@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
@@ -91,6 +90,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	protected boolean isBinding;
 
 	protected RelativeLayout rlt_loading;
+
+	protected TextView tv_loading_tips;
 
 	private HeaterInfoService heaterInfoService;
 
@@ -174,16 +175,28 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		public void dispatchMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				if (firstSendStateReq) {
-					rlt_loading.setVisibility(View.VISIBLE);
-					firstSendStateReq = false;
-					L.e(BaseBusinessActivity.this,
-							"generated.SendStateReq(Global.connectId)调用了");
-					generated.SendStateReq(Global.connectId);
-
-					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
-					reconnectHandler.removeMessages(0);
-				}
+				L.e(this, "在reconnectHandler里面调用connectToDevice()重连");
+				connectToDevice();
+//				if (firstSendStateReq) {
+//					tv_loading_tips.setText(R.string.waiting_device_response);
+//					rlt_loading.setVisibility(View.VISIBLE);
+//					firstSendStateReq = false;
+//
+//					if (BaseBusinessActivity.this instanceof MainActivity) {
+//						L.e(BaseBusinessActivity.this, "查询电热状态");
+//						generated.SendStateReq(Global.connectId);
+//					} else if (BaseBusinessActivity.this instanceof GasMainActivity) {
+//						L.e(BaseBusinessActivity.this, "查询燃热状态");
+//						generated
+//								.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
+//					} else if (BaseBusinessActivity.this instanceof FurnaceMainActivity) {
+//						L.e(BaseBusinessActivity.this, "查询壁挂炉状态");
+//						generated.SendDERYRefreshReq(Global.connectId);
+//					}
+//
+//					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
+//					reconnectHandler.removeMessages(0);
+//				}
 				break;
 			case 1:
 				L.e(this, "@@@@@@@@@@@@@@@");
@@ -196,7 +209,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			}
 		};
 	};
-
+	
+	@Override
+	public void onSendPacket(byte[] data, int connId) {
+		super.onSendPacket(data, connId);
+		L.e(this, "onSendPacket调用了");
+	};
+	
 	@Override
 	public void onWriteEvent(int result, int connId) {
 		super.onWriteEvent(result, connId);
@@ -288,6 +307,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		setContentView(getLayoutInflater().inflate(
 				R.layout.activity_device_base, null));
 
+		tv_loading_tips = (TextView) findViewById(R.id.tv_loading_tips);
 		rlt_loading = (RelativeLayout) findViewById(R.id.rlt_loading);
 		rlt_loading.setOnTouchListener(new OnTouchListener() {
 
@@ -589,15 +609,23 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			}
 
 			dialog_reconnect.dismiss();
-			rlt_loading.setVisibility(View.VISIBLE);
 
 			// 断开之前的连接
 			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 
-			connectDeviceMac = heaterInfoService.getCurrentSelectedHeater()
-					.getMac().toLowerCase();
+			HeaterInfo connectingDevice = heaterInfoService
+					.getCurrentSelectedHeater();
+			if (connectingDevice == null) {
+				return;
+			}
+
+			connectDeviceMac = connectingDevice.getMac().toLowerCase();
 
 			if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
+
+				tv_loading_tips.setText(R.string.connecting);
+				rlt_loading.setVisibility(View.VISIBLE);
+
 				if (getIntent()
 						.getBooleanExtra(
 								EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK,
@@ -644,10 +672,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			@Override
 			public void run() {
 
-				L.e(this, "XPGConnectClient.xpgcStopDiscovery()");
-				XPGConnectClient.xpgcStopDiscovery();
-
 				if (!isAlreadyTryConnectBySmallCycle) {
+					L.e(this, "XPGConnectClient.xpgcStopDiscovery()");
+					XPGConnectClient.xpgcStopDiscovery();
+					
 					tryConnectByBigCycle();
 				}
 			}
@@ -661,13 +689,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		synchronized (this) {
 
-			L.e(this, "onDeviceFound(): mac : " + endpoint.getSzMac()
-					+ ", did : " + endpoint.getSzDid());
-
 			if (null == endpoint) {
 				L.e(this, "endpoint返回为null");
 				return;
 			}
+
+			L.e(this, "onDeviceFound(): mac : " + endpoint.getSzMac()
+					+ ", did : " + endpoint.getSzDid());
 
 			if (endpoint.getSzMac() == null || endpoint.getSzDid() == null) {
 				return;
@@ -676,11 +704,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			String macFound = endpoint.getSzMac().toLowerCase();
 			String didFound = endpoint.getSzDid();
 
+			L.e(this, "connnect device Mac : " + connectDeviceMac);
+			L.e(this, "connnect device did : " + heaterInfoService.getCurrentSelectedHeater().getDid());
+			L.e(this, "endpoint.getSzPasscode()" + endpoint.getSzPasscode());
 			L.e(this, "endpoint.getSzMac() : "
 					+ endpoint.getSzMac().toLowerCase());
 			L.e(this, "didFound : " + didFound);
 			L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
-			L.e(this, "currentHeater Mac : " + connectDeviceMac);
 
 			if (!isAlreadyTryConnectBySmallCycle) {
 				if (!TextUtils.isEmpty(macFound)
@@ -692,8 +722,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 					timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 
 					isAlreadyTryConnectBySmallCycle = true;
+					
+					HeaterInfo device = heaterInfoService.getCurrentSelectedHeater();
+					device.setDid(endpoint.getSzDid());
+					new HeaterInfoDao(getApplicationContext()).save(device);
 
-					L.e(this, "XPGConnShortCuts.connect2small()");
+					L.e(this, "========小循环返回对的设备,通过小循环连接 : XPGConnShortCuts.connect2small()=========");
 					XPGConnShortCuts.connect2small(endpoint.getAddr());
 				}
 			}
@@ -718,14 +752,17 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 			String devicePasscode = heaterInfoService
 					.getCurrentSelectedHeater().getPasscode();
+			
+			// 之前有没有保存passcode都重新请求一次passcode
+			generated.SendPasscodeReq(connId);
 
-			if (TextUtils.isEmpty(devicePasscode)) {
-				L.e(this, "SendPasscodeReq()");
-				generated.SendPasscodeReq(connId);
-			} else {
-				L.e(this, "XPGConnectClient.xpgcLogin()");
-				XPGConnectClient.xpgcLogin(connId, null, devicePasscode);
-			}
+//			if (TextUtils.isEmpty(devicePasscode)) {
+//				L.e(this, "SendPasscodeReq()");
+//				generated.SendPasscodeReq(connId);
+//			} else {
+//				L.e(this, "XPGConnectClient.xpgcLogin()");
+//				XPGConnectClient.xpgcLogin(connId, null, devicePasscode);
+//			}
 		}
 	}
 
@@ -739,6 +776,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		// 请求到的passcode
 		String retrievedPasscode = generated
 				.XpgData2String(pResp.getPasscode());
+		
 
 		if (TextUtils.isEmpty(retrievedPasscode)) {
 			L.e(this, "请求回到的passcode为空");
@@ -748,6 +786,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 		HeaterInfo device = heaterInfoService.getCurrentSelectedHeater();
 		device.setPasscode(retrievedPasscode);
+		new HeaterInfoDao(getApplicationContext()).save(device);
 
 		new HeaterInfoDao(getApplicationContext()).save(device);
 
@@ -846,6 +885,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 				L.e(this,
 						"执行了8秒后执行connectAfterGetBindingDevicesReceivedFromMQTT()方法");
+				L.e(this, "========大循环返回对的设备,通过大循环连接 : XPGConnectClient.xpgcLogin2Wan()=========");
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -868,6 +908,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 			HeaterInfo device = heaterInfoService.getCurrentSelectedHeater();
 			device.setPasscode(endpoint.getSzPasscode());
+			device.setDid(endpoint.getSzDid());
 
 			new HeaterInfoDao(getApplicationContext()).save(device);
 
@@ -939,9 +980,18 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 	@Override
 	public void onV4BindDevce(int errorCode, String successString,
 			String failString) {
-		L.e(this, "onV4BindDevce()");
+		L.e(this, "onV4BindDevce() : errorCode : " + errorCode
+				+ ", successString : " + successString);
 
 		super.onV4BindDevce(errorCode, successString, failString);
+
+		if (errorCode == 0
+				&& successString.equals(heaterInfoService
+						.getCurrentSelectedHeater().getDid())) {
+
+		} else {
+			Toast.makeText(this, R.string.upload_bind_fail, Toast.LENGTH_SHORT).show();
+		}
 
 		isNeedToUploadBindAfterEasyLink = false;
 	}

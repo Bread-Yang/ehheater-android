@@ -287,21 +287,21 @@ public class EIAddPatternActivity extends EhHeaterBaseActivity implements
 						public void run() {
 
 							L.e(this, "自定义");
-							SendMsgModel.changeToZidingyiMode();
+							ElectricHeaterSendCommandService.changeToZidingyiMode();
 							try {
 								Thread.sleep(700);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
 							L.e(this, "自定义 pow: " + customSetVo.getPower());
-							SendMsgModel.setPower(customSetVo.getPower());
+							ElectricHeaterSendCommandService.setPower(customSetVo.getPower());
 							try {
 								Thread.sleep(700);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
 							L.e(this, "自定义 Tem: " + customSetVo.getTempter());
-							SendMsgModel.setTempter(customSetVo.getTempter());
+							ElectricHeaterSendCommandService.setTempter(customSetVo.getTempter());
 
 						}
 					}).start();
