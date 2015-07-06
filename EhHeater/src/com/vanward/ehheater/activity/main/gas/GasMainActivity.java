@@ -135,7 +135,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (getIntent().getBooleanExtra("newActivity", false)) {
 			String gasMac = getIntent().getStringExtra("mac");
 			Log.e("notification传过来的gasMac是", gasMac);
-//			connectDevice("", gasMac);
+			// connectDevice("", gasMac);
 		} else {
 			connectToDevice();
 		}
@@ -177,6 +177,9 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	}
 
 	private void init() {
+		GasHeaterSendCommandService.getInstance().setBeforeSendCommandCallBack(
+				this);
+
 		fullWaterDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.full_water,
 						R.string.I_know, R.string.soft_mode, null,
@@ -184,7 +187,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 							@Override
 							public void onClick(View v) {
-								GasHeaterSendCommandService.setToSolfMode();
+								GasHeaterSendCommandService.getInstance()
+										.setToSolfMode();
 								fullWaterDialog.dismiss();
 							}
 						});
@@ -300,18 +304,19 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	protected void queryState() {
 		L.e(this, "queryState()");
 
-		generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-//		rightButton.postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//				if (!stateQueried) {
-//					if (isActived) {
-//						dialog_reconnect.show();
-//					}
-//					dealDisConnect();
-//				}
-//			}
-//		}, connectTime);
+		GasHeaterSendCommandService.getInstance()
+				.SendGasWaterHeaterMobileRefreshReq();
+		// rightButton.postDelayed(new Runnable() {
+		// @Override
+		// public void run() {
+		// if (!stateQueried) {
+		// if (isActived) {
+		// dialog_reconnect.show();
+		// }
+		// dealDisConnect();
+		// }
+		// }
+		// }, connectTime);
 	}
 
 	private boolean stateQueried;
@@ -352,6 +357,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
+		GasHeaterSendCommandService.getInstance().setBeforeSendCommandCallBack(
+				null);
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
 				heaterNameChangeReceiver);
 	}
@@ -452,14 +459,15 @@ public class GasMainActivity extends BaseBusinessActivity implements
 						.nextButtonCall(new NextButtonCall() {
 							@Override
 							public void oncall(View v) {
-								GasHeaterSendCommandService.closeDevice();
+								GasHeaterSendCommandService.getInstance()
+										.closeDevice();
 								DeviceOffUtil.instance(GasMainActivity.this)
 										.dissmiss();
 							}
 						}).showDialog();
 				return;
 			} else {
-				GasHeaterSendCommandService.openDevice();
+				GasHeaterSendCommandService.getInstance().openDevice();
 			}
 
 			break;
@@ -656,7 +664,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		openView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				GasHeaterSendCommandService.openDevice();
+				GasHeaterSendCommandService.getInstance().openDevice();
 			}
 		});
 	}
@@ -1079,7 +1087,7 @@ public class GasMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	public boolean onLongClick(View arg0) {
-		GasHeaterSendCommandService.setToSolfMode();
+		GasHeaterSendCommandService.getInstance().setToSolfMode();
 		return true;
 	}
 
@@ -1099,11 +1107,13 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			@Override
 			public void onFinish() {
 				if (currentModeCode == 6 && curGasCustomVo != null) {
-					generated.SendGasWaterHeaterDIYSettingReq(Global.connectId,
-							(short) curGasCustomVo.getSendId(), (short) value,
-							(short) curGasCustomVo.getWaterval());
+					GasHeaterSendCommandService.getInstance()
+							.SendGasWaterHeaterDIYSettingReq(
+									(short) curGasCustomVo.getSendId(),
+									(short) value,
+									(short) curGasCustomVo.getWaterval());
 				} else {
-					GasHeaterSendCommandService.setTempter(value);
+					GasHeaterSendCommandService.getInstance().setTempter(value);
 				}
 				isSendingCommand = false;
 				tv_tempter.setText(value + "");

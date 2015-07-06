@@ -1,5 +1,9 @@
 package com.vanward.ehheater.activity.more;
 
+import java.text.SimpleDateFormat;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import net.tsz.afinal.http.AjaxCallBack;
 
 import org.json.JSONException;
@@ -8,6 +12,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +24,6 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
@@ -29,7 +33,7 @@ public class AboutActivity extends Activity {
 
 	private Button btn_check_update;
 	private Button rightbButton;
-	private TextView tv_vanward_site, tv_model;
+	private TextView tv_vanward_site, tv_model, tv_version;
 	private View leftbutton;
 	private HttpFriend mHttpFriend;
 	private Dialog updateTipsDialog;
@@ -56,6 +60,7 @@ public class AboutActivity extends Activity {
 		btn_check_update = (Button) findViewById(R.id.btn_check_update);
 		leftbutton = ((Button) findViewById(R.id.ivTitleBtnLeft));
 		rightbButton = ((Button) findViewById(R.id.ivTitleBtnRigh));
+		tv_version = ((TextView) findViewById(R.id.tv_version));
 		tv_vanward_site = ((TextView) findViewById(R.id.tv_vanward_site));
 		tv_model = ((TextView) findViewById(R.id.tv_model));
 		rightbButton.setVisibility(View.GONE);
@@ -134,6 +139,24 @@ public class AboutActivity extends Activity {
 	}
 
 	private void init() {
+		try {
+			ApplicationInfo ai = getPackageManager().getApplicationInfo(
+					getPackageName(), 0);
+			ZipFile zf = new ZipFile(ai.sourceDir);
+			ZipEntry ze = zf.getEntry("classes.dex");
+			long time = ze.getTime();
+			zf.close();
+			
+			String version = getResources().getString(R.string.version);
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MM月dd号 HH:mm");
+			String date = dateFormat.format(new java.util.Date(time));
+			
+			tv_version.setText(version + " " + date);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		TextView tv_about = (TextView) findViewById(R.id.tv_about);
 		tv_about.setText(Html.fromHtml(getString(R.string.vanward_profile)));
 

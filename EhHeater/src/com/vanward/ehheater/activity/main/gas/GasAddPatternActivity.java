@@ -231,8 +231,9 @@ public class GasAddPatternActivity extends EhHeaterBaseActivity implements
 						@Override
 						public void run() {
 
-							GasHeaterSendCommandService.setDIYModel(customSetVo.getSendId(),
-									customSetVo);
+							GasHeaterSendCommandService.getInstance()
+									.setDIYModel(customSetVo.getSendId(),
+											customSetVo);
 
 						}
 					}).start();

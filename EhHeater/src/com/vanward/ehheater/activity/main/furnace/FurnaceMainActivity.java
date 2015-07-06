@@ -131,20 +131,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		LocalBroadcastManager.getInstance(getBaseContext()).registerReceiver(
 				heaterNameChangeReceiver,
 				new IntentFilter(Consts.INTENT_FILTER_HEATER_NAME_CHANGED));
-
-		// btn_top_right.post(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// btn_top_right.setWidth(btn_top_right.getWidth());
-		// btn_top_right.setHeight(btn_top_right.getHeight());
-		// generated.SendDERYRefreshReq(Global.connectId);
-		// }
-		// });
-
 		if (getIntent().getBooleanExtra("newActivity", false)) {
 			String furnaceMac = getIntent().getStringExtra("mac");
-//			connectDevice("", furnaceMac);
+			// connectDevice("", furnaceMac);
 		} else {
 			connectToDevice();
 		}
@@ -280,12 +269,14 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		rlt_open.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				FurnaceSendMsgModel.openDevice();
+				FurnaceSendCommandService.getInstance().openDevice();
 			}
 		});
 	}
 
 	private void init() {
+		FurnaceSendCommandService.getInstance().setBeforeSendCommandCallBack(this);
+
 		errorString = getResources().getStringArray(
 				R.array.furnace_error_arrary);
 
@@ -296,7 +287,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 							@Override
 							public void onClick(View v) {
-								FurnaceSendMsgModel.closeDevice();
+								FurnaceSendCommandService.getInstance().closeDevice();
 								turnOffInWinnerDialog.dismiss();
 							}
 						});
@@ -401,10 +392,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			// 收到主动断开,重连一次
 			connectToDevice();
 		}
-		/*
-		 * else if (connId == Global.connectId && event == 0) {
-		 * generated.SendDERYRefreshReq(Global.connectId); }
-		 */
 	}
 
 	private void onOffDeal(DERYStatusResp_t pResp) {
@@ -692,9 +679,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			@Override
 			public void onFinish() {
 				if (isBathMode) {
-					FurnaceSendMsgModel.setBathTemperature(value);
+					FurnaceSendCommandService.getInstance().setBathTemperature(value);
 				} else {
-					FurnaceSendMsgModel.setHeatingTemperature(value);
+					FurnaceSendCommandService.getInstance().setHeatingTemperature(
+							value);
 				}
 				isSendingCommand = false;
 			}
@@ -731,7 +719,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 					// }
 					turnOffInWinnerDialog.show();
 				} else {
-					FurnaceSendMsgModel.openDevice();
+					FurnaceSendCommandService.getInstance().openDevice();
 				}
 			}
 			break;
@@ -964,20 +952,20 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	protected void queryState() {
 		L.e(this, "queryState()");
 
-		generated.SendDERYRefreshReq(Global.connectId);
-//		mSlidingMenu.postDelayed(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				if (!stateQueried) {
-//					L.e(this, "@@@@@@@@@@@@@@@");
-//					changeToOfflineUI();
-//					if (isActived) {
-//						dialog_reconnect.show();
-//					}
-//				}
-//			}
-//		}, connectTime);
+		FurnaceSendCommandService.getInstance().SendDERYRefreshReq();
+		// mSlidingMenu.postDelayed(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// if (!stateQueried) {
+		// L.e(this, "@@@@@@@@@@@@@@@");
+		// changeToOfflineUI();
+		// if (isActived) {
+		// dialog_reconnect.show();
+		// }
+		// }
+		// }
+		// }, connectTime);
 	}
 
 	@Override
@@ -991,16 +979,16 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
 	}
 
-//	@Override
-//	public void onEasyLinkResp(XpgEndpoint endpoint) {
-//		super.onEasyLinkResp(endpoint);
-//		L.e(this, "onEasyLinkResp(XpgEndpoint endpoint)");
-//
-//		L.e(this, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
-//		L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
-//		L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
-//		L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
-//	}
+	// @Override
+	// public void onEasyLinkResp(XpgEndpoint endpoint) {
+	// super.onEasyLinkResp(endpoint);
+	// L.e(this, "onEasyLinkResp(XpgEndpoint endpoint)");
+	//
+	// L.e(this, "endpoint.getSzProductKey() : " + endpoint.getSzProductKey());
+	// L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
+	// L.e(this, "endpoint.getSzDid() : " + endpoint.getSzDid());
+	// L.e(this, "endpoint.getAddr() : " + endpoint.getAddr());
+	// }
 
 	@Override
 	protected void onPause() {
@@ -1044,6 +1032,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		}
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
 				heaterNameChangeReceiver);
+		FurnaceSendCommandService.getInstance().setBeforeSendCommandCallBack(null);
 	}
 
 	@Override

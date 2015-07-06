@@ -76,7 +76,8 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 
 							@Override
 							public void onClick(View v) {
-								FurnaceSendMsgModel.setToSummerMode();
+								FurnaceSendCommandService.getInstance()
+										.setToSummerMode();
 								intent.putExtra("seasonMode", SET_SUMMER_MODE);
 								// setResult(RESULT_OK, intent);
 								summer_dialog.dismiss();
@@ -91,7 +92,8 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 
 							@Override
 							public void onClick(View v) {
-								FurnaceSendMsgModel.setToWinnerMode();
+								FurnaceSendCommandService.getInstance()
+										.setToWinnerMode();
 								intent.putExtra("seasonMode", SET_WINNER_MODE);
 								// setResult(RESULT_OK, intent);
 								winner_dialog.dismiss();
@@ -112,7 +114,7 @@ public class FurnaceSeasonActivity extends EhHeaterBaseActivity {
 	@Override
 	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
 		super.OnDERYStatusResp(pResp, nConnId);
-		
+
 		isCheckByHand = true;
 		if (pResp.getSeasonState() == 0) {
 			rg_mode.check(R.id.rb_mode_summer);

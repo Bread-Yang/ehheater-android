@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.main.furnace.FurnaceSendCommandService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -74,7 +75,7 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 			dialog_dial.show();
 			break;
 		case R.id.btn_reset:
-			generated.SendDERYResetErrorReq(Global.connectId);
+			FurnaceSendCommandService.getInstance().SendDERYRefreshReq();
 			break;
 		case R.id.ivTitleBtnLeft:
 			finish();

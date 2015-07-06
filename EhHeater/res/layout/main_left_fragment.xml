@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.vanward.ehheater.activity.main.LeftFragment xmlns:android="http://schemas.android.com/apk/res/android"
+<com.vanward.ehheater.activity.main.common.LeftFragment xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_left_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -87,10 +87,10 @@
             android:layout_centerVertical="true"
             android:drawableLeft="@drawable/setting_icon_xiatian"
             android:drawablePadding="11dp"
-            android:textSize="18sp"
             android:gravity="center_vertical"
             android:paddingLeft="8dp"
-            android:text="@string/winner_mode" />
+            android:text="@string/winner_mode"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/btn_season_mode"
@@ -293,4 +293,4 @@
         android:layout_height="wrap_content"
         android:background="@drawable/menu_line" />
 
-</com.vanward.ehheater.activity.main.LeftFragment>
+</com.vanward.ehheater.activity.main.common.LeftFragment>

@@ -31,8 +31,13 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.common.BaseSendCommandService;
+import com.vanward.ehheater.activity.main.common.BaseSendCommandService.BeforeSendCommandCallBack;
+import com.vanward.ehheater.activity.main.electric.ElectricHeaterSendCommandService;
+import com.vanward.ehheater.activity.main.electric.ElectricMainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
+import com.vanward.ehheater.activity.main.furnace.FurnaceSendCommandService;
+import com.vanward.ehheater.activity.main.gas.GasHeaterSendCommandService;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -70,9 +75,8 @@ import com.xtremeprog.xpgconnect.generated.generated;
  * @author Administrator
  * 
  */
-public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
-
-	private static final String TAG = "BaseBusinessActivity";
+public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
+		implements BeforeSendCommandCallBack {
 
 	abstract protected void changeToOfflineUI();
 
@@ -177,26 +181,28 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			case 0:
 				L.e(this, "在reconnectHandler里面调用connectToDevice()重连");
 				connectToDevice();
-//				if (firstSendStateReq) {
-//					tv_loading_tips.setText(R.string.waiting_device_response);
-//					rlt_loading.setVisibility(View.VISIBLE);
-//					firstSendStateReq = false;
-//
-//					if (BaseBusinessActivity.this instanceof MainActivity) {
-//						L.e(BaseBusinessActivity.this, "查询电热状态");
-//						generated.SendStateReq(Global.connectId);
-//					} else if (BaseBusinessActivity.this instanceof GasMainActivity) {
-//						L.e(BaseBusinessActivity.this, "查询燃热状态");
-//						generated
-//								.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-//					} else if (BaseBusinessActivity.this instanceof FurnaceMainActivity) {
-//						L.e(BaseBusinessActivity.this, "查询壁挂炉状态");
-//						generated.SendDERYRefreshReq(Global.connectId);
-//					}
-//
-//					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
-//					reconnectHandler.removeMessages(0);
-//				}
+				// if (firstSendStateReq) {
+				// tv_loading_tips.setText(R.string.waiting_device_response);
+				// rlt_loading.setVisibility(View.VISIBLE);
+				// firstSendStateReq = false;
+				//
+				// if (BaseBusinessActivity.this instanceof MainActivity) {
+				// L.e(BaseBusinessActivity.this, "查询电热状态");
+				// generated.SendStateReq(Global.connectId);
+				// } else if (BaseBusinessActivity.this instanceof
+				// GasMainActivity) {
+				// L.e(BaseBusinessActivity.this, "查询燃热状态");
+				// generated
+				// .SendGasWaterHeaterMobileRefreshReq(Global.connectId);
+				// } else if (BaseBusinessActivity.this instanceof
+				// FurnaceMainActivity) {
+				// L.e(BaseBusinessActivity.this, "查询壁挂炉状态");
+				// generated.SendDERYRefreshReq(Global.connectId);
+				// }
+				//
+				// reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
+				// reconnectHandler.removeMessages(0);
+				// }
 				break;
 			case 1:
 				L.e(this, "@@@@@@@@@@@@@@@");
@@ -209,20 +215,27 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			}
 		};
 	};
-	
+
 	@Override
 	public void onSendPacket(byte[] data, int connId) {
 		super.onSendPacket(data, connId);
 		L.e(this, "onSendPacket调用了");
 	};
-	
+
 	@Override
-	public void onWriteEvent(int result, int connId) {
-		super.onWriteEvent(result, connId);
-		L.e(this, "onWriteEvent调用了");
+	public void beforeSendCommand() {
+		L.e(this, "beforeSendCommand调用了");
 		reconnectHandler.removeMessages(0);
 		reconnectHandler.sendEmptyMessageDelayed(0, connectTime);
 	}
+
+	// @Override
+	// public void onWriteEvent(int result, int connId) {
+	// super.onWriteEvent(result, connId);
+	// L.e(this, "onWriteEvent调用了");
+	// reconnectHandler.removeMessages(0);
+	// reconnectHandler.sendEmptyMessageDelayed(0, connectTime);
+	// }
 
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
@@ -235,7 +248,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		L.e(this, "onTcpPacket被调用了");
 		super.onTcpPacket(data, connId);
 
-		if (this instanceof MainActivity) {
+		if (this instanceof ElectricMainActivity) {
 			firstSendStateReq = true;
 			reconnectHandler.removeMessages(0);
 			reconnectHandler.removeMessages(1);
@@ -675,7 +688,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 				if (!isAlreadyTryConnectBySmallCycle) {
 					L.e(this, "XPGConnectClient.xpgcStopDiscovery()");
 					XPGConnectClient.xpgcStopDiscovery();
-					
+
 					tryConnectByBigCycle();
 				}
 			}
@@ -705,7 +718,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 			String didFound = endpoint.getSzDid();
 
 			L.e(this, "connnect device Mac : " + connectDeviceMac);
-			L.e(this, "connnect device did : " + heaterInfoService.getCurrentSelectedHeater().getDid());
+			L.e(this, "connnect device did : "
+					+ heaterInfoService.getCurrentSelectedHeater().getDid());
 			L.e(this, "endpoint.getSzPasscode()" + endpoint.getSzPasscode());
 			L.e(this, "endpoint.getSzMac() : "
 					+ endpoint.getSzMac().toLowerCase());
@@ -722,12 +736,14 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 					timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 
 					isAlreadyTryConnectBySmallCycle = true;
-					
-					HeaterInfo device = heaterInfoService.getCurrentSelectedHeater();
+
+					HeaterInfo device = heaterInfoService
+							.getCurrentSelectedHeater();
 					device.setDid(endpoint.getSzDid());
 					new HeaterInfoDao(getApplicationContext()).save(device);
 
-					L.e(this, "========小循环返回对的设备,通过小循环连接 : XPGConnShortCuts.connect2small()=========");
+					L.e(this,
+							"========小循环返回对的设备,通过小循环连接 : XPGConnShortCuts.connect2small()=========");
 					XPGConnShortCuts.connect2small(endpoint.getAddr());
 				}
 			}
@@ -752,17 +768,17 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 			String devicePasscode = heaterInfoService
 					.getCurrentSelectedHeater().getPasscode();
-			
+
 			// 之前有没有保存passcode都重新请求一次passcode
 			generated.SendPasscodeReq(connId);
 
-//			if (TextUtils.isEmpty(devicePasscode)) {
-//				L.e(this, "SendPasscodeReq()");
-//				generated.SendPasscodeReq(connId);
-//			} else {
-//				L.e(this, "XPGConnectClient.xpgcLogin()");
-//				XPGConnectClient.xpgcLogin(connId, null, devicePasscode);
-//			}
+			// if (TextUtils.isEmpty(devicePasscode)) {
+			// L.e(this, "SendPasscodeReq()");
+			// generated.SendPasscodeReq(connId);
+			// } else {
+			// L.e(this, "XPGConnectClient.xpgcLogin()");
+			// XPGConnectClient.xpgcLogin(connId, null, devicePasscode);
+			// }
 		}
 	}
 
@@ -776,7 +792,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 		// 请求到的passcode
 		String retrievedPasscode = generated
 				.XpgData2String(pResp.getPasscode());
-		
 
 		if (TextUtils.isEmpty(retrievedPasscode)) {
 			L.e(this, "请求回到的passcode为空");
@@ -885,7 +900,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 
 				L.e(this,
 						"执行了8秒后执行connectAfterGetBindingDevicesReceivedFromMQTT()方法");
-				L.e(this, "========大循环返回对的设备,通过大循环连接 : XPGConnectClient.xpgcLogin2Wan()=========");
+				L.e(this,
+						"========大循环返回对的设备,通过大循环连接 : XPGConnectClient.xpgcLogin2Wan()=========");
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -990,9 +1006,11 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity {
 						.getCurrentSelectedHeater().getDid())) {
 
 		} else {
-			Toast.makeText(this, R.string.upload_bind_fail, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.upload_bind_fail, Toast.LENGTH_SHORT)
+					.show();
 		}
 
 		isNeedToUploadBindAfterEasyLink = false;
 	}
+
 }

@@ -14,11 +14,13 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
+import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.UIUtil;
 import com.xtremeprog.xpgconnect.generated.GeneratedActivity;
 
@@ -153,6 +155,11 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 
 	protected void executeRequest(String requestURL, AjaxParams params,
 			final AjaxCallBack callBack) {
+		if (!NetworkStatusUtil.isConnected(this)) {
+			Toast.makeText(this, "网络访问不了,确保打开GPRS或者WiFi网络",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
 		rlt_loading.setVisibility(View.VISIBLE);
 
 		mHttpFriend.toUrl(requestURL).executePost(params,

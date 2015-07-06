@@ -74,25 +74,6 @@ public class DialogUtil {
 								onCancel.run();
 							}
 							dialog.dismiss();
-//							HeaterInfo curHeater = new HeaterInfoService(act
-//									.getBaseContext())
-//									.getCurrentSelectedHeater();
-//							if (curHeater == null) {
-//								return;
-//							}
-//							switch (new HeaterInfoService(act)
-//									.getHeaterType(curHeater)) {
-//							case ELECTRIC_HEATER:
-//								generated.SendStateReq(Global.connectId);
-//								break;
-//							case GAS_HEATER:
-//								generated.SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-//								break;
-//							case FURNACE:
-//								generated.SendDERYRefreshReq(Global.connectId);
-//								break;
-//
-//							}
 						}
 					});
 			dialog.findViewById(R.id.dr_btn_reconnect).setOnClickListener(

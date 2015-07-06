@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.CustomSetVo;
+import com.vanward.ehheater.activity.main.electric.CustomSetVo;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 
 public class ErrorDialogUtil {

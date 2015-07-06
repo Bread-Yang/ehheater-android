@@ -44,15 +44,19 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 					public void onCheckedChanged(RadioGroup arg0, int checkedId) {
 						switch (checkedId) {
 						case R.id.rb_model_default:
-							FurnaceSendMsgModel.setToNormalHeating();
+							FurnaceSendCommandService.getInstance()
+									.setToNormalHeating();
 							break;
 						case R.id.rb_mode_outdoor:
-							FurnaceSendMsgModel.setToOutdoorHeating();
+							FurnaceSendCommandService.getInstance()
+									.setToOutdoorHeating();
 							// 供暖温度30℃（散热器与地暖一样）；可以设置温度，但不支持温度调节，不管设置多少温度，都是以默认30℃运行
-							FurnaceSendMsgModel.setHeatingTemperature(30);
+							FurnaceSendCommandService.getInstance()
+									.setHeatingTemperature(30);
 							break;
 						case R.id.rb_mode_night:
-							FurnaceSendMsgModel.setToNightHeating();
+							FurnaceSendCommandService.getInstance()
+									.setToNightHeating();
 							// 温度自动转为当前设置温度的80%；如当前设置60℃，当你按下夜间模式符号后，温度自动转为48℃；设置的温度可以调节。
 							// App直接发当前设置温度即可
 							int temp = (int) (FurnaceMainActivity.statusResp
@@ -60,8 +64,8 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 							if (temp < 30) {
 								temp = 30;
 							}
-							FurnaceSendMsgModel
-							.setHeatingTemperature(temp);
+							FurnaceSendCommandService.getInstance()
+									.setHeatingTemperature(temp);
 							break;
 						}
 						finish();
@@ -74,10 +78,10 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 			public void onCheckedChanged(RadioGroup arg0, int checkedId) {
 				switch (checkedId) {
 				case R.id.rb_mode_comfort:
-					FurnaceSendMsgModel.setToComfortBath();
+					FurnaceSendCommandService.getInstance().setToComfortBath();
 					break;
 				case R.id.rb_mode_normal:
-					FurnaceSendMsgModel.setToNormalBath();
+					FurnaceSendCommandService.getInstance().setToNormalBath();
 					break;
 				}
 				finish();
@@ -108,32 +112,40 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 			rg_heating_mode.check(R.id.rb_mode_outdoor);
 		}
 	}
-	
+
 	@Override
 	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
 		super.OnDERYStatusResp(pResp, nConnId);
-		
+
 		L.e(this, "OnDERYStatusResp()返回的nConnId : " + nConnId);
-		
+
 		if (pResp.getSeasonState() == 0) { // summer
 			llt_heating_mode.setVisibility(View.GONE);
 		} else { // winner
 			llt_heating_mode.setVisibility(View.VISIBLE);
 		}
-		
+
 		if (pResp.getBathMode() == 0) { // 0 - normal bath
-			rg_bath_mode.check(R.id.rb_mode_normal);
+			if (rg_bath_mode.getCheckedRadioButtonId() != R.id.rb_mode_normal){
+				rg_bath_mode.check(R.id.rb_mode_normal);
+			}
 		} else {
-			rg_bath_mode.check(R.id.rb_mode_comfort);
+			if (rg_bath_mode.getCheckedRadioButtonId() != R.id.rb_mode_comfort){
+				rg_bath_mode.check(R.id.rb_mode_comfort);
+			}
 		}
 		if (pResp.getHeatingMode() == 0xA0) { // 0xA0 - normal mode
-			rg_heating_mode.check(R.id.rb_model_default);
-		} else if (pResp.getHeatingMode() == 0xA1) { // 0xA1 - night
-			// mode
-			rg_heating_mode.check(R.id.rb_mode_night);
-		} else if (pResp.getHeatingMode() == 0xA2) { // 0xA2 - outdoor
-			// mode
-			rg_heating_mode.check(R.id.rb_mode_outdoor);
+			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_model_default){
+				rg_heating_mode.check(R.id.rb_model_default);
+			}
+		} else if (pResp.getHeatingMode() == 0xA1) { // 0xA1 - night mode
+			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_mode_night){
+				rg_heating_mode.check(R.id.rb_mode_night);
+			}
+		} else if (pResp.getHeatingMode() == 0xA2) { // 0xA2 - outdoor mode
+			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_mode_outdoor){
+				rg_heating_mode.check(R.id.rb_mode_outdoor);
+			}
 		}
 	}
 }

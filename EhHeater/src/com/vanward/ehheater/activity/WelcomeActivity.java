@@ -22,7 +22,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.info.SelectDeviceActivity;
 import com.vanward.ehheater.activity.login.LoginActivity;
-import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.electric.ElectricMainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -335,7 +335,7 @@ public class WelcomeActivity extends GeneratedActivity {
 					spu.put(ShareKey.PollingElectricHeaterMac, mac);
 
 					startActivity(new Intent(getBaseContext(),
-							MainActivity.class));
+							ElectricMainActivity.class));
 					finish();
 					break;
 				case GAS_HEATER:
@@ -361,7 +361,7 @@ public class WelcomeActivity extends GeneratedActivity {
 							"下载到了无法识别的设备, 请进入app切换至别的设备", Toast.LENGTH_LONG)
 							.show();
 					startActivity(new Intent(getBaseContext(),
-							MainActivity.class));
+							ElectricMainActivity.class));
 					finish();
 					break;
 				}

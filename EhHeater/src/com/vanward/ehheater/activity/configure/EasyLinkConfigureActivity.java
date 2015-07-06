@@ -34,7 +34,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.electric.ElectricMainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
@@ -611,7 +611,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 
 		case ELECTRIC_HEATER:
 
-			intent = new Intent(getBaseContext(), MainActivity.class);
+			intent = new Intent(getBaseContext(), ElectricMainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.putExtra(DIRECT_CONNECT_AFTER_EASYLINK,

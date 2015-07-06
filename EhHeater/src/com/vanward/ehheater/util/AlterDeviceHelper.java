@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.vanward.ehheater.activity.BaseBusinessActivity;
 import com.vanward.ehheater.activity.configure.ConnectActivity;
 import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.electric.ElectricMainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.service.AccountService;
@@ -65,7 +65,7 @@ public class AlterDeviceHelper {
 			intent.putExtra("switchSuccess", true);
 			switch (newHeaterType) {
 			case ELECTRIC_HEATER:
-				intent.setClass(hostActivity, MainActivity.class);
+				intent.setClass(hostActivity, ElectricMainActivity.class);
 				hostActivity.startActivity(intent);
 				L.e(AlterDeviceHelper.class, "调用了hostActivity.finish()");
 				hostActivity.finish();

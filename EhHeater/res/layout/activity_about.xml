@@ -47,7 +47,7 @@
         android:id="@+id/tv_vanward_site"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView2"
+        android:layout_above="@+id/tv_version"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="3dp"
         android:text="@string/vanward_site"
@@ -55,7 +55,7 @@
         android:textSize="17sp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView3"

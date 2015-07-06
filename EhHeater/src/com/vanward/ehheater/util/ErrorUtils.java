@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.vanward.ehheater.activity.main.MainActivity;
+import com.vanward.ehheater.activity.main.electric.ElectricMainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
@@ -43,7 +43,7 @@ public class ErrorUtils extends Activity {
 			} else if (isFurnaceMainActivityActive) {
 				originalIntent.setClass(this, FurnaceMainActivity.class);
 			} else {
-				originalIntent.setClass(this, MainActivity.class);
+				originalIntent.setClass(this, ElectricMainActivity.class);
 				if (!isMainActivityActive) {
 					originalIntent.putExtra("newActivity", true);
 				}
@@ -53,7 +53,7 @@ public class ErrorUtils extends Activity {
 		case GAS_HEATER: // 燃热
 			L.e(this, "case GAS-HEATER");
 			if (isMainActivityActive) { // 如何当前是处于电热或壁挂炉的主控界面,则从电热或壁挂炉主控界面切换到燃热主控界面
-				originalIntent.setClass(this, MainActivity.class);
+				originalIntent.setClass(this, ElectricMainActivity.class);
 			} else if (isFurnaceMainActivityActive) {
 				originalIntent.setClass(this, FurnaceMainActivity.class);
 			} else {
@@ -66,7 +66,7 @@ public class ErrorUtils extends Activity {
 
 		case FURNACE: // 壁挂炉
 			if (isMainActivityActive) {
-				originalIntent.setClass(this, MainActivity.class);
+				originalIntent.setClass(this, ElectricMainActivity.class);
 			} else if (isGasMainActivityActive) {
 				originalIntent.setClass(this, GasMainActivity.class);
 			} else {

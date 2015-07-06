@@ -32,7 +32,7 @@ import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 
 public class GasPatternActivity extends EhHeaterBaseActivity implements
 		OnClickListener, OnCheckedChangeListener {
-	
+
 	private static final String TAG = "GasPatternActivity";
 
 	@ViewInject(id = R.id.textView1, click = "onClick")
@@ -114,27 +114,27 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 	public void onCheckedChanged(RadioGroup arg0, int arg1) {
 		switch (arg1) {
 		case R.id.radio0:
-			GasHeaterSendCommandService.setToDIYMode();
+			GasHeaterSendCommandService.getInstance().setToDIYMode();
 			finish();
 			break;
 		case R.id.radio1:
-			GasHeaterSendCommandService.setToKictionMode();
+			GasHeaterSendCommandService.getInstance().setToKictionMode();
 			finish();
 			break;
 		case R.id.radio2:
-			GasHeaterSendCommandService.setToSolfMode();
+			GasHeaterSendCommandService.getInstance().setToSolfMode();
 			finish();
 			break;
 		case R.id.radio3:
-			GasHeaterSendCommandService.setToBathtubMode(this);
+			GasHeaterSendCommandService.getInstance().setToBathtubMode(this);
 			finish();
 			break;
 		case R.id.radio4:
-			GasHeaterSendCommandService.setToEnergyMode();
+			GasHeaterSendCommandService.getInstance().setToEnergyMode();
 			finish();
 			break;
 		case R.id.radio5:
-			GasHeaterSendCommandService.setToIntelligenceMode();
+			GasHeaterSendCommandService.getInstance().setToIntelligenceMode();
 			finish();
 			break;
 		}
@@ -154,7 +154,7 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 			startActivity(intent);
 			break;
 		case R.id.radio3:
-			GasHeaterSendCommandService.setToBathtubMode(this);
+			GasHeaterSendCommandService.getInstance().setToBathtubMode(this);
 			finish();
 			break;
 		case R.id.imageView1:
@@ -163,8 +163,9 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 						@Override
 						public void oncall(View v) {
 							if (radio3.isChecked()) {
-								GasHeaterSendCommandService
-										.setToBathtubMode(GasPatternActivity.this);
+								GasHeaterSendCommandService.getInstance()
+										.setToBathtubMode(
+												GasPatternActivity.this);
 								finish();
 							}
 						}
@@ -244,7 +245,7 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 				}
 
 				View view2 = new View(this);
-				view2.setBackgroundColor(R.color.line);
+				view2.setBackgroundColor(getResources().getColor(R.color.line));
 				LinearLayout.LayoutParams lParams = new LayoutParams(
 						LayoutParams.FILL_PARENT, 1);
 				zidingyiradioGroup.addView(view2, 1, lParams);
@@ -307,7 +308,8 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 										 */
 
 										Intent intent = new Intent();
-										intent.setClass(GasPatternActivity.this,
+										intent.setClass(
+												GasPatternActivity.this,
 												GasAddPatternActivity.class);
 										intent.putExtra("gasCusVoId",
 												customSetVo.getId());
@@ -332,7 +334,8 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 												GasPatternActivity.this)
 												.dissmiss();
 										SureDelDialogUtil
-												.instance(GasPatternActivity.this)
+												.instance(
+														GasPatternActivity.this)
 												.setNextButtonCall(
 														new NextButtonCall() {
 															@Override
@@ -349,35 +352,49 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 																			.getDb()
 																			.findAllByWhere(
 																					GasCustomSetVo.class,
-																					" uid = '" + AccountService.getUserId(GasPatternActivity.this)
+																					" uid = '"
+																							+ AccountService
+																									.getUserId(GasPatternActivity.this)
 																							+ "'");
 																	if (customSetVolist
 																			.size() != 0) {
 																		for (GasCustomSetVo item : customSetVolist) {
 																			item.setSet(false);
-																			new BaseDao(GasPatternActivity.this).getDb().update(
-																					item);
+																			new BaseDao(
+																					GasPatternActivity.this)
+																					.getDb()
+																					.update(item);
 																		}
 																		GasCustomSetVo tempcustomSetVo = customSetVolist
-																				.get(customSetVolist.size() - 1);
-																		tempcustomSetVo.setSet(true);
-																		new BaseDao(GasPatternActivity.this).getDb().update(
-																				tempcustomSetVo);
-//																		GasCustomSetVo tempcustomSetVo = new BaseDao(
-//																				PatternActivity.this)
-//																				.getDb()
-//																				.findById(
-//																						customSetVo
-//																								.getId() + 1,
-//																						GasCustomSetVo.class);
+																				.get(customSetVolist
+																						.size() - 1);
+																		tempcustomSetVo
+																				.setSet(true);
+																		new BaseDao(
+																				GasPatternActivity.this)
+																				.getDb()
+																				.update(tempcustomSetVo);
+																		// GasCustomSetVo
+																		// tempcustomSetVo
+																		// = new
+																		// BaseDao(
+																		// PatternActivity.this)
+																		// .getDb()
+																		// .findById(
+																		// customSetVo
+																		// .getId()
+																		// + 1,
+																		// GasCustomSetVo.class);
 																		GasHeaterSendCommandService
+																				.getInstance()
 																				.setDIYModel(
 																						customSetVo
 																								.getSendId(),
-																								tempcustomSetVo);
+																						tempcustomSetVo);
 																		finish();
 																	} else {
 																		GasHeaterSendCommandService
+																				.getInstance()
 																				.setToSolfMode();
 																		finish();
 																	}
@@ -412,14 +429,14 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 				radioButton.setChecked(true);
 				for (GasCustomSetVo item : customSetVolist) {
 					item.setSet(false);
-					new BaseDao(GasPatternActivity.this).getDb().update(
-							item);
+					new BaseDao(GasPatternActivity.this).getDb().update(item);
 				}
 				customSetVo.setSet(true);
-				new BaseDao(GasPatternActivity.this).getDb().update(
-						customSetVo);
-				
-				GasHeaterSendCommandService.setDIYModel(customSetVo.getSendId(), customSetVo);
+				new BaseDao(GasPatternActivity.this).getDb()
+						.update(customSetVo);
+
+				GasHeaterSendCommandService.getInstance().setDIYModel(
+						customSetVo.getSendId(), customSetVo);
 				finish();
 			}
 		};
@@ -444,9 +461,13 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 
 						if (name != null && name.length() != 0) {
 							List<GasCustomSetVo> list = new BaseDao(
-									GasPatternActivity.this).getDb().findAllByWhere(
+									GasPatternActivity.this)
+									.getDb()
+									.findAllByWhere(
 											GasCustomSetVo.class,
-											" uid = '" + AccountService.getUserId(GasPatternActivity.this)
+											" uid = '"
+													+ AccountService
+															.getUserId(GasPatternActivity.this)
 													+ "'");
 							for (int i = 0; i < list.size(); i++) {
 								GasCustomSetVo gasCustomSetVo = list.get(i);
@@ -458,15 +479,15 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 								}
 							}
 							customSetVo.setName(name);
-							new BaseDao(GasPatternActivity.this).getDb().update(
-									customSetVo);
+							new BaseDao(GasPatternActivity.this).getDb()
+									.update(customSetVo);
 						} else {
 							Toast.makeText(GasPatternActivity.this, "请输入有效名字",
 									Toast.LENGTH_SHORT).show();
 						}
 						initViewValue();
-						AddPatternNameDialogUtil.instance(GasPatternActivity.this)
-								.dissmiss();
+						AddPatternNameDialogUtil.instance(
+								GasPatternActivity.this).dissmiss();
 					}
 				}).showDialog();
 	}
