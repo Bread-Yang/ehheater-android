@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llt_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_background"
@@ -82,7 +83,7 @@
                 android:text=""
                 android:textSize="16dp" />
         </LinearLayout>
-        
+
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
@@ -142,14 +143,14 @@
             <Button
                 android:id="@+id/btn_acquire_captcha"
                 android:layout_width="100dp"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:layout_alignParentRight="true"
                 android:layout_height="25dp"
-                android:textSize="16dp"
-                android:text="@string/acquire_captcha"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
                 android:background="@drawable/selector_btn_captcha"
-                android:textColor="@color/white" />
+                android:gravity="center"
+                android:text="@string/acquire_captcha"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -162,11 +163,11 @@
 
         <CheckBox
             android:id="@+id/cb_show_psw"
-            android:drawablePadding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@null"
             android:drawableLeft="@drawable/my_checkbox"
+            android:drawablePadding="10dp"
             android:text="显示密码"
             android:textColor="@color/appointment_text_color"
             android:textSize="16sp" />

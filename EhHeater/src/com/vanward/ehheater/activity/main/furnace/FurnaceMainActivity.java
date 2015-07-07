@@ -101,7 +101,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	private boolean firstShowSwitchSuccess = true;
 
-	private ImageView faultTipIv;
+	private ImageView iv_device_error;
 
 	private static boolean isError = false;
 
@@ -179,8 +179,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		circle_slider = (BaoCircleSlider) findViewById(R.id.circle_slider);
 		llt_gas_consumption = (LinearLayout) findViewById(R.id.llt_gas_consumption);
 
-		faultTipIv = (ImageView) findViewById(R.id.fault_tip100);
-		faultTipIv.setVisibility(View.GONE);
+		iv_device_error = (ImageView) findViewById(R.id.fault_tip100);
+		iv_device_error.setVisibility(View.GONE);
 
 	}
 
@@ -212,7 +212,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		llt_gas_consumption.setOnClickListener(this);
 		btn_setting.setOnClickListener(this);
 		circle_slider.setCircleSliderListener(this);
-		faultTipIv.setOnClickListener(new View.OnClickListener() {
+		iv_device_error.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -310,11 +310,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
 		super.OnDERYStatusResp(pResp, nConnId);
 
-		L.e(this, "OnDERYStatusResp()返回的nConnId : " + nConnId);
-
-		Log.d(TAG, pResp.getError() + "....");
-		// Toast.makeText(this, "这是错误" + pResp.getError(),
-		// Toast.LENGTH_SHORT).show();
 		if (tv_sliding_menu_season_mode != null) {
 			changeSlidingSeasonModeItem(pResp.getSeasonState() == 0 ? FurnaceSeasonActivity.SET_SUMMER_MODE
 					: FurnaceSeasonActivity.SET_WINNER_MODE);
@@ -340,7 +335,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	private void showTipImageVIew(DERYStatusResp_t pResp) {
 		isError = false;
-		L.e(this, "故障是 : " + pResp.getError());
 		for (int i = 0; i < errorArray.length; i++) {
 			if (pResp.getError() == errorArray[i]) {
 				isError = true;
@@ -348,16 +342,16 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		}
 
 		if (isError) {
-			faultTipIv.setVisibility(View.VISIBLE);
-			faultTipIv.setBackgroundResource(R.drawable.main_error);
-			AnimationDrawable drawable = (AnimationDrawable) faultTipIv
+			iv_device_error.setVisibility(View.VISIBLE);
+			iv_device_error.setBackgroundResource(R.drawable.main_error);
+			AnimationDrawable drawable = (AnimationDrawable) iv_device_error
 					.getBackground();
 			drawable.start();
 
 			pRespG = pResp;
 
 		} else {
-			faultTipIv.setVisibility(View.GONE);
+			iv_device_error.setVisibility(View.GONE);
 		}
 	}
 
@@ -388,6 +382,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			btn_intellectual.setEnabled(false);
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_disable);
 			isOn = false;
+			iv_device_error.setVisibility(View.GONE);
 
 			// 收到主动断开,重连一次
 			connectToDevice();
@@ -646,8 +641,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			tv_gas_unit.setVisibility(View.VISIBLE);
 			tv_gas_consumption.setText(String.valueOf(Double.valueOf(pResp
 					.getGasCountNow()) / 10));
-			L.e(this, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
-			L.e(this, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
+//			L.e(this, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
+//			L.e(this, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
 		} else {
 			// tv_gas_unit.setVisibility(View.GONE);
 			tv_gas_consumption.setText(R.string.no_set);
@@ -832,7 +827,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		L.e(this, "onActivityResult()");
 		L.e(this, "requestCode : " + requestCode);
 
 		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
@@ -1125,6 +1119,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 	@Override
 	protected void changeToOfflineUI() {
+		L.e(this, "changeToOfflineUI");
 		try {
 			statusResp = null;
 			tv_status.setText(R.string.offline);
@@ -1140,7 +1135,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			btn_setting.setEnabled(false);
 			btn_intellectual.setEnabled(false);
 			btn_top_right.setBackgroundResource(R.drawable.icon_shut_disable);
-			faultTipIv.setVisibility(View.GONE);
+			iv_device_error.setVisibility(View.GONE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1172,9 +1167,10 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		if (isError) {
 			// final int errorCode = pResp.getError();
 
-			faultTipIv.setVisibility(View.VISIBLE);
-			faultTipIv.setBackgroundResource(R.drawable.main_error);
-			AnimationDrawable drawable = (AnimationDrawable) faultTipIv
+			L.e(this, "iv_device_error.setVisibility(View.VISIBLE)");
+			iv_device_error.setVisibility(View.VISIBLE);
+			iv_device_error.setBackgroundResource(R.drawable.main_error);
+			AnimationDrawable drawable = (AnimationDrawable) iv_device_error
 					.getBackground();
 			drawable.start();
 			// tipsimg.setImageResource(R.drawable.main_error);

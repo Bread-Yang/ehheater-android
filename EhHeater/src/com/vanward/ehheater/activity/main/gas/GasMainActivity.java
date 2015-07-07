@@ -322,7 +322,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	private boolean stateQueried;
 
 	private void dealDisConnect() {
-		L.e(this, "dealDisConnect被调用了");
 		isSendingCommand = false;
 		tv_tempter.setText("--");
 		tv_mode.setText("--模式");
@@ -672,9 +671,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		L.e(this, "onConnectEvent() : connid : " + connId + " , event : "
-				+ event);
-
 		if (connId == Global.connectId && event == -7) {
 			// 连接断开
 			L.e(this, "@@@@@@@@@@@@@@@");
@@ -690,8 +686,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 			int nConnId) {
 
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
-
-		L.e(this, "重连之后OnGasWaterHeaterStatusResp调用了");
 
 		if (nConnId != Global.connectId) {
 			return;
@@ -725,10 +719,10 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp,
 			int nConnId) {
 		super.OnDeviceOnlineStateResp(pResp, nConnId);
-		L.e(this, "OnDeviceOnlineStateResp isOnline == " + pResp.getIsOnline());
-		if (pResp.getIsOnline() == 0) {
-			onConnectEvent(Global.connectId, -7);
-		}
+//		L.e(this, "OnDeviceOnlineStateResp isOnline == " + pResp.getIsOnline());
+//		if (pResp.getIsOnline() == 0) {
+//			onConnectEvent(Global.connectId, -7);
+//		}
 	}
 
 	/**

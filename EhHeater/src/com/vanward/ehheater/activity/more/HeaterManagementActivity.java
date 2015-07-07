@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
@@ -63,6 +64,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 	private String didOfHeaterBeingDeleted;
 	private HeaterType typeOfHeaterBeingDeleted;
 	private int tempConnId = -2;
+
+	private CountDownTimer timeoutTimer;
 
 	private Dialog deleteHeaterConfirmDialog, deleteFurnaceConfirmDialog;
 
@@ -294,6 +297,22 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			// server delete
 			DialogUtil.instance().showLoadingDialog(this, "");
 
+			timeoutTimer = new CountDownTimer(10000, 1000) {
+
+				@Override
+				public void onTick(long arg0) {
+
+				}
+
+				@Override
+				public void onFinish() {
+					DialogUtil.dismissDialog();
+					Toast.makeText(getBaseContext(), R.string.time_out, 3000)
+							.show();
+				}
+			};
+			timeoutTimer.start();
+
 			PingWebsiteUtil.testGizwitsAvail(
 
 			new Runnable() {/* onSuccess */
@@ -340,6 +359,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 				break;
 			case 1: // 未与服务器连接
 				DialogUtil.dismissDialog();
+				timeoutTimer.cancel();
 				Toast.makeText(getBaseContext(), "删除失败", 3000).show();
 				break;
 			default:
@@ -376,6 +396,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 			L.e(this, "token : " + token);
 
+			L.e(this, "要删除的did是 : " + didOfHeaterBeingDeleted);
 			XPGConnectClient.xpgc4UnbindDevice(Consts.VANWARD_APP_ID,
 					Global.token, didOfHeaterBeingDeleted);
 		}
@@ -402,8 +423,12 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onV4UnbindDevice(int errorCode, String successString,
 			String failString) {
-		L.e(this, "onV4UnbindDevice()");
+		L.e(this, "onV4UnbindDevice() : errorCode : " + errorCode
+				+ ", successString : " + successString + ", failString : "
+				+ failString);
 		super.onV4UnbindDevice(errorCode, successString, failString);
+
+		timeoutTimer.cancel();
 
 		if (errorCode == 0) {
 			DialogUtil.dismissDialog();
@@ -412,7 +437,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 			httpFriend.showDialog = false;
 
-			String requestURL = "userinfo/saveAlias?did="
+			String requestURL = "userinfo/saveAlias?mac="
 					+ macOfHeaterBeingDeleted + "&uid="
 					+ AccountService.getUserId(getBaseContext())
 					+ "&isLogout=true";

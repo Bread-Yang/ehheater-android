@@ -55,12 +55,11 @@ public class BaoDialogShowUtil {
 		return dialog;
 	}
 
-	public BaoTimeoutDailog createDialogWithTwoButton(int contentResId,
+	public Dialog createDialogWithTwoButton(int contentResId,
 			int leftButtonResId, int rightButtonResId,
 			OnClickListener leftButtonClickListener,
 			OnClickListener rightButtonClickListener) {
-		final BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext,
-				R.style.custom_dialog);
+		final Dialog dialog = new Dialog(mContext, R.style.custom_dialog);
 		dialog.setContentView(R.layout.dialog_common_two_button);
 
 		TextView tv_content = (TextView) dialog.findViewById(R.id.tv_content);
@@ -100,10 +99,9 @@ public class BaoDialogShowUtil {
 		return dialog;
 	}
 
-	public BaoTimeoutDailog createDialogWithOneButton(int contentResId,
-			int buttonResId, OnClickListener buttonClickListener) {
-		final BaoTimeoutDailog dialog = new BaoTimeoutDailog(mContext,
-				R.style.custom_dialog);
+	public Dialog createDialogWithOneButton(int contentResId, int buttonResId,
+			OnClickListener buttonClickListener) {
+		final Dialog dialog = new Dialog(mContext, R.style.custom_dialog);
 		dialog.setContentView(R.layout.dialog_common_one_button);
 
 		TextView tv_content = (TextView) dialog.findViewById(R.id.tv_content);

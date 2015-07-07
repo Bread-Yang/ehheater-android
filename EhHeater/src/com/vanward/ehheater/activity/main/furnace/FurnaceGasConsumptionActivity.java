@@ -1,9 +1,9 @@
 package com.vanward.ehheater.activity.main.furnace;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,8 +29,8 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
+import com.vanward.ehheater.util.TextUtil;
 
 public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
@@ -49,10 +49,9 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	private ArrayList<String> realTimeXCategories = new ArrayList<>();
 	private ArrayList<Double> realTimeYDatas = new ArrayList<>();
 
-	private String[] defaultRealTimeXCategories = { "1436151300000",
-			"1436151600000", "1436151900000", "1436152200000", "1436152500000",
-			"1436152800000", "1436153100000", "1436153400000", "1436153700000",
-			"1436154000000", "1436154300000", "1436154600000" };
+	private String[] defaultRealTimeXCategories = { "10:05", "10:10", "10:15",
+			"10:20", "10:25", "10:30", "10:35", "10:40", "10:45", "10:50",
+			"10:55", "11:00" };
 	private double[] defaultRealTimeYDatas = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
@@ -70,7 +69,8 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	private boolean isPowerOffOrOffline;
 
 	private Gson gson = new Gson();
-	String forResult;
+	private String dummyAccumulatedData;
+	private String accumulatedData;
 
 	private Handler h3;
 	private TakeDataThread threadFor5minute;
@@ -102,7 +102,9 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				rb_accumulated_consumption.setChecked(true);
+//				rb_accumulated_consumption.setChecked(true);
+				realTimeYDatas.clear();
+				realTimeXCategories.clear();
 				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
 				getDataForRealtime(3);
 			}
@@ -112,7 +114,9 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				rb_realtime_consumption.setChecked(true);
+//				rb_realtime_consumption.setChecked(true);
+				accumulatedData = null;
+				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 				getDataForAccumulated();
 			}
 		});
@@ -133,6 +137,15 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
+		try {
+			InputStream inputStream;
+			inputStream = getAssets().open(
+					"furnace_chart/accumulated_dummy_data.json");
+			dummyAccumulatedData = TextUtil.readTextFile(inputStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		did = new HeaterInfoService(this).getCurrentSelectedHeater().getDid();
 		uid = AccountService.getUserId(getBaseContext());
 		// did = "Twv7ZQwEafRUqgJvC9YEZH";
@@ -148,6 +161,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 		mHttpFriend.delaySeconds = 2;
 
+		L.e(this, "init() : wv_chart.loadUrl()");
 		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
 
 		getDataForRealtime(3);
@@ -186,7 +200,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 		@JavascriptInterface
 		public String realTimeXCategories() {
-			L.e(this, "realTimeXCategories()");
+			L.e(FurnaceGasConsumptionActivity.this, "realTimeXCategories()");
 			if (realTimeXCategories.size() == 0) {
 				for (int i = 0; i < defaultRealTimeXCategories.length; i++) {
 					realTimeXCategories.add(defaultRealTimeXCategories[i]);
@@ -198,27 +212,32 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				sb.append("'").append(realTimeXCategories.get(i)).append("',");
 			}
 			sb.append("]");
-			L.e(this, "X_Categories : " + sb.toString());
+			L.e(FurnaceGasConsumptionActivity.this,
+					"X_Categories : " + sb.toString());
 			return sb.toString();
 		}
 
 		@JavascriptInterface
 		public double realTimeMaxValue() {
-			double max = realTimeYDatas.get(0);
-			for (int i = 1; i < realTimeYDatas.size(); i++) {
-				if (max < realTimeYDatas.get(i)) {
-					max = realTimeYDatas.get(i);
+			L.e(FurnaceGasConsumptionActivity.this, "realTimeMaxValue()");
+			double max = 10;
+			if (realTimeYDatas.size() != 0) {
+				max = realTimeYDatas.get(0);
+				for (int i = 1; i < realTimeYDatas.size(); i++) {
+					if (max < realTimeYDatas.get(i)) {
+						max = realTimeYDatas.get(i);
+					}
 				}
-			}
-			if (max == 0) {
-				max = 10;
+				if (max == 0) {
+					max = 10;
+				}
 			}
 			return max;
 		}
 
 		@JavascriptInterface
 		public String realTimeDatas() {
-			L.e(this, "realTimeDatas()");
+			L.e(FurnaceGasConsumptionActivity.this, "realTimeDatas()");
 			if (realTimeYDatas.size() == 0) {
 				for (int i = 0; i < defaultRealTimeYDatas.length; i++) {
 					realTimeYDatas.add(defaultRealTimeYDatas[i]);
@@ -230,24 +249,28 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				sb.append(realTimeYDatas.get(i)).append(",");
 			}
 			sb.append("]");
-			L.e(this, "realTimeDatas : " + sb.toString());
+			L.e(FurnaceGasConsumptionActivity.this,
+					"realTimeDatas : " + sb.toString());
 			return sb.toString();
 		}
 
 		@JavascriptInterface
 		public String getAccumulatedData() {
-
-			L.e(this, "getx方法执行完了" + forResult);
+			L.e(FurnaceGasConsumptionActivity.this, "getAccumulatedData()");
+			
+			if (accumulatedData == null || "".equals(accumulatedData)) {
+				accumulatedData = dummyAccumulatedData;
+			}
 			JSONObject joTemp, joResult;
 			JSONArray ja = new JSONArray();
 			StringBuilder sb = new StringBuilder();
 			sb.append("[");
 			try {
-				ja = new JSONArray(forResult);
+				ja = new JSONArray(accumulatedData);
 				for (int i = 0; i < ja.length(); i++) {
 					joTemp = ja.getJSONObject(i);
 					sb.append("{data:");
-					L.e(this,
+					L.e(FurnaceGasConsumptionActivity.this,
 							"joTemp.getString('amount') : "
 									+ joTemp.getString("amount"));
 					if ("".equals(joTemp.getString("amount"))
@@ -259,7 +282,8 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 								joTemp.getString("amount")).divide(dividend);
 						// int amount = Integer
 						// .valueOf(joTemp.getString("amount")) / 10;
-						L.e(this, "amount : " + amount);
+						L.e(FurnaceGasConsumptionActivity.this, "amount : "
+								+ amount);
 						if (amount.compareTo(new BigDecimal(0)) == 0) {
 							sb.append("\"\"");
 						} else {
@@ -273,7 +297,8 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 			}
 			sb.append("]");
 
-			L.e(this, "sb.toString() : " + sb.toString());
+			L.e(FurnaceGasConsumptionActivity.this,
+					"sb.toString() : " + sb.toString());
 
 			return sb.toString();
 		}
@@ -369,7 +394,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 							JSONObject json = new JSONObject(jsonString);
 
 							String result = json.getString("result");
-							forResult = result; // 存放返回结果
+							accumulatedData = result; // 存放返回结果
 							rb_accumulated_consumption.setChecked(true);
 							wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 							if ("success".equals("result")) {
@@ -385,7 +410,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 							String strMsg) {
 						super.onFailure(t, errorNo, strMsg);
 						L.e(FurnaceGasConsumptionActivity.this, "请求失败");
-						forResult = "";
 						rb_accumulated_consumption.setChecked(true);
 						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 					}
@@ -393,7 +417,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 					@Override
 					public void onTimeout() {
 						super.onTimeout();
-						forResult = "";
 						rb_accumulated_consumption.setChecked(true);
 						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 					}
@@ -438,10 +461,11 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 		// }
 		// });
-		return forResult;
+		return accumulatedData;
 	}
 
 	private String getDataForRealtime(final int ir) {
+		L.e(this, "getDataForRealtime()");
 		// String requestURL =
 		// "http://vanward.xtremeprog.com/EhHeaterWeb/getFurnaceHourGas?did=dVfu4XXcUCbE93Z2mu4PyZ";
 		String requestURL = "getFurnaceHourGas?did=" + did;
@@ -566,7 +590,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		// });
 
 		L.e(this, " getDataForShiShi()执行完了");
-		return forResult;
+		return accumulatedData;
 	}
 
 	private Handler handlerForRealtime = new Handler() {

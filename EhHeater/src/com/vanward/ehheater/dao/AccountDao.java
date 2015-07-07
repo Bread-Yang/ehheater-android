@@ -17,21 +17,21 @@ public class AccountDao extends BaseDao {
 			String passcode) {
 		userName = userName.trim();
 		passcode = passcode.trim();
-		
+
 		AccountBean newAccount = new AccountBean(userName, passcode);
-		
+
 		AccountBean oldAccount = null;
-		
+
 		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
 				" userName = '" + userName + "'");
-		
+
 		L.e(this, "result.size() : " + result.size());
-		
-		if (result != null && result.size() > 0) { 
+
+		if (result != null && result.size() > 0) {
 			oldAccount = result.get(0);
 		}
 		L.e(this, "oldAccount == null : " + (oldAccount == null));
-		
+
 		if (oldAccount != null) {
 			newAccount.setId(oldAccount.getId());
 			getDb().update(newAccount);
@@ -39,7 +39,17 @@ public class AccountDao extends BaseDao {
 			getDb().save(newAccount);
 		}
 	}
-	
+
+	public boolean isIntranetAccountExist(String uid) {
+		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
+				"userName = '" + uid);
+		if (result != null && result.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isAccountHasLogined(String uid, String passcode) {
 		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
 				"userName = '" + uid + "' and passcode = '" + passcode + "'");
@@ -49,7 +59,7 @@ public class AccountDao extends BaseDao {
 			return false;
 		}
 	}
-	
+
 	public void saveNicknameByUid(String uid, String nickName) {
 		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
 				"userName = '" + uid + "'");
@@ -59,7 +69,7 @@ public class AccountDao extends BaseDao {
 			getDb().update(bean);
 		}
 	}
-	
+
 	public String getNicknameByUid(String uid) {
 		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
 				"userName = '" + uid + "'");

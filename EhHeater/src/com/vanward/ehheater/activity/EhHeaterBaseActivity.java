@@ -5,6 +5,7 @@ import net.tsz.afinal.http.AjaxParams;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,6 +35,8 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 	public Intent intent;
 
 	protected HttpFriend mHttpFriend;
+	
+	private CountDownTimer timeoutCountDown;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

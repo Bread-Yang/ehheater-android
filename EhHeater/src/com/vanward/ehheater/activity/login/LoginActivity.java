@@ -80,6 +80,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 	private final int HANDLE_OUTSIDE_NETWORK = 0;
 	private final int HANDLE_INSIDE_NETWORK = 1;
+	
+	private boolean isAlreadyReceiveDeviceData;
 
 	private Handler acquireDeviceListTimeout = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -127,6 +129,13 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 				// String userName = AccountService.getUserId(getBaseContext());
 				// String psw = AccountService.getUserPsw(getBaseContext());
+				
+				if (!new AccountDao(getApplicationContext()).isIntranetAccountExist(loginUserName)) {
+					DialogUtil.dismissDialog();
+					Toast.makeText(LoginActivity.this, "内网登录数据库没有该用户",
+							Toast.LENGTH_LONG).show();
+					return;
+				}
 
 				if (new AccountDao(getApplicationContext())
 						.isAccountHasLogined(loginUserName, loginPsw)) {
@@ -393,6 +402,12 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	protected void onPause() {
 		super.onPause();
 		XPGConnectClient.RemoveActivity(this);
+		if (isAlreadyReceiveDeviceData) {
+			Set<String> tagSet = new LinkedHashSet<String>();
+			tagSet.add(AccountService.getUserId(getApplicationContext()));
+			JPushInterface.setTags(getApplicationContext(), tagSet,
+					mAliasCallback);
+		}
 	}
 
 	@Override
@@ -443,10 +458,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			final String loginUid = et_user.getText().toString().trim();
 			String loginPsw = et_pwd.getText().toString().trim();
 
-			Set<String> tagSet = new LinkedHashSet<String>();
-			tagSet.add(loginUid);
-			JPushInterface.setTags(getApplicationContext(), tagSet,
-					mAliasCallback);
+//			Set<String> tagSet = new LinkedHashSet<String>();
+//			tagSet.add(loginUid);
+//			JPushInterface.setTags(getApplicationContext(), tagSet,
+//					mAliasCallback);
 
 			// 0和1都是登录成功
 			new SharedPreferUtils(getBaseContext()).clear();
@@ -642,6 +657,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			L.e(this, "endpoint.getIsDisabled() == 1,返回");
 			return;
 		}
+		
+		isAlreadyReceiveDeviceData = true;
 
 		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
 			new Handler().postDelayed(new Runnable() {

@@ -26,7 +26,7 @@ public class TextUtil {
 	 *            文字输入流
 	 * @return 文字字符串(String 类型)
 	 */
-	public String readTextFile(InputStream inputStream) {
+	public static String readTextFile(InputStream inputStream) {
 		String readedStr = "";
 		BufferedReader br; // BfferedReader类用于从缓冲区中读取内容,所有的输入字节数据
 		// 都将放在缓冲区中.BufferedReader中定义的构造方法只能接受字符输入流的实例,所有必须

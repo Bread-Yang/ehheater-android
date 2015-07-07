@@ -68,8 +68,11 @@
     <string name="Tuesday">周二</string>
     <string name="Wednesday">周三</string>
     <string name="about">关于</string>
+    <string name="about_us_content">Rav</string>
+    <string name="about_us_desc_para_two">We continue to shatter traditional paradigms thanks largely to our dedication to and belief in quality ,communicative design.</string>
+    <string name="about_us_label">About Us</string>
     <string name="about_vanward">
-        <![CDATA[
+<![CDATA[
         <font color=#FE6C18>&#160;&#160;&#160;&#160;&#160;&#160;&#160;广东万和新电气股份有限公司</font>成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。</string>
     	]]>
     </string>
@@ -85,6 +88,18 @@
     <string name="add_pattern">添加模式</string>
     <string name="add_power_larger_than_3">亲，剩余的加热时间无法保证您用水的温度。 请您降低水温或者延后用水时间</string>
     <string name="add_power_less_than_3">亲，您需要增加功率才能保证您的用水。 </string>
+    <string name="alert_connection_failed">Failed to configure EMW device</string>
+    <string name="alert_connection_timeout">Connection to EMW was timed out.Please try again</string>
+    <string name="alert_easylink_title">Easylink Alert</string>
+    <string name="alert_invalid_gatewayip_msg">Please enter valid Gateway IP address</string>
+    <string name="alert_invalid_input_title">Invalid input</string>
+    <string name="alert_invalid_key_mesg">Please enter valid Key exactly 16 characters</string>
+    <string name="alert_invalid_password_msg">Please enter valid password</string>
+    <string name="alert_invalid_ssid_mesg">Please enter valid SSID</string>
+    <string name="alert_no_network_title">No Network</string>
+    <string name="alert_no_wifi_mesg">WiFi not available.Please check your WiFi connection.</string>
+    <string name="alert_successfully_connected">Easylink App Connected Successfully</string>
+    <string name="alert_successfully_failed">Failed to configure EMW device</string>
     <string name="app_name">万和云智能</string>
     <string name="apply_model">适用型号：H型号、L型号、S型号</string>
     <string name="appointment">预约</string>
@@ -93,6 +108,7 @@
     <string name="ask_for_help">寻求帮助</string>
     <string name="auto_conf_fail">自动配置失败</string>
     <string name="back">返回</string>
+    <string name="back_label">Back</string>
     <string name="bath_mode">卫浴模式</string>
     <string name="bathing">沐浴中</string>
     <string name="cancel">取消</string>
@@ -104,11 +120,14 @@
     <string name="check_network">网络连接已断开，请检查！</string>
     <string name="check_update">检查更新</string>
     <string name="circle">循环</string>
+    <string name="config_title">Device Configuration</string>
     <string name="confirm">确认</string>
     <string name="confirm_delete_furnace">确定删除该壁挂炉？</string>
     <string name="confirm_delete_heater">确定删除该热水器？</string>
     <string name="confirm_exit">确定退出？</string>
     <string name="confirm_save">是否保存修改？</string>
+    <string name="connecting">连接中...</string>
+    <string name="contact_label">Contact</string>
     <string name="current_power">当前功率</string>
     <string name="current_temp">当前温度</string>
     <string name="current_temperature">当前温度</string>
@@ -118,6 +137,7 @@
     <string name="device_error_tips">热水器发生故障，请尽快处理。</string>
     <string name="device_error_title">故障提示</string>
     <string name="device_manager">设备管理</string>
+    <string name="devicename_label">Device Name</string>
     <string name="dial">呼叫</string>
     <string name="edit">编辑</string>
     <string name="edit_appointment">编辑预约</string>
@@ -140,6 +160,7 @@
     <string name="failure">失败</string>
     <string name="find_password">找回密码</string>
     <string name="five">五</string>
+    <string name="footer_title">DESIGNED AND DEVELOPED BY</string>
     <string name="forget_password">忘记密码</string>
     <string name="forget_pwd">忘记密码</string>
     <string name="four">四</string>
@@ -151,6 +172,7 @@
     <string name="gas_consumption">燃气耗量</string>
     <string name="gas_consumption_title">燃气耗量(方)</string>
     <string name="gas_unit">m³/h</string>
+    <string name="gatewayip">Gateway IP Address</string>
     <string name="heat_amount">剩余加热时间</string>
     <string name="heater">热水器</string>
     <string name="heater_appointment_full">亲，热水器的预约已经满了哦！</string>
@@ -168,6 +190,7 @@
     <string name="intellectual">智能</string>
     <string name="intelligence">智能</string>
     <string name="intelligent_control">智能温控</string>
+    <string name="key_label">Key</string>
     <string name="last_step">上一步</string>
     <string name="loading">加载中</string>
     <string name="login">登录</string>
@@ -176,10 +199,10 @@
     <string name="magnesiarods_replace">镁棒更换</string>
     <string name="manual_conf_fail">手动配置失败</string>
     <string name="manual_conf_guide">手动配置向导</string>
-    <string name="manual_operation_step"> 
-        <![CDATA[ 
+    <string name="manual_operation_step">
+<![CDATA[ 
         1. 请进入 设置 > Wifi, 选择<font color=#FE6C18>XPG-GAgent</font><br>2. 输入密码:<font color=#FE6C18>123456789</font> <br>3. 完成后请返回此界面, 将自动跳转到下一步
-    	]]>  
+    	]]>
     </string>
     <string name="manually_connect">手动连接</string>
     <string name="mode">模式</string>
@@ -219,6 +242,7 @@
     <string name="oxygen_tips">亲，现检测到您热水器处于环境缺氧状态，机器已自动启动智能氧护措施，请确保您热水器处于通风环境下运行。</string>
     <string name="oxygen_warn">氧护报警</string>
     <string name="password">密码</string>
+    <string name="password_hint">Password </string>
     <string name="phone_number">手机号码</string>
     <string name="please_input_confirm_psw">请输入确认密码！</string>
     <string name="please_input_new_psw">请输入新密码！</string>
@@ -234,10 +258,11 @@
     <string name="remind_setting">提醒设置</string>
     <string name="repeate">重复</string>
     <string name="requesting_http">正在请求,请稍后...</string>
+    <string name="reset_success">重置成功！</string>
     <string name="retry">重试</string>
     <string name="second">秒</string>
     <string name="separate_wash">分人洗</string>
-    <string name="server_failure">请求数据错误</string>
+    <string name="server_failure">无法连接服务器,请检查你的网络设置</string>
     <string name="set_device_tip2">请站着热水器旁，保证热水器的<font color="#ff0000">电源</font>已经连接</string>
     <string name="set_device_tip2_eh_furnace">请站在壁挂炉旁，保证壁挂炉的<font color="#ff0000">电源</font>已经连接</string>
     <string name="set_device_tip3">请确保热水器与智能移动终端在同一无线局域网下进行连接</string>
@@ -262,7 +287,11 @@
     <string name="silence_remind">静默提醒</string>
     <string name="six">六</string>
     <string name="soft_mode">舒适模式</string>
+    <string name="ssid_label">SSID</string>
     <string name="standby">待机中</string>
+    <string name="start_label_1">Start 1.0</string>
+    <string name="start_label_2">Start 2.0</string>
+    <string name="stop_label">Stop</string>
     <string name="success">成功</string>
     <string name="summer_mode">夏季模式</string>
     <string name="supplying_heat">供暖中</string>
@@ -276,20 +305,26 @@
     <string name="time_out">请求超时</string>
     <string name="tip_setting">提醒设置</string>
     <string name="tips">提示</string>
+    <string name="touch_to_move_axis">左右可移动横轴</string>
     <string name="turn_off">关机</string>
     <string name="turn_off_in_winter">在冬天时关机，可能会由于气温过冷导致硬件损坏！</string>
     <string name="turn_on">开机</string>
     <string name="two">二</string>
     <string name="two_person">2人</string>
+    <string name="update">更新</string>
+    <string name="update_tips">万和云智能有新版本更新!</string>
+    <string name="upload_bind_fail">上传绑定关系失败!请重新配置!</string>
+    <string name="upload_bind_success">上传绑定关系成功!</string>
     <string name="use_help">使用帮助</string>
     <string name="username">用户名</string>
     <string name="vanward_profile">
-        <![CDATA[ 
+<![CDATA[ 
         &#160;&#160;&#160;&#160;&#160;&#160;&#160万和是国内A股上市公司（股票代码：002543），1992年以中国第一台水控式燃气热水器起家，已发展成为国内生产规模最大的热水器、热水/供暖系统、厨房电器制造商及领先品牌，是国内仅有的两个“全球十大热水器品牌”之一。万和也是国家火炬计划重点高新技术企业、住建部授予的国家住宅产业化基地、中国航天事业合作伙伴。万和正通过致力清洁能源（燃气）及可再生能源（太阳能、空气能）的创新、高效利用，打造“全球领先的燃气具以及生活热水系统供应商”。
-        ]]> 
+        ]]>
     </string>
     <string name="vanward_site">http://www.vanward.com</string>
     <string name="version">版本：v 1.0.0 B 0.22</string>
+    <string name="waiting_device_response">设备没有响应,等待回应</string>
     <string name="water_amount">剩余热水量</string>
     <string name="wifi_name">网络名称</string>
     <string name="winner_mode">冬季模式</string>

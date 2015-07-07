@@ -36,15 +36,41 @@
     <WebView
         android:id="@+id/wv_chart"
         android:layout_width="fill_parent"
-        android:visibility="gone"
         android:layout_height="300dp"
-        android:background="#F3F3F3" />
-    
-    <com.vanward.ehheater.view.BaoBarView
-        android:id="@+id/bbv"
+        android:background="#F3F3F3"
+        android:visibility="gone" />
+
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="300dp" />
-    
+        android:layout_height="340dp" >
+
+        <com.vanward.ehheater.view.BaoBarView
+            android:id="@+id/bbv"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_yidong" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_height="wrap_content"
+                android:text="@string/touch_to_move_axis"
+                android:textColor="#898A8B" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"

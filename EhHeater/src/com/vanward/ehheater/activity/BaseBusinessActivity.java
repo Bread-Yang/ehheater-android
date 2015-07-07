@@ -108,6 +108,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	private String connectDeviceMac;
 
+	private boolean isConnecting;
+
+	private boolean isAlreadyReceiveDeviceStatus;
+
 	private BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -179,8 +183,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		public void dispatchMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-				L.e(this, "在reconnectHandler里面调用connectToDevice()重连");
-				connectToDevice();
+				if (isAlreadyReceiveDeviceStatus) { // 起码要接受到一次设备状态前提下,才能重连,避免刚刚配置上的时候,能连上设备,但收不到设备状态时代码死循环的问题
+					L.e(this, "在reconnectHandler里面调用connectToDevice()重连");
+					connectToDevice();
+				} else {
+					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
+					reconnectHandler.removeMessages(0);
+				}
 				// if (firstSendStateReq) {
 				// tv_loading_tips.setText(R.string.waiting_device_response);
 				// rlt_loading.setVisibility(View.VISIBLE);
@@ -248,20 +257,24 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		L.e(this, "onTcpPacket被调用了");
 		super.onTcpPacket(data, connId);
 
-		if (this instanceof ElectricMainActivity) {
-			firstSendStateReq = true;
-			reconnectHandler.removeMessages(0);
-			reconnectHandler.removeMessages(1);
-			dialog_reconnect.dismiss();
-			L.e(this, "$$$$$$$");
-			rlt_loading.setVisibility(View.GONE);
+		if (!isConnecting) {
+			if (this instanceof ElectricMainActivity) {
+				isAlreadyReceiveDeviceStatus = true;
 
-			ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-			List<RunningTaskInfo> list = am.getRunningTasks(1);
-			if (list != null && list.size() > 0) {
-				ComponentName cpn = list.get(0).topActivity;
-				// if (className.equals(cpn.getClassName())) {
-				// }
+				firstSendStateReq = true;
+				reconnectHandler.removeMessages(0);
+				reconnectHandler.removeMessages(1);
+				dialog_reconnect.dismiss();
+				L.e(this, "$$$$$$$");
+				rlt_loading.setVisibility(View.GONE);
+
+				ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+				List<RunningTaskInfo> list = am.getRunningTasks(1);
+				if (list != null && list.size() > 0) {
+					ComponentName cpn = list.get(0).topActivity;
+					// if (className.equals(cpn.getClassName())) {
+					// }
+				}
 			}
 		}
 	}
@@ -272,20 +285,24 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		L.e(this, "OnGasWaterHeaterStatusResp被调用了");
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
-		if (this instanceof GasMainActivity) {
-			firstSendStateReq = true;
-			reconnectHandler.removeMessages(0);
-			reconnectHandler.removeMessages(1);
-			dialog_reconnect.dismiss();
-			L.e(this, "$$$$$$$");
-			rlt_loading.setVisibility(View.GONE);
+		if (!isConnecting) {
+			if (this instanceof GasMainActivity) {
+				isAlreadyReceiveDeviceStatus = true;
 
-			ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-			List<RunningTaskInfo> list = am.getRunningTasks(1);
-			if (list != null && list.size() > 0) {
-				ComponentName cpn = list.get(0).topActivity;
-				// if (className.equals(cpn.getClassName())) {
-				// }
+				firstSendStateReq = true;
+				reconnectHandler.removeMessages(0);
+				reconnectHandler.removeMessages(1);
+				dialog_reconnect.dismiss();
+				L.e(this, "$$$$$$$");
+				rlt_loading.setVisibility(View.GONE);
+
+				ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+				List<RunningTaskInfo> list = am.getRunningTasks(1);
+				if (list != null && list.size() > 0) {
+					ComponentName cpn = list.get(0).topActivity;
+					// if (className.equals(cpn.getClassName())) {
+					// }
+				}
 			}
 		}
 	}
@@ -295,20 +312,23 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		L.e(this, "OnDERYStatusResp被调用了");
 		super.OnDERYStatusResp(pResp, nConnId);
 
-		if (this instanceof FurnaceMainActivity) {
-			firstSendStateReq = true;
-			reconnectHandler.removeMessages(0);
-			reconnectHandler.removeMessages(1);
-			dialog_reconnect.dismiss();
-			L.e(this, "$$$$$$$");
-			rlt_loading.setVisibility(View.GONE);
+		if (!isConnecting) {
+			if (this instanceof FurnaceMainActivity) {
+				isAlreadyReceiveDeviceStatus = true;
 
-			ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-			List<RunningTaskInfo> list = am.getRunningTasks(1);
-			if (list != null && list.size() > 0) {
-				ComponentName cpn = list.get(0).topActivity;
-				// if (className.equals(cpn.getClassName())) {
-				// }
+				firstSendStateReq = true;
+				reconnectHandler.removeMessages(0);
+				reconnectHandler.removeMessages(1);
+				dialog_reconnect.dismiss();
+				rlt_loading.setVisibility(View.GONE);
+
+				ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+				List<RunningTaskInfo> list = am.getRunningTasks(1);
+				if (list != null && list.size() > 0) {
+					ComponentName cpn = list.get(0).topActivity;
+					// if (className.equals(cpn.getClassName())) {
+					// }
+				}
 			}
 		}
 	}
@@ -468,7 +488,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	public void OnDeviceOnlineStateResp(DeviceOnlineStateResp_t pResp,
 			int nConnId) {
 		super.OnDeviceOnlineStateResp(pResp, nConnId);
-		L.e(this, "OnDeviceOnlineStateResp@BaseBusinessActivity:");
+		L.e(this, "OnDeviceOnlineStateResp()");
 
 		// if current device went offline
 		// offline
@@ -476,7 +496,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		// auto reconnect
 
 		if (pResp.getIsOnline() == 0) {
-
+			L.e(this, "大循环下设备断线,OnDeviceOnlineStateResp()返回pResp.getIsOnline() == 0");
 			// offline ui
 			if (rlt_loading.getVisibility() != View.VISIBLE) {
 				L.e(this, "@@@@@@@@@@@@@@@");
@@ -485,7 +505,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				// 收到主动断开,重连一次
 				connectToDevice();
 			}
-
+		} else {
+			L.e(this, "大循环下设备上线,OnDeviceOnlineStateResp()返回pResp.getIsOnline() == 1");
 		}
 
 		// if (pResp.getIsOnline() == 1) {
@@ -604,6 +625,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		@Override
 		public boolean handleMessage(Message msg) {
 			L.e(this, "!!!!!!!!!");
+			isConnecting = false;
 			showOffline();
 			return false;
 		}
@@ -638,6 +660,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 				tv_loading_tips.setText(R.string.connecting);
 				rlt_loading.setVisibility(View.VISIBLE);
+
+				isConnecting = true;
+
+				isAlreadyReceiveDeviceStatus = false;
 
 				if (getIntent()
 						.getBooleanExtra(
@@ -678,6 +704,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	private void tryConnectBySmallCycle(int timeout) {
 		L.e(this, "tryConnectBySmallCycle()");
 
+		L.e(this, "==============开始小循环连接==============");
+		
 		L.e(this, "XPGConnectClient.xpgcStartDiscovery()");
 		XPGConnectClient.xpgcStartDiscovery();
 
@@ -707,10 +735,18 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				return;
 			}
 
-			L.e(this, "onDeviceFound(): mac : " + endpoint.getSzMac()
-					+ ", did : " + endpoint.getSzDid());
+			L.e(this, "==============start onDeviceFound()==============");
 
+			L.e(this, "小循环返回的设备信息, mac : " + endpoint.getSzMac() + ", did : "
+					+ endpoint.getSzDid());
+			
 			if (endpoint.getSzMac() == null || endpoint.getSzDid() == null) {
+				return;
+			}
+			
+			if (!connectDeviceMac.equals(endpoint.getSzMac().toLowerCase())) {
+				L.e(this, "小循环返回的设备Mac与要连接的设备不匹配, 要连接的mac :" + connectDeviceMac
+						+ ", 小循环返回的mac : " + endpoint.getSzMac());
 				return;
 			}
 
@@ -737,16 +773,17 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 					isAlreadyTryConnectBySmallCycle = true;
 
-					HeaterInfo device = heaterInfoService
-							.getCurrentSelectedHeater();
-					device.setDid(endpoint.getSzDid());
-					new HeaterInfoDao(getApplicationContext()).save(device);
+//					HeaterInfo device = heaterInfoService
+//							.getCurrentSelectedHeater();
+//					device.setDid(endpoint.getSzDid());
+//					new HeaterInfoDao(getApplicationContext()).save(device);
 
 					L.e(this,
 							"========小循环返回对的设备,通过小循环连接 : XPGConnShortCuts.connect2small()=========");
 					XPGConnShortCuts.connect2small(endpoint.getAddr());
 				}
 			}
+			L.e(this, "==============end onDeviceFound()==============");
 		}
 	}
 
@@ -757,7 +794,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				+ " event : " + event);
 
 		if (connId == Global.connectId && event == -7) {
-
+			L.e(this, "小循环下设备断线,因为onConnectEvent()主动返回event == -7");
 			if (AlterDeviceHelper.hostActivity != null) {
 				L.e(this, "onConnectEvent() : AlterDeviceHelper.alterDevice();");
 				AlterDeviceHelper.alterDevice();
@@ -818,8 +855,11 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 		Global.connectId = nConnId;
 
+		isConnecting = false;
+
 		if (pResp.getResult() == 0) {
 			timeoutHandler.removeMessages(0);
+			L.e(this, "小循环连接设备成功,发送查询指令");
 			queryState();
 
 			// 是否需要上传绑定关系到服务器
@@ -834,6 +874,9 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	private void tryConnectByBigCycle() {
 		L.e(this, "tryConnectByBigCycle()");
 
+		L.e(this, "==============结束小循环连接==============");
+		L.e(this, "==============开始大循环连接==============");
+		
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
 			L.e(this, "XPGConnectClient.xpgc4Login");
 			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
@@ -880,9 +923,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 		synchronized (this) {
 
-			L.e(this, "onV4GetMyBindings: mac : " + endpoint.getSzMac()
-					+ "- did : " + endpoint.getSzDid() + "- isOnline : "
-					+ (endpoint.getIsOnline() == 1));
+			L.e(this, "==============start onV4GetMyBindings()==============");
+
+			L.e(this,
+					"服务器返回设备的信息, mac : " + endpoint.getSzMac() + "- did : "
+							+ endpoint.getSzDid() + "- isOnline : "
+							+ (endpoint.getIsOnline() == 1));
 
 			if ("".equals(endpoint.getSzMac())
 					|| "".equals(endpoint.getSzDid())) {
@@ -899,9 +945,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				isAlreadyTryConnectByBigCycle = true;
 
 				L.e(this,
-						"执行了8秒后执行connectAfterGetBindingDevicesReceivedFromMQTT()方法");
-				L.e(this,
-						"========大循环返回对的设备,通过大循环连接 : XPGConnectClient.xpgcLogin2Wan()=========");
+						"========大循环返回对的设备,8秒后执行大循环连接 : XPGConnectClient.xpgcLogin2Wan()=========");
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -910,15 +954,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					}
 				}, 8000);
 			}
+			L.e(this, "==============end onV4GetMyBindings()==============");
 		}
 	}
 
 	private void connectAfterGetBindingDevicesReceivedFromMQTT(
 			XpgEndpoint endpoint) {
-		L.e(this, "connectAfterGetBindingDevicesReceivedFromMQTT()");
-
-		L.e(this, "要连接的mMac : " + connectDeviceMac);
-		L.e(this, "endpoint.getSzMac() : " + endpoint.getSzMac());
 
 		if (endpoint.getSzMac().toLowerCase().equals(connectDeviceMac)) {
 
@@ -942,12 +983,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 				String userName = "2$" + Consts.VANWARD_APP_ID + "$"
 						+ Global.uid;
-				L.e(this, "XPGConnectClient.xpgcLogin2Wan()来连接设备");
+				L.e(this, "XPGConnectClient.xpgcLogin2Wan()来大循环连接设备");
 				XPGConnectClient.xpgcLogin2Wan(userName, Global.token,
 						endpoint.getSzDid(), endpoint.getSzPasscode()); // 连接设备
 				return;
 			} else { // offline
-				L.e(this, "!!!!!!!!!!!!");
+				L.e(this, "通过大循环连接的设备不在线,无法连接");
 				timeoutHandler.removeMessages(0);
 				showOffline();
 				return;
@@ -964,8 +1005,11 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 		Global.connectId = connId;
 
+		isConnecting = false;
+
 		switch (result) {
 		case 0: // 可以控制
+			L.e(this, "大循环连接设备成功,发送查询指令");
 			queryState();
 			timeoutHandler.removeMessages(0);
 			break;

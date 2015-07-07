@@ -9,20 +9,6 @@
         <dex dex="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/build/intermediates/pre-dexed/debug/nineoldandroids-2.4.0-43dd55bfb334f266efc38fa1fc638867146d073f.jar" />
     </item>
     <item
-        jar="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/libs/umeng-analytics-v5.2.4.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="0f9eccf79ae6006e4346725b09114182dca0c023">
-        <dex dex="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/build/intermediates/pre-dexed/debug/umeng-analytics-v5.2.4-808b3d4d28fa0919abbe1548f465a5c30522a455.jar" />
-    </item>
-    <item
-        jar="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/libs/commons-io-2.4.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
-        <dex dex="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/build/intermediates/pre-dexed/debug/commons-io-2.4-b2fa74b7db50f755fd08f56130cafba28ed04d00.jar" />
-    </item>
-    <item
         jar="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/libs/android-support-v4.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -35,6 +21,27 @@
         revision="21.1.2"
         sha1="126d1ea978aa87b87c90f32beac4dc966a318982">
         <dex dex="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/build/intermediates/pre-dexed/debug/gson-2.2.3-80bd94a3932f2e5ab1f598518edb222dd130feee.jar" />
+    </item>
+    <item
+        jar="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/libs/jpush-sdk-release1.7.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3c85f598c111fd4d7b3b9f9fa1f8f10bfc31a898">
+        <dex dex="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/build/intermediates/pre-dexed/debug/jpush-sdk-release1.7.4-c08894a06eb82db58e283c20b57ca119bd5aa516.jar" />
+    </item>
+    <item
+        jar="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/libs/umeng-analytics-v5.2.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0f9eccf79ae6006e4346725b09114182dca0c023">
+        <dex dex="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/build/intermediates/pre-dexed/debug/umeng-analytics-v5.2.4-808b3d4d28fa0919abbe1548f465a5c30522a455.jar" />
+    </item>
+    <item
+        jar="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/libs/commons-io-2.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
+        <dex dex="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/build/intermediates/pre-dexed/debug/commons-io-2.4-b2fa74b7db50f755fd08f56130cafba28ed04d00.jar" />
     </item>
     <item
         jar="/Users/yoghourt/Gitlab/water_heater_android/EhHeater/libs/xpgconnectcli.jar"
