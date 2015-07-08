@@ -144,6 +144,7 @@
     <string name="waiting_device_response">设备没有响应,等待回应</string>
     <string name="upload_bind_success">上传绑定关系成功!</string>
     <string name="upload_bind_fail">上传绑定关系失败!请重新配置!</string>
+    <string name="login_timeout">登录超时！</string>
 
     <!-- 壁挂炉用到的字段 -->
 

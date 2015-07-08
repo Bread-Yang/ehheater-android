@@ -558,10 +558,10 @@ public class BaoBarView extends View {
 	}
 
 	public void setxOffset(float xOffset) {
-		L.e(this, "xoffset : " + xOffset);
-		L.e(this, "xGridPad : " + xGridPad);
-		L.e(this, "plotArea.right - plotArea.left : "
-				+ (plotArea.right - plotArea.left));
+//		L.e(this, "xoffset : " + xOffset);
+//		L.e(this, "xGridPad : " + xGridPad);
+//		L.e(this, "plotArea.right - plotArea.left : "
+//				+ (plotArea.right - plotArea.left));
 		if (xOffset + getWidth() - plotArea.right - plotArea.left > xGridPad * 48) {
 			return;
 		}

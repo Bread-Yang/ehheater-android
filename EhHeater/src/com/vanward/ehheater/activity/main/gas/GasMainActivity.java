@@ -684,7 +684,6 @@ public class GasMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
-
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
 		if (nConnId != Global.connectId) {

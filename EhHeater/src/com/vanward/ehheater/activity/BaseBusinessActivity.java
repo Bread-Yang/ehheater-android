@@ -108,7 +108,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	private String connectDeviceMac;
 
-	private boolean isConnecting;
+	protected boolean isConnecting;
 
 	private boolean isAlreadyReceiveDeviceStatus;
 
@@ -330,6 +330,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					// }
 				}
 			}
+		} else {
+			return;
 		}
 	}
 

@@ -423,7 +423,6 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 			@Override
 			public void onClick(View arg0) {
 				// 清空其他的
-				L.e(this, "被点击了");
 				L.e(this, "customSetVolist的大小是 : " + customSetVolist.size());
 				setRadiocheck("", getWindow().getDecorView());
 				radioButton.setChecked(true);

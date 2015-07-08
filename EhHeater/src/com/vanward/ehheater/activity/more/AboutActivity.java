@@ -23,13 +23,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends EhHeaterBaseActivity {
 
 	private Button btn_check_update;
 	private Button rightbButton;
@@ -99,8 +100,9 @@ public class AboutActivity extends Activity {
 					String requestURL = "checkVersion";
 
 					// mHttpFriend.toUrl("http://enaiter.xtremeprog.com/EnaiterWeb/checkVersion?versionCode=1")
-					mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-							.executePost(null, new AjaxCallBack<String>() {
+
+					executeRequest(Consts.REQUEST_BASE_URL + requestURL, null,
+							new AjaxCallBack<String>() {
 								@Override
 								public void onSuccess(String jsonString) {
 									JSONObject json;
@@ -146,12 +148,12 @@ public class AboutActivity extends Activity {
 			ZipEntry ze = zf.getEntry("classes.dex");
 			long time = ze.getTime();
 			zf.close();
-			
+
 			String version = getResources().getString(R.string.version);
-			
+
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MM月dd号 HH:mm");
 			String date = dateFormat.format(new java.util.Date(time));
-			
+
 			tv_version.setText(version + " " + date);
 		} catch (Exception e) {
 			e.printStackTrace();

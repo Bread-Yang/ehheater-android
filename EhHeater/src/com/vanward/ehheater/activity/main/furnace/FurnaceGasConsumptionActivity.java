@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 import net.tsz.afinal.http.AjaxCallBack;
@@ -22,6 +24,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.google.gson.Gson;
 import com.vanward.ehheater.R;
@@ -49,9 +52,6 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	private ArrayList<String> realTimeXCategories = new ArrayList<>();
 	private ArrayList<Double> realTimeYDatas = new ArrayList<>();
 
-	private String[] defaultRealTimeXCategories = { "10:05", "10:10", "10:15",
-			"10:20", "10:25", "10:30", "10:35", "10:40", "10:45", "10:50",
-			"10:55", "11:00" };
 	private double[] defaultRealTimeYDatas = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
@@ -74,7 +74,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 	private Handler h3;
 	private TakeDataThread threadFor5minute;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -97,29 +97,48 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	}
 
 	private void setListener() {
-
-		rb_realtime_consumption.setOnClickListener(new OnClickListener() {
-
+		
+		rg_tab.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
 			@Override
-			public void onClick(View v) {
-//				rb_accumulated_consumption.setChecked(true);
-				realTimeYDatas.clear();
-				realTimeXCategories.clear();
-				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
-				getDataForRealtime(3);
+			public void onCheckedChanged(RadioGroup arg0, int checkResId) {
+				if (checkResId == R.id.rb_realtime_consumption) {
+					realTimeYDatas.clear();
+					realTimeXCategories.clear();
+					L.e(FurnaceGasConsumptionActivity.this, "rb_realtime_consumption.setOnClickListener()");
+					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
+					getDataForRealtime(3);
+				} else if (checkResId == R.id.rb_accumulated_consumption) {
+					accumulatedData = null;
+					L.e(FurnaceGasConsumptionActivity.this, "rb_accumulated_consumption.setOnClickListener()");
+					wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+					getDataForAccumulated();
+				}
 			}
 		});
 
-		rb_accumulated_consumption.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-//				rb_realtime_consumption.setChecked(true);
-				accumulatedData = null;
-				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-				getDataForAccumulated();
-			}
-		});
+//		rb_realtime_consumption.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				realTimeYDatas.clear();
+//				realTimeXCategories.clear();
+//				L.e(FurnaceGasConsumptionActivity.this, "rb_realtime_consumption.setOnClickListener()");
+//				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
+//				getDataForRealtime(3);
+//			}
+//		});
+//
+//		rb_accumulated_consumption.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				accumulatedData = null;
+//				L.e(FurnaceGasConsumptionActivity.this, "rb_accumulated_consumption.setOnClickListener()");
+//				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+//				getDataForAccumulated();
+//			}
+//		}); 
 
 		// findViewById(R.id.btn_click).setOnClickListener(new OnClickListener()
 		// {
@@ -159,7 +178,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 				"highChartsJavaScriptInterface");
 		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
 
-		mHttpFriend.delaySeconds = 2;
+		mHttpFriend.delaySeconds = 0;
 
 		L.e(this, "init() : wv_chart.loadUrl()");
 		wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
@@ -185,6 +204,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 		@JavascriptInterface
 		public String getAccumulatedConsumptionTitle() {
+			L.e(FurnaceGasConsumptionActivity.this, "getAccumulatedConsumptionTitle()");
 			return AccumulatedDateFormat.format(new Date());
 
 		}
@@ -201,10 +221,29 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		@JavascriptInterface
 		public String realTimeXCategories() {
 			L.e(FurnaceGasConsumptionActivity.this, "realTimeXCategories()");
-			if (realTimeXCategories.size() == 0) {
-				for (int i = 0; i < defaultRealTimeXCategories.length; i++) {
-					realTimeXCategories.add(defaultRealTimeXCategories[i]);
+			if (realTimeXCategories.size() == 0) {  
+				Calendar c = Calendar.getInstance();
+				c.setTime(new Date());
+				
+				int year = c.get(Calendar.YEAR);
+				int month = c.get(Calendar.MONTH);
+				int day = c.get(Calendar.DAY_OF_MONTH);
+				int currentHour = c.get(Calendar.HOUR_OF_DAY);
+				int currentMinute = c.get(Calendar.MINUTE) / 5 * 5;
+				
+				c.set(year, month, day, currentHour, currentMinute, 0);
+				
+				long timestamp = c.getTimeInMillis() / 1000 * 1000; // 将毫秒统一设为000
+				
+				L.e(this, "当前时间是 : " + realTimeDateFormat.format(new Date(timestamp)));
+				realTimeXCategories.add(realTimeDateFormat.format(new Date(timestamp)));
+				
+				for (int i = 0; i < 11; i++) {
+					timestamp -= 5 * 60 * 1000;
+					L.e(this, "当前时间是 : " + realTimeDateFormat.format(new Date(timestamp)));
+					realTimeXCategories.add(realTimeDateFormat.format(new Date(timestamp)));
 				}
+				Collections.reverse(realTimeXCategories);
 			}
 			StringBuilder sb = new StringBuilder();
 			sb.append("[");
@@ -372,7 +411,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 		return null;
 	}
 
-	private String getDataForAccumulated() {
+	private void getDataForAccumulated() {
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
 
@@ -395,7 +434,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 							String result = json.getString("result");
 							accumulatedData = result; // 存放返回结果
-							rb_accumulated_consumption.setChecked(true);
+//							rb_accumulated_consumption.setChecked(true);
 							wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 							if ("success".equals("result")) {
 								finish();
@@ -410,58 +449,17 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 							String strMsg) {
 						super.onFailure(t, errorNo, strMsg);
 						L.e(FurnaceGasConsumptionActivity.this, "请求失败");
-						rb_accumulated_consumption.setChecked(true);
-						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+//						rb_accumulated_consumption.setChecked(true);
+//						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 					}
 
 					@Override
 					public void onTimeout() {
 						super.onTimeout();
-						rb_accumulated_consumption.setChecked(true);
-						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
+//						rb_accumulated_consumption.setChecked(true);
+//						wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
 					}
 				});
-
-		// mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executePost(
-		// null, new AjaxCallBack<String>() {
-		// @Override
-		// public void onSuccess(String jsonString) {
-		// super.onSuccess(jsonString);
-		// L.e(this, "请求getFurnaceYearGas数据是 : " + jsonString);
-		//
-		// try {
-		// JSONObject json = new JSONObject(jsonString);
-		//
-		// String result = json.getString("result");
-		// forResult = result; // 存放返回结果
-		// rb_accumulated_consumption.setChecked(true);
-		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-		// if ("success".equals("result")) {
-		// finish();
-		// }
-		// } catch (JSONException e) {
-		// e.printStackTrace();
-		// }
-		// }
-		//
-		// @Override
-		// public void onFailure(Throwable t, int errorNo,
-		// String strMsg) {
-		// super.onFailure(t, errorNo, strMsg);
-		// forResult = "";
-		// rb_accumulated_consumption.setChecked(true);
-		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-		// }
-		//
-		// @Override
-		// public void onTimeout() {
-		// super.onTimeout();
-		// forResult = "";
-		// rb_accumulated_consumption.setChecked(true);
-		// wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_accumulated_gas_consumption.html");
-		// }
-		// });
-		return accumulatedData;
 	}
 
 	private String getDataForRealtime(final int ir) {
@@ -602,7 +600,7 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 
 				wv_chart.loadUrl("javascript:updateChart()");
 			} else if (msg.what == 3) {
-				rb_realtime_consumption.setChecked(true);
+//				rb_realtime_consumption.setChecked(true);
 				wv_chart.loadUrl("file:///android_asset/furnace_chart/chart_realtime_gas_consumption.html");
 			} else if (msg.what == 4) {
 				getDataForRealtime(2);
@@ -621,16 +619,15 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 	class TakeDataThread extends Thread {
 		@Override
 		public void run() {
-			while (true) {
-
+			while (!isFinishing()) {
 				// 睡眠5分钟
 				try {
 					sleep(5 * 1000 * 60);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				L.e(FurnaceGasConsumptionActivity.this, "5分钟后再请求多次实时数据");
 				handlerForRealtime.sendEmptyMessage(4);
-
 			}
 
 		}

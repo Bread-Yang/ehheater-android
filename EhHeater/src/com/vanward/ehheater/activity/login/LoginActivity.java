@@ -80,13 +80,13 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 	private final int HANDLE_OUTSIDE_NETWORK = 0;
 	private final int HANDLE_INSIDE_NETWORK = 1;
-	
+
 	private boolean isAlreadyReceiveDeviceData;
 
 	private Handler acquireDeviceListTimeout = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			DialogUtil.dismissDialog();
-			Toast.makeText(getBaseContext(), "获取设备列表超时！", 3000).show();
+			Toast.makeText(getBaseContext(), "获取设备列表超时！", Toast.LENGTH_SHORT).show();
 		};
 	};
 
@@ -94,6 +94,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case HANDLE_OUTSIDE_NETWORK: // 可以上外网
+				L.e(LoginActivity.this, "上外网");
 				loginCloudResponseTriggered = false;
 
 				mLoginTimeoutTimer = new Timer();
@@ -105,8 +106,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 								@Override
 								public void run() {
 									DialogUtil.dismissDialog();
-									Toast.makeText(getBaseContext(), "登录超时！",
-											3000).show();
+									Toast.makeText(getBaseContext(),
+											R.string.login_timeout, Toast.LENGTH_SHORT)
+											.show();
 									isTimeout = true;
 								}
 							});
@@ -129,11 +131,14 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 				// String userName = AccountService.getUserId(getBaseContext());
 				// String psw = AccountService.getUserPsw(getBaseContext());
-				
-				if (!new AccountDao(getApplicationContext()).isIntranetAccountExist(loginUserName)) {
+
+				if (!new AccountDao(getApplicationContext())
+						.isIntranetAccountExist(loginUserName)) {
 					DialogUtil.dismissDialog();
-					Toast.makeText(LoginActivity.this, "内网登录数据库没有该用户",
-							Toast.LENGTH_LONG).show();
+					// Toast.makeText(LoginActivity.this, "内网登录数据库没有该用户",
+					// Toast.LENGTH_LONG).show();
+					Toast.makeText(getBaseContext(), R.string.login_timeout,
+							Toast.LENGTH_SHORT).show();
 					return;
 				}
 
@@ -198,8 +203,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					}
 				} else {
 					DialogUtil.dismissDialog();
-					Toast.makeText(LoginActivity.this, "通过内网登录的账号和密码错误",
-							Toast.LENGTH_LONG).show();
+//					Toast.makeText(LoginActivity.this, "通过内网登录的账号和密码错误",
+//							Toast.LENGTH_SHORT).show();
+					Toast.makeText(getBaseContext(), R.string.login_timeout,
+							Toast.LENGTH_SHORT).show();
 				}
 
 				break;
@@ -303,8 +310,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 							@Override
 							public void run() {
 								DialogUtil.dismissDialog();
-								Toast.makeText(getBaseContext(), "登录超时！", 3000)
-										.show();
+								Toast.makeText(getBaseContext(),
+										R.string.login_timeout, Toast.LENGTH_SHORT).show();
 								isTimeout = true;
 							}
 						});
@@ -335,7 +342,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			isTimeout = false;
 
 			if (!NetworkStatusUtil.isConnected(this)) {
-				Toast.makeText(this, R.string.check_network, Toast.LENGTH_LONG)
+				Toast.makeText(this, R.string.check_network, Toast.LENGTH_SHORT)
 						.show();
 				return;
 			}
@@ -344,7 +351,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			final String loginPsw = et_pwd.getText().toString().trim();
 
 			if (loginUserName.length() <= 0 || loginPsw.length() <= 0) {
-				Toast.makeText(this, "请输入账号和密码", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "请输入账号和密码", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			DialogUtil.instance().showLoadingDialog(this, "正在登录，请稍后...");
@@ -458,10 +465,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			final String loginUid = et_user.getText().toString().trim();
 			String loginPsw = et_pwd.getText().toString().trim();
 
-//			Set<String> tagSet = new LinkedHashSet<String>();
-//			tagSet.add(loginUid);
-//			JPushInterface.setTags(getApplicationContext(), tagSet,
-//					mAliasCallback);
+			// Set<String> tagSet = new LinkedHashSet<String>();
+			// tagSet.add(loginUid);
+			// JPushInterface.setTags(getApplicationContext(), tagSet,
+			// mAliasCallback);
 
 			// 0和1都是登录成功
 			new SharedPreferUtils(getBaseContext()).clear();
@@ -545,7 +552,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			mLoginTimeoutTimer.cancel();
 			DialogUtil.dismissDialog();
 			Toast.makeText(getBaseContext(),
-					GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), 3000)
+					GizwitsErrorMsg.getEqual(errorCode).getCHNDescript(), Toast.LENGTH_SHORT)
 					.show();
 		}
 	}
@@ -633,7 +640,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		} else {
 			// 登录失败
 			DialogUtil.dismissDialog();
-			Toast.makeText(getBaseContext(), "用户名或密码错误", 3000).show();
+			Toast.makeText(getBaseContext(), "用户名或密码错误", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -657,7 +664,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			L.e(this, "endpoint.getIsDisabled() == 1,返回");
 			return;
 		}
-		
+
 		isAlreadyReceiveDeviceData = true;
 
 		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
