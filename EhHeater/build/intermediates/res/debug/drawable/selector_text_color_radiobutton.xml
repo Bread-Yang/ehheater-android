@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:state_checked="false" android:color="@color/appointment_text_color"/>  
-    <item android:state_checked="true" android:color="@color/orange"/>
-
-</selector>   <!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/selector_text_color_radiobutton.xml -->

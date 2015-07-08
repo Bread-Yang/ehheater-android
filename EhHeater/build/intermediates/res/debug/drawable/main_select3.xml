@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@drawable/icon_auto_down" android:state_checked="true"></item>
-    <item android:drawable="@drawable/icon_auto" android:state_checked="false"></item>
-
-</selector><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/main_select3.xml -->
