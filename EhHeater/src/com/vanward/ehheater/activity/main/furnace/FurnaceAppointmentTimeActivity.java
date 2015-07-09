@@ -27,6 +27,7 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.dao.AccountDao;
 import com.vanward.ehheater.model.AppointmentVo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
@@ -63,8 +64,6 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 			appointmentExecuteTomorrowDialog;
 
 	private boolean isEdit, isOverride;
-
-	private String nickName = "";
 
 	private String conflictName = "";
 
@@ -190,43 +189,44 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 		String requestURL = "userinfo/getUsageInformation?uid="
 				+ AccountService.getUserId(getBaseContext());
-		
-		executeRequest(Consts.REQUEST_BASE_URL + requestURL, null, new AjaxCallBack<String>() {
-			public void onSuccess(String jsonString) {
-				JSONObject json;
-				try {
-					json = new JSONObject(jsonString);
-					String responseCode = json
-							.getString("responseCode");
-					if ("200".equals(responseCode)) {
-						JSONObject result = json
-								.getJSONObject("result");
-						nickName = result.getString("userName");
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-			}
-		});
 
-//		mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
-//				null, new AjaxCallBack<String>() {
-//					public void onSuccess(String jsonString) {
-//						JSONObject json;
-//						try {
-//							json = new JSONObject(jsonString);
-//							String responseCode = json
-//									.getString("responseCode");
-//							if ("200".equals(responseCode)) {
-//								JSONObject result = json
-//										.getJSONObject("result");
-//								nickName = result.getString("userName");
-//							}
-//						} catch (JSONException e) {
-//							e.printStackTrace();
-//						}
-//					}
-//				});
+		// executeRequest(Consts.REQUEST_BASE_URL + requestURL, null, new
+		// AjaxCallBack<String>() {
+		// public void onSuccess(String jsonString) {
+		// JSONObject json;
+		// try {
+		// json = new JSONObject(jsonString);
+		// String responseCode = json
+		// .getString("responseCode");
+		// if ("200".equals(responseCode)) {
+		// JSONObject result = json
+		// .getJSONObject("result");
+		// nickName = result.getString("userName");
+		// }
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// });
+
+		// mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL).executeGet(
+		// null, new AjaxCallBack<String>() {
+		// public void onSuccess(String jsonString) {
+		// JSONObject json;
+		// try {
+		// json = new JSONObject(jsonString);
+		// String responseCode = json
+		// .getString("responseCode");
+		// if ("200".equals(responseCode)) {
+		// JSONObject result = json
+		// .getJSONObject("result");
+		// nickName = result.getString("userName");
+		// }
+		// } catch (JSONException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		// });
 
 		wheelView1.setCyclic(true);
 		wheelView2.setCyclic(true);
@@ -448,7 +448,11 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
 				// for test
 
-				editModel.setName(nickName);
+				// editModel.setName(nickName);
+
+				editModel.setName(new AccountDao(getApplicationContext())
+						.getNicknameByUid((AccountService
+								.getUserId(getBaseContext()))));
 
 				editModel.setDid(heaterInfo.getDid());
 
@@ -484,113 +488,113 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 					params.put("ignoreConflict", "true");
 				}
 
-				
-				executeRequest(Consts.REQUEST_BASE_URL + requestURL, params, new AjaxCallBack<String>() {
+				executeRequest(Consts.REQUEST_BASE_URL + requestURL, params,
+						new AjaxCallBack<String>() {
 
-					@Override
-					public void onSuccess(String jsonString) {
-						super.onSuccess(jsonString);
-						isOverride = false;
-						try {
-							JSONObject json = new JSONObject(jsonString);
-							String responseCode = json
-									.getString("responseCode");
-							if ("200".equals(responseCode)) {
-								boolean isAllUncheck = !cb_Monday
-										.isChecked()
-										&& !cb_Thuesday.isChecked()
-										&& !cb_Wednesday.isChecked()
-										&& !cb_Thursday.isChecked()
-										&& !cb_Friday.isChecked()
-										&& !cb_Saturday.isChecked()
-										&& !cb_Sunday.isChecked();
-								// 如果小于或等于当前系统时间,则加一天时间
-								if (isBeforeCurrentTime) {
-									if (isAllUncheck) { // 没有选择循环的时候,点击确认后,弹出提示框
-										appointmentExecuteTomorrowDialog
-												.show();
-									} else {
-										finish();
+							@Override
+							public void onSuccess(String jsonString) {
+								super.onSuccess(jsonString);
+								isOverride = false;
+								try {
+									JSONObject json = new JSONObject(jsonString);
+									String responseCode = json
+											.getString("responseCode");
+									if ("200".equals(responseCode)) {
+										boolean isAllUncheck = !cb_Monday
+												.isChecked()
+												&& !cb_Thuesday.isChecked()
+												&& !cb_Wednesday.isChecked()
+												&& !cb_Thursday.isChecked()
+												&& !cb_Friday.isChecked()
+												&& !cb_Saturday.isChecked()
+												&& !cb_Sunday.isChecked();
+										// 如果小于或等于当前系统时间,则加一天时间
+										if (isBeforeCurrentTime) {
+											if (isAllUncheck) { // 没有选择循环的时候,点击确认后,弹出提示框
+												appointmentExecuteTomorrowDialog
+														.show();
+											} else {
+												finish();
+											}
+										} else {
+											finish();
+										}
+									} else if ("501".equals(responseCode)) {
+										JSONObject result = json
+												.getJSONObject("result");
+										conflictName = result.getString("name");
+										conflictTime = result
+												.getLong("dateTime");
+										tipsHandler.sendEmptyMessage(0);
+									} else if ("403".equals(responseCode)) { // 预约满了
+										tipsHandler.sendEmptyMessage(1);
 									}
-								} else {
-									finish();
+								} catch (JSONException e) {
+									e.printStackTrace();
 								}
-							} else if ("501".equals(responseCode)) {
-								JSONObject result = json
-										.getJSONObject("result");
-								conflictName = result.getString("name");
-								conflictTime = result
-										.getLong("dateTime");
-								tipsHandler.sendEmptyMessage(0);
-							} else if ("403".equals(responseCode)) { // 预约满了
-								tipsHandler.sendEmptyMessage(1);
 							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-					}
 
-					@Override
-					public void onFailure(Throwable t, int errorNo,
-							String strMsg) {
-						super.onFailure(t, errorNo, strMsg);
-						isOverride = false;
-					}
-				});
-				
-//				mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-//						.executePost(params, new AjaxCallBack<String>() {
-//
-//							@Override
-//							public void onSuccess(String jsonString) {
-//								super.onSuccess(jsonString);
-//								isOverride = false;
-//								try {
-//									JSONObject json = new JSONObject(jsonString);
-//									String responseCode = json
-//											.getString("responseCode");
-//									if ("200".equals(responseCode)) {
-//										boolean isAllUncheck = !cb_Monday
-//												.isChecked()
-//												&& !cb_Thuesday.isChecked()
-//												&& !cb_Wednesday.isChecked()
-//												&& !cb_Thursday.isChecked()
-//												&& !cb_Friday.isChecked()
-//												&& !cb_Saturday.isChecked()
-//												&& !cb_Sunday.isChecked();
-//										// 如果小于或等于当前系统时间,则加一天时间
-//										if (isBeforeCurrentTime) {
-//											if (isAllUncheck) { // 没有选择循环的时候,点击确认后,弹出提示框
-//												appointmentExecuteTomorrowDialog
-//														.show();
-//											} else {
-//												finish();
-//											}
-//										} else {
-//											finish();
-//										}
-//									} else if ("501".equals(responseCode)) {
-//										JSONObject result = json
-//												.getJSONObject("result");
-//										conflictName = result.getString("name");
-//										conflictTime = result
-//												.getLong("dateTime");
-//										tipsHandler.sendEmptyMessage(0);
-//									} else if ("403".equals(responseCode)) { // 预约满了
-//										tipsHandler.sendEmptyMessage(1);
-//									}
-//								} catch (JSONException e) {
-//									e.printStackTrace();
-//								}
-//							}
-//
-//							@Override
-//							public void onFailure(Throwable t, int errorNo,
-//									String strMsg) {
-//								super.onFailure(t, errorNo, strMsg);
-//								isOverride = false;
-//							}
-//						});
+							@Override
+							public void onFailure(Throwable t, int errorNo,
+									String strMsg) {
+								super.onFailure(t, errorNo, strMsg);
+								isOverride = false;
+							}
+						});
+
+				// mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
+				// .executePost(params, new AjaxCallBack<String>() {
+				//
+				// @Override
+				// public void onSuccess(String jsonString) {
+				// super.onSuccess(jsonString);
+				// isOverride = false;
+				// try {
+				// JSONObject json = new JSONObject(jsonString);
+				// String responseCode = json
+				// .getString("responseCode");
+				// if ("200".equals(responseCode)) {
+				// boolean isAllUncheck = !cb_Monday
+				// .isChecked()
+				// && !cb_Thuesday.isChecked()
+				// && !cb_Wednesday.isChecked()
+				// && !cb_Thursday.isChecked()
+				// && !cb_Friday.isChecked()
+				// && !cb_Saturday.isChecked()
+				// && !cb_Sunday.isChecked();
+				// // 如果小于或等于当前系统时间,则加一天时间
+				// if (isBeforeCurrentTime) {
+				// if (isAllUncheck) { // 没有选择循环的时候,点击确认后,弹出提示框
+				// appointmentExecuteTomorrowDialog
+				// .show();
+				// } else {
+				// finish();
+				// }
+				// } else {
+				// finish();
+				// }
+				// } else if ("501".equals(responseCode)) {
+				// JSONObject result = json
+				// .getJSONObject("result");
+				// conflictName = result.getString("name");
+				// conflictTime = result
+				// .getLong("dateTime");
+				// tipsHandler.sendEmptyMessage(0);
+				// } else if ("403".equals(responseCode)) { // 预约满了
+				// tipsHandler.sendEmptyMessage(1);
+				// }
+				// } catch (JSONException e) {
+				// e.printStackTrace();
+				// }
+				// }
+				//
+				// @Override
+				// public void onFailure(Throwable t, int errorNo,
+				// String strMsg) {
+				// super.onFailure(t, errorNo, strMsg);
+				// isOverride = false;
+				// }
+				// });
 			}
 		});
 	}

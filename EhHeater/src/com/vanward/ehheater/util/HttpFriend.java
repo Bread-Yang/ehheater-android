@@ -128,65 +128,7 @@ public class HttpFriend {
 
 			@Override
 			public void onFailure(Throwable t, int errorNo, String strMsg) {
-				callBack.onFailure(t, errorNo, strMsg);
-				dismissRequestDialog();
-				if (showTips) {
-					if (!((Activity) mContext).isFinishing()) {
-						serverFailureDialog.show();
-					}
-					// Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
-					// .show();
-				}
-			}
-
-			@Override
-			public void onLoading(long count, long current) {
-				callBack.onLoading(count, current);
-			}
-
-			@Override
-			public void onStart() {
-				callBack.onStart();
-			}
-
-			@Override
-			public AjaxCallBack<String> progress(boolean progress, int rate) {
-				callBack.progress(progress, rate);
-				return super.progress(progress, rate);
-
-			}
-
-			@Override
-			public int getRate() {
-				return callBack.getRate();
-			}
-
-			@Override
-			public boolean isProgress() {
-				return callBack.isProgress();
-			}
-
-		});
-
-		return this;
-	}
-
-	private HttpFriend executePostParams(AjaxParams params,
-			final AjaxCallBack callBack) {
-		FinalHttp fh = new FinalHttp();
-		fh.configCookieStore(pcs);
-
-		showRequestDialog(callBack);
-		fh.post(url, params, new AjaxCallBack<String>() {
-
-			@Override
-			public void onSuccess(String jsonString) {
-				callBack.onSuccess(jsonString);
-				dismissRequestDialog();
-			}
-
-			@Override
-			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				L.e(HttpFriend.this, "请求失败:onFailure()");
 				callBack.onFailure(t, errorNo, strMsg);
 				dismissRequestDialog();
 				if (showTips) {
@@ -227,6 +169,73 @@ public class HttpFriend {
 
 			@Override
 			public void onTimeout() {
+				L.e(HttpFriend.this, "请求失败:onTimeout()");
+				callBack.onTimeout();
+				super.onTimeout();
+			}
+		});
+
+		return this;
+	}
+
+	private HttpFriend executePostParams(AjaxParams params,
+			final AjaxCallBack callBack) {
+		FinalHttp fh = new FinalHttp();
+		fh.configCookieStore(pcs);
+
+		showRequestDialog(callBack);
+		fh.post(url, params, new AjaxCallBack<String>() {
+
+			@Override
+			public void onSuccess(String jsonString) {
+				callBack.onSuccess(jsonString);
+				dismissRequestDialog();
+			}
+
+			@Override
+			public void onFailure(Throwable t, int errorNo, String strMsg) {
+				L.e(HttpFriend.this, "请求失败:onFailure()");
+				callBack.onFailure(t, errorNo, strMsg);
+				dismissRequestDialog();
+				if (showTips) {
+					if (!((Activity) mContext).isFinishing()) {
+						serverFailureDialog.show();
+					}
+					// Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
+					// .show();
+				}
+			}
+
+			@Override
+			public void onLoading(long count, long current) {
+				callBack.onLoading(count, current);
+			}
+
+			@Override
+			public void onStart() {
+				callBack.onStart();
+			}
+
+			@Override
+			public AjaxCallBack<String> progress(boolean progress, int rate) {
+				callBack.progress(progress, rate);
+				return super.progress(progress, rate);
+
+			}
+
+			@Override
+			public int getRate() {
+				return callBack.getRate();
+			}
+
+			@Override
+			public boolean isProgress() {
+				return callBack.isProgress();
+			}
+
+			@Override
+			public void onTimeout() {
+				L.e(HttpFriend.this, "请求失败:onTimeout()");
 				callBack.onTimeout();
 				super.onTimeout();
 			}
@@ -254,6 +263,7 @@ public class HttpFriend {
 
 				@Override
 				public void onFailure(Throwable t, int errorNo, String strMsg) {
+					L.e(HttpFriend.this, "请求失败:onFailure()");
 					callBack.onFailure(t, errorNo, strMsg);
 					dismissRequestDialog();
 					if (showTips) {
@@ -263,7 +273,6 @@ public class HttpFriend {
 						// Toast.makeText(mContext, "服务器错误", Toast.LENGTH_SHORT)
 						// .show();
 					}
-
 				}
 
 				@Override
@@ -293,6 +302,12 @@ public class HttpFriend {
 					return callBack.isProgress();
 				}
 
+				@Override
+				public void onTimeout() {
+					L.e(HttpFriend.this, "请求失败:onTimeout()");
+					callBack.onTimeout();
+					super.onTimeout();
+				}
 			};
 			if (params != null) {
 				fh.get(url, params, ajaxCallBack);

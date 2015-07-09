@@ -112,6 +112,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	private boolean isAlreadyReceiveDeviceStatus;
 
+	private XpgEndpoint bigCycleConnectEndpoint;
+
 	private BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -498,7 +500,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		// auto reconnect
 
 		if (pResp.getIsOnline() == 0) {
-			L.e(this, "大循环下设备断线,OnDeviceOnlineStateResp()返回pResp.getIsOnline() == 0");
+			L.e(this,
+					"大循环下设备断线,OnDeviceOnlineStateResp()返回pResp.getIsOnline() == 0");
 			// offline ui
 			if (rlt_loading.getVisibility() != View.VISIBLE) {
 				L.e(this, "@@@@@@@@@@@@@@@");
@@ -508,7 +511,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				connectToDevice();
 			}
 		} else {
-			L.e(this, "大循环下设备上线,OnDeviceOnlineStateResp()返回pResp.getIsOnline() == 1");
+			L.e(this,
+					"大循环下设备上线,OnDeviceOnlineStateResp()返回pResp.getIsOnline() == 1");
 		}
 
 		// if (pResp.getIsOnline() == 1) {
@@ -680,6 +684,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				} else { // 先试小循环, 不行则大循环
 					isAlreadyTryConnectBySmallCycle = false;
 					isAlreadyTryConnectByBigCycle = false;
+					bigCycleConnectEndpoint = null;
 					tryConnectBySmallCycle(smallCycleConnectTimeout);
 				}
 			} else if (NetworkStatusUtil
@@ -707,7 +712,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		L.e(this, "tryConnectBySmallCycle()");
 
 		L.e(this, "==============开始小循环连接==============");
-		
+
 		L.e(this, "XPGConnectClient.xpgcStartDiscovery()");
 		XPGConnectClient.xpgcStartDiscovery();
 
@@ -741,11 +746,11 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 			L.e(this, "小循环返回的设备信息, mac : " + endpoint.getSzMac() + ", did : "
 					+ endpoint.getSzDid());
-			
+
 			if (endpoint.getSzMac() == null || endpoint.getSzDid() == null) {
 				return;
 			}
-			
+
 			if (!connectDeviceMac.equals(endpoint.getSzMac().toLowerCase())) {
 				L.e(this, "小循环返回的设备Mac与要连接的设备不匹配, 要连接的mac :" + connectDeviceMac
 						+ ", 小循环返回的mac : " + endpoint.getSzMac());
@@ -775,10 +780,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 					isAlreadyTryConnectBySmallCycle = true;
 
-//					HeaterInfo device = heaterInfoService
-//							.getCurrentSelectedHeater();
-//					device.setDid(endpoint.getSzDid());
-//					new HeaterInfoDao(getApplicationContext()).save(device);
+					// HeaterInfo device = heaterInfoService
+					// .getCurrentSelectedHeater();
+					// device.setDid(endpoint.getSzDid());
+					// new HeaterInfoDao(getApplicationContext()).save(device);
 
 					L.e(this,
 							"========小循环返回对的设备,通过小循环连接 : XPGConnShortCuts.connect2small()=========");
@@ -878,7 +883,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 		L.e(this, "==============结束小循环连接==============");
 		L.e(this, "==============开始大循环连接==============");
-		
+
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
 			L.e(this, "XPGConnectClient.xpgc4Login");
 			XPGConnectClient.xpgc4Login(Consts.VANWARD_APP_ID,
@@ -932,29 +937,42 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 							+ endpoint.getSzDid() + "- isOnline : "
 							+ (endpoint.getIsOnline() == 1));
 
-			if ("".equals(endpoint.getSzMac())
-					|| "".equals(endpoint.getSzDid())) {
-				return;
-			}
+			if ("".equals(endpoint.getSzMac())) { // 假如mac地址为空,说明onV4GetMyBindings()最后一次回调
+				if (bigCycleConnectEndpoint != null
+						&& !isAlreadyTryConnectByBigCycle) { // 假如有设备,则执行大循环连接
+					isAlreadyTryConnectByBigCycle = true;
 
-			if (!connectDeviceMac.equals(endpoint.getSzMac().toLowerCase())) {
-				L.e(this, "服务器返回的设备Mac与要连接的设备不匹配, 要连接的mac :" + connectDeviceMac
-						+ ", 服务器返回的mac : " + endpoint.getSzMac());
-				return;
-			}
+					L.e(this,
+							"========服务器上有该设备,执行大循环连接 : XPGConnectClient.xpgcLogin2Wan()=========");
 
-			if (!isAlreadyTryConnectByBigCycle) {
-				isAlreadyTryConnectByBigCycle = true;
+					connectAfterGetBindingDevicesReceivedFromMQTT(bigCycleConnectEndpoint);
 
-				L.e(this,
-						"========大循环返回对的设备,8秒后执行大循环连接 : XPGConnectClient.xpgcLogin2Wan()=========");
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						// 接收绑定的设备列表完毕
-						connectAfterGetBindingDevicesReceivedFromMQTT(endpoint);
-					}
-				}, 8000);
+					// L.e(this,
+					// "========大循环返回对的设备,8秒后执行大循环连接 : XPGConnectClient.xpgcLogin2Wan()=========");
+					// new Handler().postDelayed(new Runnable() {
+					// @Override
+					// public void run() {
+					// // 接收绑定的设备列表完毕
+					// connectAfterGetBindingDevicesReceivedFromMQTT(endpoint);
+					// }
+					// }, 8000);
+				} else {
+					L.e(this, "========服务器上没有该设备,不执行大循环连接,弹出重连对话框bigCycleConnectEndpoint");
+					timeoutHandler.removeMessages(0);
+					timeoutHandler.sendEmptyMessage(0);
+				}
+			} else {
+				if (!connectDeviceMac.equals(endpoint.getSzMac().toLowerCase())) {
+					L.e(this,
+							"服务器返回的设备Mac与要连接的设备不匹配, 要连接的mac :"
+									+ connectDeviceMac + ", 服务器返回的mac : "
+									+ endpoint.getSzMac());
+					return;
+				} else {
+					L.e(this,
+							"!!!服务器返回要连接的设备信息!!!");
+					bigCycleConnectEndpoint = endpoint;
+				}
 			}
 			L.e(this, "==============end onV4GetMyBindings()==============");
 		}
@@ -996,6 +1014,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				return;
 			}
 		}
+		bigCycleConnectEndpoint = null;
 	}
 
 	@Override

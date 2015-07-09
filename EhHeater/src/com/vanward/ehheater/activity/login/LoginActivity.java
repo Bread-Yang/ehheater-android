@@ -135,10 +135,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				if (!new AccountDao(getApplicationContext())
 						.isIntranetAccountExist(loginUserName)) {
 					DialogUtil.dismissDialog();
-					// Toast.makeText(LoginActivity.this, "内网登录数据库没有该用户",
-					// Toast.LENGTH_LONG).show();
-					Toast.makeText(getBaseContext(), R.string.login_timeout,
-							Toast.LENGTH_SHORT).show();
+					 Toast.makeText(LoginActivity.this, "内网登录数据库没有该用户",
+					 Toast.LENGTH_LONG).show();
+//					Toast.makeText(getBaseContext(), R.string.login_timeout,
+//							Toast.LENGTH_SHORT).show();
 					return;
 				}
 
@@ -203,10 +203,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					}
 				} else {
 					DialogUtil.dismissDialog();
-//					Toast.makeText(LoginActivity.this, "通过内网登录的账号和密码错误",
-//							Toast.LENGTH_SHORT).show();
-					Toast.makeText(getBaseContext(), R.string.login_timeout,
+					Toast.makeText(LoginActivity.this, "通过内网登录的账号和密码错误",
 							Toast.LENGTH_SHORT).show();
+//					Toast.makeText(getBaseContext(), R.string.login_timeout,
+//							Toast.LENGTH_SHORT).show();
 				}
 
 				break;
@@ -916,20 +916,5 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				Log.e(TAG, logs);
 			}
 		}
-
-		private final Handler mHandler = new Handler() {
-			@Override
-			public void handleMessage(android.os.Message msg) {
-				super.handleMessage(msg);
-				switch (msg.what) {
-				case MSG_SET_ALIAS:
-					Log.d(TAG, "Set alias in handler.");
-					JPushInterface.setAliasAndTags(getApplicationContext(),
-							(String) msg.obj, null, mAliasCallback);
-					break;
-				}
-			}
-		};
-
 	};
 }

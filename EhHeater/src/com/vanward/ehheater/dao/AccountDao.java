@@ -42,7 +42,7 @@ public class AccountDao extends BaseDao {
 
 	public boolean isIntranetAccountExist(String uid) {
 		List<AccountBean> result = getDb().findAllByWhere(AccountBean.class,
-				"userName = " + uid);
+				"userName = '" + uid + "'");
 		if (result != null && result.size() > 0) {
 			return true;
 		} else {

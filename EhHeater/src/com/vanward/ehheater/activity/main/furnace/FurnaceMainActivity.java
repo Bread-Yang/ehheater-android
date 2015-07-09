@@ -275,7 +275,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	}
 
 	private void init() {
-		FurnaceSendCommandService.getInstance().setBeforeSendCommandCallBack(this);
+		FurnaceSendCommandService.getInstance().setBeforeSendCommandCallBack(
+				this);
 
 		errorString = getResources().getStringArray(
 				R.array.furnace_error_arrary);
@@ -287,7 +288,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 
 							@Override
 							public void onClick(View v) {
-								FurnaceSendCommandService.getInstance().closeDevice();
+								FurnaceSendCommandService.getInstance()
+										.closeDevice();
 								turnOffInWinnerDialog.dismiss();
 							}
 						});
@@ -641,8 +643,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			tv_gas_unit.setVisibility(View.VISIBLE);
 			tv_gas_consumption.setText(String.valueOf(Double.valueOf(pResp
 					.getGasCountNow()) / 10));
-//			L.e(this, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
-//			L.e(this, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
+			// L.e(this, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
+			// L.e(this, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
 		} else {
 			// tv_gas_unit.setVisibility(View.GONE);
 			tv_gas_consumption.setText(R.string.no_set);
@@ -674,10 +676,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			@Override
 			public void onFinish() {
 				if (isBathMode) {
-					FurnaceSendCommandService.getInstance().setBathTemperature(value);
-				} else {
-					FurnaceSendCommandService.getInstance().setHeatingTemperature(
+					FurnaceSendCommandService.getInstance().setBathTemperature(
 							value);
+				} else {
+					FurnaceSendCommandService.getInstance()
+							.setHeatingTemperature(value);
 				}
 				isSendingCommand = false;
 			}
@@ -694,7 +697,9 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			break;
 
 		case R.id.ivTitleBtnRigh:
-			if (statusResp == null) {
+			if (statusResp == null
+					|| tv_status.getText().toString()
+							.equals(getResources().getString(R.string.offline))) {
 				dialog_reconnect.show();
 			} else {
 				if (isOn) {
@@ -824,117 +829,6 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		}
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		L.e(this, "requestCode : " + requestCode);
-
-		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
-				&& resultCode == RESULT_OK) {
-
-			int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
-			boolean isOnline = data.getBooleanExtra(
-					Consts.INTENT_EXTRA_ISONLINE, true);
-			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
-			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
-			String conntext = data
-					.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
-
-			final HeaterInfoService hser = new HeaterInfoService(
-					getBaseContext());
-			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-
-			if (!TextUtils.isEmpty(passcode)) {
-				curHeater.setPasscode(passcode);
-			}
-			if (!TextUtils.isEmpty(did)) {
-				curHeater.setDid(did);
-			}
-
-			new HeaterInfoDao(getBaseContext()).save(curHeater);
-
-			L.e(this, "壁挂炉是否在线 : " + isOnline);
-
-			if (isOnline) {
-				Global.connectId = connId;
-				Global.checkOnlineConnId = -1;
-
-				boolean shouldExecuteBinding = HeaterInfoService
-						.shouldExecuteBinding(curHeater);
-
-				if (shouldExecuteBinding) {
-					HeaterInfoService.setBinding(this, did, passcode);
-					isBinding = true;
-					new Handler().postDelayed(new Runnable() {
-
-						@Override
-						public void run() {
-							isBinding = false;
-						}
-					}, 20000);
-				} else {
-					L.e(this,
-							" Consts.REQUESTCODE_CONNECT_ACTIVITY 查询 queryState()");
-					queryState();
-				}
-
-				if (getIntent().getBooleanExtra("switchSuccess", false)
-						&& firstShowSwitchSuccess) {
-					// 12月16日需求:去掉切换成功的提示
-					/* appointmentSwitchSuccessDialog.show(); */
-					firstShowSwitchSuccess = false;
-				}
-
-			} else {
-
-				Global.connectId = -1;
-				Global.checkOnlineConnId = connId;
-
-				changeToOfflineUI();
-			}
-
-			if (!conntext.contains("reconnect")) {
-				mSlidingMenu.showContent();
-			}
-
-		} else if (tv_sliding_menu_season_mode != null
-				&& resultCode == RESULT_OK && data != null) {
-			int seasonMode = data.getIntExtra("seasonMode",
-					FurnaceSeasonActivity.SET_SUMMER_MODE);
-			changeSlidingSeasonModeItem(seasonMode);
-			if (seasonMode == FurnaceSeasonActivity.SET_SUMMER_MODE) {
-				rb_summer.setVisibility(View.VISIBLE);
-				rg_winner.setVisibility(View.GONE);
-				iv_season_mode.setImageResource(R.drawable.mode_icon_summer);
-			} else {
-				rb_summer.setVisibility(View.GONE);
-				rg_winner.setVisibility(View.VISIBLE);
-				iv_season_mode.setImageResource(R.drawable.mode_icon_winner);
-			}
-		}
-
-		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
-
-			L.e(this, "Consts.REQUESTCODE_UPLOAD_BINDING里面");
-
-			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
-			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
-
-			isBinding = false;
-
-			if (resultCode == RESULT_OK) {
-				// binded
-				new HeaterInfoService(getBaseContext()).updateBindedByUid(
-						AccountService.getUserId(getApplicationContext()),
-						curHeater.getMac(), true);
-			}
-
-			L.e(this, " Consts.REQUESTCODE_UPLOAD_BINDING 查询 queryState()");
-			queryState();
-
-		}
-	}
-
 	/**
 	 * 多少秒后没有回调
 	 */
@@ -1026,7 +920,8 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		}
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
 				heaterNameChangeReceiver);
-		FurnaceSendCommandService.getInstance().setBeforeSendCommandCallBack(null);
+		FurnaceSendCommandService.getInstance().setBeforeSendCommandCallBack(
+				null);
 	}
 
 	@Override
@@ -1201,6 +1096,107 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 						}
 					}).showDialog();
 
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == Consts.REQUESTCODE_CONNECT_ACTIVITY
+				&& resultCode == RESULT_OK) {
+
+			int connId = data.getIntExtra(Consts.INTENT_EXTRA_CONNID, -1);
+			boolean isOnline = data.getBooleanExtra(
+					Consts.INTENT_EXTRA_ISONLINE, true);
+			String did = data.getStringExtra(Consts.INTENT_EXTRA_DID);
+			String passcode = data.getStringExtra(Consts.INTENT_EXTRA_PASSCODE);
+			String conntext = data
+					.getStringExtra(Consts.INTENT_EXTRA_CONNECT_TEXT);
+
+			final HeaterInfoService hser = new HeaterInfoService(
+					getBaseContext());
+			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+
+			if (!TextUtils.isEmpty(passcode)) {
+				curHeater.setPasscode(passcode);
+			}
+			if (!TextUtils.isEmpty(did)) {
+				curHeater.setDid(did);
+			}
+
+			new HeaterInfoDao(getBaseContext()).save(curHeater);
+
+			if (isOnline) {
+				Global.connectId = connId;
+				Global.checkOnlineConnId = -1;
+
+				boolean shouldExecuteBinding = HeaterInfoService
+						.shouldExecuteBinding(curHeater);
+
+				if (shouldExecuteBinding) {
+					HeaterInfoService.setBinding(this, did, passcode);
+					isBinding = true;
+					new Handler().postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							isBinding = false;
+						}
+					}, 20000);
+				} else {
+					L.e(this,
+							" Consts.REQUESTCODE_CONNECT_ACTIVITY 查询 queryState()");
+					queryState();
+				}
+
+				if (getIntent().getBooleanExtra("switchSuccess", false)
+						&& firstShowSwitchSuccess) {
+					// 12月16日需求:去掉切换成功的提示
+					/* appointmentSwitchSuccessDialog.show(); */
+					firstShowSwitchSuccess = false;
+				}
+
+			} else {
+				Global.connectId = -1;
+				Global.checkOnlineConnId = connId;
+
+				changeToOfflineUI();
+			}
+
+			if (!conntext.contains("reconnect")) {
+				mSlidingMenu.showContent();
+			}
+
+		} else if (tv_sliding_menu_season_mode != null
+				&& resultCode == RESULT_OK && data != null) {
+			int seasonMode = data.getIntExtra("seasonMode",
+					FurnaceSeasonActivity.SET_SUMMER_MODE);
+			changeSlidingSeasonModeItem(seasonMode);
+			if (seasonMode == FurnaceSeasonActivity.SET_SUMMER_MODE) {
+				rb_summer.setVisibility(View.VISIBLE);
+				rg_winner.setVisibility(View.GONE);
+				iv_season_mode.setImageResource(R.drawable.mode_icon_summer);
+			} else {
+				rb_summer.setVisibility(View.GONE);
+				rg_winner.setVisibility(View.VISIBLE);
+				iv_season_mode.setImageResource(R.drawable.mode_icon_winner);
+			}
+		}
+
+		if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {
+			HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+			HeaterInfo curHeater = hser.getCurrentSelectedHeater();
+
+			isBinding = false;
+
+			if (resultCode == RESULT_OK) {
+				// binded
+				new HeaterInfoService(getBaseContext()).updateBindedByUid(
+						AccountService.getUserId(getApplicationContext()),
+						curHeater.getMac(), true);
+			}
+			queryState();
 		}
 	}
 
