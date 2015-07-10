@@ -67,7 +67,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 	private CountDownTimer timeoutTimer;
 
-	private Dialog deleteHeaterConfirmDialog, deleteFurnaceConfirmDialog;
+	private Dialog deleteHeaterConfirmDialog, deleteFurnaceConfirmDialog,
+			serverFailureDialog;
 
 	@Override
 	public void initUI() {
@@ -114,6 +115,10 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 								deleteHeater();
 							}
 						});
+
+		serverFailureDialog = BaoDialogShowUtil.getInstance(this)
+				.createDialogWithOneButton(R.string.server_failure,
+						BaoDialogShowUtil.DEFAULT_RESID, null);
 
 		adapter = new HeaterAdapter(
 				new HeaterInfoDao(getBaseContext()).getAllByUid(AccountService
@@ -295,7 +300,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			deleted();
 		} else {
 			// server delete
-			DialogUtil.instance().showLoadingDialog(this, "");
+			// DialogUtil.instance().showLoadingDialog(this, "");
+			rlt_loading.setVisibility(View.VISIBLE);
 
 			timeoutTimer = new CountDownTimer(10000, 1000) {
 
@@ -306,9 +312,11 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 				@Override
 				public void onFinish() {
-					DialogUtil.dismissDialog();
-					Toast.makeText(getBaseContext(), R.string.time_out, 3000)
-							.show();
+					// DialogUtil.dismissDialog();
+					rlt_loading.setVisibility(View.GONE);
+//					Toast.makeText(getBaseContext(), R.string.time_out, 3000)
+//							.show();
+					serverFailureDialog.show();
 				}
 			};
 			timeoutTimer.start();
@@ -358,9 +366,11 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 				break;
 			case 1: // 未与服务器连接
-				DialogUtil.dismissDialog();
+				// DialogUtil.dismissDialog();
+				rlt_loading.setVisibility(View.GONE);
 				timeoutTimer.cancel();
-				Toast.makeText(getBaseContext(), "删除失败", 3000).show();
+//				Toast.makeText(getBaseContext(), "删除失败", 3000).show();
+				serverFailureDialog.show();
 				break;
 			default:
 				break;
@@ -431,7 +441,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 		timeoutTimer.cancel();
 
 		if (errorCode == 0) {
-			DialogUtil.dismissDialog();
+			// DialogUtil.dismissDialog();
+			rlt_loading.setVisibility(View.GONE);
 
 			HttpFriend httpFriend = HttpFriend.create(this);
 
@@ -479,7 +490,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 		super.OnBindingDelResp(pResp, nConnId);
 		L.e(this, "OnBindingDelResp@HeaterManagement: " + pResp.getResult());
 
-		DialogUtil.dismissDialog();
+		// DialogUtil.dismissDialog();
+		rlt_loading.setVisibility(View.GONE);
 
 		// if (pResp.getResult() == 0) {
 		new HeaterInfoService(getBaseContext()).deleteHeaterByUid(

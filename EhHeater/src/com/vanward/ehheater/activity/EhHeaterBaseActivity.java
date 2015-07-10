@@ -30,8 +30,8 @@ public class EhHeaterBaseActivity extends GeneratedActivity implements
 
 	protected Button btn_left, btn_right;
 	private TextView tv_center_title;
-	private RelativeLayout rlt_center, rlt_top, rlt_center_no_scrollview,
-			rlt_loading;
+	private RelativeLayout rlt_center, rlt_top, rlt_center_no_scrollview;
+	protected RelativeLayout rlt_loading;
 	public Intent intent;
 
 	protected HttpFriend mHttpFriend;
