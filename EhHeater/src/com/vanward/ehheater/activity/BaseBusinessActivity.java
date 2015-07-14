@@ -115,6 +115,9 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	private boolean isAlreadyReceiveDeviceStatus;
 
 	private XpgEndpoint bigCycleConnectEndpoint;
+	
+	private final int SMALL_CYCLE_CONNECT_ALREADY_TIMEOUT = 1001;
+	private final int BIG_CYCLE_CONNECT_ALREADY_TIMEOUT = 2001;
 
 	private BroadcastReceiver wifiConnectedReceiver = new BroadcastReceiver() {
 
@@ -222,8 +225,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				changeToOfflineUI();
 				L.e(this, "$$$$$$$");
 				rlt_loading.setVisibility(View.GONE);
-				L.e(this, "=================");
-				dialog_reconnect.show();
+				if (!isFinishing()) {
+					L.e(this, "=================");
+					dialog_reconnect.show();
+				}
 				break;
 			}
 		};
@@ -478,7 +483,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
 				logoutReceiver);
 
-		L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
+//		L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
 		// XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 		timeoutHandler.removeMessages(0);
 		reconnectHandler.removeMessages(0);
@@ -635,6 +640,9 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 			L.e(this, "!!!!!!!!!");
 			isConnecting = false;
 			showOffline();
+			if (msg.what == 1) {
+				L.e(this, "连接大循环30秒后超时,弹出重连对话框");
+			}
 			return false;
 		}
 	});
@@ -654,6 +662,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 			dialog_reconnect.dismiss();
 
 			// 断开之前的连接
+			L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
 			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 
 			HeaterInfo connectingDevice = heaterInfoService
@@ -822,6 +831,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					L.e(this, "endpoint返回为null");
 					return;
 				}
+				
+				if (isAlreadyTryConnectBySmallCycle) {
+					return;
+				}
 
 				L.e(this, "==============start onDeviceFound()==============");
 
@@ -855,13 +868,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				if (!isAlreadyTryConnectBySmallCycle) {
 					if (!TextUtils.isEmpty(macFound)
 							&& macFound.equals(connectDeviceMac)) {
+						
+						isAlreadyTryConnectBySmallCycle = true;
 
 						L.e(this, "XPGConnectClient.xpgcStopDiscovery()");
 						XPGConnectClient.xpgcStopDiscovery();
-
+						
 						timeoutHandler.sendEmptyMessageDelayed(0, 5000);
-
-						isAlreadyTryConnectBySmallCycle = true;
 
 						// HeaterInfo device = heaterInfoService
 						// .getCurrentSelectedHeater();
@@ -886,10 +899,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				+ " event : " + event);
 
 		if (connId == Global.connectId && event == -7) {
-			L.e(this, "小循环下设备断线,因为onConnectEvent()主动返回event == -7");
+//			L.e(this, "小循环下设备断线,因为onConnectEvent()主动返回event == -7");
 			if (AlterDeviceHelper.hostActivity != null) {
 				L.e(this, "onConnectEvent() : AlterDeviceHelper.alterDevice();");
-				AlterDeviceHelper.alterDevice();
+//				AlterDeviceHelper.alterDevice();
 				return;
 			}
 		} else if (event == 0) { // 连接设备,connect2small()之后回调
@@ -899,6 +912,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					.getCurrentSelectedHeater().getPasscode();
 
 			// 之前有没有保存passcode都重新请求一次passcode
+			L.e(this, "generated.SendPasscodeReq(connId) 请求设备密码");
 			generated.SendPasscodeReq(connId);
 
 			// if (TextUtils.isEmpty(devicePasscode)) {
@@ -966,7 +980,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	private void tryConnectByBigCycle() {
 		L.e(this, "tryConnectByBigCycle()");
 
-		L.e(this, "==============结束小循环连接==============");
+		L.e(this, "==============结束小循环连接,小循环网络没有找到要连接的设备==============");
 		L.e(this, "==============开始大循环连接==============");
 
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
@@ -980,7 +994,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					Global.token, 20, 0);
 		}
 
-		L.e(this, "timeoutHandler.sendEmptyMessageDelayed()");
 		timeoutHandler.sendEmptyMessageDelayed(0, bigCycleConnnectTimeout);
 	}
 

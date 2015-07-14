@@ -20,6 +20,7 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.vanward.ehheater.util.UIUtil;
@@ -89,6 +90,7 @@ public class AccountManagementActivity extends EhHeaterBaseActivity implements
 				new Intent(Consts.INTENT_ACTION_LOGOUT));
 		
 		if (Global.connectId > -1) {
+			L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
 			XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			Global.connectId = -1;
 		}

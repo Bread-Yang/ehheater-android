@@ -75,6 +75,7 @@ public class DummySendBindingReqActivity extends GeneratedActivity {
 	protected void onStop() {
 		super.onStop();
 		if (tempConnId != -1) {
+			L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
 			XPGConnectClient.xpgcDisconnectAsync(tempConnId);
 		}
 		XPGConnectClient.RemoveActivity(this);

@@ -482,6 +482,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 					macOfHeaterBeingDeleted);
 			deleted();
 		}
+		L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
 		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 	}
 
@@ -520,6 +521,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			if (all == null || all.size() == 0) {
 				// 删光了
 				hser.setCurrentSelectedHeater("");
+				L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
 				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			} else {
 				// TODO 需切换至其他设备

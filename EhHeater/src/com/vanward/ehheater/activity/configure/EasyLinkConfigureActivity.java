@@ -605,6 +605,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 
 		Intent intent = null;
 		
+		L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
 		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 
 		switch (hser.getHeaterType(hinfo)) {

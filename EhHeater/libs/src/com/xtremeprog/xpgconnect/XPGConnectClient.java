@@ -18,6 +18,7 @@ import java.util.List;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.security.Security;
 
 import com.xtremeprog.xpgconnect.generated.*;
 import com.xtremeprog.xpgconnect.listener.ClientListener;
@@ -73,6 +74,7 @@ public class XPGConnectClient {
 	}
 
 	public static native int xpgcInit(byte[] clientId);
+	public static native String getVersion();
 	public static native int xpgcFindDevice();
 	public static native void xpgcStartDiscovery();
 	public static native void xpgcStopDiscovery();
@@ -227,6 +229,9 @@ public class XPGConnectClient {
 	public static native void xpgcLogin2Lan(String ip,String passcode);
 
 	private static native void xpgcSetLogPath(String filePath);
+	private static native void xpgcSetIpPath(String filePath);
+
+
 	public static void xpgcInitLogPath(Context ctx)
 	{	
 
@@ -241,6 +246,24 @@ public class XPGConnectClient {
 
 		directory=directory+XPGConnectClient.getStrDate()+"-log.txt";
 		xpgcSetLogPath(directory);
+	}
+
+	public static void xpgcInitSaveDNS(Context ctx)
+	{
+		//change save time for DNS failure results to 0
+		Security.setProperty("networkaddress.cache.negative.ttl", "0");
+
+		//create saving path
+		String directory = android.os.Environment.getExternalStorageDirectory()
+				.getAbsolutePath()
+				+ "/"
+				+ "Gizwits"
+				+"/";
+		File tempFile = new File( directory );
+			if ( !tempFile.exists() )
+				tempFile.mkdirs();
+
+		xpgcSetIpPath(directory);
 	}
 
 	//获取应用程序的名称
@@ -326,6 +349,7 @@ public class XPGConnectClient {
 
 
 		byte[] clientId = Coding.EncodeUUID(UUID.randomUUID());
+
 		return xpgcInit(clientId);
 	}
 
@@ -335,6 +359,7 @@ public class XPGConnectClient {
 		AddActivity(activity);
 
 		byte[] clientId = Coding.EncodeUUID(UUID.randomUUID());
+
 		return xpgcInit(clientId);
 	}
 

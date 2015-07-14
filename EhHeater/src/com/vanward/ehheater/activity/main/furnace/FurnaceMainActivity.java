@@ -360,9 +360,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 	@Override
 	public void onConnectEvent(int connId, int event) {
 		super.onConnectEvent(connId, event);
-		L.e(this, "onConnectEvent@FurnaceMainActivity : event : " + event);
 		if (connId == Global.connectId && event == -7) { // -7:offline, 0 :
-			L.e(this, "壁挂炉不在线!!! @onConnectEvent()");
 			// online
 			isPowerOffOrOffline = true;
 
