@@ -145,6 +145,8 @@ public class GasMainActivity extends BaseBusinessActivity implements
 		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
+		
+		changeToOfflineUI();
 	}
 
 	@Override

@@ -1,0 +1,60 @@
+{
+    "responseCode": "200",
+    "responseMessage": "成功",
+    "result": [
+        {
+            "appointmentId": 101,
+            "dateTime": 1420095498630,
+            "deviceType": 1,
+            "did": "SkWEsvSxX68zd6s63jhw6i",
+            "isAppointmentOn": 1,
+            "isDeviceOn": 0,
+            "isSend": 0,
+            "loopflag": 2,
+            "name": "错错错",
+            "passcode": "SFKWDAWADS",
+            "peopelNum": "0",
+            "power": "0",
+            "temper": "48",
+            "uid": "13527718111",
+            "week": "11111110",
+            "workMode": 0
+        },
+        {
+            "appointmentId": 134,
+            "dateTime": 1417536000000,
+            "deviceType": 0,
+            "did": "SkWEsvSxX68zd6s63jhw6i",
+            "isAppointmentOn": 1,
+            "isDeviceOn": 1,
+            "isSend": 0,
+            "loopflag": 2,
+            "name": "kj",
+            "passcode": "SFKWDAWADS",
+            "peopelNum": "0",
+            "power": "0",
+            "temper": "30",
+            "uid": "13433914528",
+            "week": "0001000",
+            "workMode": 0
+        },
+        {
+            "appointmentId": 138,
+            "dateTime": 1417536180000,
+            "deviceType": 0,
+            "did": "SkWEsvSxX68zd6s63jhw6i",
+            "isAppointmentOn": 1,
+            "isDeviceOn": 1,
+            "isSend": 0,
+            "loopflag": 2,
+            "name": "kj",
+            "passcode": "SFKWDAWADS",
+            "peopelNum": "0",
+            "power": "0",
+            "temper": "30",
+            "uid": "13433914528",
+            "week": "0001000",
+            "workMode": 0
+        }
+    ]
+}

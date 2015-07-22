@@ -41,8 +41,6 @@ import com.vanward.ehheater.view.wheelview.adapters.NumericWheelAdapter;
 
 public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 
-	private final String TAG = "FurnaceAppointmentTimeActivity";
-
 	private WheelView wheelView1, wheelView2;
 
 	private ToggleButton tb_switch;
@@ -480,13 +478,15 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 				Gson gson = new Gson();
 				String json = gson.toJson(editModel);
 
-				L.e(this, "data : " + json);
-
 				AjaxParams params = new AjaxParams();
 				params.put("data", json);
 				if (isOverride) {
 					params.put("ignoreConflict", "true");
 				}
+				
+				L.e(FurnaceAppointmentTimeActivity.this, "data : " + params);
+				
+				L.e(FurnaceAppointmentTimeActivity.this, "请求的URL : " + Consts.REQUEST_BASE_URL + requestURL);
 
 				executeRequest(Consts.REQUEST_BASE_URL + requestURL, params,
 						new AjaxCallBack<String>() {

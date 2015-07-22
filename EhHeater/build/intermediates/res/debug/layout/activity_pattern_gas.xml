@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e6e6e6" >
+
+    <include
+        android:id="@+id/top_layout"
+        android:layout_alignParentTop="true"
+        layout="@layout/main_title"
+        android:focusable="true" />
+
+    <LinearLayout
+        android:id="@+id/couse_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/top_layout"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="自定义情景"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#b2b2b2" />
+
+        <TextView
+            android:id="@+id/nopatterm"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:text="暂无自定义情景"
+            android:textColor="#c3c9cc"
+            android:textSize="23sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/zidingyiradio"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_add_pattern"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@null"
+            android:drawableLeft="@drawable/icon_moshi_add"
+            android:drawablePadding="20dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/add_pattern"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/couse_layout"
+        android:background="#c9c9c9" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view1"
+        android:layout_marginTop="30dp"
+        android:padding="10dp"
+        android:text="预设模式"
+        android:textColor="#5d7884"
+        android:textSize="18sp" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:background="#b2b2b2" />
+
+    <LinearLayout
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/view2"
+        android:layout_toRightOf="@+id/radioGroup2"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/textradio0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:background="@null"
+            android:checked="true"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:padding="10dp"
+            android:text="自定义"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_alignParentLeft="true"
+            android:background="#d4d4d4" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/textradio1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/button1"
+                android:background="@null"
+                android:drawablePadding="10dp"
+                android:gravity="left|center_vertical"
+                android:padding="10dp"
+                android:text="厨房"
+                android:textColor="#5d7884"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/mornongsetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/icon_zheng" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_alignParentLeft="true"
+            android:background="#d4d4d4" />
+
+        <Button
+            android:id="@+id/textradio2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:padding="10dp"
+            android:text="舒适"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_alignParentLeft="true"
+            android:background="#d4d4d4" />
+
+        <Button
+            android:id="@+id/textradio3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:padding="10dp"
+            android:text="浴缸"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/View01"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#d4d4d4" />
+
+        <Button
+            android:id="@+id/Button01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:padding="10dp"
+            android:text="节能"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/View04"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#d4d4d4" />
+
+        <Button
+            android:id="@+id/Button02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:padding="10dp"
+            android:text="智能"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/radioGroup1"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2" >
+
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:button="@drawable/radio_selector"
+            android:padding="10dp"
+            android:tag="自定义模式"
+            android:text="自定义"
+            android:textColor="#5d7884"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_alignParentLeft="true"
+            android:background="#d4d4d4" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:background="@null"
+            android:button="@null"
+            android:drawableLeft="@drawable/radio_selector"
+            android:drawablePadding="18dp"
+            android:tag="舒适模式"
+            android:text="舒适"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#d4d4d4" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:drawableLeft="@drawable/radio_selector"
+            android:drawablePadding="18dp"
+            android:tag="厨房模式"
+            android:text="厨房"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/textView2"
+            android:layout_alignParentLeft="true"
+            android:background="#d4d4d4" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <RadioButton
+                android:id="@+id/radio3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:padding="10dp"
+                android:background="@null"
+                android:button="@null"
+                android:drawableLeft="@drawable/radio_selector"
+                android:drawablePadding="18dp"
+                android:tag="浴缸模式"
+                android:text="浴缸"
+                android:textColor="#5d7884"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/icon_zheng" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/View03"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#d4d4d4" />
+
+        <RadioButton
+            android:id="@+id/radio4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:drawableLeft="@drawable/radio_selector"
+            android:drawablePadding="18dp"
+            android:tag="节能模式"
+            android:text="节能"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/View05"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#d4d4d4" />
+
+        <RadioButton
+            android:id="@+id/radio5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:button="@null"
+            android:drawableLeft="@drawable/radio_selector"
+            android:drawablePadding="18dp"
+            android:tag="智能模式"
+            android:text="智能"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/View02"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#d4d4d4" />
+    </RadioGroup>
+
+</RelativeLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/activity_pattern_gas.xml -->

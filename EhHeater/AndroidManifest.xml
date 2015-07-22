@@ -135,7 +135,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".electric.TestActivity"
+            android:name=".activity.main.electric.TestActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
@@ -176,7 +176,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".electric.MainActivity"
+            android:name=".activity.main.electric.ElectricMainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
@@ -227,7 +227,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".electric.EIAddPatternActivity"
+            android:name=".activity.main.electric.EIAddPatternActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -236,7 +236,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".electric.EIPatternActivity"
+            android:name=".activity.main.electric.EIPatternActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>

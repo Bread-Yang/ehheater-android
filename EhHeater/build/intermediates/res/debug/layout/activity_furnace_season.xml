@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e6e6e6"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#c9c9c9" />
+
+    <RadioGroup
+        android:id="@+id/rg_winner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#d4d4d4" />
+
+        <RadioButton
+            android:id="@+id/rb_mode_summer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableLeft="@drawable/mode_icon_summer"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/selector_bg_furnace_switch_mode"
+            android:padding="20dp"
+            android:text="@string/summer_mode"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#d4d4d4" />
+
+        <RadioButton
+            android:id="@+id/rb_mode_winner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableLeft="@drawable/mode_icon_winner"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/selector_bg_furnace_switch_mode"
+            android:padding="20dp"
+            android:text="@string/winner_mode"
+            android:textColor="#5d7884"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#d4d4d4" />
+    </RadioGroup>
+
+</LinearLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/activity_furnace_season.xml -->

@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/values/arrays.xml -->
+    <eat-comment/>
+    <string-array name="furnace_error_arrary">
+        <item>卫浴水输入水温度传感器故障或过热</item>
+        <item>水压故障、缺水/变频水泵故障</item>
+        <item>点火失败或伪火故障</item>
+        <item>取暖水温度传感器故障或过热</item>
+        <item>卫浴水温度传感器故障或过热</item>
+        <item>风压/风机故障，可调速风机风速故障，烟道温度探头故障</item>
+        <item>机械温控器过热保护</item>
+        <item>AD采样/12V电压故障</item>
+        <item>主阀驱动继电器驱动电路故障</item>
+    </string-array>
+    <!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/values/attrs.xml -->
+    <eat-comment/>
+    <attr format="boolean" name="centered"/>
+    <attr format="color" name="selectedColor"/>
+    <attr format="dimension" name="strokeWidth"/>
+    <attr format="color" name="unselectedColor"/>
+    <!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/values/color.xml -->
+    <eat-comment/>
+    <color name="activity_background">#E6E6E6</color>
+    <color name="an_hui">#696969</color>
+    <color name="appointment_text_color">#71878B</color>
+    <color name="appointment_wheelview_color">#EEF2F3</color>
+    <color name="black">#000000</color>
+    <color name="color1">#506d7b</color>
+    <color name="color2">#9cabb1</color>
+    <color name="detail">#C0C1C2</color>
+    <color name="error_orange">#FF8B0A</color>
+    <color name="gray">#DCDCDC</color>
+    <color name="line">#44b2b2b2</color>
+    <color name="orange">#fff76805</color>
+    <color name="red">#f00</color>
+    <color name="seekline">#fff76805</color>
+    <color name="sheng_drak">#D3D3D3</color>
+    <color name="sky_blue">#00FFFF</color>
+    <color name="text_grey">#d2d2d2</color>
+    <color name="text_grey2">#555555</color>
+    <color name="text_hui">#cbcbcb</color>
+    <color name="title_color">#ff6d19</color>
+    <color name="transparent">#00000000</color>
+    <color name="wheelview_border">#A9A9A9</color>
+    <color name="wheelview_disable_item">#D4D4D4</color>
+    <color name="wheelview_grey_label">#C3C3C3</color>
+    <color name="white">#ffFFFFFF</color>
+    <color name="yeallow">#e8b59a</color>
+    <declare-styleable name="CircularSeekBar"><attr format="integer" name="progress"/><attr format="integer" name="max"/><attr format="boolean" name="move_outside_circle"/><attr format="boolean" name="maintain_equal_circle"/><attr format="boolean" name="use_custom_radii"/><attr format="boolean" name="lock_enabled"/><attr format="float" name="circle_x_radius"/><attr format="float" name="circle_y_radius"/><attr format="float" name="circle_stroke_width"/><attr format="float" name="pointer_radius"/><attr format="float" name="pointer_halo_width"/><attr format="float" name="pointer_halo_border_width"/><attr format="string" name="circle_color"/><attr format="string" name="circle_progress_color"/><attr format="string" name="pointer_color"/><attr format="string" name="pointer_halo_color"/><attr format="string" name="pointer_halo_color_ontouch"/><attr format="integer" name="pointer_alpha_ontouch"/><attr format="float" name="start_angle"/><attr format="float" name="end_angle"/><attr format="string" name="circle_fill"/></declare-styleable>
+    <declare-styleable name="MarqueeView"><attr format="integer" name="speed"/><attr format="integer" name="pause"/><attr format="boolean" name="autoStart"/></declare-styleable>
+    <declare-styleable name="SeekBarHint"><attr format="dimension" name="popupWidth"/><attr format="dimension" name="yOffset"/><attr format="integer" name="minValueTips"/><attr format="string" name="tipsUnit"/><attr format="enum" name="popupStyle"><enum name="follow" value="0"/><enum name="fixed" value="1"/></attr></declare-styleable>
+    <declare-styleable name="SlidingMenu"><attr name="mode"><enum name="left" value="0"/><enum name="right" value="1"/></attr><attr format="reference" name="viewAbove"/><attr format="reference" name="viewBehind"/><attr format="dimension" name="behindOffset"/><attr format="dimension" name="behindWidth"/><attr format="float" name="behindScrollScale"/><attr name="touchModeAbove"><enum name="margin" value="0"/><enum name="fullscreen" value="1"/></attr><attr name="touchModeBehind"><enum name="margin" value="0"/><enum name="fullscreen" value="1"/></attr><attr format="reference" name="shadowDrawable"/><attr format="dimension" name="shadowWidth"/><attr format="boolean" name="fadeEnabled"/><attr format="float" name="fadeDegree"/><attr format="boolean" name="selectorEnabled"/><attr format="reference" name="selectorDrawable"/></declare-styleable>
+    <declare-styleable name="SwipeListView"><attr format="boolean" name="swipeOpenOnLongPress"/><attr format="integer" name="swipeAnimationTime"/><attr format="dimension" name="swipeOffsetLeft"/><attr format="dimension" name="swipeOffsetRight"/><attr format="boolean" name="swipeCloseAllItemsWhenMoveList"/><attr format="reference" name="swipeFrontView"/><attr format="reference" name="swipeBackView"/><attr format="enum" name="swipeMode"><enum name="none" value="0"/><enum name="both" value="1"/><enum name="right" value="2"/><enum name="left" value="3"/></attr><attr format="enum" name="swipeActionLeft"><enum name="reveal" value="0"/><enum name="dismiss" value="1"/><enum name="choice" value="2"/></attr><attr format="enum" name="swipeActionRight"><enum name="reveal" value="0"/><enum name="dismiss" value="1"/><enum name="choice" value="2"/></attr><attr format="reference" name="swipeDrawableChecked"/><attr format="reference" name="swipeDrawableUnchecked"/></declare-styleable>
+    <declare-styleable name="ViewPagerIndicator"><attr format="reference" name="vpiCirclePageIndicatorStyle"/><attr format="reference" name="vpiIconPageIndicatorStyle"/><attr format="reference" name="vpiLinePageIndicatorStyle"/><attr format="reference" name="vpiTitlePageIndicatorStyle"/><attr format="reference" name="vpiTabPageIndicatorStyle"/><attr format="reference" name="vpiUnderlinePageIndicatorStyle"/></declare-styleable>
+    <declare-styleable name="WheelView"><attr format="reference" name="wheelBackground"/><attr format="reference" name="wheelForeground"/><attr format="boolean" name="hasLeftBorder"/><attr format="boolean" name="hasTopBorder"/><attr format="boolean" name="hasRightBorder"/><attr format="boolean" name="hasBottomBorder"/><attr format="boolean" name="enabled"/><attr format="reference" name="textNormalColor"/><attr format="reference" name="textHighlightColor"/><attr format="dimension" name="normalTextSize"/><attr format="dimension" name="highlightTextSize"/><attr format="string|reference" name="wheelCenterLabel"/><attr format="integer|dimension" name="centerLabelPosition"/><attr format="dimension" name="TextHeight"/></declare-styleable>
+    <!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/values/ids.xml -->
+    <eat-comment/>
+    <item name="selected_view" type="id"/>
+    <!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="Friday">周五</string>
+    <string name="I_know">我知道了</string>
+    <string name="Monday">周一</string>
+    <string name="Saturday">周六</string>
+    <string name="Sunday">周日</string>
+    <string name="Thursday">周四</string>
+    <string name="Tuesday">周二</string>
+    <string name="Wednesday">周三</string>
+    <string name="about">关于</string>
+    <string name="about_us_content">Rav</string>
+    <string name="about_us_desc_para_two">We continue to shatter traditional paradigms thanks largely to our dedication to and belief in quality ,communicative design.</string>
+    <string name="about_us_label">About Us</string>
+    <string name="about_vanward">
+<![CDATA[
+        <font color=#FE6C18>&#160;&#160;&#160;&#160;&#160;&#160;&#160;广东万和新电气股份有限公司</font>成立于1993年8月，总部位于广东顺德国家级新技术开发区内，是国内生产规模最大的燃气具专业制造企业，也是中国燃气具发展战略的首倡者、中国五金制品协会燃气用具分会第三阶理事长单位。近年，万和以连续三年35%以上的趋势增长成为行业发展标杆。2008年11月国务院总理温家宝、2008年10月广东省委书记汪洋曾亲临万和考察指导。温总理还高度赞扬了万和在自主创新、节能环保方面做出的努力。</string>
+    	]]>
+    </string>
+    <string name="account">用户名</string>
+    <string name="account_management">账号管理</string>
+    <string name="account_manager">账号管理</string>
+    <string name="accumulated_consumption">累计耗量</string>
+    <string name="acquire_again">重新获取</string>
+    <string name="acquire_captcha">获取验证码</string>
+    <string name="add">添加</string>
+    <string name="add_appointment">添加预约</string>
+    <string name="add_heater">添加设备</string>
+    <string name="add_pattern">添加模式</string>
+    <string name="add_power_larger_than_3">亲，剩余的加热时间无法保证您用水的温度。 请您降低水温或者延后用水时间</string>
+    <string name="add_power_less_than_3">亲，您需要增加功率才能保证您的用水。 </string>
+    <string name="alert_connection_failed">Failed to configure EMW device</string>
+    <string name="alert_connection_timeout">Connection to EMW was timed out.Please try again</string>
+    <string name="alert_easylink_title">Easylink Alert</string>
+    <string name="alert_invalid_gatewayip_msg">Please enter valid Gateway IP address</string>
+    <string name="alert_invalid_input_title">Invalid input</string>
+    <string name="alert_invalid_key_mesg">Please enter valid Key exactly 16 characters</string>
+    <string name="alert_invalid_password_msg">Please enter valid password</string>
+    <string name="alert_invalid_ssid_mesg">Please enter valid SSID</string>
+    <string name="alert_no_network_title">No Network</string>
+    <string name="alert_no_wifi_mesg">WiFi not available.Please check your WiFi connection.</string>
+    <string name="alert_successfully_connected">Easylink App Connected Successfully</string>
+    <string name="alert_successfully_failed">Failed to configure EMW device</string>
+    <string name="app_name">万和云智能</string>
+    <string name="apply_model">适用型号：H型号、L型号、S型号</string>
+    <string name="appointment">预约</string>
+    <string name="appointment_conflict">亲，请问是否要覆盖%1$s的预约%2$s</string>
+    <string name="appointment_execute_tomorrow">预约时间已过，您的预约将明天执行</string>
+    <string name="ask_for_help">寻求帮助</string>
+    <string name="auto_conf_fail">自动配置失败</string>
+    <string name="back">返回</string>
+    <string name="back_label">Back</string>
+    <string name="bath_mode">卫浴模式</string>
+    <string name="bathing">沐浴中</string>
+    <string name="cancel">取消</string>
+    <string name="cannot_connect">无法连接设备，\n请注意设备与手机的网络状态</string>
+    <string name="change_bind_phone">修改绑定手机号码</string>
+    <string name="change_device">切换设备</string>
+    <string name="change_password">修改密码</string>
+    <string name="change_success_relogin">密码修改成功，请重新登录</string>
+    <string name="check_network">网络连接已断开，请检查！</string>
+    <string name="check_update">检查更新</string>
+    <string name="circle">循环</string>
+    <string name="config_title">Device Configuration</string>
+    <string name="confirm">确认</string>
+    <string name="confirm_delete_furnace">确定删除该壁挂炉？</string>
+    <string name="confirm_delete_heater">确定删除该热水器？</string>
+    <string name="confirm_exit">确定退出？</string>
+    <string name="confirm_save">是否保存修改？</string>
+    <string name="connecting">连接中...</string>
+    <string name="contact_label">Contact</string>
+    <string name="current_power">当前功率</string>
+    <string name="current_temp">当前温度</string>
+    <string name="current_temperature">当前温度</string>
+    <string name="day">日</string>
+    <string name="delete">删除</string>
+    <string name="device_configure">亲，电器正在配对中，请您耐心等待</string>
+    <string name="device_error_tips">热水器发生故障，请尽快处理。</string>
+    <string name="device_error_title">故障提示</string>
+    <string name="device_manager">设备管理</string>
+    <string name="devicename_label">Device Name</string>
+    <string name="dial">呼叫</string>
+    <string name="edit">编辑</string>
+    <string name="edit_appointment">编辑预约</string>
+    <string name="edit_device_name">修改名称</string>
+    <string name="edit_nickname">修改用户名</string>
+    <string name="eh_furnace">万和壁挂炉</string>
+    <string name="enable">启用</string>
+    <string name="error_bypass">暂不处理</string>
+    <string name="error_handle">马上处理</string>
+    <string name="every_Friday">每周五</string>
+    <string name="every_Monday">每周一</string>
+    <string name="every_Saturday">每周六</string>
+    <string name="every_Sunday">每周日</string>
+    <string name="every_Thursday">每周四</string>
+    <string name="every_Tuesday">每周二</string>
+    <string name="every_Wednesday">每周三</string>
+    <string name="everyday">每天</string>
+    <string name="ewh_error_e2">热水器未注满水直接通电，发生干烧</string>
+    <string name="ewh_error_e2_title">机器故障(E2)</string>
+    <string name="failure">失败</string>
+    <string name="find_password">找回密码</string>
+    <string name="five">五</string>
+    <string name="footer_title">DESIGNED AND DEVELOPED BY</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="forget_pwd">忘记密码</string>
+    <string name="four">四</string>
+    <string name="freezeProof_tips">亲，现检测到您热水器水箱已接近冰点，请旋下进水接头处的泄压排水阀进行排水，以免水箱冻裂。</string>
+    <string name="freezeProof_warn_title">防冻预警</string>
+    <string name="full_water">亲,水已注满,请立即关闭。</string>
+    <string name="furnace_appointment_full">亲，壁挂炉的预约已经满了哦！</string>
+    <string name="furnace_switch">壁挂炉开关</string>
+    <string name="gas_consumption">燃气耗量</string>
+    <string name="gas_consumption_title">燃气耗量(方)</string>
+    <string name="gas_unit">m³/h</string>
+    <string name="gatewayip">Gateway IP Address</string>
+    <string name="heat_amount">剩余加热时间</string>
+    <string name="heater">热水器</string>
+    <string name="heater_appointment_full">亲，热水器的预约已经满了哦！</string>
+    <string name="heater_wifi_ssid">XPG-GAgent</string>
+    <string name="heating_mode">供暖模式</string>
+    <string name="heating_temperature">供暖温度</string>
+    <string name="help">帮助</string>
+    <string name="hint_input_phone_number">用户名</string>
+    <string name="history">历史记录</string>
+    <string name="hotline_num">400-830-8383</string>
+    <string name="information">信息</string>
+    <string name="input_mode_name">请输入模式名称！</string>
+    <string name="input_name">请输入名称</string>
+    <string name="input_phone">用户名</string>
+    <string name="intellectual">智能</string>
+    <string name="intelligence">智能</string>
+    <string name="intelligent_control">智能温控</string>
+    <string name="key_label">Key</string>
+    <string name="last_step">上一步</string>
+    <string name="loading">加载中</string>
+    <string name="login">登录</string>
+    <string name="login_tips">如果您购买了新设备,请进行设备配置</string>
+    <string name="logout">注销</string>
+    <string name="magnesiarods_replace">镁棒更换</string>
+    <string name="manual_conf_fail">手动配置失败</string>
+    <string name="manual_conf_guide">手动配置向导</string>
+    <string name="manual_operation_step">
+<![CDATA[ 
+        1. 请进入 设置 > Wifi, 选择<font color=#FE6C18>XPG-GAgent</font><br>2. 输入密码:<font color=#FE6C18>123456789</font> <br>3. 完成后请返回此界面, 将自动跳转到下一步
+    	]]>
+    </string>
+    <string name="manually_connect">手动连接</string>
+    <string name="mode">模式</string>
+    <string name="mode_bath">沐浴</string>
+    <string name="mode_comfort">舒适</string>
+    <string name="mode_default">普通</string>
+    <string name="mode_name_exist">该模式名称已存在！</string>
+    <string name="mode_night">夜间</string>
+    <string name="mode_outdoor">外出</string>
+    <string name="more">更多</string>
+    <string name="morning_wash">用水时段</string>
+    <string name="morning_wash_number">晨浴人数</string>
+    <string name="morning_wash_time">晨浴时间</string>
+    <string name="msg_empty_account">账号还没填写</string>
+    <string name="msg_empty_password">密码还没填写</string>
+    <string name="msg_fill_all">请填写完整</string>
+    <string name="msg_logining">登录中...</string>
+    <string name="msg_logining_out">注销中...</string>
+    <string name="never">永不</string>
+    <string name="new_device_tip">如果您购买了新设备，请进行设备配置</string>
+    <string name="new_pwd">新密码</string>
+    <string name="new_pwd_confirm">确认密码</string>
+    <string name="new_pwd_error">两次密码不一致，请重新输入！</string>
+    <string name="next_step">下一步</string>
+    <string name="no_set">--</string>
+    <string name="not_null">密码最少为6位</string>
+    <string name="num_wash">人洗</string>
+    <string name="number">分人洗</string>
+    <string name="offline">不在线</string>
+    <string name="ok">确定</string>
+    <string name="old_pwd">旧密码</string>
+    <string name="old_pwd_error">原密码不正确，请重新输入！</string>
+    <string name="one">一</string>
+    <string name="one_person">1人</string>
+    <string name="outlet_temperature">出水温度</string>
+    <string name="override">覆盖</string>
+    <string name="oxygen_tips">亲，现检测到您热水器处于环境缺氧状态，机器已自动启动智能氧护措施，请确保您热水器处于通风环境下运行。</string>
+    <string name="oxygen_warn">氧护报警</string>
+    <string name="password">密码</string>
+    <string name="password_hint">Password </string>
+    <string name="phone_number">手机号码</string>
+    <string name="please_input_confirm_psw">请输入确认密码！</string>
+    <string name="please_input_new_psw">请输入新密码！</string>
+    <string name="please_input_old_psw">请输入旧密码！</string>
+    <string name="power">功率</string>
+    <string name="psw_6_to_18">请输入6-18位密码！</string>
+    <string name="pwd">密码</string>
+    <string name="realtime_consumption">实时耗量</string>
+    <string name="regist">注册用户</string>
+    <string name="regist_tip">注册账号将于设备绑定，绑定后即可远程操控设备</string>
+    <string name="register">注册</string>
+    <string name="register_account">注册用户</string>
+    <string name="remind_setting">提醒设置</string>
+    <string name="repeate">重复</string>
+    <string name="requesting_http">正在请求,请稍后...</string>
+    <string name="reset_success">重置成功！</string>
+    <string name="retry">重试</string>
+    <string name="second">秒</string>
+    <string name="separate_wash">分人洗</string>
+    <string name="server_failure">无法连接服务器,请检查你的网络设置</string>
+    <string name="set_device_tip2">请站着热水器旁，保证热水器的<font color="#ff0000">电源</font>已经连接</string>
+    <string name="set_device_tip2_eh_furnace">请站在壁挂炉旁，保证壁挂炉的<font color="#ff0000">电源</font>已经连接</string>
+    <string name="set_device_tip3">请确保热水器与智能移动终端在同一无线局域网下进行连接</string>
+    <string name="set_device_tip3_eh_furnace">请确保壁挂炉与智能移动终端在同一无线局域网下进行连接</string>
+    <string name="set_device_tip4">(无线局域网默认为智能移动终端当前正在使用的无线局域网，如需更改，请先更改智能移动终端使用的网络配置。)</string>
+    <string name="set_device_tip5">请长按电源键<font color="#ff0000">3秒</font>，听到<font color="#ff0000">三声</font>蜂鸣后松手，点击下一步</string>
+    <string name="set_fail_tip1">无法连接热水器，请检查</string>
+    <string name="set_fail_tip2">1.热水器是否正常运行;\n2.无线局域网名称和密码是否修改过,如是,则需删除热水器重新添加。</string>
+    <string name="set_new_device">配置新设备</string>
+    <string name="setting">设置</string>
+    <string name="setting_new_device">配置热水器</string>
+    <string name="setting_new_furnace">配置壁挂炉</string>
+    <string name="setting_temperature">设置温度</string>
+    <string name="setting_water_temperature">设置水温</string>
+    <string name="setup_furnace_fail_tips">1. 壁挂炉是否正常运行\n2. 无线局域网名称和密码是否修改过\n\n如是, 则需删除壁挂炉重新添加</string>
+    <string name="setup_furnace_fail_title">无法连接壁挂炉，请检查</string>
+    <string name="setup_step3_eh">在关机状态下, 长按热水器节能键3秒, 蜂鸣器响一声之后松手, 并点击下一步</string>
+    <string name="setup_step3_eh_furnace">长按壁挂炉冬夏季键<font color="#ff0000">3秒</font>，蜂鸣器<font color="#ff0000">响一声</font>之后松手，并点击下一步</string>
+    <string name="setup_step3_st">在关机状态下, 按热水器预设键一下, 听到蜂鸣之后, 点击下一步</string>
+    <string name="show_password">显示密码</string>
+    <string name="shutdown">已关机</string>
+    <string name="silence_remind">静默提醒</string>
+    <string name="six">六</string>
+    <string name="soft_mode">舒适模式</string>
+    <string name="ssid_label">SSID</string>
+    <string name="standby">待机中</string>
+    <string name="start_label_1">Start 1.0</string>
+    <string name="start_label_2">Start 2.0</string>
+    <string name="stop_label">Stop</string>
+    <string name="success">成功</string>
+    <string name="summer_mode">夏季模式</string>
+    <string name="supplying_heat">供暖中</string>
+    <string name="switch_success">切换成功</string>
+    <string name="switch_summer">您确定要切换到夏季模式？</string>
+    <string name="switch_winner">您确定要切换到冬季模式？</string>
+    <string name="temperature">温度</string>
+    <string name="temperature_no_set">设置--°</string>
+    <string name="three">三</string>
+    <string name="three_person">3人</string>
+    <string name="time_out">请求超时</string>
+    <string name="tip_setting">提醒设置</string>
+    <string name="tips">提示</string>
+    <string name="touch_to_move_axis">左右可移动横轴</string>
+    <string name="turn_off">关机</string>
+    <string name="turn_off_in_winter">在冬天时关机，可能会由于气温过冷导致硬件损坏！</string>
+    <string name="turn_on">开机</string>
+    <string name="two">二</string>
+    <string name="two_person">2人</string>
+    <string name="update">更新</string>
+    <string name="update_tips">万和云智能有新版本更新!</string>
+    <string name="upload_bind_fail">上传绑定关系失败!请重新配置!</string>
+    <string name="upload_bind_success">上传绑定关系成功!</string>
+    <string name="use_help">使用帮助</string>
+    <string name="username">用户名</string>
+    <string name="vanward_profile">
+<![CDATA[ 
+        &#160;&#160;&#160;&#160;&#160;&#160;&#160万和是国内A股上市公司（股票代码：002543），1992年以中国第一台水控式燃气热水器起家，已发展成为国内生产规模最大的热水器、热水/供暖系统、厨房电器制造商及领先品牌，是国内仅有的两个“全球十大热水器品牌”之一。万和也是国家火炬计划重点高新技术企业、住建部授予的国家住宅产业化基地、中国航天事业合作伙伴。万和正通过致力清洁能源（燃气）及可再生能源（太阳能、空气能）的创新、高效利用，打造“全球领先的燃气具以及生活热水系统供应商”。
+        ]]>
+    </string>
+    <string name="vanward_site">http://www.vanward.com</string>
+    <string name="version">版本：v 1.0.0 B 0.22</string>
+    <string name="waiting_device_response">设备没有响应,等待回应</string>
+    <string name="water_amount">剩余热水量</string>
+    <string name="wifi_name">网络名称</string>
+    <string name="winner_mode">冬季模式</string>
+    <!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="AppBaseTheme" parent="android:Theme.Light.NoTitleBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="DialogBaseTheme" parent="@android:style/Theme.Dialog"/>
+    <style name="custom_checkbox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/my_checkbox</item>
+    </style>
+    <style name="custom_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <!-- Dialog的windowFrame框为无 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否漂现在activity上 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 是否半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 去除黑色边框的关键设置项 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 屏幕背景是否变暗 -->
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+    <style name="custom_dialog2" parent="DialogBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <style name="dialogStyle" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 屏幕背景不变暗 -->
+    </style>
+    <style name="fade_animation">
+        <item name="@android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="@android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
+</resources>

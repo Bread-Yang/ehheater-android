@@ -111,11 +111,11 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	private String connectDeviceMac;
 
 	protected boolean isConnecting;
- 
+
 	private boolean isAlreadyReceiveDeviceStatus;
 
 	private XpgEndpoint bigCycleConnectEndpoint;
-	
+
 	private final int SMALL_CYCLE_CONNECT_ALREADY_TIMEOUT = 1001;
 	private final int BIG_CYCLE_CONNECT_ALREADY_TIMEOUT = 2001;
 
@@ -162,16 +162,19 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 			AlterDeviceHelper.hostActivity = BaseBusinessActivity.this;
 
-			if (Global.connectId > -1) {
-				// 触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
-				L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
-				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
-			} else {
-				// 如果当前未建立连接, 直接调用此方法
-				L.e(this,
-						"alterDeviceDueToDeleteReceiver : AlterDeviceHelper.alterDevice();");
-				AlterDeviceHelper.alterDevice();
-			}
+			L.e(this, "切换设备");
+			AlterDeviceHelper.alterDevice();
+
+			// if (Global.connectId > -1) {
+			// // 触发BaseBusinessActivity里的断开连接回调, 具体的切换逻辑在该回调中处理
+			// L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
+			// XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+			// } else {
+			// // 如果当前未建立连接, 直接调用此方法
+			// L.e(this,
+			// "alterDeviceDueToDeleteReceiver : AlterDeviceHelper.alterDevice();");
+			// AlterDeviceHelper.alterDevice();
+			// }
 		}
 	};
 
@@ -396,11 +399,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 							@Override
 							public void onClick(View v) {
 								if (Global.connectId > -1) {
+									L.e(BaseBusinessActivity.this, "XPGConnectClient.xpgcDisconnectAsync()");
 									XPGConnectClient
 											.xpgcDisconnectAsync(Global.connectId);
 								}
 
 								if (Global.checkOnlineConnId > 0) {
+									L.e(BaseBusinessActivity.this, "XPGConnectClient.xpgcDisconnectAsync()");
 									XPGConnectClient
 											.xpgcDisconnectAsync(Global.checkOnlineConnId);
 								}
@@ -483,7 +488,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		LocalBroadcastManager.getInstance(getBaseContext()).unregisterReceiver(
 				logoutReceiver);
 
-//		L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
+		// L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
 		// XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 		timeoutHandler.removeMessages(0);
 		reconnectHandler.removeMessages(0);
@@ -695,7 +700,6 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				} else { // 先试小循环, 不行则大循环
 					isConnectingBySmallCycle = false;
 					isAlreadyTryConnectBySmallCycle = false;
-					isAlreadyTryConnectByBigCycle = false;
 					bigCycleConnectEndpoint = null;
 					tryConnectBySmallCycle(smallCycleConnectTimeout);
 				}
@@ -831,7 +835,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					L.e(this, "endpoint返回为null");
 					return;
 				}
-				
+
 				if (isAlreadyTryConnectBySmallCycle) {
 					return;
 				}
@@ -868,12 +872,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				if (!isAlreadyTryConnectBySmallCycle) {
 					if (!TextUtils.isEmpty(macFound)
 							&& macFound.equals(connectDeviceMac)) {
-						
+
 						isAlreadyTryConnectBySmallCycle = true;
 
 						L.e(this, "XPGConnectClient.xpgcStopDiscovery()");
 						XPGConnectClient.xpgcStopDiscovery();
-						
+
 						timeoutHandler.sendEmptyMessageDelayed(0, 5000);
 
 						// HeaterInfo device = heaterInfoService
@@ -899,10 +903,10 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				+ " event : " + event);
 
 		if (connId == Global.connectId && event == -7) {
-//			L.e(this, "小循环下设备断线,因为onConnectEvent()主动返回event == -7");
+			// L.e(this, "小循环下设备断线,因为onConnectEvent()主动返回event == -7");
 			if (AlterDeviceHelper.hostActivity != null) {
 				L.e(this, "onConnectEvent() : AlterDeviceHelper.alterDevice();");
-//				AlterDeviceHelper.alterDevice();
+				// AlterDeviceHelper.alterDevice();
 				return;
 			}
 		} else if (event == 0) { // 连接设备,connect2small()之后回调
@@ -982,6 +986,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 		L.e(this, "==============结束小循环连接,小循环网络没有找到要连接的设备==============");
 		L.e(this, "==============开始大循环连接==============");
+		
+		isAlreadyTryConnectByBigCycle = false;
 
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
 			L.e(this, "XPGConnectClient.xpgc4Login");
@@ -1056,7 +1062,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					// }, 8000);
 				} else {
 					L.e(this,
-							"========服务器上没有该设备,不执行大循环连接,弹出重连对话框bigCycleConnectEndpoint");
+							"========服务器上没有该设备,不执行大循环连接,弹出重连对话框");
 					timeoutHandler.removeMessages(0);
 					timeoutHandler.sendEmptyMessage(0);
 				}

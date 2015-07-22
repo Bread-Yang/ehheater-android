@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_right_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+</FrameLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/main_right_layout.xml -->

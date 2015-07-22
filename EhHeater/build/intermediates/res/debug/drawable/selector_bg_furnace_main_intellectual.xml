@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/icon_zhiceng3" android:state_enabled="false"></item>
+    <item android:drawable="@drawable/icon_zhiceng2" android:state_pressed="true"></item>
+    <item android:drawable="@drawable/icon_zhiceng1" android:state_enabled="true"></item>
+
+</selector><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/selector_bg_furnace_main_intellectual.xml -->

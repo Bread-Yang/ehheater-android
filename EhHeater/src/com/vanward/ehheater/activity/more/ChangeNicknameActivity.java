@@ -29,8 +29,6 @@ public class ChangeNicknameActivity extends EhHeaterBaseActivity {
 
 	private EditText et_change_nickname;
 
-	private HttpFriend mHttpFriend;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -91,8 +89,8 @@ public class ChangeNicknameActivity extends EhHeaterBaseActivity {
 				params.put("uid", AccountService.getUserId(getBaseContext()));
 				params.put("userName", nickName);
 
-				mHttpFriend.toUrl(Consts.REQUEST_BASE_URL + requestURL)
-						.executeGet(params, new AjaxCallBack<String>() {
+				executeRequest(Consts.REQUEST_BASE_URL + requestURL, params,
+						new AjaxCallBack<String>() {
 
 							@Override
 							public void onSuccess(String jsonString) {
@@ -121,8 +119,6 @@ public class ChangeNicknameActivity extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
-		mHttpFriend = HttpFriend.create(this);
-
 		String nickName = getIntent().getStringExtra("nickname");
 		if (nickName != null) {
 			et_change_nickname.setText(nickName);

@@ -482,8 +482,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 					macOfHeaterBeingDeleted);
 			deleted();
 		}
-		L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
-		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+//		L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
+//		XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 	}
 
 	@Override
@@ -491,20 +491,14 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 		super.OnBindingDelResp(pResp, nConnId);
 		L.e(this, "OnBindingDelResp@HeaterManagement: " + pResp.getResult());
 
-		// DialogUtil.dismissDialog();
-		rlt_loading.setVisibility(View.GONE);
-
-		// if (pResp.getResult() == 0) {
-		new HeaterInfoService(getBaseContext()).deleteHeaterByUid(
-				AccountService.getUserId(getApplicationContext()),
-				macOfHeaterBeingDeleted);
-		deleted();
-		// } else {
-		// Toast.makeText(getBaseContext(), R.string.failure,
-		// Toast.LENGTH_SHORT).show();
-		// }
-
-		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
+//		rlt_loading.setVisibility(View.GONE);
+//
+//		new HeaterInfoService(getBaseContext()).deleteHeaterByUid(
+//				AccountService.getUserId(getApplicationContext()),
+//				macOfHeaterBeingDeleted);
+//		deleted();
+//
+//		XPGConnectClient.xpgcDisconnectAsync(tempConnId);
 	}
 
 	private void deleted() {
@@ -521,8 +515,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			if (all == null || all.size() == 0) {
 				// 删光了
 				hser.setCurrentSelectedHeater("");
-				L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
-				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
+//				L.e(this, "XPGConnectClient.xpgcDisconnectAsync()");
+//				XPGConnectClient.xpgcDisconnectAsync(Global.connectId);
 			} else {
 				// TODO 需切换至其他设备
 				hser.setCurrentSelectedHeater(all.get(0).getMac());
@@ -536,12 +530,12 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 
 				shouldAlter = true;
 
-				finish();
 				LocalBroadcastManager
 						.getInstance(getBaseContext())
 						.sendBroadcast(
 								new Intent(
 										Consts.INTENT_ACTION_ALTER_DEVICE_DUE_TO_DELETE));
+				finish();
 			}
 		}
 
@@ -571,10 +565,8 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.putExtra("isDeleteAll", true);
 			startActivity(intent);
-			finish();
-
 		}
-
+		finish();
 	}
 
 	private String getCurDeviceMac(Context context) {

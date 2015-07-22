@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/home_yuan_bg"
+    android:insetLeft="10dp"
+    android:insetTop="10dp"
+    android:insetRight="10dp"
+    android:insetBottom="10dp" />
+<!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/inset_background.xml -->

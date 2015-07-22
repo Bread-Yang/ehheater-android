@@ -135,10 +135,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 				if (!new AccountDao(getApplicationContext())
 						.isIntranetAccountExist(loginUserName)) {
 					DialogUtil.dismissDialog();
-					 Toast.makeText(LoginActivity.this, "内网登录数据库没有该用户",
-					 Toast.LENGTH_LONG).show();
-//					Toast.makeText(getBaseContext(), R.string.login_timeout,
-//							Toast.LENGTH_SHORT).show();
+//					 Toast.makeText(LoginActivity.this, "内网登录数据库没有该用户",
+//					 Toast.LENGTH_LONG).show();
+					Toast.makeText(getBaseContext(), R.string.login_timeout,
+							Toast.LENGTH_SHORT).show();
 					return;
 				}
 
@@ -203,10 +203,10 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					}
 				} else {
 					DialogUtil.dismissDialog();
-					Toast.makeText(LoginActivity.this, "通过内网登录的账号和密码错误",
-							Toast.LENGTH_SHORT).show();
-//					Toast.makeText(getBaseContext(), R.string.login_timeout,
+//					Toast.makeText(LoginActivity.this, "通过内网登录的账号和密码错误",
 //							Toast.LENGTH_SHORT).show();
+					Toast.makeText(getBaseContext(), R.string.login_timeout,
+							Toast.LENGTH_SHORT).show();
 				}
 
 				break;

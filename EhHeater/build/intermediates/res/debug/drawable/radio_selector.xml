@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_checked="false" android:drawable="@drawable/icon_xuan3"></item>
+    <item android:state_checked="true" android:drawable="@drawable/icon_xuan4"></item>
+
+</selector>
+<!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/radio_selector.xml -->

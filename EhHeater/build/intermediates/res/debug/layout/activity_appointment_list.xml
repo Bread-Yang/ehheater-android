@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/home_bg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/top_layout"
+        layout="@layout/main_title"
+        android:focusable="true" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#80808080" />
+
+    <com.vanward.ehheater.view.swipelistview.SwipeListView
+        android:id="@+id/lv_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:listSelector="#00000000"
+        swipe:swipeActionLeft="reveal"
+        swipe:swipeActionRight="reveal"
+        swipe:swipeAnimationTime="1000"
+        swipe:swipeBackView="@+id/rlt_back"
+        swipe:swipeCloseAllItemsWhenMoveList="false"
+        swipe:swipeFrontView="@+id/rlt_front"
+        swipe:swipeMode="left"
+        swipe:swipeOffsetLeft="90dp"
+        swipe:swipeOffsetRight="90dp"
+        swipe:swipeOpenOnLongPress="false" />
+
+</LinearLayout><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/layout/activity_appointment_list.xml -->
