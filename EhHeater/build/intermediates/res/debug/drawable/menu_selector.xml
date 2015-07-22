@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@drawable/menu_icon_next_down" android:state_pressed="true"></item>
-    <item android:drawable="@drawable/menu_icon_next" android:state_pressed="false"></item>
-
-</selector><!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/menu_selector.xml -->

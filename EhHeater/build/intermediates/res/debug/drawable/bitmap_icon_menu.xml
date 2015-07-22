@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="center"
-    android:src="@drawable/icon_menu" />
-<!-- From: file:/Users/yoghourt/Gitlab/water_heater_android/EhHeater/res/drawable/bitmap_icon_menu.xml -->
