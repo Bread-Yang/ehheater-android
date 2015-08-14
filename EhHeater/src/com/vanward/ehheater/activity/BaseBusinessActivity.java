@@ -31,13 +31,9 @@ import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.main.common.BaseSendCommandService;
 import com.vanward.ehheater.activity.main.common.BaseSendCommandService.BeforeSendCommandCallBack;
-import com.vanward.ehheater.activity.main.electric.ElectricHeaterSendCommandService;
 import com.vanward.ehheater.activity.main.electric.ElectricMainActivity;
 import com.vanward.ehheater.activity.main.furnace.FurnaceMainActivity;
-import com.vanward.ehheater.activity.main.furnace.FurnaceSendCommandService;
-import com.vanward.ehheater.activity.main.gas.GasHeaterSendCommandService;
 import com.vanward.ehheater.activity.main.gas.GasMainActivity;
 import com.vanward.ehheater.bean.HeaterInfo;
 import com.vanward.ehheater.dao.HeaterInfoDao;
@@ -123,20 +119,22 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			L.e(BaseBusinessActivity.this, "wifiConnectedReceiver的onReceive()");
-			boolean isConnected = intent.getBooleanExtra("isConnected", false);
-			if (isConnected) {
-				// if (isActived) {
-				if (!NetworkStatusUtil.isConnected(BaseBusinessActivity.this)) {
-					L.e(this, "=================");
-					dialog_reconnect.show();
-				} else {
-					connectToDevice();
+			synchronized (this) {
+				L.e(BaseBusinessActivity.this,
+						"wifiConnectedReceiver的onReceive()");
+				if (rlt_loading.getVisibility() == View.VISIBLE) {
+					return;
 				}
-				// }
-			} else {
-				L.e(this, "@@@@@@@@@@@@@@@");
-				changeToOfflineUI();
+				boolean isConnected = intent.getBooleanExtra("isConnected",
+						false);
+
+				L.e(BaseBusinessActivity.this, "isConnected : " + isConnected);
+
+				if (isConnected) {
+					connectToDevice();
+				} else {
+					changeToOfflineUI();
+				}
 			}
 		}
 	};
@@ -399,13 +397,15 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 							@Override
 							public void onClick(View v) {
 								if (Global.connectId > -1) {
-									L.e(BaseBusinessActivity.this, "XPGConnectClient.xpgcDisconnectAsync()");
+									L.e(BaseBusinessActivity.this,
+											"XPGConnectClient.xpgcDisconnectAsync()");
 									XPGConnectClient
 											.xpgcDisconnectAsync(Global.connectId);
 								}
 
 								if (Global.checkOnlineConnId > 0) {
-									L.e(BaseBusinessActivity.this, "XPGConnectClient.xpgcDisconnectAsync()");
+									L.e(BaseBusinessActivity.this,
+											"XPGConnectClient.xpgcDisconnectAsync()");
 									XPGConnectClient
 											.xpgcDisconnectAsync(Global.checkOnlineConnId);
 								}
@@ -633,6 +633,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		rlt_loading.setVisibility(View.GONE);
 		L.e(this, "=================");
 
+		changeToOfflineUI();
+
 		if (!isFinishing()) {
 			dialog_reconnect.show();
 		}
@@ -653,6 +655,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	});
 
 	public void connectToDevice() {
+
+		if (!NetworkStatusUtil.isConnected(this)) {
+			Toast.makeText(this, R.string.check_network, Toast.LENGTH_SHORT)
+					.show();
+			return;
+		}
 
 		if (rlt_loading.getVisibility() != View.VISIBLE) {
 
@@ -678,15 +686,18 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 			connectDeviceMac = connectingDevice.getMac().toLowerCase();
 
+			tv_loading_tips.setText(R.string.connecting);
+			rlt_loading.setVisibility(View.VISIBLE);
+
+			isConnecting = true;
+
+			isAlreadyReceiveDeviceStatus = false;
+
+			isConnectingBySmallCycle = false;
+			isAlreadyTryConnectBySmallCycle = false;
+			bigCycleConnectEndpoint = null;
+
 			if (NetworkStatusUtil.isConnectedByWifi(getBaseContext())) {
-
-				tv_loading_tips.setText(R.string.connecting);
-				rlt_loading.setVisibility(View.VISIBLE);
-
-				isConnecting = true;
-
-				isAlreadyReceiveDeviceStatus = false;
-
 				if (getIntent()
 						.getBooleanExtra(
 								EasyLinkConfigureActivity.DIRECT_CONNECT_AFTER_EASYLINK,
@@ -698,13 +709,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 									false);
 					connectDirectlyAfterEasyLink();
 				} else { // 先试小循环, 不行则大循环
-					isConnectingBySmallCycle = false;
-					isAlreadyTryConnectBySmallCycle = false;
-					bigCycleConnectEndpoint = null;
+					L.e(this,
+							"==============使用wifi网络,先尝试小循环连接,失败了再尝试大循环连接==============");
 					tryConnectBySmallCycle(smallCycleConnectTimeout);
 				}
 			} else if (NetworkStatusUtil
 					.isConnectedByMobileData(getBaseContext())) {
+				L.e(this, "==============使用蜂窝网络,直接尝试大循环连接==============");
 				// 只能大循环
 				tryConnectByBigCycle();
 			}
@@ -745,6 +756,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					L.e(this, "XPGConnectClient.xpgcStopDiscovery()");
 					XPGConnectClient.xpgcStopDiscovery();
 
+					L.e(this,
+							"==============结束小循环连接,小循环网络没有找到要连接的设备==============");
 					tryConnectByBigCycle();
 				}
 			}
@@ -755,10 +768,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	public void onEasyLinkResp(XpgEndpoint endpoint) {
 		super.onEasyLinkResp(endpoint);
 
+		L.e(this, "onEasyLinkResp()");
+
 		synchronized (this) {
 
-			if (rlt_loading.getVisibility() == View.VISIBLE
-					&& isConnectingBySmallCycle) {
+			if (rlt_loading.getVisibility() != View.VISIBLE
+					&& !isAlreadyTryConnectBySmallCycle) {
 
 				if (null == endpoint) {
 					L.e(this, "endpoint返回为null");
@@ -984,9 +999,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	private void tryConnectByBigCycle() {
 		L.e(this, "tryConnectByBigCycle()");
 
-		L.e(this, "==============结束小循环连接,小循环网络没有找到要连接的设备==============");
 		L.e(this, "==============开始大循环连接==============");
-		
+
 		isAlreadyTryConnectByBigCycle = false;
 
 		if ("".equals(Global.token) || "".equals(Global.uid)) {
@@ -1061,8 +1075,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					// }
 					// }, 8000);
 				} else {
-					L.e(this,
-							"========服务器上没有该设备,不执行大循环连接,弹出重连对话框");
+					L.e(this, "========服务器上没有该设备,不执行大循环连接,弹出重连对话框");
 					timeoutHandler.removeMessages(0);
 					timeoutHandler.sendEmptyMessage(0);
 				}

@@ -60,7 +60,6 @@ import com.vanward.ehheater.view.PowerSettingDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
-import com.xtremeprog.xpgconnect.generated.generated;
 
 public class ElectricMainActivity extends BaseBusinessActivity implements
 		OnClickListener, BaoCircleSliderListener {
@@ -79,7 +78,7 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 
 	private BaoCircleSlider circle_slider;
 
-	private ViewGroup stuteParent;
+	private ViewGroup llt_statusParent;
 	private Button btn_appointment;
 	private ImageView iv_wave, hotImgeImageView;
 	private AnimationDrawable animationDrawable;
@@ -127,7 +126,7 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initSlidingMenu();
-		setSlidingView(R.layout.activity_main);
+		setSlidingView(R.layout.activity_electric_main);
 		initView();
 
 		ElectricHeaterSendCommandService.getInstance()
@@ -151,15 +150,13 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 		deviceSwitchSuccessDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithOneButton(R.string.switch_success,
 						R.string.confirm, null);
+
+		ChangeStuteView.swichdisconnect(llt_statusParent);
 	}
 
 	public void changeToOfflineUI() {
-		try {
-			ChangeStuteView.swichdisconnect(stuteParent);
-			dealDisConnect();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		ChangeStuteView.swichdisconnect(llt_statusParent);
+		dealDisConnect();
 	}
 
 	@Override
@@ -378,7 +375,7 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 		target_tem = (TextView) findViewById(R.id.target_tem);
 		btn_info = (Button) findViewById(R.id.btn_information);
 		tv_mode = (TextView) findViewById(R.id.mode_tv);
-		stuteParent = (ViewGroup) findViewById(R.id.stute);
+		llt_statusParent = (ViewGroup) findViewById(R.id.stute);
 		mTitleName = (TextView) findViewById(R.id.ivTitleName);
 		iv_wave = (ImageView) findViewById(R.id.wave_bg);
 		tv_tempter = (TextView) findViewById(R.id.tempter);
@@ -517,13 +514,13 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 		circle_slider.setVisibility(View.VISIBLE);
 		// circularView.setOn(true);
 		setAppointmentButtonAble(true);
-		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
+		ChangeStuteView.swichLeaveMinView(llt_statusParent, 10);
 		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
 		if (i == 0 || i == -1) {
-			ChangeStuteView.swichKeep(stuteParent);
+			ChangeStuteView.swichKeep(llt_statusParent);
 		} else {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
+			ChangeStuteView.swichLeaveMinView(llt_statusParent, i);
 		}
 
 	}
@@ -533,15 +530,15 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 		circle_slider.setVisibility(View.GONE);
 		// circularView.setOn(false);
 		setAppointmentButtonAble(true);
-		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
+		ChangeStuteView.swichLeaveMinView(llt_statusParent, 10);
 		btn_power.setOnClickListener(this);
 		btn_power.setSelected(true);
 		int i = new EhState(data).getRemainingHeatingTime();
 
 		if (i == 0 || i == -1) {
-			ChangeStuteView.swichKeep(stuteParent);
+			ChangeStuteView.swichKeep(llt_statusParent);
 		} else {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
+			ChangeStuteView.swichLeaveMinView(llt_statusParent, i);
 		}
 
 	}
@@ -551,13 +548,13 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 		circle_slider.setVisibility(View.GONE);
 		// circularView.setOn(false);
 		setAppointmentButtonAble(false);
-		ChangeStuteView.swichNight(stuteParent);
+		ChangeStuteView.swichNight(llt_statusParent);
 		int i = new EhState(data).getSystemRunningState();
 		int remainingTime = new EhState(data).getRemainingHeatingTime();
 		if (i == 0) {
-			ChangeStuteView.swichNight(stuteParent);
+			ChangeStuteView.swichNight(llt_statusParent);
 		} else {
-			ChangeStuteView.swichLeaveMinView(stuteParent, remainingTime);
+			ChangeStuteView.swichLeaveMinView(llt_statusParent, remainingTime);
 		}
 
 	}
@@ -608,14 +605,14 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 
 		circle_slider.setVisibility(View.VISIBLE);
 
-		ChangeStuteView.swichLeaveMinView(stuteParent, 10);
+		ChangeStuteView.swichLeaveMinView(llt_statusParent, 10);
 		// powerTv.setText(3 + "kw");
 		btn_power.setOnClickListener(this);
 		int i = new EhState(data).getRemainingHeatingTime();
 		if (i == 0 || i == -1) {
-			ChangeStuteView.swichKeep(stuteParent);
+			ChangeStuteView.swichKeep(llt_statusParent);
 		} else {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
+			ChangeStuteView.swichLeaveMinView(llt_statusParent, i);
 		}
 
 	}
@@ -661,13 +658,13 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 		// circularView.setOn(false);
 		setAppointmentButtonAble(false);
 		tv_mode.setText("晨浴模式");
-		ChangeStuteView.swichMorningWash(stuteParent);
+		ChangeStuteView.swichMorningWash(llt_statusParent);
 		int i = new EhState(data).getRemainingHeatingTime();
 		System.out.println("测试晨浴i: " + i);
 		if (i == 0) {
-			ChangeStuteView.swichMorningWash(stuteParent);
+			ChangeStuteView.swichMorningWash(llt_statusParent);
 		} else if (new EhState(data).getSystemRunningState() == 1) {
-			ChangeStuteView.swichLeaveMinView(stuteParent, i);
+			ChangeStuteView.swichLeaveMinView(llt_statusParent, i);
 		}
 
 	}
@@ -936,7 +933,7 @@ public class ElectricMainActivity extends BaseBusinessActivity implements
 				rightButton.setBackgroundResource(R.drawable.icon_shut_disable);
 				findViewById(R.id.pattern).setEnabled(false);
 				findViewById(R.id.power).setEnabled(false);
-				ChangeStuteView.swichDeviceOff(stuteParent);
+				ChangeStuteView.swichDeviceOff(llt_statusParent);
 				ison = false;
 			} else {
 				tv_mode.setVisibility(View.VISIBLE);

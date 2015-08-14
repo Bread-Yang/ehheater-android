@@ -427,6 +427,7 @@ public class AppointmentTimeActivity extends EhHeaterBaseActivity implements
 										tipsHandler.sendEmptyMessage(1);
 									}
 								} catch (JSONException e) {
+									L.e(AppointmentTimeActivity.this, "增加或者修改预约请求服务器后拿数据出错!!!!!!!!!!!!!!!!");
 									e.printStackTrace();
 								}
 							}

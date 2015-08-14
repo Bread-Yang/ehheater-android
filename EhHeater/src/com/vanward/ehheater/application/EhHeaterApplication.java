@@ -27,6 +27,23 @@ public class EhHeaterApplication extends Application implements ClientListener {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+//		Locale locale = this.getResources().getConfiguration().locale;
+//
+//		StringBuffer sb = new StringBuffer();
+//
+//		sb.append("locale.toString():" + locale.toString());
+//		sb.append("\nlocale.getCountry():" + locale.getCountry());
+//		sb.append("\nlocale.getDisplayCountry():" + locale.getDisplayCountry());
+//		sb.append("\nlocale.getDisplayLanguage():" + locale.getDisplayLanguage());
+//		sb.append("\nlocale.getDisplayName():" + locale.getDisplayName());
+//		sb.append("\nlocale.getDisplayVariant():" + locale.getDisplayVariant());
+//		sb.append("\nlocale.getISO3Country():" + locale.getISO3Country());
+//		sb.append("\nlocale.getISO3Language():" + locale.getISO3Language());
+//		sb.append("\nlocale.getLanguage():" + locale.getLanguage());
+//		sb.append("\nlocale.getVariant():" + locale.getVariant());
+//
+//		L.e(this, sb.toString());
 
 		XPGConnectClient.initClient(this);
 		

@@ -50,7 +50,6 @@
         </service>
         -->
 
-
         <!-- Required JPush SDK 核心功能 -->
         <service
             android:name="cn.jpush.android.service.PushService"
@@ -133,6 +132,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".notification.NotificationActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.main.electric.TestActivity"

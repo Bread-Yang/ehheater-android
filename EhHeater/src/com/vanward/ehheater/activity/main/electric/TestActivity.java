@@ -14,7 +14,7 @@ public class TestActivity extends Activity implements BaoCircleSliderListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_electric_main);
 		
 		circle_slider = (BaoCircleSlider)findViewById(R.id.circle_slider);
 		

@@ -22,6 +22,7 @@
             android:id="@+id/rb_realtime_consumption"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:visibility="gone"
             android:layout_weight="1"
             android:background="@drawable/selector_text_color_furnace_gas_consumption"
             android:button="@null"

@@ -205,7 +205,7 @@
     <string name="switch_winner">您确定要切换到冬季模式？</string>
     <string name="confirm_delete_heater">确定删除该热水器？</string>
     <string name="confirm_delete_furnace">确定删除该壁挂炉？</string>
-    <string name="turn_off_in_winter">在冬天时关机，可能会由于气温过冷导致硬件损坏！</string>
+    <string name="turn_off_in_winter">如冬季时关机，极可能因气温过低而损伤硬件！</string>
     <string name="add_pattern">添加模式</string>
     <string name="add_appointment">添加预约</string>
     <string name="switch_success">切换成功</string>

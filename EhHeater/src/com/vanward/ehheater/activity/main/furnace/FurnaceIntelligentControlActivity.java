@@ -36,7 +36,6 @@ import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.view.BaoBarView;
@@ -331,7 +330,7 @@ public class FurnaceIntelligentControlActivity extends EhHeaterBaseActivity
 		AjaxParams params = new AjaxParams();
 		params.put("data", gson.toJson(highChar_data));
 
-		L.e(this, "requestURL : " + requestURL);
+		L.e(this, "智能温控请求: requestURL : " + requestURL);
 
 		executeRequest(Consts.REQUEST_BASE_URL + requestURL, params, new AjaxCallBack<String>() {
 			@Override

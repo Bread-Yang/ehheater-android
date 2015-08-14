@@ -117,6 +117,8 @@ public class SelectDeviceActivity extends Activity implements OnClickListener {
             case 6002:
                 logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
 //                	mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SET_ALIAS, alias), 1000 * 60);
+                Set<String> tagSet = new LinkedHashSet<String>();
+        		JPushInterface.setTags(getApplicationContext(), tagSet, mAliasCallback);
                 break;
             
             default:

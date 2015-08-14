@@ -16,7 +16,23 @@ public class NetworkStatusUtil {
 		ConnectivityManager connMgr = (ConnectivityManager) ctx
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connMgr.getActiveNetworkInfo();
-		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+//		L.e(NetworkStatusUtil.class,
+//				"可不可以上网 : "
+//						+ (activeNetworkInfo != null && activeNetworkInfo
+//								.isConnected()));
+		 return activeNetworkInfo != null &&
+				 activeNetworkInfo.isConnectedOrConnecting(); // 有wifi或者有蜂窝网络
+		// NetworkInfo wifi = connMgr
+		// .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		// NetworkInfo md = connMgr
+		// .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		
+//		boolean networkStatus = ((wifi != null && wifi.isConnected()) || (md != null && md
+//				.isConnected()));
+//		L.e(NetworkStatusUtil.class,
+//				"可不可以上网 networkStatus : "
+//						+ networkStatus);
+//		return networkStatus;  // 有wifi或者有蜂窝网络
 	}
 
 	/**

@@ -640,7 +640,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		if (pResp.getOnOff() == 1) {
 			tv_gas_unit.setVisibility(View.VISIBLE);
 			tv_gas_consumption.setText(String.valueOf(Double.valueOf(pResp
-					.getGasCountNow()) / 10));
+					.getGasCountNow())));
 			// L.e(this, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
 			// L.e(this, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
 		} else {

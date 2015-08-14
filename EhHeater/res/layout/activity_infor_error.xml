@@ -42,7 +42,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/red_button_bg"
+        android:background="@drawable/selector_yellow_bg"
         android:text="复位"
         android:textColor="#FFFFFFFF"
         android:textSize="20dp" />
@@ -57,7 +57,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/red_button_bg"
+        android:background="@drawable/selector_yellow_bg"
         android:text="联系客服"
         android:textColor="#FFFFFFFF"
         android:textSize="20dp" />

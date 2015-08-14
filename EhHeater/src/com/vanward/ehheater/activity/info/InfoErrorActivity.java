@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Consts;
 import com.vanward.ehheater.activity.global.Global;
 import com.vanward.ehheater.activity.main.furnace.FurnaceSendCommandService;
+import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 import com.xtremeprog.xpgconnect.generated.generated;
 
@@ -43,6 +45,14 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 		leftbutton.setBackgroundResource(R.drawable.icon_back);
 		TextView title = (TextView) findViewById(R.id.ivTitleName);
 		title.setText("信息");
+		
+		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+
+		// 当前设备是壁挂炉才显示复位按钮
+		if (!hser.getCurrentSelectedHeater().getProductKey()
+				.equals(Consts.FURNACE_PRODUCT_KEY)) {
+			btn_reset.setVisibility(View.INVISIBLE);
+		}
 
 		name = (TextView) findViewById(R.id.name);
 		name.setText(getIntent().getStringExtra("name"));

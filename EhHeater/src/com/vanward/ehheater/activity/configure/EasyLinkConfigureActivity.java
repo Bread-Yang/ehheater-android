@@ -455,6 +455,7 @@ public class EasyLinkConfigureActivity extends EhHeaterBaseActivity implements
 		super.onAirLinkResp(endpoint);
 		L.e(this, "OnAirLinkResp()回调了");
 		if (isWaitingCallback) {
+			
 			// 配置成功, 保存设备(此时密码为空), 跳转回welcome
 
 			// L.e(this, "null == endpoint.getSzProductKey() : " + (null ==

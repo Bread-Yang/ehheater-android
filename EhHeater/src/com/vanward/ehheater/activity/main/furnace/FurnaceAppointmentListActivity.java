@@ -41,8 +41,6 @@ import com.vanward.ehheater.view.swipelistview.SwipeListView;
 
 public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 
-	private static final String TAG = "FurnaceAppointmentListActivity";
-
 	private SwipeListView lv_listview;
 
 	private Button btn_add_appointment;

@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
 
 public class InfoTipActivity extends Activity implements OnClickListener {
@@ -44,6 +46,16 @@ public class InfoTipActivity extends Activity implements OnClickListener {
 		detail.setText(getIntent().getStringExtra("detail"));
 		time = (TextView) findViewById(R.id.time);
 		time.setText(getIntent().getStringExtra("time"));
+		
+		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
+
+		Button btn_reset = (Button) findViewById(R.id.btn_reset);
+		
+		// 当前设备是壁挂炉才显示复位按钮
+		if (!hser.getCurrentSelectedHeater().getProductKey()
+				.equals(Consts.FURNACE_PRODUCT_KEY)) {
+			btn_reset.setVisibility(View.INVISIBLE);
+		}
 
 		dialog_dial = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.hotline_num,
