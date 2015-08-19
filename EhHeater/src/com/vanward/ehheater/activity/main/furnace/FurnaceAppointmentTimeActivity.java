@@ -32,7 +32,6 @@ import com.vanward.ehheater.model.AppointmentVo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.view.SeekBarHint;
 import com.vanward.ehheater.view.SeekBarHint.OnSeekBarHintProgressChangeListener;
@@ -142,6 +141,18 @@ public class FurnaceAppointmentTimeActivity extends EhHeaterBaseActivity {
 	}
 
 	private void init() {
+		boolean isFloorHeating = getIntent().getBooleanExtra("floor_heating",
+				false);
+		L.e(this, "isfloorHeating : " + isFloorHeating);
+		// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
+		// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
+		if (isFloorHeating) {
+			seekBar.setMax(25);
+			((TextView)findViewById(R.id.tv_max_value)).setText("55℃");
+		} else {
+			seekBar.setMax(50);
+		}
+		
 		appointmentConflictDialog = BaoDialogShowUtil.getInstance(this)
 				.createDialogWithTwoButton(R.string.appointment_conflict,
 						BaoDialogShowUtil.DEFAULT_RESID, R.string.override,

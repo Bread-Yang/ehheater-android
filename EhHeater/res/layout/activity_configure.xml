@@ -20,7 +20,7 @@
         android:id="@+id/ac_btn_next_step"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@drawable/button_zhu"
+        android:background="@drawable/selector_yellow_bg"
         android:textColor="@color/white"
         android:text="下一步"
         />

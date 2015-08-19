@@ -85,7 +85,7 @@ public class InfoErrorActivity extends Activity implements OnClickListener {
 			dialog_dial.show();
 			break;
 		case R.id.btn_reset:
-			FurnaceSendCommandService.getInstance().SendDERYRefreshReq();
+			FurnaceSendCommandService.getInstance().SendDERYResetErrorReq();
 			break;
 		case R.id.ivTitleBtnLeft:
 			finish();

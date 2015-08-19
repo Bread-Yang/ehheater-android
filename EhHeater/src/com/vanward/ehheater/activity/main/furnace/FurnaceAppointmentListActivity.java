@@ -34,7 +34,6 @@ import com.vanward.ehheater.model.AppointmentVo;
 import com.vanward.ehheater.service.AccountService;
 import com.vanward.ehheater.service.HeaterInfoService;
 import com.vanward.ehheater.service.HeaterInfoService.HeaterType;
-import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.view.swipelistview.SwipeListView;
@@ -87,6 +86,8 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					intent.setClass(FurnaceAppointmentListActivity.this,
 							AppointmentTimeActivity.class);
 				} else {
+					intent.putExtra("floor_heating", getIntent().getBooleanExtra("floor_heating",
+							false));
 					intent.setClass(FurnaceAppointmentListActivity.this,
 							FurnaceAppointmentTimeActivity.class);
 				}
@@ -515,6 +516,8 @@ public class FurnaceAppointmentListActivity extends EhHeaterBaseActivity {
 					// intent.putExtra("week", appointment.getDates());
 					intent.putExtra("editAppointment", model);
 					if (deviceType == HeaterType.FURNACE) {
+						intent.putExtra("floor_heating", getIntent()
+								.getBooleanExtra("floor_heating", false));
 						intent.setClass(FurnaceAppointmentListActivity.this,
 								FurnaceAppointmentTimeActivity.class);
 					} else {

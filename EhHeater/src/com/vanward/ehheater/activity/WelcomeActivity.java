@@ -260,7 +260,7 @@ public class WelcomeActivity extends GeneratedActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		L.e(this, "onActivityResult(RESULT_OK = -1):" + requestCode + "~"
+		L.e(this, "onActivityResult(RESULT_OK = -1):" + requestCode + " : "
 				+ resultCode);
 
 		// if (requestCode == Consts.REQUESTCODE_UPLOAD_BINDING) {

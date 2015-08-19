@@ -47,6 +47,8 @@ public class EhHeaterApplication extends Application implements ClientListener {
 
 		XPGConnectClient.initClient(this);
 		
+		L.e(this, "SDK版本 : " + XPGConnectClient.getVersion());
+		
 		JPushInterface.setDebugMode(false); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush
 

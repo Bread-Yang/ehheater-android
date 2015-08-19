@@ -640,7 +640,7 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 		if (pResp.getOnOff() == 1) {
 			tv_gas_unit.setVisibility(View.VISIBLE);
 			tv_gas_consumption.setText(String.valueOf(Double.valueOf(pResp
-					.getGasCountNow())));
+					.getGasCountNow()) / 10));
 			// L.e(this, "实时燃气量是 : " + String.valueOf(pResp.getGasCountNow()));
 			// L.e(this, "累计燃气量是 : " + String.valueOf(pResp.getGasCount()));
 		} else {
@@ -729,6 +729,11 @@ public class FurnaceMainActivity extends BaseBusinessActivity implements
 			} else {
 				intent = new Intent(FurnaceMainActivity.this,
 						FurnaceAppointmentListActivity.class);
+			}
+			// 若是在散热器供暖下：温度调节范围30~80℃，温度可在此范围内调节
+			// 若是在地暖供暖下 ： 温度调节范围30~55℃，温度可在此范围内调节
+			if (statusResp != null && statusResp.getHeatingSend() == 1) { // 地暖
+				intent.putExtra("floor_heating", true);
 			}
 			startActivity(intent);
 			break;
