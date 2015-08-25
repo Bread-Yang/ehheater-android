@@ -596,7 +596,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 					@Override
 					public void onClick(View v) {
 						String nameSet = etName.getText().toString();
-						if (!TextUtils.isEmpty(nameSet)) {
+						if (!TextUtils.isEmpty(nameSet) && !nameSet.equals(heater.getName())) {
 							// update name
 							heater.setName(nameSet);
 							new HeaterInfoService(getBaseContext())

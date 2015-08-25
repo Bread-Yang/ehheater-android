@@ -649,7 +649,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 	@Override
 	public void onV4GetMyBindings(int errorCode, XpgEndpoint endpoint) {
 		L.e(this, "onV4GetMyBindings()");
-
+		
 		acquireDeviceListTimeout.removeMessages(0);
 
 		if (errorCode != 0) {
