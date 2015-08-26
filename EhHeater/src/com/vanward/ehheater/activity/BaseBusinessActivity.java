@@ -54,6 +54,7 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
+import com.xtremeprog.xpgconnect.generated.HeartbeatResp_t;
 import com.xtremeprog.xpgconnect.generated.LanLoginResp_t;
 import com.xtremeprog.xpgconnect.generated.PasscodeResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
@@ -198,36 +199,11 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 					reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
 					reconnectHandler.removeMessages(0);
 				}
-				// if (firstSendStateReq) {
-				// tv_loading_tips.setText(R.string.waiting_device_response);
-				// rlt_loading.setVisibility(View.VISIBLE);
-				// firstSendStateReq = false;
-				//
-				// if (BaseBusinessActivity.this instanceof MainActivity) {
-				// L.e(BaseBusinessActivity.this, "查询电热状态");
-				// generated.SendStateReq(Global.connectId);
-				// } else if (BaseBusinessActivity.this instanceof
-				// GasMainActivity) {
-				// L.e(BaseBusinessActivity.this, "查询燃热状态");
-				// generated
-				// .SendGasWaterHeaterMobileRefreshReq(Global.connectId);
-				// } else if (BaseBusinessActivity.this instanceof
-				// FurnaceMainActivity) {
-				// L.e(BaseBusinessActivity.this, "查询壁挂炉状态");
-				// generated.SendDERYRefreshReq(Global.connectId);
-				// }
-				//
-				// reconnectHandler.sendEmptyMessageDelayed(1, connectTime);
-				// reconnectHandler.removeMessages(0);
-				// }
 				break;
 			case 1:
-				L.e(this, "@@@@@@@@@@@@@@@");
 				changeToOfflineUI();
-				L.e(this, "$$$$$$$");
 				rlt_loading.setVisibility(View.GONE);
 				if (!isFinishing()) {
-					L.e(this, "=================");
 					dialog_reconnect.show();
 				}
 				break;
@@ -238,12 +214,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	@Override
 	public void onSendPacket(byte[] data, int connId) {
 		super.onSendPacket(data, connId);
-		L.e(this, "onSendPacket调用了");
+		L.e(this, "onSendPacket()");
 	};
 
 	@Override
 	public void beforeSendCommand() {
-		L.e(this, "beforeSendCommand调用了");
+		L.e(this, "beforeSendCommand()");
 		reconnectHandler.removeMessages(0);
 		reconnectHandler.sendEmptyMessageDelayed(0, connectTime);
 	}
@@ -258,13 +234,13 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	@Override
 	public void OnStateResp(StateResp_t pResp, int nConnId) {
-		L.e(this, "OnStateResp被调用了");
+		L.e(this, "OnStateResp()");
 		super.OnStateResp(pResp, nConnId);
 	}
 
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
-		L.e(this, "onTcpPacket被调用了");
+		L.e(this, "onTcpPacket()");
 		super.onTcpPacket(data, connId);
 
 		if (!isConnecting) {
@@ -292,7 +268,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
 			int nConnId) {
-		L.e(this, "OnGasWaterHeaterStatusResp被调用了");
+		L.e(this, "OnGasWaterHeaterStatusResp()");
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
 		if (!isConnecting) {
@@ -319,7 +295,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	@Override
 	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
-		L.e(this, "OnDERYStatusResp被调用了");
+		L.e(this, "OnDERYStatusResp()");
 		super.OnDERYStatusResp(pResp, nConnId);
 
 		if (!isConnecting) {
