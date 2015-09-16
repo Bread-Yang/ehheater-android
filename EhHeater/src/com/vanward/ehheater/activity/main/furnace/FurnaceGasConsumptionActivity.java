@@ -49,8 +49,8 @@ public class FurnaceGasConsumptionActivity extends EhHeaterBaseActivity {
 			"yyyy年");
 	private SimpleDateFormat realTimeDateFormat = new SimpleDateFormat("HH:mm");
 
-	private ArrayList<String> realTimeXCategories = new ArrayList<>();
-	private ArrayList<Double> realTimeYDatas = new ArrayList<>();
+	private ArrayList<String> realTimeXCategories = new ArrayList<String>();
+	private ArrayList<Double> realTimeYDatas = new ArrayList<Double>();
 
 	private double[] defaultRealTimeYDatas = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };

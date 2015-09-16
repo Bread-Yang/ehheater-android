@@ -25,7 +25,7 @@ public class IntelligentPatternUtil {
 		HashMap<String, Integer> last30TemperatureMap = getLast30TemperatureMap(context);
 
 		if (last30TemperatureArray == null) {
-			last30TemperatureArray = new ArrayList<>();
+			last30TemperatureArray = new ArrayList<Integer>();
 		} else {
 			for (Integer i : last30TemperatureArray) {
 				Log.e("getLast30TemperatureArray遍历 : ", i + "");
@@ -68,7 +68,7 @@ public class IntelligentPatternUtil {
 		HashMap<String, Integer> last30PowerMap = getLast30PowerMap(context);
 
 		if (last30PowerArray == null) {
-			last30PowerArray = new ArrayList<>();
+			last30PowerArray = new ArrayList<Integer>();
 		} else {
 			for (Integer i : last30PowerArray) {
 				Log.e("getLast30PowerArray遍历 : ", i + "");

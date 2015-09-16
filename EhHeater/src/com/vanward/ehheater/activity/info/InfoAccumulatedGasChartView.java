@@ -589,20 +589,45 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 
 	@Override
 	public void onClick(View v) {
+		
+		int tagLast = 0;
+		
+		String textLast = tv_last.getText().toString().trim();
+		
+		if (textLast.equals("上一周")) {
+			tagLast = 1;
+		}else if (textLast.equals("上一月")) {
+			tagLast = 2;
+		}else if (textLast.equals("上一年")) {
+			tagLast = 3;
+		}
+		
+		int tagNext = 0;
+		
+		String textNext = tv_next.getText().toString().trim();
+		
+		if (textNext.equals("下一周")) {
+			tagNext = 1;
+		}else if (textNext.equals("下一月")) {
+			tagNext = 2;
+		}else if (textNext.equals("下一年")) {
+			tagNext = 3;
+		}
+		
 		switch (v.getId()) {
 		case R.id.imageView1:
-			switch (tv_last.getText().toString().trim()) {
-			case "上一周":
+			switch (tagLast) {
+			case 1:
 				long dates5 = timechanged();
 				getmessageweek(dates5);
 				break;
 
-			case "上一月":
+			case 2:
 				long dates6 = timechanged2();
 				getmessagemonth(dates6);
 				break;
 
-			case "上一年":
+			case 3:
 				long dates7 = timechanged3();
 				getmessageyear(dates7);
 				break;
@@ -613,22 +638,22 @@ public class InfoAccumulatedGasChartView extends LinearLayout implements
 			break;
 
 		case R.id.imageView2:
-			switch (tv_next.getText().toString().trim()) {
-			case "下一周":
+			switch (tagNext) {
+			case 1:
 				long dates2 = timechanged4();
 				if (timechanged4() != dtime) {
 					getmessageweek(dates2);
 				}
 				break;
 
-			case "下一月":
+			case 2:
 				long dates3 = timechanged5();
 				if (timechanged5() != dtime) {
 					getmessagemonth(dates3);
 				}
 				break;
 
-			case "下一年":
+			case 3:
 				long dates4 = timechanged6();
 				if (timechanged6() != dtime) {
 					getmessageyear(dates4);
