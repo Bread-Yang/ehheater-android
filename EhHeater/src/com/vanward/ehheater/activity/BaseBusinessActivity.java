@@ -995,7 +995,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	@Override
 	public void onV4Login(int errorCode, String uid, String token,
-			String expire_at) {
+			String expire_at) {  // XPGConnectClient.xpgc4Login之后回调
 		super.onV4Login(errorCode, uid, token, expire_at);
 		L.e(this, "onV4Login() errorCode : " + errorCode);
 
@@ -1019,7 +1019,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	}
 
 	@Override
-	public void onV4GetMyBindings(int errorCode, final XpgEndpoint endpoint) {
+	public void onV4GetMyBindings(int errorCode, final XpgEndpoint endpoint) {  // XPGConnectClient.xpgc4GetMyBindings()后回调
 		super.onV4GetMyBindings(errorCode, endpoint);
 
 		synchronized (this) {
