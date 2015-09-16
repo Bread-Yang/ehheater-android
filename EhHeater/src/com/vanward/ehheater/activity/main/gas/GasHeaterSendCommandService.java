@@ -31,6 +31,7 @@ public class GasHeaterSendCommandService extends BaseSendCommandService {
 		if (beforeSendCommandCallBack != null) {
 			beforeSendCommandCallBack.beforeSendCommand();
 		}
+		
 		generated.SendGasWaterHeaterTargetTemperatureReq(Global.connectId,
 				(short) i);
 	}

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.EhHeaterBaseActivity;
@@ -126,6 +127,12 @@ public class AboutActivity extends EhHeaterBaseActivity {
 													.getString("path");
 											if (lastestVersionCode > currentVersion) {
 												updateTipsDialog.show();
+											} else {
+												Toast.makeText(
+														getApplicationContext(),
+														"已经是最新版本!",
+														Toast.LENGTH_SHORT)
+														.show();
 											}
 										}
 									} catch (JSONException e) {

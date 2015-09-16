@@ -15,7 +15,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,9 +48,7 @@ import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
 import com.vanward.ehheater.view.ErrorDialogUtil;
 import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
-import com.xtremeprog.xpgconnect.generated.EasylinkResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
-import com.xtremeprog.xpgconnect.generated.generated;
 
 public class FurnaceMainActivity extends BaseBusinessActivity implements
 		OnClickListener, OnLongClickListener, BaoCircleSliderListener {

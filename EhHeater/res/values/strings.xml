@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">万和云智能</string>
-    <string name="version">版本：v 1.0.0 B 0.22</string>
+    <string name="version">版本：v 1.0.15.08.28.1217</string>
     <string name="heater">热水器</string>
     <string name="account">用户名</string>
     <string name="password">密码</string>
@@ -19,7 +19,7 @@
     <string name="show_password">显示密码</string>
     <string name="intelligence">智能</string>
     <string name="morning_wash">用水时段</string>
-    <string name="separate_wash">分人洗</string>
+    <string name="separate_wash">分人洗</string> 
     <string name="information">信息</string>
     <string name="last_step">上一步</string>
     <string name="next_step">下一步</string>

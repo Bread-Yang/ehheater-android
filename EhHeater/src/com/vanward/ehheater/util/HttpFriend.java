@@ -181,6 +181,8 @@ public class HttpFriend {
 	private HttpFriend executePostParams(AjaxParams params,
 			final AjaxCallBack callBack) {
 		FinalHttp fh = new FinalHttp();
+		fh.addHeader("Accept-Charset", "UTF-8");// 配置http请求头
+		fh.configCharset("UTF-8");
 		fh.configCookieStore(pcs);
 
 		showRequestDialog(callBack);

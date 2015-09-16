@@ -54,6 +54,9 @@ public class EhHeaterApplication extends Application implements ClientListener {
 
 		// 加这行显示log详情
 		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),3);
+		// 完全屏蔽SDK的LOG
+		XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.LOG_LEVEL.swigValue(),0);
+		
 		XPGConnectClient.xpgcInitSaveDNS(this);
 
 		// XPGConnectClient.xpgcIoctl(XPG_CONFIG_KEY.DEVICE_FOUND_TIMER.swigValue(),5);

@@ -50,7 +50,6 @@ import com.vanward.ehheater.util.GizwitsErrorMsg;
 import com.vanward.ehheater.util.HttpFriend;
 import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
-
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
 import com.xtremeprog.xpgconnect.XPGConnectClient;
