@@ -233,16 +233,16 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	// }
 
 	@Override
-	public void OnStateResp(StateResp_t pResp, int nConnId) {
+	public void OnStateResp(StateResp_t pResp, int nConnId) {//电热
 		L.e(this, "OnStateResp()");
 		super.OnStateResp(pResp, nConnId);
 	}
 
 	@Override
-	public void onTcpPacket(byte[] data, int connId) {
+	public void onTcpPacket(byte[] data, int connId) {//所有都会回调
 		L.e(this, "onTcpPacket()");
 		super.onTcpPacket(data, connId);
-
+		L.e(this, "OnGasWaterHeaterStatusResp()");
 		if (!isConnecting) {
 			if (this instanceof ElectricMainActivity) {
 				isAlreadyReceiveDeviceStatus = true;
@@ -267,7 +267,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
-			int nConnId) {
+			int nConnId) {//燃热
 		L.e(this, "OnGasWaterHeaterStatusResp()");
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
@@ -294,7 +294,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	}
 
 	@Override
-	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
+	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {//壁挂炉
 		L.e(this, "OnDERYStatusResp()");
 		super.OnDERYStatusResp(pResp, nConnId);
 
@@ -995,7 +995,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	@Override
 	public void onV4Login(int errorCode, String uid, String token,
-			String expire_at) {
+			String expire_at) {    // XPGConnectClient.xpgc4Login()成功后回调
 		super.onV4Login(errorCode, uid, token, expire_at);
 		L.e(this, "onV4Login() errorCode : " + errorCode);
 
