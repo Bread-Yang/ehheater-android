@@ -3,6 +3,27 @@ package com.vanward.ehheater.activity.main.furnace;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.vanward.ehheater.R;
+import com.vanward.ehheater.activity.BaseBusinessActivity;
+import com.vanward.ehheater.activity.global.Consts;
+import com.vanward.ehheater.activity.global.Global;
+import com.vanward.ehheater.activity.info.InfoErrorActivity;
+import com.vanward.ehheater.application.EhHeaterApplication;
+import com.vanward.ehheater.bean.HeaterInfo;
+import com.vanward.ehheater.dao.HeaterInfoDao;
+import com.vanward.ehheater.service.AccountService;
+import com.vanward.ehheater.service.HeaterInfoService;
+import com.vanward.ehheater.util.BaoDialogShowUtil;
+import com.vanward.ehheater.util.ErrorUtils;
+import com.vanward.ehheater.util.L;
+import com.vanward.ehheater.util.SwitchDeviceUtil;
+import com.vanward.ehheater.view.BaoCircleSlider;
+import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
+import com.vanward.ehheater.view.ErrorDialogUtil;
+import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
+import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
+import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
+
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,27 +49,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
-
-import com.vanward.ehheater.R;
-import com.vanward.ehheater.activity.BaseBusinessActivity;
-import com.vanward.ehheater.activity.global.Consts;
-import com.vanward.ehheater.activity.global.Global;
-import com.vanward.ehheater.activity.info.InfoErrorActivity;
-import com.vanward.ehheater.application.EhHeaterApplication;
-import com.vanward.ehheater.bean.HeaterInfo;
-import com.vanward.ehheater.dao.HeaterInfoDao;
-import com.vanward.ehheater.service.AccountService;
-import com.vanward.ehheater.service.HeaterInfoService;
-import com.vanward.ehheater.util.BaoDialogShowUtil;
-import com.vanward.ehheater.util.ErrorUtils;
-import com.vanward.ehheater.util.L;
-import com.vanward.ehheater.util.SwitchDeviceUtil;
-import com.vanward.ehheater.view.BaoCircleSlider;
-import com.vanward.ehheater.view.BaoCircleSlider.BaoCircleSliderListener;
-import com.vanward.ehheater.view.ErrorDialogUtil;
-import com.vanward.ehheater.view.TimeDialogUtil.NextButtonCall;
-import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
-import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 
 public class FurnaceMainActivity extends BaseBusinessActivity implements
 		OnClickListener, OnLongClickListener, BaoCircleSliderListener {

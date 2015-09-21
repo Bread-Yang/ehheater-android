@@ -280,7 +280,7 @@
                     android:text="@string/information"
                     android:textColor="@color/an_hui"
                     android:textSize="15dp"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
 
