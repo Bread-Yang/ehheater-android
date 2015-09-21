@@ -592,7 +592,7 @@ public class HeaterManagementActivity extends EhHeaterBaseActivity {
 					}
 				});
 		renameDialog.findViewById(R.id.drename_btn_confirm).setOnClickListener(
-				new View.OnClickListener() {
+				new View.OnClickListener() {//jeff
 					@Override
 					public void onClick(View v) {
 						String nameSet = etName.getText().toString();

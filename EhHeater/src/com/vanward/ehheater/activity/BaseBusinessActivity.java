@@ -46,6 +46,7 @@ import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
+import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.vanward.ehheater.util.wifi.ConnectChangeReceiver;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
@@ -242,7 +243,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	public void onTcpPacket(byte[] data, int connId) {//所有都会回调
 		L.e(this, "onTcpPacket()");
 		super.onTcpPacket(data, connId);
-		L.e(this, "OnGasWaterHeaterStatusResp()");
+		L.e(this, "返回的数据："+TextUtil.byteArray2String(data));
 		if (!isConnecting) {
 			if (this instanceof ElectricMainActivity) {
 				isAlreadyReceiveDeviceStatus = true;
@@ -995,7 +996,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	@Override
 	public void onV4Login(int errorCode, String uid, String token,
-			String expire_at) {    // XPGConnectClient.xpgc4Login()成功后回调
+			String expire_at) {  // XPGConnectClient.xpgc4Login之后回调
 		super.onV4Login(errorCode, uid, token, expire_at);
 		L.e(this, "onV4Login() errorCode : " + errorCode);
 
@@ -1019,7 +1020,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	}
 
 	@Override
-	public void onV4GetMyBindings(int errorCode, final XpgEndpoint endpoint) {
+	public void onV4GetMyBindings(int errorCode, final XpgEndpoint endpoint) {  // XPGConnectClient.xpgc4GetMyBindings()后回调
 		super.onV4GetMyBindings(errorCode, endpoint);
 
 		synchronized (this) {

@@ -479,7 +479,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 			new HeaterInfoService(getBaseContext())
 					.deleteAllHeatersByUid(AccountService
-							.getUserId(getApplicationContext()));
+							.getUserId(getApplicationContext()));   // jeff
 
 			// 获取昵称
 			HttpFriend httpFriend = HttpFriend.create(getApplicationContext());
@@ -665,7 +665,9 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		isAlreadyReceiveDeviceData = true;
-
+		if ("".equals(endpoint.getSzMac())) { // 假如mac地址为空,说明onV4GetMyBindings()最后一次回调
+			
+		}
 		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
 			new Handler().postDelayed(new Runnable() {
 
