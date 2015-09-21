@@ -1,10 +1,12 @@
 package com.vanward.ehheater.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -122,6 +124,7 @@ public class SeekBarHint extends SeekBar implements
 		});
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void showPopup() {
 
 		if (mPopupStyle == POPUP_FOLLOW) {
@@ -163,6 +166,7 @@ public class SeekBarHint extends SeekBar implements
 		mProgressChangeListener = l;
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
 		String popupText = null;
