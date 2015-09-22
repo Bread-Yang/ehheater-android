@@ -18,6 +18,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -211,11 +212,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 			}
 		};
 	};
-
+	
 	@Override
 	public void onSendPacket(byte[] data, int connId) {
 		super.onSendPacket(data, connId);
 		L.e(this, "onSendPacket()");
+		Log.e("onSendPacket", TextUtil.byteArray2String(data));
 	};
 
 	@Override
@@ -244,6 +246,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		L.e(this, "onTcpPacket()");
 		super.onTcpPacket(data, connId);
 		L.e(this, "返回的数据："+TextUtil.byteArray2String(data));
+		Log.e("onTcpPacket", TextUtil.byteArray2String(data));
 		if (!isConnecting) {
 			if (this instanceof ElectricMainActivity) {
 				isAlreadyReceiveDeviceStatus = true;

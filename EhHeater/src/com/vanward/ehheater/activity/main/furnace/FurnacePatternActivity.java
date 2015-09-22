@@ -1,6 +1,7 @@
 package com.vanward.ehheater.activity.main.furnace;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -76,6 +77,7 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int checkedId) {
+				Log.e("bao", "rg_bath_mode.setOnCheckedChangeListener");
 				switch (checkedId) {
 				case R.id.rb_mode_comfort:
 					FurnaceSendCommandService.getInstance().setToComfortBath();

@@ -480,7 +480,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			new HeaterInfoService(getBaseContext())
 					.deleteAllHeatersByUid(AccountService
 							.getUserId(getApplicationContext()));   // jeff
-
+			
 			// 获取昵称
 			HttpFriend httpFriend = HttpFriend.create(getApplicationContext());
 			httpFriend.showTips = false;
@@ -665,12 +665,25 @@ public class LoginActivity extends EhHeaterBaseActivity {
 		}
 
 		isAlreadyReceiveDeviceData = true;
-		if ("".equals(endpoint.getSzMac())) { // 假如mac地址为空,说明onV4GetMyBindings()最后一次回调
-			
+		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {//返回绑定设备结束
+			if (notBindedDevice) {//没有设备
+				new Handler().postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						DialogUtil.dismissDialog();
+						startActivity(new Intent(getBaseContext(),
+								SelectDeviceActivity.class));
+					}
+				}, 3000);
+				return;
+			}else{//有设备
+				
+			}
 		}
-		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
+/*		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
 			new Handler().postDelayed(new Runnable() {
-
+				
 				@Override
 				public void run() {
 					if (notBindedDevice) {
@@ -682,7 +695,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			}, 3000);
 			return;
 		}
-
+*/
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(
 				AccountService.getUserId(getApplicationContext()), endpoint);
