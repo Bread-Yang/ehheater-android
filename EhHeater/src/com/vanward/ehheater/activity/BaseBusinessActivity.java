@@ -4,29 +4,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.vanward.ehheater.R;
 import com.vanward.ehheater.activity.configure.EasyLinkConfigureActivity;
 import com.vanward.ehheater.activity.global.Consts;
@@ -54,12 +31,35 @@ import com.xtremeprog.xpgconnect.XPGConnectClient;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 import com.xtremeprog.xpgconnect.generated.DeviceOnlineStateResp_t;
 import com.xtremeprog.xpgconnect.generated.GasWaterHeaterStatusResp_t;
-import com.xtremeprog.xpgconnect.generated.HeartbeatResp_t;
 import com.xtremeprog.xpgconnect.generated.LanLoginResp_t;
 import com.xtremeprog.xpgconnect.generated.PasscodeResp_t;
 import com.xtremeprog.xpgconnect.generated.StateResp_t;
 import com.xtremeprog.xpgconnect.generated.XpgEndpoint;
 import com.xtremeprog.xpgconnect.generated.generated;
+
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningTaskInfo;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 电热, 燃热, 壁挂炉三个MainActivity共用业务:
@@ -214,7 +214,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	@Override
 	public void onSendPacket(byte[] data, int connId) {
 		super.onSendPacket(data, connId);
-		L.e(this, "onSendPacket()");
+		L.e(this, "onSendPacket()发过去的数据是 : " + data);
+		Log.e("onSendPacket", data.toString());
 	};
 
 	@Override
@@ -240,7 +241,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	@Override
 	public void onTcpPacket(byte[] data, int connId) {
-		L.e(this, "onTcpPacket()");
+		L.e(this, "onTcpPacket()返回的数据 : " + data);
+		Log.e("onTcpPacket", data.toString());
 		super.onTcpPacket(data, connId);
 
 		if (!isConnecting) {
@@ -251,15 +253,12 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 				reconnectHandler.removeMessages(0);
 				reconnectHandler.removeMessages(1);
 				dialog_reconnect.dismiss();
-				L.e(this, "$$$$$$$");
 				rlt_loading.setVisibility(View.GONE);
 
 				ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 				List<RunningTaskInfo> list = am.getRunningTasks(1);
 				if (list != null && list.size() > 0) {
 					ComponentName cpn = list.get(0).topActivity;
-					// if (className.equals(cpn.getClassName())) {
-					// }
 				}
 			}
 		}
