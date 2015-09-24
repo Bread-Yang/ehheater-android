@@ -1,9 +1,12 @@
 package com.vanward.ehheater.activity.main.furnace;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
@@ -12,11 +15,14 @@ import com.vanward.ehheater.activity.EhHeaterBaseActivity;
 import com.vanward.ehheater.util.L;
 import com.xtremeprog.xpgconnect.generated.DERYStatusResp_t;
 
-public class FurnacePatternActivity extends EhHeaterBaseActivity {
+public class FurnacePatternActivity extends EhHeaterBaseActivity implements OnClickListener {
 
 	private LinearLayout llt_heating_mode, llt_bath_mode;
 
 	private RadioGroup rg_heating_mode, rg_bath_mode;
+
+	private RadioButton rb_model_default, rb_mode_outdoor, rb_mode_night;
+	private RadioButton rb_mode_comfort, rb_mode_normal;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,65 +41,65 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 		llt_bath_mode = (LinearLayout) findViewById(R.id.llt_bath_mode);
 		rg_heating_mode = (RadioGroup) findViewById(R.id.rg_heating_mode);
 		rg_bath_mode = (RadioGroup) findViewById(R.id.rg_bath_mode);
+		rb_model_default = (RadioButton) findViewById(R.id.rb_model_default);
+		rb_mode_outdoor = (RadioButton) findViewById(R.id.rb_mode_outdoor);
+		rb_mode_night = (RadioButton) findViewById(R.id.rb_mode_night);
+		rb_mode_comfort = (RadioButton) findViewById(R.id.rb_mode_comfort);
+		rb_mode_normal = (RadioButton) findViewById(R.id.rb_mode_normal);
 	}
 
 	private void setListener() {
-		rg_heating_mode
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-					@Override
-					public void onCheckedChanged(RadioGroup arg0, int checkedId) {
-						switch (checkedId) {
-						case R.id.rb_model_default:
-							FurnaceSendCommandService.getInstance()
-									.setToNormalHeating();
-							break;
-						case R.id.rb_mode_outdoor:
-							FurnaceSendCommandService.getInstance()
-									.setToOutdoorHeating();
-							// 供暖温度30℃（散热器与地暖一样）；可以设置温度，但不支持温度调节，不管设置多少温度，都是以默认30℃运行
-							FurnaceSendCommandService.getInstance()
-									.setHeatingTemperature(30);
-							break;
-						case R.id.rb_mode_night:
-							FurnaceSendCommandService.getInstance()
-									.setToNightHeating();
-							// 温度自动转为当前设置温度的80%；如当前设置60℃，当你按下夜间模式符号后，温度自动转为48℃；设置的温度可以调节。
-							// App直接发当前设置温度即可
-							int temp = (int) (FurnaceMainActivity.statusResp
-									.getHeatingTemTarget());
-							if (temp < 30) {
-								temp = 30;
-							}
-							FurnaceSendCommandService.getInstance()
-									.setHeatingTemperature(temp);
-							break;
-						}
-						finish();
-					}
-				});
-
-		rg_bath_mode.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(RadioGroup arg0, int checkedId) {
-				Log.e("bao", "rg_bath_mode.setOnCheckedChangeListener");
-				switch (checkedId) {
-				case R.id.rb_mode_comfort:
-					FurnaceSendCommandService.getInstance().setToComfortBath();
-					break;
-				case R.id.rb_mode_normal:
-					FurnaceSendCommandService.getInstance().setToNormalBath();
-					break;
-				}
-				finish();
-			}
-		});
+		// rg_heating_mode.setOnCheckedChangeListener(new
+		// OnCheckedChangeListener() {
+		//
+		// @Override
+		// public void onCheckedChanged(RadioGroup arg0, int checkedId) {
+		// switch (checkedId) {
+		// case R.id.rb_model_default:
+		// FurnaceSendCommandService.getInstance().setToNormalHeating();
+		// break;
+		// case R.id.rb_mode_outdoor:
+		// FurnaceSendCommandService.getInstance().setToOutdoorHeating();
+		// // 供暖温度30℃（散热器与地暖一样）；可以设置温度，但不支持温度调节，不管设置多少温度，都是以默认30℃运行
+		// FurnaceSendCommandService.getInstance().setHeatingTemperature(30);
+		// break;
+		// case R.id.rb_mode_night:
+		// FurnaceSendCommandService.getInstance().setToNightHeating();
+		// // 温度自动转为当前设置温度的80%；如当前设置60℃，当你按下夜间模式符号后，温度自动转为48℃；设置的温度可以调节。
+		// // App直接发当前设置温度即可
+		// int temp = (int)
+		// (FurnaceMainActivity.statusResp.getHeatingTemTarget());
+		// if (temp < 30) {
+		// temp = 30;
+		// }
+		// FurnaceSendCommandService.getInstance().setHeatingTemperature(temp);
+		// break;
+		// }
+		// finish();
+		// }
+		// });
+		//
+		// rg_bath_mode.setOnCheckedChangeListener(new OnCheckedChangeListener()
+		// {
+		//
+		// @Override
+		// public void onCheckedChanged(RadioGroup arg0, int checkedId) {
+		// switch (checkedId) {
+		// case R.id.rb_mode_comfort:
+		// FurnaceSendCommandService.getInstance().setToComfortBath();
+		// break;
+		// case R.id.rb_mode_normal:
+		// FurnaceSendCommandService.getInstance().setToNormalBath();
+		// break;
+		// }
+		// finish();
+		// }
+		// });
 	}
 
 	private void init() {
-		int seasonTag = getIntent().getIntExtra("seasonMode",
-				FurnaceSeasonActivity.SET_SUMMER_MODE);
+		int seasonTag = getIntent().getIntExtra("seasonMode", FurnaceSeasonActivity.SET_SUMMER_MODE);
 		if (seasonTag == FurnaceSeasonActivity.SET_SUMMER_MODE) {
 			llt_heating_mode.setVisibility(View.GONE);
 		}
@@ -128,26 +134,65 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity {
 		}
 
 		if (pResp.getBathMode() == 0) { // 0 - normal bath
-			if (rg_bath_mode.getCheckedRadioButtonId() != R.id.rb_mode_normal){
+			if (rg_bath_mode.getCheckedRadioButtonId() != R.id.rb_mode_normal) {
 				rg_bath_mode.check(R.id.rb_mode_normal);
 			}
 		} else {
-			if (rg_bath_mode.getCheckedRadioButtonId() != R.id.rb_mode_comfort){
+			if (rg_bath_mode.getCheckedRadioButtonId() != R.id.rb_mode_comfort) {
 				rg_bath_mode.check(R.id.rb_mode_comfort);
 			}
 		}
 		if (pResp.getHeatingMode() == 0xA0) { // 0xA0 - normal mode
-			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_model_default){
+			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_model_default) {
 				rg_heating_mode.check(R.id.rb_model_default);
 			}
 		} else if (pResp.getHeatingMode() == 0xA1) { // 0xA1 - night mode
-			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_mode_night){
+			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_mode_night) {
 				rg_heating_mode.check(R.id.rb_mode_night);
 			}
 		} else if (pResp.getHeatingMode() == 0xA2) { // 0xA2 - outdoor mode
-			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_mode_outdoor){
+			if (rg_heating_mode.getCheckedRadioButtonId() != R.id.rb_mode_outdoor) {
 				rg_heating_mode.check(R.id.rb_mode_outdoor);
 			}
 		}
 	}
+
+	@Override
+	public void onClick(View view) {
+		super.onClick(view);
+
+		Log.e("yoghourt", "onClick");
+		switch (view.getId()) {
+		
+		case R.id.rb_model_default:
+			FurnaceSendCommandService.getInstance().setToNormalHeating();
+			break;
+
+		case R.id.rb_mode_outdoor:
+			FurnaceSendCommandService.getInstance().setToOutdoorHeating();
+			break;
+		case R.id.rb_mode_night:
+			FurnaceSendCommandService.getInstance().setToNightHeating();
+			// 温度自动转为当前设置温度的80%；如当前设置60℃，当你按下夜间模式符号后，温度自动转为48℃；设置的温度可以调节。
+			// App直接发当前设置温度即可
+			int temp = (int) (FurnaceMainActivity.statusResp.getHeatingTemTarget());
+			if (temp < 30) {
+				temp = 30;
+			}
+			FurnaceSendCommandService.getInstance().setHeatingTemperature(temp);
+			break;
+
+		case R.id.rb_mode_comfort:
+			FurnaceSendCommandService.getInstance().setToComfortBath();
+			break;
+
+		case R.id.rb_mode_normal:
+			FurnaceSendCommandService.getInstance().setToNormalBath();
+			break;
+
+		}
+
+		finish();
+	}
+
 }
