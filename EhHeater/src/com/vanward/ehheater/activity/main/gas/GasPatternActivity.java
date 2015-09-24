@@ -112,6 +112,7 @@ public class GasPatternActivity extends EhHeaterBaseActivity implements
 
 	@Override
 	public void onCheckedChanged(RadioGroup arg0, int arg1) {
+		L.e(this, "onCheckedChanged()");
 		switch (arg1) {
 		case R.id.radio0:
 			GasHeaterSendCommandService.getInstance().setToDIYMode();

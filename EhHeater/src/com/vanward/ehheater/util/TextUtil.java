@@ -49,4 +49,27 @@ public class TextUtil {
 
 		return readedStr;
 	}
+
+	/**
+	 * 将byte[]转成16进制字符串，如传入00010011,00000010，则返回字符串"1302"
+	 */
+	public static String byteArray2String(byte[] bytes) {
+		String str = "";
+		for (int i = 0; i < bytes.length; i++) {
+			str += get16FormatByte(bytes[i]) + " ";
+		}
+		return str;
+	}
+
+	/**
+	 * 将byte转成16进制字符串，如传入00010011，则返回字符串"13"
+	 */
+	public static String get16FormatByte(byte temp) {
+		String str = Integer.toHexString(temp & 0xFF);
+		if (str.length() == 1) {
+			str = "0" + str;
+		}
+		return str;
+	}
+
 }

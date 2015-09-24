@@ -23,6 +23,7 @@ import com.vanward.ehheater.util.L;
 import com.vanward.ehheater.util.NetworkStatusUtil;
 import com.vanward.ehheater.util.SharedPreferUtils;
 import com.vanward.ehheater.util.SharedPreferUtils.ShareKey;
+import com.vanward.ehheater.util.TextUtil;
 import com.vanward.ehheater.util.XPGConnShortCuts;
 import com.vanward.ehheater.util.wifi.ConnectChangeReceiver;
 import com.vanward.ehheater.view.fragment.BaseSlidingFragmentActivity;
@@ -210,7 +211,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 			}
 		};
 	};
-
+	
 	@Override
 	public void onSendPacket(byte[] data, int connId) {
 		super.onSendPacket(data, connId);
@@ -234,7 +235,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	// }
 
 	@Override
-	public void OnStateResp(StateResp_t pResp, int nConnId) {
+	public void OnStateResp(StateResp_t pResp, int nConnId) {//电热
 		L.e(this, "OnStateResp()");
 		super.OnStateResp(pResp, nConnId);
 	}
@@ -244,7 +245,8 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 		L.e(this, "onTcpPacket()返回的数据 : " + data);
 		Log.e("onTcpPacket", data.toString());
 		super.onTcpPacket(data, connId);
-
+		L.e(this, "返回的数据："+TextUtil.byteArray2String(data));
+		Log.e("onTcpPacket", TextUtil.byteArray2String(data));
 		if (!isConnecting) {
 			if (this instanceof ElectricMainActivity) {
 				isAlreadyReceiveDeviceStatus = true;
@@ -266,7 +268,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 
 	@Override
 	public void OnGasWaterHeaterStatusResp(GasWaterHeaterStatusResp_t pResp,
-			int nConnId) {
+			int nConnId) {//燃热
 		L.e(this, "OnGasWaterHeaterStatusResp()");
 		super.OnGasWaterHeaterStatusResp(pResp, nConnId);
 
@@ -293,7 +295,7 @@ public abstract class BaseBusinessActivity extends BaseSlidingFragmentActivity
 	}
 
 	@Override
-	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {
+	public void OnDERYStatusResp(DERYStatusResp_t pResp, int nConnId) {//壁挂炉
 		L.e(this, "OnDERYStatusResp()");
 		super.OnDERYStatusResp(pResp, nConnId);
 

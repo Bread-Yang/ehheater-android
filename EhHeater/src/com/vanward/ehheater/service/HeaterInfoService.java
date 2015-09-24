@@ -77,6 +77,13 @@ public class HeaterInfoService {
 		hdao.save(he);
 	}
 
+	public void updateNameByUidAndDid(String uid, String did, String name){
+		HeaterInfoDao hdao = new HeaterInfoDao(context);
+		HeaterInfo he = hdao.getHeaterByUidAndDid(uid, did);
+		he.setName(name);
+		hdao.save(he);
+	}
+	
 	public HeaterInfo getCurrentSelectedHeater() {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
 		String curSelectMac = new SharedPreferUtils(context).get(
@@ -112,6 +119,11 @@ public class HeaterInfoService {
 		hdao.getDb().deleteById(HeaterInfo.class, hi.getId());
 	}
 
+	public List<HeaterInfo> queryAllHeatersByUid(String uid){
+		HeaterInfoDao hdao = new HeaterInfoDao(context);
+		return hdao.getDb().findAllByWhere(HeaterInfo.class, " uid = '" + uid + "'");
+	}
+	
 	public void deleteAllHeatersByUid(String uid) {
 		HeaterInfoDao hdao = new HeaterInfoDao(context);
 		// hdao.getDb().dropTable(HeaterInfo.class);

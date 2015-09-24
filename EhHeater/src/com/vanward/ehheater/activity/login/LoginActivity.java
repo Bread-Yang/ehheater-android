@@ -1,6 +1,7 @@
 package com.vanward.ehheater.activity.login;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -288,9 +289,18 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			et_pwd.setText(psw);
 
 			new SharedPreferUtils(getBaseContext()).clear();
-			new HeaterInfoService(getBaseContext())
+			/*new HeaterInfoService(getBaseContext())
 					.deleteAllHeatersByUid(AccountService
-							.getUserId(getApplicationContext()));
+							.getUserId(getApplicationContext()));*/
+			HeaterInfoService heaterInfoService = new HeaterInfoService(getBaseContext());
+			
+			queryAllHeatersByUid = heaterInfoService.queryAllHeatersByUid(AccountService
+							.getUserId(getApplicationContext()));//先将数据库中的数据保存起来，之后再删除
+			
+			Log.e("528", "size3:"+queryAllHeatersByUid.size());
+			
+			heaterInfoService.deleteAllHeatersByUid(AccountService
+							.getUserId(getApplicationContext()));   // jeff
 
 			L.e(this, "userName : " + userName);
 			L.e(this, "psw : " + psw);
@@ -404,6 +414,8 @@ public class LoginActivity extends EhHeaterBaseActivity {
 
 	Timer mLoginTimeoutTimer; // 点击登录时触发此timer, 在登录回调中取消此timer
 
+	private List<HeaterInfo> queryAllHeatersByUid;
+
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -477,10 +489,18 @@ public class LoginActivity extends EhHeaterBaseActivity {
 					.saveLoginAccountIntoDatabaseForInsideLogin(loginUid,
 							loginPsw);
 
-			new HeaterInfoService(getBaseContext())
-					.deleteAllHeatersByUid(AccountService
-							.getUserId(getApplicationContext()));
-
+			HeaterInfoService heaterInfoService = new HeaterInfoService(getBaseContext());
+			
+			if(queryAllHeatersByUid == null){
+				queryAllHeatersByUid = heaterInfoService.queryAllHeatersByUid(AccountService
+						.getUserId(getApplicationContext()));//先将数据库中的数据保存起来，之后再删除
+			}
+			
+			Log.e("528", "size:"+queryAllHeatersByUid.size());
+			
+			heaterInfoService.deleteAllHeatersByUid(AccountService
+							.getUserId(getApplicationContext()));   // jeff
+			
 			// 获取昵称
 			HttpFriend httpFriend = HttpFriend.create(getApplicationContext());
 			httpFriend.showTips = false;
@@ -664,11 +684,39 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			return;
 		}
 
-		isAlreadyReceiveDeviceData = true;
-
-		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
+		isAlreadyReceiveDeviceData = true;//jeff
+		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {//返回绑定设备结束
+			if (notBindedDevice) {//没有设备
+				new Handler().postDelayed(new Runnable() {
+					
+					@Override
+					public void run() {
+						DialogUtil.dismissDialog();
+						startActivity(new Intent(getBaseContext(),
+								SelectDeviceActivity.class));
+					}
+				}, 3000);
+				return;
+			}else{//有设备
+				Log.e("528", "HeaterInfoService");
+				HeaterInfoService heaterInfoService = new HeaterInfoService(getBaseContext());
+				List<HeaterInfo> queryCurAllHeatersByUid = heaterInfoService.queryAllHeatersByUid(AccountService
+						.getUserId(getApplicationContext()));
+				for (int i = 0; i < queryAllHeatersByUid.size(); i++) {//将上一次保存的数据库的设备名字，覆盖到最新从服务器拉下来的数据中
+					String did = queryAllHeatersByUid.get(i).getDid();
+					for (int j = 0; j < queryCurAllHeatersByUid.size(); j++) {
+						if(did.equals(queryCurAllHeatersByUid.get(j).getDid())){
+							heaterInfoService.updateNameByUidAndDid(AccountService
+									.getUserId(getApplicationContext()), did, queryAllHeatersByUid.get(i).getName());
+							break;
+						}
+					}
+				}
+			}
+		}
+/*		if (null == endpoint.getSzMac() || "".equals(endpoint.getSzMac())) {
 			new Handler().postDelayed(new Runnable() {
-
+				
 				@Override
 				public void run() {
 					if (notBindedDevice) {
@@ -680,7 +728,7 @@ public class LoginActivity extends EhHeaterBaseActivity {
 			}, 3000);
 			return;
 		}
-
+*/
 		HeaterInfoService hser = new HeaterInfoService(getBaseContext());
 		HeaterInfo hi = new HeaterInfo(
 				AccountService.getUserId(getApplicationContext()), endpoint);
