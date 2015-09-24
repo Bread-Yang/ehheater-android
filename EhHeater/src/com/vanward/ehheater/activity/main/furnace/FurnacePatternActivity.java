@@ -161,9 +161,8 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity implements OnCl
 	public void onClick(View view) {
 		super.onClick(view);
 
-		Log.e("yoghourt", "onClick");
 		switch (view.getId()) {
-		
+
 		case R.id.rb_model_default:
 			FurnaceSendCommandService.getInstance().setToNormalHeating();
 			break;
@@ -171,6 +170,7 @@ public class FurnacePatternActivity extends EhHeaterBaseActivity implements OnCl
 		case R.id.rb_mode_outdoor:
 			FurnaceSendCommandService.getInstance().setToOutdoorHeating();
 			break;
+			
 		case R.id.rb_mode_night:
 			FurnaceSendCommandService.getInstance().setToNightHeating();
 			// 温度自动转为当前设置温度的80%；如当前设置60℃，当你按下夜间模式符号后，温度自动转为48℃；设置的温度可以调节。
